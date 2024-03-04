@@ -42,33 +42,12 @@ async void SignIn()
     Console.WriteLine($"Start URL: {state.StartUrl}");
 
     // open system browser to start authentication
-    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+    Process.Start(new ProcessStartInfo
     {
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = state.StartUrl,
-            UseShellExecute = true,
-        });
-    }
-    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-    {
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = "xdg-open",
-            Arguments = state.StartUrl,
-            UseShellExecute = true,
-        });
-    }
-    else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-    {
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = "open",
-            Arguments = state.StartUrl,
-            UseShellExecute = true,
-        });
-    }
-
+        FileName = state.StartUrl,
+        UseShellExecute = true,
+    });
+    
     // wait for the authorization response.
     var context = await http.GetContextAsync();
 
@@ -82,6 +61,8 @@ async void SignIn()
     responseOutput.Close();
 
     var result = await client.ProcessResponseAsync(context.Request.RawUrl, state);
+
+    BringConsoleToFront();
 
     if (result.IsError)
     {
@@ -105,4 +86,18 @@ async void SignIn()
     }
 
     http.Stop();
+}
+
+// Hack to bring the Console window to front.
+// ref: http://stackoverflow.com/a/12066376
+[DllImport("kernel32.dll", ExactSpelling = true)]
+static extern IntPtr GetConsoleWindow();
+
+[DllImport("user32.dll")]
+[return: MarshalAs(UnmanagedType.Bool)]
+static extern bool SetForegroundWindow(IntPtr hWnd);
+
+void BringConsoleToFront()
+{
+    SetForegroundWindow(GetConsoleWindow());
 }
