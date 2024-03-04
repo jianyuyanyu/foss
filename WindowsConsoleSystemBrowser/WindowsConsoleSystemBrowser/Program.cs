@@ -1,11 +1,8 @@
 ﻿using IdentityModel.Client;
 using IdentityModel.OidcClient;
-using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace WindowsConsoleSystemBrowser
 {
@@ -79,7 +76,11 @@ namespace WindowsConsoleSystemBrowser
             var callbackManager = new CallbackManager(state.State);
 
             // open system browser to start authentication
-            Process.Start(state.StartUrl);
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = state.StartUrl,
+                UseShellExecute = true
+            });
 
             Console.WriteLine("Running callback manager");
             var response = await callbackManager.RunServer();
