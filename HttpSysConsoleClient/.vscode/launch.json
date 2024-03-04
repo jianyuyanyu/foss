@@ -9,9 +9,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/HttpSysConsoleClient/bin/Debug/net8.0/HttpSysConsoleClient.dll",
+            "program": "${workspaceFolder}/ConsoleSystemBrowser/bin/Debug/net8.0/ConsoleSystemBrowser.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/HttpSysConsoleClient",
+            "cwd": "${workspaceFolder}/ConsoleSystemBrowser",
             "console": "externalTerminal"
         }
     ]
