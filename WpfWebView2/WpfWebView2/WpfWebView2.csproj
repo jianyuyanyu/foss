@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IdentityModel.OidcClient" Version="4.0.0-preview.8" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.774.44" />
+    <PackageReference Include="IdentityModel.OidcClient" Version="6.0.0-preview.2" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2365.46" />
   </ItemGroup>
 
 </Project>

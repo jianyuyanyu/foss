@@ -18,7 +18,7 @@ namespace WpfWebView2
         {
             var options = new OidcClientOptions()
             {
-                Authority = "https://demo.identityserver.io/",
+                Authority = "https://demo.duendesoftware.com/",
                 ClientId = "interactive.public",
                 Scope = "openid profile email",
                 RedirectUri = "http://127.0.0.1/sample-wpf-app",
