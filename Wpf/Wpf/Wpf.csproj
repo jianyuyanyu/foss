@@ -13,10 +13,4 @@
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.774.44" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="callback.bat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

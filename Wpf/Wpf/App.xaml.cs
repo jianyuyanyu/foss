@@ -30,7 +30,7 @@ public partial class App : Application
         {
             Args = e.Args;
             await SendCallbackToMainProcess(Args[0]);
-            //Shutdown();
+            Shutdown();
         }
         else
         {
