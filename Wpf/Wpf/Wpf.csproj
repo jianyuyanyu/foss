@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityModel.OidcClient" Version="6.0.0-preview.2" />
+    <PackageReference Include="IdentityModel.OidcClient.DPoP" Version="6.0.0-preview.2" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.774.44" />
   </ItemGroup>
 
