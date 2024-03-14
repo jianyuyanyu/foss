@@ -1,4 +1,5 @@
 ﻿using IdentityModel.OidcClient;
+using IdentityModel.OidcClient.DPoP;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -17,27 +18,23 @@ public partial class MainWindow : Window
 {
     private HttpClient _apiClient;
     private OidcClient _oidcClient;
+    private AuthorizeState _state;
 
     public MainWindow()
     {
         InitializeComponent();
-        Message.Text = "Logging in...";
+        Message.Text = "Not logged in";
     }
 
     public void DisplayMessage(string message)
     {
         Message.Text = message;
-        Show();
-    }
-
-    public void Initialize(HttpClient client, OidcClient oidcClient)
-    {
-        _apiClient = client;
-        _oidcClient = oidcClient;
+        Activate();
     }
 
     private async void CallApi_Click(object sender, RoutedEventArgs e)
     {
+        Details.Text = "Loading...";
         var response = await _apiClient.GetAsync("");
 
         if (response.IsSuccessStatusCode)
@@ -95,4 +92,110 @@ public partial class MainWindow : Window
             Message.Text = "Logout issue - no session";
         }
     }
+
+    private async void Login_Click(object sender, RoutedEventArgs e)
+    {
+        var proofKey = InitializeOidcClient();
+
+        var session = Session.Get();
+        if (session?.RefreshToken != null)
+        {
+            InitializeApiClient(proofKey, session.RefreshToken);
+
+            // TODO - Try without Dispatcher
+            Dispatcher.Invoke(() =>
+            {
+                var name = session.Claims.Single(c => c.Type == "name").Value;
+                DisplayMessage($"User previously logged in: {name}");
+            });
+        }
+        else
+        {
+            _state = await _oidcClient.PrepareLoginAsync();
+
+            // open system browser to start authentication
+            OpenBrowser(_state.StartUrl);
+
+            // Wait for the user to login
+            var result = await ReceiveCallback();
+
+            InitializeApiClient(result);
+            Session.Store(result);
+
+            // Marshall the update into the UI
+            Dispatcher.Invoke(() =>
+            {
+                DisplayMessage($"User logged in: {result.User.Identity?.Name}");
+            });
+        }
+    }
+
+    private void OpenBrowser(string url)
+    {
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = url,
+            UseShellExecute = true
+        });
+    }
+
+    private string InitializeOidcClient()
+    {
+        // Configure OidcClient and prepare a login request
+        string redirectUri = $"{App.CustomUriScheme}://signin";
+        var options = new OidcClientOptions()
+        {
+            Authority = "https://demo.duendesoftware.com/",
+            ClientId = "interactive.public",
+            Scope = "openid profile email offline_access",
+            RedirectUri = redirectUri,
+            PostLogoutRedirectUri = $"{App.CustomUriScheme}://signout"
+        };
+
+        // Enable DPoP
+        var proofKey = GetProofKey();
+        options.ConfigureDPoP(proofKey);
+
+        _oidcClient = new OidcClient(options);
+        return proofKey;
+    }
+
+    private void InitializeApiClient(string proofKey, string refreshToken)
+    {
+        // Use saved refresh token
+        var handler = _oidcClient.CreateDPoPHandler(proofKey, refreshToken);
+        _apiClient = new HttpClient(handler)
+        {
+            BaseAddress = new Uri(App.Api)
+        };
+    }
+
+    private void InitializeApiClient(LoginResult result)
+    {
+        _apiClient = new HttpClient(result.RefreshTokenHandler)
+        {
+            BaseAddress = new Uri(App.Api)
+        };
+    }
+
+    private async Task<LoginResult> ReceiveCallback()
+    {
+        var callbackManager = new CallbackManager(_state.State);
+        var response = await callbackManager.RunServer();
+        return await _oidcClient.ProcessResponseAsync(response, _state);
+    }
+
+    private string GetProofKey()
+    {
+        if (File.Exists("proofkey"))
+        {
+            var protectedKey = File.ReadAllText("proofkey");
+            return DataProtector.Unprotect(protectedKey);
+        }
+
+        var proofKey = JsonWebKeys.CreateRsaJson();
+        File.WriteAllText("proofkey", DataProtector.Protect(proofKey));
+        return proofKey;
+    }
+
 }

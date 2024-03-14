@@ -13,8 +13,10 @@
                    FontSize="24"
                    FontFamily="Segoe UI Light, San Serif"
                    TextWrapping="Wrap" Height="38" Width="692" Margin="0,22,0,0"/>
-        <TextBox x:Name="Details" IsReadOnly="true" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" Height="242" Width="692" VerticalScrollBarVisibility="Auto" Margin="0,144,0,0"/>
-        <Button x:Name="CallApi" Content="Call Api" HorizontalAlignment="Left" Margin="54,75,0,0" VerticalAlignment="Top" RenderTransformOrigin="-4.58,0.497" Click="CallApi_Click" Width="84" Height="31"/>
-        <Button x:Name="Logout" Content="Logout" HorizontalAlignment="Left" Margin="173,75,0,0" VerticalAlignment="Top" RenderTransformOrigin="-4.58,0.497" Click="Logout_Click" Width="84" Height="31"/>
+        <TextBox x:Name="Details" IsReadOnly="true" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" Height="193" Width="692" VerticalScrollBarVisibility="Auto" Margin="0,193,0,0"/>
+        <Button x:Name="CallApi" Content="Call Api" HorizontalAlignment="Left" Margin="54,117,0,0" VerticalAlignment="Top" RenderTransformOrigin="-4.58,0.497" Click="CallApi_Click" Width="84" Height="32"/>
+        <Button x:Name="Logout" Content="Log Out" HorizontalAlignment="Left" Margin="154,71,0,0" VerticalAlignment="Top" RenderTransformOrigin="-4.58,0.497" Click="Logout_Click" Width="84" Height="31"/>
+        <Button x:Name="Login" Content="Log In" HorizontalAlignment="Left" Margin="54,71,0,0" VerticalAlignment="Top" RenderTransformOrigin="-4.58,0.497" Click="Login_Click" Width="84" Height="31"/>
+        <Label Content="Api Results:" HorizontalAlignment="Left" Margin="54,162,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
