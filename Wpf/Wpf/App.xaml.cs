@@ -6,8 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Security.Cryptography;
-using System.Text;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -45,15 +44,16 @@ public partial class App : Application
 
             var proofKey = InitializeOidcClient();
 
-            var (refreshToken, userId) = GetSession();
-            if (refreshToken != null)
+            var session = Session.Get();
+            if (session?.RefreshToken != null)
             {
-                InitializeApiClient(proofKey, refreshToken);
+                InitializeApiClient(proofKey, session.RefreshToken);
 
                 // Marshall an update into the UI
                 mainWindow.Dispatcher.Invoke(() =>
                 {
-                    mainWindow.DisplayMessage($"User previously logged in: {userId}");
+                    var name = session.Claims.Single(c => c.Type == "name").Value;
+                    mainWindow.DisplayMessage($"User previously logged in: {name}");
                 });
             }
             else
@@ -67,12 +67,12 @@ public partial class App : Application
                 var result = await ReceiveCallback();
 
                 InitializeApiClient(result);
-                StoreSession(result.RefreshToken, result.User.Identity.Name);
+                Session.Store(result);
 
                 // Marshall the update into the UI
                 mainWindow.Dispatcher.Invoke(() =>
                 {
-                    mainWindow.DisplayMessage($"User logged in: {result.User.Identity.Name}");
+                    mainWindow.DisplayMessage($"User logged in: {result.User.Identity?.Name}");
                 });
             }
             mainWindow.Initialize(_apiClient, _oidcClient);
@@ -150,44 +150,11 @@ public partial class App : Application
         if (File.Exists("proofkey"))
         {
             var protectedKey = File.ReadAllText("proofkey");
-            return Unprotect(protectedKey);
+            return DataProtector.Unprotect(protectedKey);
         }
 
         var proofKey = JsonWebKeys.CreateRsaJson();
-        File.WriteAllText("proofkey", Protect(proofKey));
+        File.WriteAllText("proofkey", DataProtector.Protect(proofKey));
         return proofKey;
-    }
-
-    // Our "session" is just the username and refresh token.
-    // If we cared about more claims, we could write those to disk as well.
-    private (string refreshToken, string username) GetSession()
-    {
-        if(File.Exists("refresh_token"))
-        {
-            var protectedRefreshToken = File.ReadAllText("refresh_token");
-            var unprotected = Unprotect(protectedRefreshToken);
-            var split = unprotected.Split(",");
-            return (split[0], split[1]);
-        }
-        return (null, null);
-    }
-
-    private void StoreSession(string refreshToken, string username)
-    {
-        var plainText = $"{refreshToken},{username}";
-        File.WriteAllText("refresh_token", Protect(plainText));
-    }
-
-    private string Protect(string plainText)
-    {
-        byte[] encryptedData = ProtectedData.Protect(Encoding.UTF8.GetBytes(plainText), null, DataProtectionScope.CurrentUser);
-        return Convert.ToBase64String(encryptedData);
-    }
-
-    private string Unprotect(string encryptedText)
-    {
-        var encryptedData = Convert.FromBase64String(encryptedText);
-        var decryptedData = ProtectedData.Unprotect(encryptedData, null, DataProtectionScope.CurrentUser);
-        return Encoding.UTF8.GetString(decryptedData);
     }
 }
