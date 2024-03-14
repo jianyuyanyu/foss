@@ -23,12 +23,29 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        Message.Text = "Not logged in";
+        
+        var proofKey = InitializeOidcClient();
+
+        var session = Session.Get();
+        if (session?.RefreshToken != null)
+        {
+            InitializeApiClient(proofKey, session.RefreshToken);
+
+            var name = session.Claims.Single(c => c.Type == "name").Value;
+            DisplayLoginMessage($"User previously logged in: {name}");
+        }
+        else
+        {
+            Message.Text = "Not logged in";
+            EnableButtons(isLoggedIn: false);
+        }
+
     }
 
-    public void DisplayMessage(string message)
+    public void DisplayLoginMessage(string message)
     {
         Message.Text = message;
+        EnableButtons(isLoggedIn: true);
         Activate();
     }
 
@@ -50,10 +67,6 @@ public partial class MainWindow : Window
 
     private async void Logout_Click(object sender, RoutedEventArgs e)
     {
-        // TODO - persist id token, pass to logout endpoint
-        // Add a login button to log back in
-        // Consider moving the login flow into the main window to cut down on the back and forth between App and MainWindow (and to allow login button to call the login code easily)
-        // Set the post logout redirect uri to also use the custom scheme. Have the app look for the post logout uri as well, and use that to signal that we are "logged out" (don't just directly set the string)
         var session = Session.Get();
         var url = await _oidcClient.PrepareLogoutAsync(new LogoutRequest
         {
@@ -64,12 +77,10 @@ public partial class MainWindow : Window
             FileName = url,
             UseShellExecute = true
         });
-        await ReceiveSignoutCallback();
-
-
+        await ReceivePostLogoutCallback();
     }
 
-    private async Task ReceiveSignoutCallback()
+    private async Task ReceivePostLogoutCallback()
     {
         var session = Session.Get();
         if (session != null)
@@ -81,6 +92,7 @@ public partial class MainWindow : Window
                 Activate();
                 Session.Delete();
                 Message.Text = "Logged out";
+                EnableButtons(isLoggedIn: false);
             }
             else
             {
@@ -95,39 +107,17 @@ public partial class MainWindow : Window
 
     private async void Login_Click(object sender, RoutedEventArgs e)
     {
-        var proofKey = InitializeOidcClient();
+        _state = await _oidcClient.PrepareLoginAsync();
 
-        var session = Session.Get();
-        if (session?.RefreshToken != null)
-        {
-            InitializeApiClient(proofKey, session.RefreshToken);
+        // open system browser to start authentication
+        OpenBrowser(_state.StartUrl);
 
-            // TODO - Try without Dispatcher
-            Dispatcher.Invoke(() =>
-            {
-                var name = session.Claims.Single(c => c.Type == "name").Value;
-                DisplayMessage($"User previously logged in: {name}");
-            });
-        }
-        else
-        {
-            _state = await _oidcClient.PrepareLoginAsync();
+        // Wait for the user to login
+        var result = await ReceiveSignInCallback();
 
-            // open system browser to start authentication
-            OpenBrowser(_state.StartUrl);
-
-            // Wait for the user to login
-            var result = await ReceiveCallback();
-
-            InitializeApiClient(result);
-            Session.Store(result);
-
-            // Marshall the update into the UI
-            Dispatcher.Invoke(() =>
-            {
-                DisplayMessage($"User logged in: {result.User.Identity?.Name}");
-            });
-        }
+        InitializeApiClient(result);
+        Session.Store(result);
+        DisplayLoginMessage($"User logged in: {result.User.Identity?.Name}");
     }
 
     private void OpenBrowser(string url)
@@ -178,7 +168,7 @@ public partial class MainWindow : Window
         };
     }
 
-    private async Task<LoginResult> ReceiveCallback()
+    private async Task<LoginResult> ReceiveSignInCallback()
     {
         var callbackManager = new CallbackManager(_state.State);
         var response = await callbackManager.RunServer();
@@ -198,4 +188,10 @@ public partial class MainWindow : Window
         return proofKey;
     }
 
+    private void EnableButtons(bool isLoggedIn)
+    {
+        Login.IsEnabled = !isLoggedIn;
+        Logout.IsEnabled = isLoggedIn;
+        CallApi.IsEnabled = isLoggedIn;
+    }
 }
