@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -11,7 +12,7 @@ namespace Wpf
 {
     internal class Session
     {
-        private const string FileName = "session";
+        private static readonly string SessionFile = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/session";
 
         public string IdToken { get; set; }
         public string RefreshToken { get; set; }
@@ -27,19 +28,24 @@ namespace Wpf
                 Claims = loginResult.User.Claims.Select(c => new ClaimData(c.Type, c.Value))
             };
             var plainText = JsonSerializer.Serialize(session);
-            File.WriteAllText(FileName, DataProtector.Protect(plainText));
+            File.WriteAllText(SessionFile, DataProtector.Protect(plainText));
            
         }
         
         internal static Session? Get()
         {
-            if (File.Exists(FileName))
+            if (File.Exists(SessionFile))
             {
-                var fileContent = File.ReadAllText(FileName);
+                var fileContent = File.ReadAllText(SessionFile);
                 var unprotected = DataProtector.Unprotect(fileContent);
                 return JsonSerializer.Deserialize<Session>(unprotected);
             }
             return null;
+        }
+
+        internal static void Delete()
+        {
+            File.Delete(SessionFile);
         }
 
     }

@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -31,7 +30,7 @@ public partial class App : Application
         {
             Args = e.Args;
             await SendCallbackToMainProcess(Args[0]);
-            Shutdown();
+            //Shutdown();
         }
         else
         {
@@ -92,14 +91,14 @@ public partial class App : Application
     private string InitializeOidcClient()
     {
         // Configure OidcClient and prepare a login request
-        string redirectUri = $"{App.CustomUriScheme}://callback";
+        string redirectUri = $"{App.CustomUriScheme}://signin";
         var options = new OidcClientOptions()
         {
             Authority = "https://demo.duendesoftware.com/",
             ClientId = "interactive.public",
             Scope = "openid profile email offline_access",
             RedirectUri = redirectUri,
-            PostLogoutRedirectUri = "" // ???
+            PostLogoutRedirectUri = $"{App.CustomUriScheme}://signout"
         };
 
         // Enable DPoP
@@ -135,13 +134,27 @@ public partial class App : Application
         return await _oidcClient.ProcessResponseAsync(response, _state);
     }
 
-    private async Task SendCallbackToMainProcess(string args)
+    private async Task SendCallbackToMainProcess(string callbackUrl)
     {
-        var response = new AuthorizeResponse(args);
-        if (!String.IsNullOrWhiteSpace(response.State))
+        if(callbackUrl.StartsWith($"{App.CustomUriScheme}://signin"))
         {
-            var callbackManager = new CallbackManager(response.State);
-            await callbackManager.RunClient(args);
+            var response = new AuthorizeResponse(callbackUrl);
+            if (!String.IsNullOrWhiteSpace(response.State))
+            {
+                var callbackManager = new CallbackManager(response.State);
+                await callbackManager.RunClient(callbackUrl);
+            }
+        }
+        else if(callbackUrl.StartsWith($"{App.CustomUriScheme}://signout"))
+        {
+            var session = Session.Get();
+            if (session != null)
+            {
+                var sid = session.Claims.First(c => c.Type == "sid").Value;
+                var callbackManager = new CallbackManager(sid);
+                
+                await callbackManager.RunClient(callbackUrl);
+            }
         }
     }
 

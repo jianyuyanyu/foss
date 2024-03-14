@@ -32,7 +32,7 @@ class RegistryConfig
     const string CommandKeyName = "command";
 
     const string CommandKeyValueName = "";
-    const string CommandKeyValueFormat = "\"{0}\\Wpf.exe\" \"%1\"";
+    const string CommandKeyValueFormat = "\"{0}\\callback.bat\" \"%1\"";
     static string CommandKeyValueValue => String.Format(CommandKeyValueFormat, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
     const string UrlProtocolValueName = "URL Protocol";

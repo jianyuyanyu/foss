@@ -2,8 +2,10 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Wpf;
@@ -52,18 +54,45 @@ public partial class MainWindow : Window
     private async void Logout_Click(object sender, RoutedEventArgs e)
     {
         // TODO - persist id token, pass to logout endpoint
-        // That will involve expanding the persisted session
-        // You might as well make it a proper session object, with claims
         // Add a login button to log back in
         // Consider moving the login flow into the main window to cut down on the back and forth between App and MainWindow (and to allow login button to call the login code easily)
         // Set the post logout redirect uri to also use the custom scheme. Have the app look for the post logout uri as well, and use that to signal that we are "logged out" (don't just directly set the string)
-        var url = await _oidcClient.PrepareLogoutAsync(new LogoutRequest());
+        var session = Session.Get();
+        var url = await _oidcClient.PrepareLogoutAsync(new LogoutRequest
+        {
+            IdTokenHint = session?.IdToken
+        });
         Process.Start(new ProcessStartInfo
         {
             FileName = url,
             UseShellExecute = true
         });
-        File.Delete("refresh_token");
-        Message.Text = "Logged out";
+        await ReceiveSignoutCallback();
+
+
+    }
+
+    private async Task ReceiveSignoutCallback()
+    {
+        var session = Session.Get();
+        if (session != null)
+        {
+            var callbackManager = new CallbackManager(session.Claims.First(c => c.Type == "sid").Value);
+            var response = await callbackManager.RunServer();
+            if(response != null)
+            {
+                Activate();
+                Session.Delete();
+                Message.Text = "Logged out";
+            }
+            else
+            {
+                Message.Text = "Logout issue - null response from callback"; // Don't think this is possible
+            }
+        }
+        else 
+        {
+            Message.Text = "Logout issue - no session";
+        }
     }
 }
