@@ -132,14 +132,13 @@ public partial class MainWindow : Window
     private string InitializeOidcClient()
     {
         // Configure OidcClient and prepare a login request
-        string redirectUri = $"{App.CustomUriScheme}://signin";
         var options = new OidcClientOptions()
         {
             Authority = "https://demo.duendesoftware.com/",
             ClientId = "interactive.public",
             Scope = "openid profile email offline_access",
-            RedirectUri = redirectUri,
-            PostLogoutRedirectUri = $"{App.CustomUriScheme}://signout"
+            RedirectUri = App.SigninCallback,
+            PostLogoutRedirectUri = App.SignoutCallback
         };
 
         // Enable DPoP
