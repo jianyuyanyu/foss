@@ -16,7 +16,7 @@ namespace WinFormsWebView2
 
             var options = new OidcClientOptions
             {
-                Authority = "https://demo.identityserver.io",
+                Authority = "https://demo.duendesoftware.com",
                 ClientId = "interactive.public",
                 Scope = "openid email api offline_access",
                 RedirectUri = "http://localhost/winforms.client",

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Microsoft.Win32;
 
 namespace WindowsConsoleSystemBrowser
@@ -31,8 +30,8 @@ namespace WindowsConsoleSystemBrowser
         const string CommandKeyName = "command";
 
         const string CommandKeyValueName = "";
-        const string CommandKeyValueFormat = "\"{0}\" \"%1\"";
-        static string CommandKeyValueValue => String.Format(CommandKeyValueFormat, Assembly.GetExecutingAssembly().Location);
+        const string CommandKeyValueFormat = "\"{0}\\callback.bat\" \"%1\"";
+        static string CommandKeyValueValue => String.Format(CommandKeyValueFormat, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 
         const string UrlProtocolValueName = "URL Protocol";
         const string UrlProtocolValueValue = "";
@@ -63,7 +62,7 @@ namespace WindowsConsoleSystemBrowser
         {
             using (var classesKey = Registry.CurrentUser.OpenSubKey(RootKeyPath, true))
             {
-                using (var root = classesKey.OpenSubKey(CustomUriScheme, true) ??
+                using (var root = classesKey!.OpenSubKey(CustomUriScheme, true) ??
                     classesKey.CreateSubKey(CustomUriScheme, true))
                 {
                     root.SetValue(CustomUriSchemeKeyValueName, CustomUriSchemeKeyValueValue);
