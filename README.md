@@ -4,6 +4,7 @@ This repository contains samples that demonstrate how to use
 [IdentityModel.OidcClient](https://github.com/IdentityModel/IdentityModel) to create
 OpenId Connect client applications with a variety of platforms and tools, including
 - [.NET MAUI](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/main/Maui)
+- [WPF with the system browser](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/main/Wpf)
 - [WPF with an embedded browser](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/main/WpfWebView2)
 - [WinForms with an embedded browser](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/main/WinFormsWebView2)
 - [Cross Platform Console Applications](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/main/NetCoreConsoleClient) (relies on kestrel for processing the callback)
