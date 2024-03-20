@@ -12,7 +12,7 @@ namespace Wpf;
 public partial class App : Application
 {
     public const string Api = "https://demo.duendesoftware.com/api/dpop/test";
-    public const string CustomUriScheme = "oidcclient-wpf-sample"; // In practice, a short reverse domain name (e.g., app.example.com) is preferred
+    public const string CustomUriScheme = "oidcclient-wpf-sample"; // In practice, a short reverse domain name (e.g., com.example.app) is preferred
     public const string SigninCallback = $"{CustomUriScheme}:/signin";
     public const string SignoutCallback = $"{CustomUriScheme}:/signout";
 
