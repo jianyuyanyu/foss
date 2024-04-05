@@ -116,12 +116,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="IdentityModel.OidcClient">
-      <Version>6.0.0-preview.2</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Web.WebView2">
-      <Version>1.0.2365.46</Version>
-    </PackageReference>
+    <PackageReference Include="IdentityModel.OidcClient" Version="6.0.0-preview.3" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2365.46" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
