@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IdentityModel.OidcClient" Version="6.0.0-preview.3" />
+    <PackageReference Include="IdentityModel.OidcClient" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
