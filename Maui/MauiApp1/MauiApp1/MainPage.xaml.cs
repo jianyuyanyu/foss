@@ -46,8 +46,8 @@ public partial class MainPage : ContentPage
         if (!string.IsNullOrWhiteSpace(result.RefreshToken))
         {
             sb.AppendLine();
-            sb.AppendLine("access token:");
-            sb.AppendLine(result.AccessToken);
+            sb.AppendLine("refresh token:");
+            sb.AppendLine(result.RefreshToken);
         }
 
         editor.Text = sb.ToString();
