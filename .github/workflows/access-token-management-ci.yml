@@ -25,6 +25,7 @@ env:
 defaults:
   run:
     working-directory: access-token-management
+    shell: pwsh
 
 jobs:
   build:
@@ -40,11 +41,16 @@ jobs:
         dotnet-version: |
           8.0.x
 
-    - name: Build and Test
-      shell: pwsh    
+    - name: Build and test
       run: ./build.ps1
 
-    - name: Test Report
+    - name: Sign packages
+      run: ./build.ps1 sign
+
+    - name: Push packages to MyGet
+      run: dotnet nuget push artifacts\*.nupkg -s https://www.myget.org/F/duende_identityserver/api/v2/package -k ${{ secrets.MYGET }}
+
+    - name: Test report
       id: test-report
       uses: dorny/test-reporter@v1
       if: success() || failure()    # run this step even if previous step failed
