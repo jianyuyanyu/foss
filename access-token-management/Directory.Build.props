@@ -24,5 +24,6 @@
 
     <PropertyGroup>
         <MinVerAutoIncrement>minor</MinVerAutoIncrement>
+        <MinVerTagPrefix>atm-</MinVerTagPrefix>
     </PropertyGroup>
 </Project>
