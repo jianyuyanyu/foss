@@ -2,6 +2,7 @@ name: access-token-management-ci
 
 permissions:
   contents: read
+  checks: write
 
 on:
   workflow_dispatch:
@@ -39,6 +40,17 @@ jobs:
         dotnet-version: |
           8.0.x
 
-    - name: Build and test
+    - name: Build and Test
       shell: pwsh    
       run: ./build.ps1
+
+    - name: Test Report
+      id: test-report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()    # run this step even if previous step failed
+      with:
+        name: test results
+        path: access-token-management/test/Tests/TestResults/Test.trx
+        reporter: dotnet-trx
+        fail-on-error: true
+        fail-on-empty: true

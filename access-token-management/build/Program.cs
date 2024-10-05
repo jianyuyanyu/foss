@@ -43,7 +43,11 @@ namespace build
 
             Target(Targets.Test, DependsOn(Targets.Build), () =>
             {
-                Run("dotnet", "test -c Release --no-build --nologo");
+                Run("dotnet",
+                    $"test test/Tests -c Release --nologo "
+                    + $"--blame-hang "
+                    + $"--blame-hang-timeout=120sec "
+                    + $"--logger \"console;verbosity=normal\" --logger \"trx;LogFileName=Test.trx\"");
             });
 
             Target(Targets.CleanPackOutput, () =>
@@ -56,8 +60,8 @@ namespace build
 
             Target(Targets.Pack, DependsOn(Targets.Build, Targets.CleanPackOutput), () =>
             {
-                Run("dotnet", $"pack ./src/Duende.AccessTokenManagement/Duende.AccessTokenManagement.csproj -c Release -o {Directory.CreateDirectory(packOutput).FullName} --no-build --nologo");
-                Run("dotnet", $"pack ./src/Duende.AccessTokenManagement.OpenIdConnect/Duende.AccessTokenManagement.OpenIdConnect.csproj -c Release -o {Directory.CreateDirectory(packOutput).FullName} --no-build --nologo");
+                Run("dotnet", $"pack src/Duende.AccessTokenManagement/Duende.AccessTokenManagement.csproj -c Release -o {Directory.CreateDirectory(packOutput).FullName} --no-build --nologo");
+                Run("dotnet", $"pack src/Duende.AccessTokenManagement.OpenIdConnect/Duende.AccessTokenManagement.OpenIdConnect.csproj -c Release -o {Directory.CreateDirectory(packOutput).FullName} --no-build --nologo");
             });
 
             Target(Targets.SignPackage, DependsOn(Targets.Pack, Targets.RestoreTools), () =>
