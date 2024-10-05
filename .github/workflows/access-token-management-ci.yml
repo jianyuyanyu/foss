@@ -1,55 +1,44 @@
-name: "CI"
-
-on:
-  push:
-    branches:
-    - main
-    - features/**
-    tags:
-    - '*.*.*'
-  pull_request:
-
-env:
-  DOTNET_NOLOGO: true
+name: access-token-management-ci
 
 permissions:
   contents: read
 
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+    tags:
+    - access-token-management-v*
+    paths:
+    - .github/workflows/access-token-management-ci.yml
+    - access-token-management/*
+  pull_request:
+    paths:
+    - .github/workflows/access-token-management-ci.yml
+    - access-token-management/*
+
+env:
+  DOTNET_NOLOGO: true
+
+defaults:
+  run:
+    working-directory: access-token-management
+
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        runs-on: [macOS-latest, ubuntu-latest, windows-latest]
-    name: ${{ matrix.runs-on }}
-    runs-on: ${{ matrix.runs-on }}
+    runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2.4.0
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: |
-          6.0.x
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v1
+
+    - uses: actions/setup-dotnet@v4
       with:
         dotnet-version: |
           8.0.x
-        
-    - run: dotnet --info
-    
-    - if: contains(matrix.runs-on, 'macOS') || contains(matrix.runs-on, 'ubuntu')
-      run: ./build.sh
-    - if: matrix.runs-on == 'windows-latest' && github.ref != 'refs/heads/main' && !contains(github.ref, 'refs/tags/')
+
+    - name: Build and test
+      shell: pwsh    
       run: ./build.ps1
-    - if: (matrix.runs-on == 'windows-latest') && (github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/'))
-      env:
-        SignClientSecret: ${{ secrets.SIGNCLIENTSECRET }}
-      run: |
-        ./build.ps1 sign
-        dotnet nuget push .\artifacts\*.nupkg -s https://www.myget.org/F/duende_identityserver/api/v2/package -k ${{ secrets.MYGET }}
-        
