@@ -20,8 +20,7 @@ namespace build
             public const string Build = "build";
             public const string Test = "test";
             public const string Pack = "pack";
-            public const string SignBinary = "sign-binary";
-            public const string SignPackage = "sign-package";
+            public const string Sign = "sign";
         }
 
         internal static async Task Main(string[] args)
@@ -64,14 +63,9 @@ namespace build
                 Run("dotnet", $"pack src/AccessTokenManagement.OpenIdConnect/AccessTokenManagement.OpenIdConnect.csproj -c Release -o {Directory.CreateDirectory(packOutput).FullName} --no-build --nologo");
             });
 
-            Target(Targets.SignPackage, DependsOn(Targets.Pack, Targets.RestoreTools), () =>
-            {
-                SignNuGet();
-            });
+            Target(Targets.Sign, DependsOn(Targets.RestoreTools), SignNuGet);
 
             Target("default", DependsOn(Targets.Test, Targets.Pack));
-
-            Target("sign", DependsOn(Targets.Test, Targets.SignPackage));
 
             await RunTargetsAndExitAsync(args, ex => ex is SimpleExec.ExitCodeException || ex.Message.EndsWith(envVarMissing));
         }

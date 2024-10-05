@@ -44,10 +44,7 @@ jobs:
     - name: Build
       env:
         SignClientSecret: ${{ secrets.SignClientSecret }}
-      run: ./build.ps1 sign
-
-    - name: Push packages to MyGet
-      run: dotnet nuget push artifacts\*.nupkg -s https://www.myget.org/F/duende_identityserver/api/v2/package -k ${{ secrets.MYGET }}
+      run: ./build.ps1
 
     - name: Test report
       id: test-report
@@ -55,14 +52,24 @@ jobs:
       if: success() || failure()    # run this step even if previous step failed
       with:
         name: test results
-        path: access-token-management/test/Tests/TestResults/Test.trx
+        path: access-token-management/test/AccessTokenManagement.Tests/TestResults/Test.trx
         reporter: dotnet-trx
         fail-on-error: true
         fail-on-empty: true
 
+    - name: Sign
+      if: (github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/'))
+      env:
+        SignClientSecret: ${{ secrets.SignClientSecret }}
+      run: ./build.ps1 sign
+
+    - name: Push packages to MyGet
+      if: (github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/'))
+      run: dotnet nuget push artifacts\*.nupkg -s https://www.myget.org/F/duende_identityserver/api/v2/package -k ${{ secrets.MYGET }}
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
-      if: success() || failure()    # run this step even if previous step failed
+      if: (github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/'))
       with:
         path: access-token-management/artifacts/*.nupkg
         compression-level: 0
