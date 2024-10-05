@@ -1,4 +1,4 @@
-name: acces-token-management-codeql"
+name: acces-token-management\codeql
 
 on:
   push:

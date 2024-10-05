@@ -9,9 +9,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.7" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
   </ItemGroup>
-
+  
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Duende.AccessTokenManagement.OpenIdConnect\Duende.AccessTokenManagement.OpenIdConnect.csproj" />
+    <ProjectReference Include="..\..\src\AccessTokenManagement.OpenIdConnect\AccessTokenManagement.OpenIdConnect.csproj" />
   </ItemGroup>
 
 </Project>

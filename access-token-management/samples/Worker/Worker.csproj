@@ -11,6 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Duende.AccessTokenManagement\Duende.AccessTokenManagement.csproj" />
+    <ProjectReference Include="..\..\src\AccessTokenManagement\AccessTokenManagement.csproj" />
   </ItemGroup>
 </Project>
