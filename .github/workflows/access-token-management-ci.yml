@@ -54,3 +54,12 @@ jobs:
         reporter: dotnet-trx
         fail-on-error: true
         fail-on-empty: true
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      if: success() || failure()    # run this step even if previous step failed
+      with:
+        path: access-token-management/artifacts/*.nupkg
+        compression-level: 0
+        overwrite: true
+        retention-days: 15
