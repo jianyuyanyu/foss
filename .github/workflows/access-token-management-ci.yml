@@ -44,8 +44,6 @@ jobs:
           8.0.x
 
     - name: Build
-      env:
-        SignClientSecret: ${{ secrets.SignClientSecret }}
       run: ./build.ps1
 
     - name: Test report
