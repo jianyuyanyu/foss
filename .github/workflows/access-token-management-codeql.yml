@@ -2,13 +2,12 @@ name: acces-token-management\codeql
 
 on:
   push:
-    branches: main
+    branches: 
+    - main
     paths:
     - .github/workflows/access-token-management-codeql.yml
     - access-token-management/*
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: main
     paths:
     - .github/workflows/access-token-management-codeql.yml
     - access-token-management/*
