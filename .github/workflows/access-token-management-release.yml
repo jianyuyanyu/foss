@@ -37,8 +37,8 @@ jobs:
 
     - name: Tag
       run: |
-        git config --global user.email "github-bot@duendesoftware.com"
-        git config --global user.name "Duende Software GitHub Bot"
+        git config --global user.email "noreply@duendesoftware.com"
+        git config --global user.name "Duende Software"
         git tag -a atm-${{ github.event.inputs.version }} -m "Release v${{ github.event.inputs.version }}"
         git push origin atm-${{ github.event.inputs.version }}
 
