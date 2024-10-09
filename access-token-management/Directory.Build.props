@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <PropertyGroup>
-        <MinVerAutoIncrement>minor</MinVerAutoIncrement>
+        <MinVerAutoIncrement>patch</MinVerAutoIncrement>
         <MinVerTagPrefix>atm-</MinVerTagPrefix>
     </PropertyGroup>
 </Project>
