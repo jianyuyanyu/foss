@@ -6,10 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using Duende.IdentityModel.Client.Extensions;
 using Duende.IdentityModel.Internal;
 
-namespace Duende.IdentityModel.Client.Messages;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
 /// Models a base OAuth/OIDC request with client credentials

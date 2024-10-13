@@ -4,8 +4,6 @@
 using System;
 using System.Linq;
 using Duende.IdentityModel.Client;
-using Duende.IdentityModel.Client.Extensions;
-using Duende.IdentityModel.Client.Messages;
 using FluentAssertions;
 using Microsoft.AspNetCore.WebUtilities;
 using Xunit;

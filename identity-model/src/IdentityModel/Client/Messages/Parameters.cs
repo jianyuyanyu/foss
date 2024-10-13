@@ -10,7 +10,7 @@ using Duende.IdentityModel.Internal;
 #if NET6_0_OR_GREATER
 #endif
 
-namespace Duende.IdentityModel.Client.Messages;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
 /// Models a list of request parameters

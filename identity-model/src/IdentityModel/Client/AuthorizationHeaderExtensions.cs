@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using static Duende.IdentityModel.OidcConstants;
 
-namespace Duende.IdentityModel.Client.Extensions;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
 /// Extensions for HttpRequestMessage

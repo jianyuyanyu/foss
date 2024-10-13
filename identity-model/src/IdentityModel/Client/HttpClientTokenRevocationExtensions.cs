@@ -5,24 +5,23 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Duende.IdentityModel.Client.Messages;
 using Duende.IdentityModel.Internal;
 
-namespace Duende.IdentityModel.Client.Extensions;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
-/// HttpClient extensions for OAuth token introspection
+/// HttpClient extensions for OAuth token revocation
 /// </summary>
-public static class HttpClientTokenIntrospectionExtensions
+public static class HttpClientTokenRevocationExtensions
 {
     /// <summary>
-    /// Sends an OAuth token introspection request.
+    /// Sends an OAuth token revocation request.
     /// </summary>
     /// <param name="client">The client.</param>
     /// <param name="request">The request.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
-    public static async Task<TokenIntrospectionResponse> IntrospectTokenAsync(this HttpMessageInvoker client, TokenIntrospectionRequest request, CancellationToken cancellationToken = default)
+    public static async Task<TokenRevocationResponse> RevokeTokenAsync(this HttpMessageInvoker client, TokenRevocationRequest request, CancellationToken cancellationToken = default)
     {
         var clone = request.Clone();
 
@@ -42,9 +41,9 @@ public static class HttpClientTokenIntrospectionExtensions
         }
         catch (Exception ex)
         {
-            return ProtocolResponse.FromException<TokenIntrospectionResponse>(ex);
+            return ProtocolResponse.FromException<TokenRevocationResponse>(ex);
         }
 
-        return await ProtocolResponse.FromHttpResponseAsync<TokenIntrospectionResponse>(response).ConfigureAwait();
+        return await ProtocolResponse.FromHttpResponseAsync<TokenRevocationResponse>(response).ConfigureAwait();
     }
 }

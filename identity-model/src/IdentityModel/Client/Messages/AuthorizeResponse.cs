@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Net;
 using Duende.IdentityModel.Internal;
 
-namespace Duende.IdentityModel.Client.Messages;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
 /// Models the response of an authorize request

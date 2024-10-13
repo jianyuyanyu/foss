@@ -7,10 +7,9 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Duende.IdentityModel.Client.Messages;
 using Duende.IdentityModel.Internal;
 
-namespace Duende.IdentityModel.Client.Extensions;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
 /// HttpClient extensions for dynamic registration
