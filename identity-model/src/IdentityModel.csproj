@@ -7,6 +7,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">True</ContinuousIntegrationBuild>
+    <MinVerAutoIncrement>patch</MinVerAutoIncrement>
+    <MinVerTagPrefix>idm-</MinVerTagPrefix>
 
     <!-- Nuget metadata -->
     <Description>OpenID Connect &amp; OAuth 2.0 client library</Description>
