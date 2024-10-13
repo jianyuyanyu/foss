@@ -6,9 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DPoP\DPoP.csproj" />
-    <ProjectReference Include="..\..\src\IdentityTokenValidator\IdentityTokenValidator.csproj" />
-    <ProjectReference Include="..\..\src\OidcClient\OidcClient.csproj" />
+    <ProjectReference Include="..\..\src\OidcClient.DPoP\OidcClient.DPoP.csproj" />
+    <ProjectReference Include="..\..\src\OidcClient.IdentityTokenValidator\OidcClient.IdentityTokenValidator.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,11 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <PackageId>IdentityModel.OidcClient.IdentityTokenValidator</PackageId>
-        <RootNamespace>IdentityModel.OidcClient</RootNamespace>
-        <AssemblyName>IdentityModel.OidcClient.IdentityTokenValidator</AssemblyName>
-        
+        <RootNamespace>Duende.IdentityModel.OidcClient.IdentityTokenValidator</RootNamespace>
+        <AssemblyName>Duende.IdentityModel.OidcClient.IdentityTokenValidator</AssemblyName>
         <TargetFramework>netstandard2.0</TargetFramework>
-    
+        <PackageId>IdentityModel.OidcClient.IdentityTokenValidator</PackageId>
         <PackageTags>OAuth2;OAuth 2.0;OpenID Connect;Security;Identity;IdentityServer</PackageTags>
         <Description>Identity token validator for IdentityModeo.OidcClient based on the Microsoft JWT handler</Description>
         <Authors>Dominick Baier;Brock Allen</Authors>

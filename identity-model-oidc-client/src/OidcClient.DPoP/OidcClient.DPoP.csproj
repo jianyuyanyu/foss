@@ -1,14 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <PackageId>IdentityModel.OidcClient.DPoP</PackageId>
-        <RootNamespace>IdentityModel.OidcClient.DPoP</RootNamespace>
-        <AssemblyName>IdentityModel.OidcClient.DPoP</AssemblyName>
-
+        <RootNamespace>Duende.IdentityModel.OidcClient.DPoP</RootNamespace>
+        <AssemblyName>Duende.IdentityModel.OidcClient.DPoP</AssemblyName>
         <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
-
+        <PackageId>IdentityModel.OidcClient.DPoP</PackageId>
         <PackageTags>OAuth2;OAuth 2.0;OpenID Connect;Security;Identity;IdentityServer;DPoP</PackageTags>
         <Description>DPoP extensions for IdentityModel.OidcClient</Description>
         <Authors>Dominick Baier;Brock Allen</Authors>

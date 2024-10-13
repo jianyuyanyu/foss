@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>IdentityModel.OidcClient</RootNamespace>
-    <AssemblyName>IdentityModel.OidcClient</AssemblyName>
+    <RootNamespace>Duende.IdentityModel.OidcClient</RootNamespace>
+    <AssemblyName>Duende.IdentityModel.OidcClient</AssemblyName>
 
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
 
-    <PackageId>IdentityModel.OidcClient</PackageId>
+    <PackageId>Duende.IdentityModel.OidcClient</PackageId>
     <PackageTags>OAuth2;OAuth 2.0;OpenID Connect;Security;Identity;IdentityServer</PackageTags>
     <Description>RFC8252 compliant and certified OpenID Connect and OAuth 2.0 client library for native applications</Description>
     <Authors>Dominick Baier;Brock Allen</Authors>
@@ -50,8 +50,8 @@
   </ItemGroup>
 
   <!--Conditional Package references -->
-  <ItemGroup Condition="'$(TargetFramework)' != 'net6.0'">
-    <PackageReference Include="System.Text.Json" Version="8.0.0" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>   
 
 </Project>
