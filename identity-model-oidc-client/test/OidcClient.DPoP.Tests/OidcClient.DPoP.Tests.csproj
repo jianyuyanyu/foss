@@ -3,6 +3,8 @@
     <PropertyGroup>
         <TargetFrameworks>net8.0</TargetFrameworks>
         <RootNamespace>Duende.IdentityModel.OidcClient.DPoP</RootNamespace>
+        <IsTestProject>true</IsTestProject>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <PropertyGroup>
