@@ -3,11 +3,11 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Duende.IdentityModel.Client;
+using Duende.IdentityModel.Infrastructure;
 using FluentAssertions;
-using IdentityModel.Tests.Infrastructure;
 using Xunit;
 
-namespace IdentityModel.Tests
+namespace Duende.IdentityModel
 {
     public class DiscoveryCacheTests
     {

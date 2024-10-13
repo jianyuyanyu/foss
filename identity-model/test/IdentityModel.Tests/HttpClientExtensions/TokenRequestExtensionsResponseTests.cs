@@ -9,11 +9,11 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Duende.IdentityModel.Client.Extensions;
 using Duende.IdentityModel.Client.Messages;
+using Duende.IdentityModel.Infrastructure;
 using FluentAssertions;
-using IdentityModel.Tests.Infrastructure;
 using Xunit;
 
-namespace IdentityModel.Tests.HttpClientExtensions
+namespace Duende.IdentityModel.HttpClientExtensions
 {
     public class TokenRequestExtensionsResponseTests
     {

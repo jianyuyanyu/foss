@@ -7,7 +7,7 @@ using Duende.IdentityModel.Client;
 using FluentAssertions;
 using Xunit;
 
-namespace IdentityModel.Tests
+namespace Duende.IdentityModel
 {
     public class BasicAuthenticationEncodingTests
     {

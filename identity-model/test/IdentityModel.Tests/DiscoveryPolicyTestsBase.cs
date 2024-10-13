@@ -2,9 +2,9 @@
 using System.IO;
 using System.Net;
 using Duende.IdentityModel.Client;
-using IdentityModel.Tests.Infrastructure;
+using Duende.IdentityModel.Infrastructure;
 
-namespace IdentityModel.Tests
+namespace Duende.IdentityModel
 {
     public abstract class DiscoveryPolicyTestsBase
     {

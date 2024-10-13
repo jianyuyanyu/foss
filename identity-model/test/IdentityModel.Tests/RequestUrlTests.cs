@@ -10,7 +10,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.WebUtilities;
 using Xunit;
 
-namespace IdentityModel.Tests
+namespace Duende.IdentityModel
 {
     public class RequestUrlTests
     {

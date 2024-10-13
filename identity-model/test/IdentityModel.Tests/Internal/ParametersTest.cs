@@ -3,7 +3,7 @@ using Duende.IdentityModel.Client.Messages;
 using FluentAssertions;
 using Xunit;
 
-namespace IdentityModel.Tests.Internal
+namespace Duende.IdentityModel.Internal
 {
     public class ParametersTest
     {
