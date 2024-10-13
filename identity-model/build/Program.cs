@@ -20,7 +20,6 @@ namespace build
             public const string Build = "build";
             public const string Test = "test";
             public const string Pack = "pack";
-            public const string SignBinary = "sign-binary";
             public const string SignPackage = "sign-package";
             public const string TrimmableAnalysis = "trimmable-analysis";
         }
@@ -44,7 +43,11 @@ namespace build
 
             Target(Targets.Test, DependsOn(Targets.Build), () =>
             {
-                Run("dotnet", "test -c Release --no-build --nologo");
+                Run("dotnet",
+                    $"test test/IdentityModel.Tests -c Release --nologo "
+                    + $"--blame-hang "
+                    + $"--blame-hang-timeout=120sec "
+                    + $"--logger \"console;verbosity=normal\" --logger \"trx;LogFileName=Test.trx\"");
             });
 
             Target(Targets.CleanPackOutput, () =>
@@ -57,7 +60,7 @@ namespace build
 
             Target(Targets.Pack, DependsOn(Targets.Build, Targets.CleanPackOutput), () =>
             {
-                Run("dotnet", $"pack ./src/IdentityModel.csproj -c Release -o {Directory.CreateDirectory(packOutput).FullName} --no-build --nologo");
+                Run("dotnet", $"pack src/IdentityModel.csproj -c Release -o {Directory.CreateDirectory(packOutput).FullName} --no-build --nologo");
             });
 
             Target(Targets.SignPackage, DependsOn(Targets.Pack, Targets.RestoreTools), () =>
@@ -72,7 +75,7 @@ namespace build
 
             Target("default", DependsOn(Targets.Test, Targets.Pack, Targets.TrimmableAnalysis));
 
-            Target("sign", DependsOn(Targets.Test, Targets.SignPackage, Targets.TrimmableAnalysis));
+            Target("sign", DependsOn(Targets.RestoreTools), SignNuGet);
 
             await RunTargetsAndExitAsync(args, ex => ex is SimpleExec.ExitCodeException || ex.Message.EndsWith(envVarMissing));
         }
