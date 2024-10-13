@@ -7,10 +7,9 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Duende.IdentityModel.Client.Extensions;
 using Duende.IdentityModel.Internal;
 
-namespace Duende.IdentityModel.Client.Messages;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
 /// A protocol response

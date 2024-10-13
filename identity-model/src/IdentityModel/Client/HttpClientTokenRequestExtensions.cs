@@ -5,10 +5,9 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Duende.IdentityModel.Client.Messages;
 using Duende.IdentityModel.Internal;
 
-namespace Duende.IdentityModel.Client.Extensions;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
 /// HttpClient extensions for OAuth token requests

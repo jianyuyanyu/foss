@@ -4,7 +4,7 @@
 using System.Threading.Tasks;
 using Duende.IdentityModel.Jwk;
 
-namespace Duende.IdentityModel.Client.Messages;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
 /// Models a response from a JWK endpoint

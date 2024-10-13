@@ -6,13 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Duende.IdentityModel.Client.Extensions;
 using Duende.IdentityModel.Internal;
 using Duende.IdentityModel.Jwk;
 
 #pragma warning disable 1591
 
-namespace Duende.IdentityModel.Client.Messages;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
 /// Models the response from an OpenID Connect discovery endpoint

@@ -2,18 +2,18 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Duende.IdentityModel.Client.Messages;
 using Duende.IdentityModel.Internal;
 
-namespace Duende.IdentityModel.Client.Extensions;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
 /// HttpClient extensions for OIDC userinfo
 /// </summary>
-public static class HttpClientUserInfoExtensions
+public static class HttpClientDeviceFlowExtensions
 {
     /// <summary>
     /// Sends a userinfo request.
@@ -22,15 +22,20 @@ public static class HttpClientUserInfoExtensions
     /// <param name="request">The request.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
-    public static async Task<UserInfoResponse> GetUserInfoAsync(this HttpMessageInvoker client, UserInfoRequest request, CancellationToken cancellationToken = default)
+    public static async Task<DeviceAuthorizationResponse> RequestDeviceAuthorizationAsync(this HttpMessageInvoker client, DeviceAuthorizationRequest request, CancellationToken cancellationToken = default)
     {
-        if (request.Token.IsMissing()) throw new ArgumentNullException(nameof(request.Token));
-
         var clone = request.Clone();
 
-        clone.Method = HttpMethod.Get;
-        clone.SetBearerToken(request.Token!);
+        clone.Parameters.AddOptional(OidcConstants.AuthorizeRequest.Scope, request.Scope);
+        clone.Method = HttpMethod.Post;
         clone.Prepare();
+        
+        // make sure to send form encoded body (even if no parameters are in the body)
+        // todo: test with real implementation, maybe turn into a more formal feature
+        if (clone.Content == null)
+        {
+            clone.Content = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>());
+        }
 
         HttpResponseMessage response;
         try
@@ -43,11 +48,9 @@ public static class HttpClientUserInfoExtensions
         }
         catch (Exception ex)
         {
-            return ProtocolResponse.FromException<UserInfoResponse>(ex);
+            return ProtocolResponse.FromException<DeviceAuthorizationResponse>(ex);
         }
 
-        // response.Content can be null in net462 and net471
-        var skipJsonParsing = response.Content?.Headers.ContentType?.MediaType != "application/json";
-        return await ProtocolResponse.FromHttpResponseAsync<UserInfoResponse>(response, skipJson: skipJsonParsing).ConfigureAwait();
+        return await ProtocolResponse.FromHttpResponseAsync<DeviceAuthorizationResponse>(response).ConfigureAwait();
     }
 }

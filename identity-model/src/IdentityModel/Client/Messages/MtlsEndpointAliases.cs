@@ -2,9 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System.Text.Json;
-using Duende.IdentityModel.Client.Extensions;
 
-namespace Duende.IdentityModel.Client.Messages;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
 /// MTLS endpoint aliases

@@ -4,8 +4,6 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Duende.IdentityModel.Client.Extensions;
-using Duende.IdentityModel.Client.Messages;
 using Duende.IdentityModel.Internal;
 
 namespace Duende.IdentityModel.Client;

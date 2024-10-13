@@ -6,7 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace Duende.IdentityModel.Client.Extensions;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
 /// Extensions for JObject

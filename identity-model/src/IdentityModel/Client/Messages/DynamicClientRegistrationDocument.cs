@@ -10,7 +10,7 @@ using Duende.IdentityModel.Jwk;
 
 #pragma warning disable 1591
 
-namespace Duende.IdentityModel.Client.Messages;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
 /// Models an OpenID Connect dynamic client registration request.

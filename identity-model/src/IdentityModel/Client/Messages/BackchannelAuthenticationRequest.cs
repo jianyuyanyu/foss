@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Duende.IdentityModel.Client.Messages;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
 /// Request for CIBA backchannel authentication

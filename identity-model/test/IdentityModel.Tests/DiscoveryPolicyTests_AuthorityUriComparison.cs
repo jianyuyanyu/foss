@@ -5,8 +5,6 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Duende.IdentityModel.Client;
-using Duende.IdentityModel.Client.Extensions;
-using Duende.IdentityModel.Client.Messages;
 using FluentAssertions;
 using Xunit;
 

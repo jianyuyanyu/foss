@@ -1,5 +1,5 @@
 ﻿using System;
-using Duende.IdentityModel.Client.Messages;
+using Duende.IdentityModel.Client;
 using FluentAssertions;
 using Xunit;
 

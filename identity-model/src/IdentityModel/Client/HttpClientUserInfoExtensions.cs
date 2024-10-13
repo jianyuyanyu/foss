@@ -5,30 +5,30 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Duende.IdentityModel.Client.Messages;
 using Duende.IdentityModel.Internal;
 
-namespace Duende.IdentityModel.Client.Extensions;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
-/// HttpClient extensions for OAuth token revocation
+/// HttpClient extensions for OIDC userinfo
 /// </summary>
-public static class HttpClientTokenRevocationExtensions
+public static class HttpClientUserInfoExtensions
 {
     /// <summary>
-    /// Sends an OAuth token revocation request.
+    /// Sends a userinfo request.
     /// </summary>
     /// <param name="client">The client.</param>
     /// <param name="request">The request.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
-    public static async Task<TokenRevocationResponse> RevokeTokenAsync(this HttpMessageInvoker client, TokenRevocationRequest request, CancellationToken cancellationToken = default)
+    public static async Task<UserInfoResponse> GetUserInfoAsync(this HttpMessageInvoker client, UserInfoRequest request, CancellationToken cancellationToken = default)
     {
+        if (request.Token.IsMissing()) throw new ArgumentNullException(nameof(request.Token));
+
         var clone = request.Clone();
 
-        clone.Method = HttpMethod.Post;
-        clone.Parameters.AddRequired(OidcConstants.TokenIntrospectionRequest.Token, request.Token);
-        clone.Parameters.AddOptional(OidcConstants.TokenIntrospectionRequest.TokenTypeHint, request.TokenTypeHint);
+        clone.Method = HttpMethod.Get;
+        clone.SetBearerToken(request.Token!);
         clone.Prepare();
 
         HttpResponseMessage response;
@@ -42,9 +42,11 @@ public static class HttpClientTokenRevocationExtensions
         }
         catch (Exception ex)
         {
-            return ProtocolResponse.FromException<TokenRevocationResponse>(ex);
+            return ProtocolResponse.FromException<UserInfoResponse>(ex);
         }
 
-        return await ProtocolResponse.FromHttpResponseAsync<TokenRevocationResponse>(response).ConfigureAwait();
+        // response.Content can be null in net462 and net471
+        var skipJsonParsing = response.Content?.Headers.ContentType?.MediaType != "application/json";
+        return await ProtocolResponse.FromHttpResponseAsync<UserInfoResponse>(response, skipJson: skipJsonParsing).ConfigureAwait();
     }
 }

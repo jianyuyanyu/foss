@@ -7,9 +7,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Duende.IdentityModel.Client.Extensions;
 
-namespace Duende.IdentityModel.Client.Messages;
+namespace Duende.IdentityModel.Client;
 
 /// <summary>
 /// Models an OAuth 2.0 introspection response

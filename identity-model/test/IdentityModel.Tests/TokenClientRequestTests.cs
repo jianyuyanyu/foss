@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Duende.IdentityModel.Client;
-using Duende.IdentityModel.Client.Messages;
 using Duende.IdentityModel.Infrastructure;
 using FluentAssertions;
 using Microsoft.AspNetCore.WebUtilities;
