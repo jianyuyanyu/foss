@@ -1,16 +1,16 @@
-name: acces-token-management\codeql
+name: identity-model\codeql
 
 on:
   push:
     branches: 
     - main
     paths:
-    - .github/workflows/access-token-management-codeql.yml
-    - access-token-management/*
+    - .github/workflows/identity-model-codeql.yml
+    - identity-model/*
   pull_request:
     paths:
-    - .github/workflows/access-token-management-codeql.yml
-    - access-token-management/*
+    - .github/workflows/identity-model-codeql.yml
+    - identity-model/*
   schedule:
     - cron: '38 15 * * 0'
 
@@ -24,7 +24,7 @@ jobs:
       security-events: write
     defaults:
       run:
-        working-directory: access-token-management
+        working-directory: identity-model
 
     steps:
     - name: Checkout repository
