@@ -3,7 +3,7 @@
     <PropertyGroup>
         <RootNamespace>Duende.IdentityModel.OidcClient.DPoP</RootNamespace>
         <AssemblyName>Duende.IdentityModel.OidcClient.DPoP</AssemblyName>
-        <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <PackageId>IdentityModel.OidcClient.DPoP</PackageId>
