@@ -1,6 +1,8 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
+using Duende.IdentityModel.Client.Extensions;
+using Duende.IdentityModel.Client.Messages;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApplication1.Controllers
