@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
     <RootNamsepace>Duende.IdentityModel</RootNamsepace>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
@@ -7,11 +8,8 @@
   </PropertyGroup>
 
   <!--Conditional compilation-->
-  <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
-  </PropertyGroup>
   <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-    <TargetFrameworks>net462;net472;$(TargetFrameworks)</TargetFrameworks>
+    <TargetFrameworks>net481;$(TargetFrameworks)</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,7 +24,4 @@
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net462' or $(TargetFramework) == 'net472'">
-    <Reference Include="System.Net.Http" />
-  </ItemGroup>
 </Project>
