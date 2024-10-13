@@ -6,12 +6,6 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <AssemblyOriginatorKeyFile>../../key.snk</AssemblyOriginatorKeyFile>
-        <SignAssembly>true</SignAssembly>
-        <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
-    </PropertyGroup>
-
-    <PropertyGroup>
         <NoWarn>CS8002</NoWarn>
     </PropertyGroup>
 

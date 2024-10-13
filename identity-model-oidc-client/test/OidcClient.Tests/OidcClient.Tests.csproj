@@ -1,14 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <AssemblyOriginatorKeyFile>../../key.snk</AssemblyOriginatorKeyFile>
-        <SignAssembly>true</SignAssembly>
-        <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
-        <RootNamespace>IdentityModel.OidcClient.Tests</RootNamespace>
+        <TargetFramework>net6.0;net8.0</TargetFramework>
+        <RootNamespace>Duende.IdentityModel.OidcClient</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

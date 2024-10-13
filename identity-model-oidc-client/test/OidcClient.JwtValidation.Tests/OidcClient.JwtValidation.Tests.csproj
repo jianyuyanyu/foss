@@ -4,12 +4,6 @@
         <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     </PropertyGroup>
 
-    <PropertyGroup>
-        <AssemblyOriginatorKeyFile>../../key.snk</AssemblyOriginatorKeyFile>
-        <SignAssembly>true</SignAssembly>
-        <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
-    </PropertyGroup>
-
     <ItemGroup>
         <ProjectReference Include="..\..\src\OidcClient.IdentityTokenValidator\OidcClient.IdentityTokenValidator.csproj" />
     </ItemGroup>
