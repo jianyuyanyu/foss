@@ -1,15 +1,18 @@
-﻿using FluentAssertions;
-using IdentityModel.Client;
-using Microsoft.AspNetCore.WebUtilities;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Duende.IdentityModel;
+using Duende.IdentityModel.Client;
+using Duende.IdentityModel.Client.Messages;
+using FluentAssertions;
+using IdentityModel.Tests.Infrastructure;
+using Microsoft.AspNetCore.WebUtilities;
 using Xunit;
 
-namespace IdentityModel.UnitTests
+namespace IdentityModel.Tests
 {
     public class TokenClientRequestTests
     {

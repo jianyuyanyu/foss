@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace IdentityModel.UnitTests
+namespace IdentityModel.Tests.Infrastructure
 {
     public class NetworkHandler : HttpMessageHandler
     {

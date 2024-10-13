@@ -4,7 +4,7 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 
-namespace IdentityModel.UnitTests
+namespace IdentityModel.Tests.Infrastructure
 {
     internal static class FileName
     {

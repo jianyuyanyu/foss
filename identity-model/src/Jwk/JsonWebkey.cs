@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 #pragma warning disable 1591
 #nullable disable
 
-namespace IdentityModel.Jwk;
+namespace Duende.IdentityModel.Jwk;
 
 /// <summary>
 /// Represents a Json Web Key as defined in http://tools.ietf.org/html/rfc7517.

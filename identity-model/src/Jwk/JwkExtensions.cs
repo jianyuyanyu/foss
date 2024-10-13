@@ -4,7 +4,7 @@
 using System.Text;
 using System.Text.Json;
 
-namespace IdentityModel.Jwk;
+namespace Duende.IdentityModel.Jwk;
 
 /// <summary>
 /// Extensions for JsonWebKey
