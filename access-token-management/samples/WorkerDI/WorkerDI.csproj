@@ -1,15 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
-
+<Project Sdk="Microsoft.NET.Sdk.Worker">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.1.2" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\src\AccessTokenManagement\AccessTokenManagement.csproj" />
   </ItemGroup>

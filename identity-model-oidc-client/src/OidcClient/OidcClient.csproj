@@ -1,5 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>Duende.IdentityModel.OidcClient</RootNamespace>
     <AssemblyName>Duende.IdentityModel.OidcClient</AssemblyName>
@@ -12,44 +11,32 @@
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-
     <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-
     <!-- Embed source files that are not tracked by the source control manager in the PDB -->
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-
     <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
     <DebugType>embedded</DebugType>
-
     <!-- Enable Trimming Warnings to allow consumers to publish as trimmed -->
     <IsTrimmable Condition="'$(TargetFramework)' == 'net6.0'">true</IsTrimmable>
-
     <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">True</ContinuousIntegrationBuild>
-
     <AssemblyOriginatorKeyFile>../../key.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
   </PropertyGroup>
-
-   <ItemGroup>
+  <ItemGroup>
     <None Include="../../icon.jpg" Pack="true" Visible="false" PackagePath="" />
-    <None Include="README.md" Pack="true" PackagePath=""/>
-</ItemGroup>
-
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="IdentityModel" Version="7.0.0" />
-    <PackageReference Include="minver" Version="4.3.0" PrivateAssets="All" />
-    
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="minver" Version="4.3.0" PrivateAssets="All" />
   </ItemGroup>
-
   <!--Conditional Package references -->
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
-  </ItemGroup>   
-
+  </ItemGroup>
 </Project>
