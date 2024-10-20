@@ -1,17 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>Duende.IdentityModel.OidcClient.DPoP</RootNamespace>
-    <AssemblyName>Duende.IdentityModel.OidcClient.DPoP</AssemblyName>
-    <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
-    <PackageId>IdentityModel.OidcClient.DPoP</PackageId>
-    <PackageTags>OAuth2;OAuth 2.0;OpenID Connect;Security;Identity;IdentityServer;DPoP</PackageTags>
-    <Description>DPoP extensions for IdentityModel.OidcClient</Description>
+    <RootNamespace>Duende.IdentityModel.OidcClient.IdentityTokenValidator</RootNamespace>
+    <AssemblyName>Duende.IdentityModel.OidcClient.IdentityTokenValidator</AssemblyName>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>IdentityModel.OidcClient.IdentityTokenValidator</PackageId>
+    <PackageTags>OAuth2;OAuth 2.0;OpenID Connect;Security;Identity;IdentityServer</PackageTags>
+    <Description>Identity token validator for IdentityModeo.OidcClient based on the Microsoft JWT handler</Description>
     <Authors>Dominick Baier;Brock Allen</Authors>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -31,13 +29,12 @@
     <None Include="README.md" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="IdentityModel" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="minver" Version="4.3.0" PrivateAssets="All" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OidcClient\OidcClient.csproj" />
+    <ProjectReference Include="..\IdentityModel.OidcClient\IdentityModel.OidcClient.csproj" />
   </ItemGroup>
 </Project>

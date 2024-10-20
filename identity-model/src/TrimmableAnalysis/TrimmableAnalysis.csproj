@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\IdentityModel\IdentityModel.csproj" />
+    <ProjectReference Include="..\IdentityModel\IdentityModel.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,7 +9,7 @@
     <NoWarn>CS8002</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\OidcClient.DPoP\OidcClient.DPoP.csproj" />
+    <ProjectReference Include="..\..\src\IdentityModel.OidcClient.DPoP\IdentityModel.OidcClient.DPoP.csproj" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

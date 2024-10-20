@@ -5,7 +5,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\OidcClient.IdentityTokenValidator\OidcClient.IdentityTokenValidator.csproj" />
+    <ProjectReference Include="..\..\src\IdentityModel.OidcClient.IdentityTokenValidator\IdentityModel.OidcClient.IdentityTokenValidator.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.10.2" />
