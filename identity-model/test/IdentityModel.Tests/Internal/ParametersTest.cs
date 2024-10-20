@@ -1,7 +1,5 @@
-﻿using System;
-using Duende.IdentityModel.Client;
+﻿using Duende.IdentityModel.Client;
 using FluentAssertions;
-using Xunit;
 
 namespace Duende.IdentityModel.Internal
 {

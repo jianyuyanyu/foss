@@ -5,17 +5,11 @@ using FluentAssertions;
 using IdentityModel.Jwk;
 using IdentityModel.OidcClient.Tests.Infrastructure;
 using Microsoft.AspNetCore.WebUtilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Text.Json;
-using System.Threading.Tasks;
 using IdentityModel.Client;
 using JwtValidationTests.Infrastructure;
-using Xunit;
 
 namespace IdentityModel.OidcClient.Tests
 {

@@ -3,9 +3,6 @@
 
 using IdentityModel.Client;
 using Microsoft.Extensions.Logging;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using static IdentityModel.OidcConstants;
 
 namespace Duende.AccessTokenManagement;

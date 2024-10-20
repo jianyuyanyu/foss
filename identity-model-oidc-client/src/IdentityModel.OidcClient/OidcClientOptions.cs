@@ -4,13 +4,8 @@
 using IdentityModel.Client;
 using IdentityModel.OidcClient.Browser;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging.Abstractions;
-using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
 
 namespace IdentityModel.OidcClient
 {

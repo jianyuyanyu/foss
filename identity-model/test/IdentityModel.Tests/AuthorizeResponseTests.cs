@@ -3,7 +3,6 @@
 
 using Duende.IdentityModel.Client;
 using FluentAssertions;
-using Xunit;
 
 namespace Duende.IdentityModel
 {

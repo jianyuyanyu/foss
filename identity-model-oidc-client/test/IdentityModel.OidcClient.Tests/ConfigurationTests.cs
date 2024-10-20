@@ -5,11 +5,7 @@ using FluentAssertions;
 using IdentityModel.Client;
 using IdentityModel.Jwk;
 using IdentityModel.OidcClient.Tests.Infrastructure;
-using System;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace IdentityModel.OidcClient.Tests
 {

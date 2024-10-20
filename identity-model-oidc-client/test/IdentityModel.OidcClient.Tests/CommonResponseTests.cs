@@ -3,8 +3,6 @@
 
 using FluentAssertions;
 using IdentityModel.Jwk;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace IdentityModel.OidcClient.Tests
 {

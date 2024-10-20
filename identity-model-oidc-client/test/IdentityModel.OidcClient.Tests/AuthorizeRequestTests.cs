@@ -3,11 +3,7 @@
 
 using FluentAssertions;
 using IdentityModel.OidcClient.Browser;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using IdentityModel.Client;
-using Xunit;
 
 namespace IdentityModel.OidcClient.Tests
 {

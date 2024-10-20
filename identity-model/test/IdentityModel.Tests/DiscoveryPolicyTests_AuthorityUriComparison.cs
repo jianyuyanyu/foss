@@ -3,10 +3,8 @@
 
 using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Duende.IdentityModel.Client;
 using FluentAssertions;
-using Xunit;
 
 namespace Duende.IdentityModel
 {
