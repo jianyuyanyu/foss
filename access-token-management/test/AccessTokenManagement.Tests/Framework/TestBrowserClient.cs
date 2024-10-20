@@ -1,9 +1,10 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // See LICENSE in the project root for license information.
 
-using CsQuery;
 using System.Diagnostics;
 using System.Net;
+using AngleSharp.Dom;
+using AngleSharp.Html.Parser;
 
 namespace Duende.AccessTokenManagement.Tests;
 
@@ -105,18 +106,17 @@ public class TestBrowserClient : HttpClient
     {
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-        var htmlForm = new HtmlForm
-        {
-
-        };
+        var htmlForm = new HtmlForm();
 
         var html = await response.Content.ReadAsStringAsync();
 
-        var dom = new CQ(html);
-        var form = dom.Find(selector ?? "form");
-        form.Length.ShouldBe(1);
+        var parser = new HtmlParser();
+        var dom = parser.ParseDocument(html);
 
-        var postUrl = form.Attr("action");
+        var form = dom.QuerySelector(selector ?? "form");
+        form.ShouldNotBeNull();
+
+        var postUrl = form.GetAttribute("action")!;
         if (!postUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
         {
             if (postUrl.StartsWith("/"))
@@ -133,20 +133,13 @@ public class TestBrowserClient : HttpClient
 
         var data = new Dictionary<string, string?>();
 
-        var inputs = form.Find("input");
+        var inputs = form.QuerySelectorAll("input");
         foreach (var input in inputs)
         {
-            var name = input.GetAttribute("name");
+            var name = input.GetAttribute("name")!;
             var value = input.GetAttribute("value");
 
-            if (!data.ContainsKey(name))
-            {
-                data.Add(name, value);
-            }
-            else
-            {
-                data[name] = value;
-            }
+            data[name] = value;
         }
         htmlForm.Inputs = data;
 
@@ -154,61 +147,64 @@ public class TestBrowserClient : HttpClient
     }
 
 
-    public Task<string> ReadElementTextAsync(string selector)
+    private Task<string> ReadElementTextAsync(string selector)
     {
         return ReadElementTextAsync(LastResponse, selector);
     }
-    public async Task<string> ReadElementTextAsync(HttpResponseMessage response, string selector)
+
+    private async Task<string> ReadElementTextAsync(HttpResponseMessage response, string selector)
     {
         var html = await response.Content.ReadAsStringAsync();
-
-        var dom = new CQ(html);
-        var element = dom.Find(selector);
+        var parser = new HtmlParser();
+        var dom = parser.ParseDocument(html);
+        var element = dom.QuerySelector(selector)!;
         return element.Text();
     }
 
-    public Task<string> ReadElementAttributeAsync(string selector, string attribute)
+    private Task<string> ReadElementAttributeAsync(string selector, string attribute)
     {
         return ReadElementAttributeAsync(LastResponse, selector, attribute);
     }
-    public async Task<string> ReadElementAttributeAsync(HttpResponseMessage response, string selector, string attribute)
+
+    private async Task<string> ReadElementAttributeAsync(HttpResponseMessage response, string selector, string attribute)
     {
         var html = await response.Content.ReadAsStringAsync();
-
-        var dom = new CQ(html);
-        var element = dom.Find(selector);
-        return element.Attr(attribute);
+        var parser = new HtmlParser();
+        var dom = parser.ParseDocument(html);
+        var element = dom.QuerySelector(selector)!;
+        return element.GetAttribute(attribute)!;
     }
 
-    public Task AssertExistsAsync(string selector)
+    private Task AssertExistsAsync(string selector)
     {
         return AssertExistsAsync(LastResponse, selector);
     }
 
-    public async Task AssertExistsAsync(HttpResponseMessage response, string selector)
+    private async Task AssertExistsAsync(HttpResponseMessage response, string selector)
     {
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-        var html = await response.Content.ReadAsStringAsync();
-
-        var dom = new CQ(html);
-        var element = dom.Find(selector);
-        element.Length.ShouldBeGreaterThan(0);
+        var html    = await response.Content.ReadAsStringAsync();
+        var parser  = new HtmlParser();
+        var dom     = parser.ParseDocument(html);
+        var element = dom.QuerySelector(selector);
+        element.ShouldNotBeNull();
     }
 
     public Task AssertNotExistsAsync(string selector)
     {
         return AssertNotExistsAsync(selector);
     }
+
     public async Task AssertNotExistsAsync(HttpResponseMessage response, string selector)
     {
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-        var html = await response.Content.ReadAsStringAsync();
-
-        var dom = new CQ(html);
-        var element = dom.Find(selector);
-        element.Length.ShouldBe(0);
+        var html    = await response.Content.ReadAsStringAsync();
+        var parser  = new HtmlParser();
+        var dom     = parser.ParseDocument(html);
+        var element = dom.QuerySelector(selector);
+        element.ShouldNotBeNull();
     }
 
     public Task AssertErrorPageAsync(string? error = null)
