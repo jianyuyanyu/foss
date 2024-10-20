@@ -1,13 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 17
+# Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "access-token-management", "access-token-management", "{40E4A188-F989-487A-9E7A-F0315CE9A9BC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{ED44137D-195B-4902-B49D-F497370E7B4F}"
+	ProjectSection(SolutionItems) = preProject
+		access-token-management\src\Directory.Build.props = access-token-management\src\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B716B915-19BD-427D-952A-CE731900F858}"
+	ProjectSection(SolutionItems) = preProject
+		access-token-management\test\Directory.Build.props = access-token-management\test\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "identity-model", "identity-model", "{24895E4F-A225-4A79-95EB-20C34D4971ED}"
 EndProject
@@ -42,8 +48,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityModel", "identity-model\src\IdentityModel\IdentityModel.csproj", "{075C071A-075A-4AD3-987C-FAAF89737C75}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityModel.Tests", "identity-model\test\IdentityModel.Tests\IdentityModel.Tests.csproj", "{DD8D9D43-A85A-420F-9D6D-2E4DE08A5E7C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrimmableAnalysis", "identity-model\test\TrimmableAnalysis\TrimmableAnalysis.csproj", "{386F719D-CB8D-4587-A75B-6CA1681A15AB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{F391B43B-25AE-4078-B45A-049A5D55800C}"
 EndProject
@@ -97,6 +101,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{55A6615D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "build", "ignore-this\build\build.csproj", "{5BA284B9-96DA-49EE-A105-2B5497E376B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrimmableAnalysis", "identity-model\src\TrimmableAnalysis\TrimmableAnalysis.csproj", "{EDCC670D-6527-4B5D-B66D-6A80C9B2EBB1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -143,10 +149,6 @@ Global
 		{DD8D9D43-A85A-420F-9D6D-2E4DE08A5E7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD8D9D43-A85A-420F-9D6D-2E4DE08A5E7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD8D9D43-A85A-420F-9D6D-2E4DE08A5E7C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{386F719D-CB8D-4587-A75B-6CA1681A15AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{386F719D-CB8D-4587-A75B-6CA1681A15AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{386F719D-CB8D-4587-A75B-6CA1681A15AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{386F719D-CB8D-4587-A75B-6CA1681A15AB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F9E2568F-1D4C-4660-A4C8-F0BF01F748F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F9E2568F-1D4C-4660-A4C8-F0BF01F748F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9E2568F-1D4C-4660-A4C8-F0BF01F748F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -215,6 +217,10 @@ Global
 		{5BA284B9-96DA-49EE-A105-2B5497E376B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BA284B9-96DA-49EE-A105-2B5497E376B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BA284B9-96DA-49EE-A105-2B5497E376B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDCC670D-6527-4B5D-B66D-6A80C9B2EBB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDCC670D-6527-4B5D-B66D-6A80C9B2EBB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDCC670D-6527-4B5D-B66D-6A80C9B2EBB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDCC670D-6527-4B5D-B66D-6A80C9B2EBB1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -237,7 +243,6 @@ Global
 		{4DAAC5CC-6273-4E05-BB2A-B3A552E730EA} = {6613705A-6F98-46AB-B260-984732E9A6A7}
 		{075C071A-075A-4AD3-987C-FAAF89737C75} = {1D517331-22CF-4680-B9BA-ABF9230D1887}
 		{DD8D9D43-A85A-420F-9D6D-2E4DE08A5E7C} = {5E2DFAA1-DD0A-4BEA-A6E9-5118869ACEB8}
-		{386F719D-CB8D-4587-A75B-6CA1681A15AB} = {5E2DFAA1-DD0A-4BEA-A6E9-5118869ACEB8}
 		{F391B43B-25AE-4078-B45A-049A5D55800C} = {24895E4F-A225-4A79-95EB-20C34D4971ED}
 		{F9E2568F-1D4C-4660-A4C8-F0BF01F748F2} = {F391B43B-25AE-4078-B45A-049A5D55800C}
 		{827EBD64-C014-4357-94EE-103E0B975421} = {93313B63-592B-41AA-B122-BE6DED75B198}
@@ -263,6 +268,7 @@ Global
 		{FF409986-2435-49D3-B1C3-BC3D3DE1DC60} = {2D0C9000-7DE8-4F03-82C6-D6A87DBE00DA}
 		{55A6615D-0BAE-434A-BE0F-D52DC44FB088} = {13BD5E04-9CA2-4C6A-B59C-E74645BE7D7D}
 		{5BA284B9-96DA-49EE-A105-2B5497E376B0} = {55A6615D-0BAE-434A-BE0F-D52DC44FB088}
+		{EDCC670D-6527-4B5D-B66D-6A80C9B2EBB1} = {1D517331-22CF-4680-B9BA-ABF9230D1887}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {198D25AC-7BC4-48D6-BF04-37AF59E0648D}

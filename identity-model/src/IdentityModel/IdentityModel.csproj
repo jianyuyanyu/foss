@@ -32,13 +32,10 @@
     <None Include="../icon.jpg" Pack="true" Visible="false" PackagePath="" />
     <None Include="../README.md" Pack="true" PackagePath="" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-    <PackageReference Include="minver" Version="5.0.0" PrivateAssets="All" />
-  </ItemGroup>
+ 
   <!-- Conditional Package references -->
   <!-- System.Text.Json is automatically included in net6.0, so we don't take an explicit dependency on it in the net6.0 build. -->
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="System.Text.Json" />
   </ItemGroup>
 </Project>

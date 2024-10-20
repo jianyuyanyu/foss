@@ -2,11 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
     <RootNamespace>Duende.IdentityModel</RootNamespace>
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
-    <DeterministicSourcePaths>false</DeterministicSourcePaths>
   </PropertyGroup>
-  <!--Conditional compilation-->
   <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <TargetFrameworks>net481;$(TargetFrameworks)</TargetFrameworks>
   </PropertyGroup>
@@ -14,10 +10,7 @@
     <ProjectReference Include="..\..\src\IdentityModel\IdentityModel.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="6.12.0" />
-    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
-    <PackageReference Include="xunit" Version="2.8.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1" PrivateAssets="All" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" />
   </ItemGroup>
 </Project>
