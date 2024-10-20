@@ -5,6 +5,7 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Xunit;
 
 namespace IdentityModel.OidcClient.Tests
@@ -41,7 +42,7 @@ namespace IdentityModel.OidcClient.Tests
                         Func = async r =>
                         {
                             var content = await r.Content.ReadAsStringAsync();
-                            Assert.Contains($"scope={scope}", content);
+                            content.Should().Contain($"scope={scope}", content);
                             return new HttpResponseMessage
                                 {
                                     Content = new StringContent($@"{{
@@ -59,7 +60,7 @@ namespace IdentityModel.OidcClient.Tests
 
             var result = await sut.RefreshTokenAsync("test", scope: scope);
 
-            Assert.NotNull(result);
+            result.Should().NotBeNull();
         }
 
         class FakeHttpMessageHandler : HttpMessageHandler

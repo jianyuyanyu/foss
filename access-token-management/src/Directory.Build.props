@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <Import Project="../../src.props" />
+
+  <PropertyGroup>
+    <MinVerTagPrefix>atm-</MinVerTagPrefix>
+    <MinVerMinimumMajorMinor>0.1</MinVerMinimumMajorMinor>
+    <PackageTags>OAuth 2.0;OpenID Connect;Security;BFF;IdentityServer;ASP.NET Core;SPA;Blazor;Token Management</PackageTags>
+  </PropertyGroup>
+
+</Project>

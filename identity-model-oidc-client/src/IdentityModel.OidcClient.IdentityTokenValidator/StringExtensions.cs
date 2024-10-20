@@ -25,7 +25,7 @@ namespace IdentityModel.OidcClient
         }
 
         [DebuggerStepThrough]
-        public static bool IsPresent(this string value)
+        public static bool IsPresent(this string? value)
         {
             return !string.IsNullOrWhiteSpace(value);
         }

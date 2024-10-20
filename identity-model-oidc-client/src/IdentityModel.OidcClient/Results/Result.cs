@@ -22,7 +22,7 @@ namespace IdentityModel.OidcClient
         /// <value>
         /// The error.
         /// </value>
-        public virtual string Error { get; set; }
+        public virtual string? Error { get; set; }
 
         /// <summary>
         /// Gets or sets the error description.
