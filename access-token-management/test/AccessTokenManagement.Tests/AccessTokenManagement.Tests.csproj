@@ -7,6 +7,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AngleSharp" Version="1.1.2" />
     <PackageReference Include="coverlet.collector" Version="6.0.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -23,16 +24,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <!-- TODO - Replace CsQuery with AngleSharp -->
-    <!-- TODO - The rest of the packages in this group are transitive
-        dependencies of CsQuery. We should remove them when we replace CsQuery
-        with AngleSharp. -->
-    <PackageReference Include="CsQuery.NETStandard" Version="1.3.6.1" />
-    <PackageReference Include="Microsoft.NETCore.Jit" Version="2.0.8" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\AccessTokenManagement.OpenIdConnect\AccessTokenManagement.OpenIdConnect.csproj" />
