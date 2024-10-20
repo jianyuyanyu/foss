@@ -334,8 +334,8 @@ namespace IdentityModel.OidcClient.Tests
             _options.BackchannelHandler =
                 new NetworkHandler(JsonSerializer.Serialize(tokenResponse), HttpStatusCode.OK);
 
-            Func<Task> act = async () => { await client.ProcessResponseAsync(url, state); };
-            act.Should().Throw<InvalidOperationException>()
+            var act = async () => { await client.ProcessResponseAsync(url, state); };
+            await act.Should().ThrowAsync<InvalidOperationException>()
                 .Where(e => e.Message.StartsWith("No IIdentityTokenValidator is configured"));
         }
 
@@ -510,7 +510,7 @@ namespace IdentityModel.OidcClient.Tests
             // Validate that the resulting PAR state is correct
             var startUrl = new Uri(state.StartUrl);
             var startUrlQueryParams = HttpUtility.ParseQueryString(startUrl.Query);
-            startUrlQueryParams.Should().HaveCount(2);
+            startUrlQueryParams.Count.Should().Be(2);
             startUrlQueryParams.GetValues("client_id").Single().Should().Be("client");
             startUrlQueryParams.GetValues("request_uri").Single().Should().Be(requestUri);
 
@@ -551,7 +551,7 @@ namespace IdentityModel.OidcClient.Tests
             // Validate that the resulting PAR state is correct
             var startUrl = new Uri(state.StartUrl);
             var startUrlQueryParams = HttpUtility.ParseQueryString(startUrl.Query);
-            startUrlQueryParams.Should().HaveCount(2);
+            startUrlQueryParams.Count.Should().Be(2);
             startUrlQueryParams.GetValues("client_id").Single().Should().Be("client");
             startUrlQueryParams.GetValues("request_uri").Single().Should().Be(requestUri);
 

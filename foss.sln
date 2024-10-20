@@ -18,14 +18,26 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "identity-model", "identity-model", "{24895E4F-A225-4A79-95EB-20C34D4971ED}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1D517331-22CF-4680-B9BA-ABF9230D1887}"
+	ProjectSection(SolutionItems) = preProject
+		identity-model\src\Directory.Build.props = identity-model\src\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{5E2DFAA1-DD0A-4BEA-A6E9-5118869ACEB8}"
+	ProjectSection(SolutionItems) = preProject
+		identity-model\test\Directory.Build.props = identity-model\test\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "identity-model-oidc-client", "identity-model-oidc-client", "{2780E0AB-5C82-439D-BD76-15F3D434B25C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{93313B63-592B-41AA-B122-BE6DED75B198}"
+	ProjectSection(SolutionItems) = preProject
+		identity-model-oidc-client\src\Directory.Build.props = identity-model-oidc-client\src\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{4AE27E00-FA61-4049-8081-C1E756E0B564}"
+	ProjectSection(SolutionItems) = preProject
+		identity-model-oidc-client\test\Directory.Build.props = identity-model-oidc-client\test\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccessTokenManagement", "access-token-management\src\AccessTokenManagement\AccessTokenManagement.csproj", "{B016C603-47C7-4632-AA13-DC64FAB17C1A}"
 EndProject

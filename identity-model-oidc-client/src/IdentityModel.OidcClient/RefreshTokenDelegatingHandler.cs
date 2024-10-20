@@ -91,7 +91,7 @@ namespace IdentityModel.OidcClient
         /// <param name="tokenType">The token type.</param>
         /// <param name="innerHandler">The inner handler.</param>
         /// <exception cref="ArgumentNullException">oidcClient</exception>
-        public RefreshTokenDelegatingHandler(OidcClient oidcClient, string accessToken, string refreshToken, string tokenType = "Bearer", HttpMessageHandler innerHandler = null)
+        public RefreshTokenDelegatingHandler(OidcClient oidcClient, string? accessToken, string refreshToken, string tokenType = "Bearer", HttpMessageHandler innerHandler = null)
         {
             _oidcClient = oidcClient ?? throw new ArgumentNullException(nameof(oidcClient));
             _accessToken = accessToken;
