@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
     <RootNamespace>Duende.IdentityModel.OidcClient.IdentityTokenValidator</RootNamespace>
@@ -6,6 +6,7 @@
     <PackageId>Duende.IdentityModel.OidcClient.IdentityTokenValidator</PackageId>
     <PackageTags>OAuth2;OAuth 2.0;OpenID Connect;Security;Identity;IdentityServer</PackageTags>
     <Description>Identity token validator for IdentityModeo.OidcClient based on the Microsoft JWT handler</Description>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />

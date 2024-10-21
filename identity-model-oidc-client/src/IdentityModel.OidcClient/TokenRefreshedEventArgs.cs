@@ -15,7 +15,7 @@ namespace Duende.IdentityModel.OidcClient
         /// <param name="refreshToken">The refresh token.</param>
         /// <param name="expiresIn">The expires in.</param>
         /// <param name="identityToken">The identity token (optional).</param>
-        public TokenRefreshedEventArgs(string accessToken, string refreshToken, int expiresIn, string? identityToken = null)
+        public TokenRefreshedEventArgs(string accessToken, string refreshToken, int expiresIn, string identityToken = null)
         {
             AccessToken = accessToken;
             RefreshToken = refreshToken;
@@ -53,6 +53,6 @@ namespace Duende.IdentityModel.OidcClient
         /// <value>
         /// The identity token.
         /// </value>
-        public string? IdentityToken { get; }
+        public string IdentityToken { get; }
     }
 }
