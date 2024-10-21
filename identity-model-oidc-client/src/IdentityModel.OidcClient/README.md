@@ -35,9 +35,6 @@ relying party implementation, and implements [RFC 8252](https://tools.ietf.org/h
 
 ![openid_certified](https://cloud.githubusercontent.com/assets/1454075/7611268/4d19de32-f97b-11e4-895b-31b2455a7ca6.png)
 
-
-
-
 ## Related Packages
 
 - Library for claims-based identity, OAuth 2.0, and OpenID Connect: [IdentityModel](https://www.nuget.org/packages/IdentityModel)
