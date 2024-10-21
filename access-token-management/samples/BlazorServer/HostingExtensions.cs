@@ -1,7 +1,6 @@
 using BlazorServer.Plumbing;
 using BlazorServer.Services;
 using Serilog;
-using BlazorServer;
 
 namespace BlazorServer;
 

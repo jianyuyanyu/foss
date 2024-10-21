@@ -1,20 +1,15 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Security.Claims;
+using Duende.IdentityModel.OidcClient.Browser;
+using Duende.IdentityModel.OidcClient.Infrastructure;
+using Duende.IdentityModel.OidcClient.Results;
+using IdentityModel;
 using IdentityModel.Client;
-using IdentityModel.OidcClient.Infrastructure;
-using IdentityModel.OidcClient.Results;
-
 using Microsoft.Extensions.Logging;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace IdentityModel.OidcClient
+namespace Duende.IdentityModel.OidcClient
 {
     /// <summary>
     /// OpenID Connect client
@@ -144,7 +139,7 @@ namespace IdentityModel.OidcClient
 
             var result = await _authorizeClient.EndSessionAsync(request, cancellationToken);
 
-            if (result.ResultType != Browser.BrowserResultType.Success)
+            if (result.ResultType != BrowserResultType.Success)
             {
                 return new LogoutResult(result.ResultType.ToString())
                 {

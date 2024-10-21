@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-namespace IdentityModel.OidcClient.Browser
+namespace Duende.IdentityModel.OidcClient.Browser
 {
     /// <summary>
     /// The result from a browser login.
     /// </summary>
-    /// <seealso cref="IdentityModel.OidcClient.Result" />
+    /// <seealso cref="Result" />
     public class BrowserResult : Result
     {
         /// <summary>

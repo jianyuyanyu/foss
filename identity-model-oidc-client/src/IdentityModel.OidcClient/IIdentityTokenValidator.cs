@@ -1,11 +1,9 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using System.Threading;
-using System.Threading.Tasks;
-using IdentityModel.OidcClient.Results;
+using Duende.IdentityModel.OidcClient.Results;
 
-namespace IdentityModel.OidcClient
+namespace Duende.IdentityModel.OidcClient
 {
     /// <summary>
     /// Models pluggable identity token validation

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using IdentityModel.OidcClient;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -12,6 +11,8 @@ using Microsoft.Extensions.Logging;
 using Serilog.Sinks.SystemConsole.Themes;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Duende.IdentityModel.OidcClient;
+using Duende.IdentityModel.OidcClient.IdentityTokenValidator;
 using IdentityModel;
 using Microsoft.IdentityModel.Tokens;
 using IdentityModel.Client;

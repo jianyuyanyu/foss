@@ -3,10 +3,8 @@
 
 using FluentAssertions;
 using IdentityModel.Jwk;
-using System.Threading.Tasks;
-using Xunit;
 
-namespace IdentityModel.OidcClient.Tests
+namespace Duende.IdentityModel.OidcClient
 {
     public class CommonResponseTests
     {
@@ -24,8 +22,8 @@ namespace IdentityModel.OidcClient.Tests
         [Fact]
         public async Task Missing_code_should_be_rejected()
         {
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&id_token=foo";
             var result = await client.ProcessResponseAsync(url, state);
@@ -37,8 +35,8 @@ namespace IdentityModel.OidcClient.Tests
         [Fact]
         public async Task Missing_state_should_be_rejected()
         {
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?code=foo&id_token=foo";
             var result = await client.ProcessResponseAsync(url, state);
@@ -50,8 +48,8 @@ namespace IdentityModel.OidcClient.Tests
         [Fact]
         public async Task Invalid_state_should_be_rejected()
         {
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state=invalid&id_token=foo&code=bar";
             var result = await client.ProcessResponseAsync(url, state);

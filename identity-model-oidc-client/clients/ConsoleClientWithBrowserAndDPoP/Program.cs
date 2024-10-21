@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using IdentityModel.OidcClient;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -9,8 +8,9 @@ using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Duende.IdentityModel.OidcClient;
+using Duende.IdentityModel.OidcClient.DPoP;
 using Serilog.Sinks.SystemConsole.Themes;
-using IdentityModel.OidcClient.DPoP;
 using Microsoft.Extensions.Logging;
 
 namespace ConsoleClientWithBrowserAndDPoP

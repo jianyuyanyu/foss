@@ -1,9 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using System.Net.Http;
-
-namespace IdentityModel.OidcClient.DPoP;
+namespace Duende.IdentityModel.OidcClient.DPoP;
 
 /// <summary>
 /// Extension methods to configure DPoP
@@ -37,10 +35,10 @@ public static class OidcClientExtensions
     /// <param name="refreshToken">The refresh token</param>
     /// <param name="apiInnerHandler">The inner handler (optional)</param>
     /// <returns></returns>
-    public static HttpMessageHandler CreateDPoPHandler(this OidcClient client, 
-        string proofKey, 
-        string refreshToken, 
-        HttpMessageHandler? apiInnerHandler = null)
+    public static HttpMessageHandler CreateDPoPHandler(this Duende.IdentityModel.OidcClient.OidcClient client, 
+        string                                                                                  proofKey, 
+        string                                                                                  refreshToken, 
+        HttpMessageHandler?                                                                     apiInnerHandler = null)
     {
         var apiDpopHandler = new ProofTokenMessageHandler(proofKey, apiInnerHandler ?? new HttpClientHandler());
         

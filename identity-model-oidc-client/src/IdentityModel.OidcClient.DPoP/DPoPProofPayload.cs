@@ -2,8 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System.Text.Json.Serialization;
+using IdentityModel;
 
-namespace IdentityModel.OidcClient.DPoP;
+namespace Duende.IdentityModel.OidcClient.DPoP;
 
 /// <summary>
 ///  Internal class to aid serialization of DPoP proof token payloads. Giving

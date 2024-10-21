@@ -1,6 +1,5 @@
 using Duende.AccessTokenManagement;
 using IdentityModel.Client;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Options;
 
 namespace WorkerService;

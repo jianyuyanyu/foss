@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 
-namespace IdentityModel.OidcClient.Infrastructure
+namespace Duende.IdentityModel.OidcClient.Infrastructure
 {
     /// <summary>
     /// Helper to JSON serialize object data for logging.

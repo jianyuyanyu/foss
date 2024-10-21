@@ -1,23 +1,16 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using FluentAssertions;
-using IdentityModel.Jwk;
-using IdentityModel.OidcClient.Tests.Infrastructure;
-using Microsoft.AspNetCore.WebUtilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Text.Json;
-using System.Threading.Tasks;
+using Duende.IdentityModel.OidcClient.IdentityTokenValidator;
+using Duende.IdentityModel.OidcClient.JwtValidation.Infrastructure;
+using FluentAssertions;
 using IdentityModel.Client;
-using JwtValidationTests.Infrastructure;
-using Xunit;
+using IdentityModel.Jwk;
 
-namespace IdentityModel.OidcClient.Tests
+namespace Duende.IdentityModel.OidcClient.JwtValidation
 {
     public class CodeFlowResponseTestsWithJwtValidation
     {
@@ -43,8 +36,8 @@ namespace IdentityModel.OidcClient.Tests
         [Fact]
         public async Task Valid_response_should_succeed()
         {
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var key = Crypto.CreateKey();
@@ -81,8 +74,8 @@ namespace IdentityModel.OidcClient.Tests
         {
             _options.LoadProfile = true;
 
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var key = Crypto.CreateKey();
@@ -143,8 +136,8 @@ namespace IdentityModel.OidcClient.Tests
         {
             _options.Policy.RequireIdentityTokenSignature = false;
 
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var key = Crypto.CreateKey();
@@ -180,8 +173,8 @@ namespace IdentityModel.OidcClient.Tests
         public async Task Valid_response_with_missing_signature_should_fail()
         {
             _options.Policy.RequireIdentityTokenSignature = true;
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var key = Crypto.CreateKey();
@@ -211,10 +204,10 @@ namespace IdentityModel.OidcClient.Tests
         public async Task Sending_authorization_header_should_succeed()
         {
             _options.ClientSecret = "secret";
-            _options.TokenClientCredentialStyle = Client.ClientCredentialStyle.AuthorizationHeader;
+            _options.TokenClientCredentialStyle = global::IdentityModel.Client.ClientCredentialStyle.AuthorizationHeader;
 
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var key = Crypto.CreateKey();
@@ -249,10 +242,10 @@ namespace IdentityModel.OidcClient.Tests
         public async Task Sending_client_credentials_in_body_should_succeed()
         {
             _options.ClientSecret = "secret";
-            _options.TokenClientCredentialStyle = Client.ClientCredentialStyle.PostBody;
+            _options.TokenClientCredentialStyle = global::IdentityModel.Client.ClientCredentialStyle.PostBody;
 
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var key = Crypto.CreateKey();
@@ -283,8 +276,8 @@ namespace IdentityModel.OidcClient.Tests
         [Fact]
         public async Task Multi_tenant_token_issuer_name_should_succeed_by_policy_option()
         {
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             _options.Policy.Discovery.ValidateEndpoints = false;
             _options.Policy.ValidateTokenIssuerName = false;
@@ -318,8 +311,8 @@ namespace IdentityModel.OidcClient.Tests
         [Fact]
         public async Task Extra_parameters_on_backchannel_should_be_sent()
         {
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var key = Crypto.CreateKey();
@@ -362,8 +355,8 @@ namespace IdentityModel.OidcClient.Tests
         {
             _options.BackchannelHandler = new NetworkHandler(new Exception("error"));
 
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var result = await client.ProcessResponseAsync(url, state);
@@ -386,8 +379,8 @@ namespace IdentityModel.OidcClient.Tests
             _options.BackchannelHandler =
                 new NetworkHandler(JsonSerializer.Serialize(tokenResponse), HttpStatusCode.OK);
 
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var result = await client.ProcessResponseAsync(url, state);
@@ -409,8 +402,8 @@ namespace IdentityModel.OidcClient.Tests
             _options.BackchannelHandler =
                 new NetworkHandler(JsonSerializer.Serialize(tokenResponse), HttpStatusCode.OK);
 
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var result = await client.ProcessResponseAsync(url, state);
@@ -428,8 +421,8 @@ namespace IdentityModel.OidcClient.Tests
         {
             _options.LoadProfile = true;
 
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var key = Crypto.CreateKey();
@@ -498,8 +491,8 @@ namespace IdentityModel.OidcClient.Tests
             _options.BackchannelHandler =
                 new NetworkHandler(JsonSerializer.Serialize(tokenResponse), HttpStatusCode.OK);
 
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var result = await client.ProcessResponseAsync(url, state);
@@ -522,8 +515,8 @@ namespace IdentityModel.OidcClient.Tests
             _options.BackchannelHandler =
                 new NetworkHandler(JsonSerializer.Serialize(tokenResponse), HttpStatusCode.OK);
 
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var result = await client.ProcessResponseAsync(url, state);
@@ -547,8 +540,8 @@ namespace IdentityModel.OidcClient.Tests
             _options.BackchannelHandler =
                 new NetworkHandler(JsonSerializer.Serialize(tokenResponse), HttpStatusCode.OK);
 
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var result = await client.ProcessResponseAsync(url, state);
@@ -562,8 +555,8 @@ namespace IdentityModel.OidcClient.Tests
         [InlineData(false)]
         public async Task At_hash_policy_should_be_enforced(bool atHashRequired)
         {
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var key = Crypto.CreateKey();
@@ -604,8 +597,8 @@ namespace IdentityModel.OidcClient.Tests
         [InlineData(false)]
         public async Task Invalid_at_hash_should_fail(bool atHashRequired)
         {
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var key = Crypto.CreateKey();
@@ -635,8 +628,8 @@ namespace IdentityModel.OidcClient.Tests
         [Fact]
         public async Task Invalid_signing_algorithm_should_fail()
         {
-            var client = new OidcClient(_options);
-            var state = await client.PrepareLoginAsync();
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
             var key = Crypto.CreateKey();

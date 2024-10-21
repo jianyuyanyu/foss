@@ -1,16 +1,14 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using IdentityModel.OidcClient.Browser;
-using System.Collections.Generic;
-using IdentityModel.Client;
+using Duende.IdentityModel.OidcClient.Browser;
 
-namespace IdentityModel.OidcClient
+namespace Duende.IdentityModel.OidcClient
 {
     /// <summary>
-    /// A login request.
+    /// A logout request
     /// </summary>
-    public class LoginRequest
+    public class LogoutRequest
     {
         /// <summary>
         /// Gets or sets the browser display mode.
@@ -27,21 +25,21 @@ namespace IdentityModel.OidcClient
         /// The browser timeout.
         /// </value>
         public int BrowserTimeout { get; set; } = 300;
-        
+
         /// <summary>
-        /// Gets or sets extra parameters for the front-channel request.
+        /// Gets or sets the id_token_hint.
         /// </summary>
         /// <value>
-        /// The extra parameters.
+        /// The identifier token hint.
         /// </value>
-        public Parameters FrontChannelExtraParameters { get; set; } = new Parameters();
-        
+        public string IdTokenHint { get; set; }
+
         /// <summary>
-        /// Gets or sets extra parameters for the back-channel request.
+        /// Gets or sets the state.
         /// </summary>
         /// <value>
-        /// The extra parameters.
+        /// The state value passed back to client as query string on post_logout_redirect_uri
         /// </value>
-        public Parameters BackChannelExtraParameters { get; set; } = new Parameters();
+        public string State { get; set; }
     }
 }

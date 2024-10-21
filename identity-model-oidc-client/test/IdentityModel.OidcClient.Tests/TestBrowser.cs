@@ -1,12 +1,9 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using IdentityModel.OidcClient.Browser;
+using Duende.IdentityModel.OidcClient.Browser;
 
-namespace IdentityModel.OidcClient.Tests
+namespace Duende.IdentityModel.OidcClient
 {
     public class TestBrowser : IBrowser
     {

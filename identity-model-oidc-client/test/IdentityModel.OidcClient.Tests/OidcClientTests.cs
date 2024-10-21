@@ -1,14 +1,9 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using System;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using FluentAssertions;
-using Xunit;
 
-namespace IdentityModel.OidcClient.Tests
+namespace Duende.IdentityModel.OidcClient
 {
     public class OidcClientTests
     {
@@ -16,7 +11,7 @@ namespace IdentityModel.OidcClient.Tests
         public async Task RefreshTokenAsync_with_scope_should_set_http_request_scope_parameter()
         {
             var scope = Guid.NewGuid().ToString();
-            var sut = new OidcClient(new OidcClientOptions
+            var sut = new Duende.IdentityModel.OidcClient.OidcClient(new OidcClientOptions
             {
                 Authority = "https://exemple.com",
                 ProviderInformation = new ProviderInformation
@@ -27,7 +22,7 @@ namespace IdentityModel.OidcClient.Tests
                 },
                 Policy = new Policy
                 {
-                    Discovery = new Client.DiscoveryPolicy
+                    Discovery = new global::IdentityModel.Client.DiscoveryPolicy
                     {
                         RequireKeySet = false,
                     }

@@ -1,13 +1,11 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.Extensions.Primitives;
 
-namespace Microsoft.AspNetCore.WebUtilities
+namespace Duende.IdentityModel.OidcClient.JwtValidation.Infrastructure
 {
     public static class QueryHelpers
     {

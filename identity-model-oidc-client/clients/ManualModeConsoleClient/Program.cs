@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using IdentityModel.OidcClient;
 using System.Diagnostics;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
+using Duende.IdentityModel.OidcClient;
 
 Console.WriteLine("+-----------------------+");
 Console.WriteLine("|  Sign in with OIDC    |");

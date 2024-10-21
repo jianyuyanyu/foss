@@ -1,21 +1,15 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using System;
 using System.Collections.Concurrent;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
+using Duende.IdentityModel.OidcClient.Results;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using IdentityModel.Client;
-using IdentityModel.OidcClient.Results;
-using Xunit;
 using Xunit.Abstractions;
 
-namespace IdentityModel.OidcClient.Tests
+namespace Duende.IdentityModel.OidcClient
 {
     public class RefreshTokenDelegatingHandlerTests
     {
@@ -231,7 +225,7 @@ namespace IdentityModel.OidcClient.Tests
             }
         }
 
-        private class TestableOidcTokenRefreshClient : OidcClient
+        private class TestableOidcTokenRefreshClient : Duende.IdentityModel.OidcClient.OidcClient
         {
             private readonly TestTokens _tokens;
             private readonly TimeSpan _delayForRefresh;

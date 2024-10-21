@@ -1,12 +1,12 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using System;
 using System.Security.Cryptography;
 using System.Text.Json;
+using IdentityModel;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityModel.OidcClient.DPoP;
+namespace Duende.IdentityModel.OidcClient.DPoP;
 
 /// <summary>
 /// Helper to create JSON web keys.

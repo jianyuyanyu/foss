@@ -5,14 +5,11 @@ using Duende.IdentityServer.Configuration;
 using Duende.IdentityServer.Models;
 using FluentAssertions;
 using IdentityModel.Client;
-using IdentityModel.OidcClient.DPoP;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
-using System.Threading.Tasks;
-using Xunit;
+using Duende.IdentityModel.OidcClient.DPoP;
 
 namespace DPoPTests;
 
