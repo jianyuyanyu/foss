@@ -4,7 +4,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityModel.OidcClient.DPoP
+namespace Duende.IdentityModel.OidcClient.DPoP
 {
     [JsonSourceGenerationOptions(
         WriteIndented = false,

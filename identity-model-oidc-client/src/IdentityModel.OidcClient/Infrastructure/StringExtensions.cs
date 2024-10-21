@@ -3,7 +3,7 @@
 
 using System.Diagnostics;
 
-namespace IdentityModel.OidcClient
+namespace Duende.IdentityModel.OidcClient.Infrastructure
 {
     internal static class StringExtensions
     {

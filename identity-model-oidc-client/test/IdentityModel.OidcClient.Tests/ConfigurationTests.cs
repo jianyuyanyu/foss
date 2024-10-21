@@ -6,6 +6,7 @@ using IdentityModel.Client;
 using IdentityModel.Jwk;
 using IdentityModel.OidcClient.Tests.Infrastructure;
 using System.Net;
+using Duende.IdentityModel.OidcClient;
 
 namespace IdentityModel.OidcClient.Tests
 {
@@ -16,7 +17,7 @@ namespace IdentityModel.OidcClient.Tests
         {
             OidcClientOptions options = null;
 
-            Action act = () => new OidcClient(options);
+            Action act = () => new Duende.IdentityModel.OidcClient.OidcClient(options);
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -26,7 +27,7 @@ namespace IdentityModel.OidcClient.Tests
         {
             var options = new OidcClientOptions();
 
-            Action act = () => new OidcClient(options);
+            Action act = () => new Duende.IdentityModel.OidcClient.OidcClient(options);
 
             act.Should().Throw<ArgumentException>().Where(e => e.Message.StartsWith("No authority specified"));
         }
@@ -45,7 +46,7 @@ namespace IdentityModel.OidcClient.Tests
                 }
             };
 
-            var client = new OidcClient(options);
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(options);
 
             var act = async () => { await client.EnsureProviderInformationAsync(CancellationToken.None); };
 
@@ -66,7 +67,7 @@ namespace IdentityModel.OidcClient.Tests
                 }
             };
 
-            var client = new OidcClient(options);
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(options);
 
             var act = async () => { await client.EnsureProviderInformationAsync(CancellationToken.None); };
 
@@ -87,7 +88,7 @@ namespace IdentityModel.OidcClient.Tests
                 }
             };
 
-            var client = new OidcClient(options);
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(options);
 
             var act = async () => { await client.EnsureProviderInformationAsync(CancellationToken.None); };
 
@@ -108,7 +109,7 @@ namespace IdentityModel.OidcClient.Tests
                 }
             };
 
-            var client = new OidcClient(options);
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(options);
 
             var act = async () => { await client.EnsureProviderInformationAsync(CancellationToken.None); };
 
@@ -129,7 +130,7 @@ namespace IdentityModel.OidcClient.Tests
                 }
             };
 
-            var client = new OidcClient(options);
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(options);
 
             var act = async () => { await client.EnsureProviderInformationAsync(CancellationToken.None); };
 
@@ -146,7 +147,7 @@ namespace IdentityModel.OidcClient.Tests
                 BackchannelHandler = new NetworkHandler(new Exception("error"))
             };
 
-            var client = new OidcClient(options);
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(options);
 
             var act = async () => { await client.EnsureProviderInformationAsync(CancellationToken.None); };
 
@@ -163,7 +164,7 @@ namespace IdentityModel.OidcClient.Tests
                 BackchannelHandler = new NetworkHandler(HttpStatusCode.NotFound, "not found")
             };
 
-            var client = new OidcClient(options);
+            var client = new Duende.IdentityModel.OidcClient.OidcClient(options);
 
             var act = async () => { await client.EnsureProviderInformationAsync(CancellationToken.None); };
 

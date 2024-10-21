@@ -3,7 +3,7 @@
 
 using System.Security.Claims;
 
-namespace IdentityModel.OidcClient.Results
+namespace Duende.IdentityModel.OidcClient.Results
 {
     /// <summary>
     /// The result of a userinfo request.

@@ -3,12 +3,13 @@
 
 using System.Security.Claims;
 using System.Security.Cryptography;
-using IdentityModel.OidcClient.Results;
+using Duende.IdentityModel.OidcClient.Results;
+using IdentityModel;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityModel.OidcClient
+namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
 {
     /// <inheritdoc />
     public class JwtHandlerIdentityTokenValidator : IIdentityTokenValidator

@@ -4,7 +4,7 @@
 using System.Security.Claims;
 using IdentityModel.Client;
 
-namespace IdentityModel.OidcClient
+namespace Duende.IdentityModel.OidcClient
 {
     /// <summary>
     /// The result of a login.

@@ -3,9 +3,10 @@
 
 using System.Security.Cryptography;
 using System.Text.Json;
+using IdentityModel;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityModel.OidcClient.DPoP;
+namespace Duende.IdentityModel.OidcClient.DPoP;
 
 /// <summary>
 /// Helper to create JSON web keys.

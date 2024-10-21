@@ -4,9 +4,10 @@
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
-using IdentityModel.OidcClient.Results;
+using Duende.IdentityModel.OidcClient.Results;
+using IdentityModel;
 
-namespace IdentityModel.OidcClient
+namespace Duende.IdentityModel.OidcClient
 {
     /// <inheritdoc />
     public class NoValidationIdentityTokenValidator : IIdentityTokenValidator

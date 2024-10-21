@@ -3,10 +3,11 @@
 
 using System.Collections.Concurrent;
 using System.Net;
+using Duende.IdentityModel.OidcClient;
+using Duende.IdentityModel.OidcClient.Results;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using IdentityModel.Client;
-using IdentityModel.OidcClient.Results;
 using Xunit.Abstractions;
 
 namespace IdentityModel.OidcClient.Tests
@@ -225,7 +226,7 @@ namespace IdentityModel.OidcClient.Tests
             }
         }
 
-        private class TestableOidcTokenRefreshClient : OidcClient
+        private class TestableOidcTokenRefreshClient : Duende.IdentityModel.OidcClient.OidcClient
         {
             private readonly TestTokens _tokens;
             private readonly TimeSpan _delayForRefresh;

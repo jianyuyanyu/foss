@@ -3,9 +3,10 @@
 
 using System.Net;
 using System.Net.Http.Headers;
+using Duende.IdentityModel.OidcClient.Infrastructure;
 using Microsoft.Extensions.Logging;
 
-namespace IdentityModel.OidcClient
+namespace Duende.IdentityModel.OidcClient
 {
     /// <summary>
     /// HTTP message delegating handler that encapsulates token handling and refresh

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using Duende.IdentityModel.OidcClient;
 using FluentAssertions;
 
 namespace IdentityModel.OidcClient.Tests
@@ -11,7 +12,7 @@ namespace IdentityModel.OidcClient.Tests
         public async Task RefreshTokenAsync_with_scope_should_set_http_request_scope_parameter()
         {
             var scope = Guid.NewGuid().ToString();
-            var sut = new OidcClient(new OidcClientOptions
+            var sut = new Duende.IdentityModel.OidcClient.OidcClient(new OidcClientOptions
             {
                 Authority = "https://exemple.com",
                 ProviderInformation = new ProviderInformation

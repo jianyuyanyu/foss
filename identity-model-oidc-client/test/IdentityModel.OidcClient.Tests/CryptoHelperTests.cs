@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System.Text;
+using Duende.IdentityModel.OidcClient;
 using FluentAssertions;
 using IdentityModel;
-using IdentityModel.OidcClient;
 
 public class CryptoHelperTests
 {
