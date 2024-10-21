@@ -2,9 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System.Text;
-using Duende.IdentityModel.OidcClient;
 using FluentAssertions;
 using IdentityModel;
+
+namespace Duende.IdentityModel.OidcClient;
 
 public class CryptoHelperTests
 {
@@ -14,7 +15,7 @@ public class CryptoHelperTests
     [InlineData("asdf", "RS512")]
     public void ComputeHash_should_compute_correct_hashes_for_all_signature_algorithms(string data, string algorithmName)
     {
-        var sut = new CryptoHelper(new OidcClientOptions());
+        var sut       = new CryptoHelper(new OidcClientOptions());
         var algorithm = sut.GetMatchingHashAlgorithm(algorithmName);
 
         var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(data));

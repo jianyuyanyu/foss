@@ -1,14 +1,13 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Net;
+using Duende.IdentityModel.OidcClient.Infrastructure;
 using FluentAssertions;
 using IdentityModel.Client;
 using IdentityModel.Jwk;
-using IdentityModel.OidcClient.Tests.Infrastructure;
-using System.Net;
-using Duende.IdentityModel.OidcClient;
 
-namespace IdentityModel.OidcClient.Tests
+namespace Duende.IdentityModel.OidcClient
 {
     public class ConfigurationTests
     {

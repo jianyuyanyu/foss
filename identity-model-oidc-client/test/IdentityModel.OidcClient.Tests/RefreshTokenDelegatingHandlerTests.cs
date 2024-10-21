@@ -3,14 +3,13 @@
 
 using System.Collections.Concurrent;
 using System.Net;
-using Duende.IdentityModel.OidcClient;
 using Duende.IdentityModel.OidcClient.Results;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using IdentityModel.Client;
 using Xunit.Abstractions;
 
-namespace IdentityModel.OidcClient.Tests
+namespace Duende.IdentityModel.OidcClient
 {
     public class RefreshTokenDelegatingHandlerTests
     {

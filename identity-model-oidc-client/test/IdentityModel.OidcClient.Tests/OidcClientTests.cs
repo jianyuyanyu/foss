@@ -1,10 +1,9 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using Duende.IdentityModel.OidcClient;
 using FluentAssertions;
 
-namespace IdentityModel.OidcClient.Tests
+namespace Duende.IdentityModel.OidcClient
 {
     public class OidcClientTests
     {
@@ -23,7 +22,7 @@ namespace IdentityModel.OidcClient.Tests
                 },
                 Policy = new Policy
                 {
-                    Discovery = new Client.DiscoveryPolicy
+                    Discovery = new global::IdentityModel.Client.DiscoveryPolicy
                     {
                         RequireKeySet = false,
                     }

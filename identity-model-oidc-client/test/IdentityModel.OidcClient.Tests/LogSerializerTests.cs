@@ -4,7 +4,7 @@
 using Duende.IdentityModel.OidcClient.Infrastructure;
 using FluentAssertions;
 
-namespace IdentityModel.OidcClient.Tests
+namespace Duende.IdentityModel.OidcClient
 {
     public class LogSerializerTests
     {

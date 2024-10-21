@@ -9,7 +9,7 @@ using IdentityModel;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 
-namespace JwtValidationTests.Infrastructure
+namespace Duende.IdentityModel.OidcClient.JwtValidation.Infrastructure
 {
     public static class Crypto
     {
@@ -50,13 +50,13 @@ namespace JwtValidationTests.Infrastructure
             return key;
         }
 
-        public static IdentityModel.Jwk.JsonWebKeySet CreateKeySet(RsaSecurityKey key)
+        public static global::IdentityModel.Jwk.JsonWebKeySet CreateKeySet(RsaSecurityKey key)
         {
             var parameters = key.Rsa?.ExportParameters(false) ?? key.Parameters;
             var exponent = Base64Url.Encode(parameters.Exponent);
             var modulus = Base64Url.Encode(parameters.Modulus);
 
-            var webKey = new IdentityModel.Jwk.JsonWebKey
+            var webKey = new global::IdentityModel.Jwk.JsonWebKey
             { 
                 Kty = "RSA",
                 Use = "sig",
@@ -65,7 +65,7 @@ namespace JwtValidationTests.Infrastructure
                 N = modulus,
             };
 
-            var set = new IdentityModel.Jwk.JsonWebKeySet();
+            var set = new global::IdentityModel.Jwk.JsonWebKeySet();
             set.Keys.Add(webKey);
             return set;
         }

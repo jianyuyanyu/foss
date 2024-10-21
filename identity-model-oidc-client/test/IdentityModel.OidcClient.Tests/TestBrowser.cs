@@ -3,7 +3,7 @@
 
 using Duende.IdentityModel.OidcClient.Browser;
 
-namespace IdentityModel.OidcClient.Tests
+namespace Duende.IdentityModel.OidcClient
 {
     public class TestBrowser : IBrowser
     {

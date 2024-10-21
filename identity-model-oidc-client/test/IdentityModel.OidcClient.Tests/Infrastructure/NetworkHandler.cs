@@ -4,7 +4,7 @@
 using System.Net;
 using System.Text;
 
-namespace IdentityModel.OidcClient.Tests.Infrastructure
+namespace Duende.IdentityModel.OidcClient.Infrastructure
 {
     public class NetworkHandler : HttpMessageHandler
     {

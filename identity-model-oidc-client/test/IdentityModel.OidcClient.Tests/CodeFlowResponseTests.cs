@@ -1,17 +1,15 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using FluentAssertions;
-using IdentityModel.OidcClient.Tests.Infrastructure;
-using Microsoft.AspNetCore.WebUtilities;
 using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
-using IdentityModel.Client;
 using System.Web;
-using Duende.IdentityModel.OidcClient;
+using Duende.IdentityModel.OidcClient.Infrastructure;
+using FluentAssertions;
+using IdentityModel.Client;
 
-namespace IdentityModel.OidcClient.Tests
+namespace Duende.IdentityModel.OidcClient
 {
     public class CodeFlowResponseTestsWithNoValidation
     {
@@ -169,7 +167,7 @@ namespace IdentityModel.OidcClient.Tests
         public async Task Sending_authorization_header_should_succeed()
         {
             _options.ClientSecret = "secret";
-            _options.TokenClientCredentialStyle = Client.ClientCredentialStyle.AuthorizationHeader;
+            _options.TokenClientCredentialStyle = global::IdentityModel.Client.ClientCredentialStyle.AuthorizationHeader;
 
             var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
@@ -204,7 +202,7 @@ namespace IdentityModel.OidcClient.Tests
         public async Task Sending_client_credentials_in_body_should_succeed()
         {
             _options.ClientSecret = "secret";
-            _options.TokenClientCredentialStyle = Client.ClientCredentialStyle.PostBody;
+            _options.TokenClientCredentialStyle = global::IdentityModel.Client.ClientCredentialStyle.PostBody;
 
             var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
