@@ -4,17 +4,15 @@
 using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
-using Duende.IdentityModel.OidcClient.IdentityTokenValidator;
-using Duende.IdentityModel.OidcClient.JwtValidation.Infrastructure;
 using FluentAssertions;
 using IdentityModel.Client;
 using IdentityModel.Jwk;
 
-namespace Duende.IdentityModel.OidcClient.JwtValidation
+namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
 {
     public class CodeFlowResponseTestsWithJwtValidation
     {
-        private readonly OidcClientOptions _options = new OidcClientOptions
+        private readonly OidcClientOptions _options = new()
         {
             ClientId = "client",
             Scope = "openid profile api",

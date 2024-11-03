@@ -4,7 +4,7 @@
 using System.Net;
 using System.Text;
 
-namespace Duende.IdentityModel.OidcClient.JwtValidation.Infrastructure
+namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator.Infrastructure
 {
     public class NetworkHandler : HttpMessageHandler
     {

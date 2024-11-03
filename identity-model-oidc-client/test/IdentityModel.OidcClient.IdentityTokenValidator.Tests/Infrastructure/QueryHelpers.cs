@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.Extensions.Primitives;
 
-namespace Duende.IdentityModel.OidcClient.JwtValidation.Infrastructure
+namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator.Infrastructure
 {
     public static class QueryHelpers
     {

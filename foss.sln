@@ -109,9 +109,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityModel.OidcClient.Id
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityModel.OidcClient.Tests", "identity-model-oidc-client\test\IdentityModel.OidcClient.Tests\IdentityModel.OidcClient.Tests.csproj", "{820F1626-F2F6-46B7-9F9C-FFE95EF7315D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityModel.OidcClient.JwtValidation.Tests", "identity-model-oidc-client\test\IdentityModel.OidcClient.JwtValidation.Tests\IdentityModel.OidcClient.JwtValidation.Tests.csproj", "{BB6FDAAF-82F7-4709-99F0-765B0847F27F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityModel.OidcClient.DPoP.Tests", "identity-model-oidc-client\test\IdentityModel.OidcClient.DPoP.Tests\IdentityModel.OidcClient.DPoP.Tests.csproj", "{70D62961-2C4E-4EBD-91AE-1108FA9E08FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityModel.OidcClient.IdentityTokenValidator.Tests", "identity-model-oidc-client\test\IdentityModel.OidcClient.IdentityTokenValidator.Tests\IdentityModel.OidcClient.IdentityTokenValidator.Tests.csproj", "{3B2CCDD9-9598-4380-9120-86699E5578F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -219,14 +219,14 @@ Global
 		{820F1626-F2F6-46B7-9F9C-FFE95EF7315D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{820F1626-F2F6-46B7-9F9C-FFE95EF7315D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{820F1626-F2F6-46B7-9F9C-FFE95EF7315D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BB6FDAAF-82F7-4709-99F0-765B0847F27F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB6FDAAF-82F7-4709-99F0-765B0847F27F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BB6FDAAF-82F7-4709-99F0-765B0847F27F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BB6FDAAF-82F7-4709-99F0-765B0847F27F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{70D62961-2C4E-4EBD-91AE-1108FA9E08FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{70D62961-2C4E-4EBD-91AE-1108FA9E08FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70D62961-2C4E-4EBD-91AE-1108FA9E08FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70D62961-2C4E-4EBD-91AE-1108FA9E08FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B2CCDD9-9598-4380-9120-86699E5578F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B2CCDD9-9598-4380-9120-86699E5578F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B2CCDD9-9598-4380-9120-86699E5578F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B2CCDD9-9598-4380-9120-86699E5578F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -272,8 +272,8 @@ Global
 		{802E34B5-3403-4898-A395-6EF5CB4A1417} = {93313B63-592B-41AA-B122-BE6DED75B198}
 		{6C282601-37A9-4246-AA30-30A8745A0CA8} = {93313B63-592B-41AA-B122-BE6DED75B198}
 		{820F1626-F2F6-46B7-9F9C-FFE95EF7315D} = {4AE27E00-FA61-4049-8081-C1E756E0B564}
-		{BB6FDAAF-82F7-4709-99F0-765B0847F27F} = {4AE27E00-FA61-4049-8081-C1E756E0B564}
 		{70D62961-2C4E-4EBD-91AE-1108FA9E08FC} = {4AE27E00-FA61-4049-8081-C1E756E0B564}
+		{3B2CCDD9-9598-4380-9120-86699E5578F1} = {4AE27E00-FA61-4049-8081-C1E756E0B564}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {198D25AC-7BC4-48D6-BF04-37AF59E0648D}

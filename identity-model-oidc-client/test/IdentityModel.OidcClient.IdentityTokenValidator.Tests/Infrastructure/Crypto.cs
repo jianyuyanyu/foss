@@ -9,7 +9,7 @@ using IdentityModel;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Duende.IdentityModel.OidcClient.JwtValidation.Infrastructure
+namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator.Infrastructure
 {
     public static class Crypto
     {
