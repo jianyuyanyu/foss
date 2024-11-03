@@ -16,4 +16,8 @@
     <PackageReference Include="PublicApiGenerator" />
     <PackageReference Include="Verify.Xunit" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- Fixes Warning (active)	NU1904	Package 'System.Text.Encodings.Web' 4.5.0 has a known critical severity vulnerability, https://github.com/advisories/GHSA-ghhp-997w-qr28	-->
+    <PackageReference Include="System.Text.Encodings.Web" VersionOverride="8.0.0" />
+  </ItemGroup>
 </Project>
