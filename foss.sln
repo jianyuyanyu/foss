@@ -112,6 +112,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7FE03753-F6F7-48B3-B38B-52EC8C804998}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IgnoreThis.Tests", "ignore-this\test\IgnoreThis.Tests\IgnoreThis.Tests.csproj", "{DB9D419A-39BE-4AF0-8DF5-AC59DB218469}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{F3E00123-AE97-4BF4-8868-E078B59691C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "workflow-gen", ".github\workflow-gen\workflow-gen.csproj", "{79FA307B-8362-448B-8ED3-A8E60700B04C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -227,6 +230,10 @@ Global
 		{DB9D419A-39BE-4AF0-8DF5-AC59DB218469}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB9D419A-39BE-4AF0-8DF5-AC59DB218469}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB9D419A-39BE-4AF0-8DF5-AC59DB218469}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79FA307B-8362-448B-8ED3-A8E60700B04C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79FA307B-8362-448B-8ED3-A8E60700B04C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79FA307B-8362-448B-8ED3-A8E60700B04C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79FA307B-8362-448B-8ED3-A8E60700B04C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -274,6 +281,7 @@ Global
 		{3B2CCDD9-9598-4380-9120-86699E5578F1} = {4AE27E00-FA61-4049-8081-C1E756E0B564}
 		{7FE03753-F6F7-48B3-B38B-52EC8C804998} = {13BD5E04-9CA2-4C6A-B59C-E74645BE7D7D}
 		{DB9D419A-39BE-4AF0-8DF5-AC59DB218469} = {7FE03753-F6F7-48B3-B38B-52EC8C804998}
+		{79FA307B-8362-448B-8ED3-A8E60700B04C} = {F3E00123-AE97-4BF4-8868-E078B59691C8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {198D25AC-7BC4-48D6-BF04-37AF59E0648D}
