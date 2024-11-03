@@ -4,6 +4,7 @@
 using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
+using Duende.IdentityModel.OidcClient.IdentityTokenValidator.Infrastructure;
 using FluentAssertions;
 using IdentityModel.Client;
 using IdentityModel.Jwk;

@@ -3,9 +3,7 @@
     <TargetFrameworks>net8.0</TargetFrameworks>
     <RootNamespace>Duende.IdentityModel.OidcClient.DPoP</RootNamespace>
     <Nullable>disable</Nullable>
-  </PropertyGroup>
-  <PropertyGroup>
-    <NoWarn>CS8002</NoWarn>
+    <NoWarn>CS8002;NU1507</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\IdentityModel.OidcClient.DPoP\IdentityModel.OidcClient.DPoP.csproj" />
