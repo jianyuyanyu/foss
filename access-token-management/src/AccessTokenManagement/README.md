@@ -6,7 +6,7 @@ It will acquire new tokens when old tokens are about to expire and provides conv
 automatically use the current token with HTTP clients.
 
 ## Documentation
-Documentation is available [here](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/wiki).
+Documentation is available [here](https://github.com/DuendeSoftware/foss/wiki).
 
 ## Related Packages
 - Foundational library for claims-based identity, OAuth 2.0 and OpenId Connect: [IdentityModel](https://www.nuget.org/packages/IdentityModel)
@@ -15,9 +15,9 @@ applications: [Duende.AccessTokenManagement.OpenIdConnect](https://www.nuget.org
 
 ## License and Feedback
 Duende.AccessTokenManagement is released as open source under the 
-[Apache 2.0 license](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/blob/main/LICENSE). 
-[Bug reports, feature requests](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/issues) and 
-[contributions](https://github.com/DuendeSoftware/Duende.AccessTokenManagement/pulls) are welcome. 
+[Apache 2.0 license](https://github.com/DuendeSoftware/foss/blob/main/LICENSE). 
+[Bug reports, feature requests](https://github.com/DuendeSoftware/foss/issues) and 
+[contributions](https://github.com/DuendeSoftware/foss/pulls) are welcome. 
 If you have an idea for a new feature or significant code change you'd like to propose, please start with a 
 GitHub issue so that we can discuss it. Thanks in advance!
 
