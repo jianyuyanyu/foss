@@ -56,7 +56,7 @@ jobs:
         fail-on-empty: true
 
     - name: Install Sectigo CodeSiging CA certificates
-      run: |
+      run: |-
         sudo apt-get update
         sudo apt-get install -y ca-certificates
         sudo cp build/SectigoPublicCodeSigningRootCrossAAA.crt /usr/local/share/ca-certificates/
