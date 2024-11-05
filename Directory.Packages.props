@@ -12,7 +12,7 @@
     <FrameworkVersion>6.0.1</FrameworkVersion>
     <ExtensionsVersion>6.0.0</ExtensionsVersion>
     <WilsonVersion>7.1.2</WilsonVersion>
-    <IdentityServerVersion>6.0.6</IdentityServerVersion>
+    <IdentityServerVersion>6.1.8</IdentityServerVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0'">
