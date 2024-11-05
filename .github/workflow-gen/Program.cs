@@ -202,7 +202,6 @@ public static class StepExtensions
         => job.Step()
             .Name("Install Sectigo CodeSiging CA certificates") 
             .WorkingDirectory(".github/workflows")
-            //.IfRefMain()
             .Run("""
                  sudo apt-get update
                  sudo apt-get install -y ca-certificates
@@ -221,7 +220,6 @@ public static class StepExtensions
         var path = $"src/{project}";
         job.Step()
             .Name($"Pack {project}")
-            //.IfRefMain()
             .Run($"dotnet pack -c Release {path} -o artifacts");
     }
 
@@ -236,7 +234,6 @@ public static class StepExtensions
                     "--azure-key-vault-certificate CodeSigning";
         job.Step()
             .Name("Sign packages")
-            //.IfRefMain()
             .Run($"""
                  for file in artifacts/*.nupkg; do
                     dotnet NuGetKeyVaultSignTool sign "$file" {flags}
