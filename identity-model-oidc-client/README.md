@@ -1,14 +1,14 @@
 ## About Duende.IdentityModel.OidcClient
 
 This repository contains several libraries for building OpenID Connect (OIDC) native
-clients. The core IdentityModel.OidcClient library is a certified OIDC relying party and
+clients. The core `Duende.IdentityModel.OidcClient` library is a certified OIDC relying party and
 implements [RFC 8252](https://tools.ietf.org/html/rfc8252/), "OAuth 2.0 for native
-Applications". The `Duende.IdentityModel.OidcClient.IdTokenValidator` provides validation of Id
-Tokens based on the Microsoft JWT handler: 
-[Duende.IdentityModel.OidcClient.IdentityTokenValidator](https://www.nuget.org/packages/Duende.IdentityModel.OidcClient.IdentityTokenValidator),
-and is distributed as a separate package in order to prevent certain dependency problems.
-Finally, `Duende.IdentityModel.OidcClient.DPoP` adds [DPoP](https://datatracker.ietf.org/doc/html/rfc9449) 
-extensions to `Duende.IdentityModel.OidcClient`` for sender-constraining tokens.
+Applications". The [Duende.IdentityModel.OidcClient.IdentityTokenValidator](https://www.nuget.org/packages/Duende.IdentityModel.OidcClient.IdentityTokenValidator)
+provides two sets of extensions that distributed as a separate package in order to prevent certain 
+transitive dependency problems.
+
+ - Validation of Id Tokens based on the Microsoft JWT handler.
+ - [DPoP](https://datatracker.ietf.org/doc/html/rfc9449) extensions for sender-constraining tokens.
 
 ## Samples
 OidcClient targets .NET Standard, making it suitable for .NET and .NET

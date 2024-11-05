@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace ApiHost;
+namespace Duende.IdentityModel.OidcClient.DPoP.Framework.DPoP;
 
 static class DPoPServiceCollectionExtensions
 {

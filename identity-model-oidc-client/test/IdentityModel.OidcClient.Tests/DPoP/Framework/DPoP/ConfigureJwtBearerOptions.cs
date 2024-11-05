@@ -4,7 +4,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 
-namespace ApiHost;
+namespace Duende.IdentityModel.OidcClient.DPoP.Framework.DPoP;
 
 public class ConfigureJwtBearerOptions : IPostConfigureOptions<JwtBearerOptions>
 {

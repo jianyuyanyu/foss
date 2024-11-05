@@ -1,8 +1,0 @@
-﻿<ProjectConfiguration>
-  <Settings>
-    <HiddenComponentWarnings>
-      <Value>AspNetTestHostCompatibility</Value>
-      <Value>LostReference</Value>
-    </HiddenComponentWarnings>
-  </Settings>
-</ProjectConfiguration>

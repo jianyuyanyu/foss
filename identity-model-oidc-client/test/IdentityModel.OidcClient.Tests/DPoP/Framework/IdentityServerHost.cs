@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace DPoPTests;
+namespace Duende.IdentityModel.OidcClient.DPoP.Framework;
 
 public class IdentityServerHost : GenericHost
 {

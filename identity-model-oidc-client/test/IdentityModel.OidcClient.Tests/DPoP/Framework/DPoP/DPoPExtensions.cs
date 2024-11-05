@@ -1,13 +1,13 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Text.Json;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
-using System.Text.Json;
 
-namespace ApiHost;
+namespace Duende.IdentityModel.OidcClient.DPoP.Framework.DPoP;
 
 /// <summary>
 /// Extensions methods for DPoP

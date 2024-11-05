@@ -3,7 +3,7 @@
 
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace ApiHost;
+namespace Duende.IdentityModel.OidcClient.DPoP.Framework.DPoP;
 
 /// <summary>
 /// Default implementation of the replay cache using IDistributedCache

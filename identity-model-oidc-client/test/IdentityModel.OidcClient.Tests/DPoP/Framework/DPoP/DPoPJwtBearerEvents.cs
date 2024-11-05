@@ -1,15 +1,15 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Text;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
-using System.Text;
 using static IdentityModel.OidcConstants;
 
-namespace ApiHost;
+namespace Duende.IdentityModel.OidcClient.DPoP.Framework.DPoP;
 
 public class DPoPJwtBearerEvents : JwtBearerEvents
 {

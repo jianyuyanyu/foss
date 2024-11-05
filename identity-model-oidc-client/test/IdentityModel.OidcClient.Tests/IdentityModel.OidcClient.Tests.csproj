@@ -8,10 +8,14 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\IdentityModel.OidcClient.Extensions\IdentityModel.OidcClient.Extensions.csproj" />
     <ProjectReference Include="..\..\src\IdentityModel.OidcClient\IdentityModel.OidcClient.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FluentAssertions"/>
+    <PackageReference Include="Duende.IdentityServer" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" />
     <PackageReference Include="Microsoft.Extensions.Primitives" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
   </ItemGroup>

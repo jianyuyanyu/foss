@@ -3,7 +3,7 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace DPoPTests;
+namespace Duende.IdentityModel.OidcClient.DPoP.Framework;
 
 public class TestLoggerProvider : ILoggerProvider
 {

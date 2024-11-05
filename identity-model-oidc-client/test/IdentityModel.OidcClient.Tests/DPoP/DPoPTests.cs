@@ -1,17 +1,18 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using Duende.IdentityServer.Configuration;
+#if NET8_0_OR_GREATER
+
+using System.Net;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using Duende.IdentityModel.OidcClient.DPoP.Framework;
 using Duende.IdentityServer.Models;
 using FluentAssertions;
 using IdentityModel.Client;
 using Microsoft.IdentityModel.Tokens;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Text.Json;
-using Duende.IdentityModel.OidcClient.DPoP;
 
-namespace DPoPTests;
+namespace Duende.IdentityModel.OidcClient.DPoP;
 
 public class DPoPTest : IntegrationTestBase
 {
@@ -21,7 +22,7 @@ public class DPoPTest : IntegrationTestBase
 
     static DPoPTest()
     {
-        var key = CryptoHelper.CreateRsaSecurityKey();
+        var key = IdentityServer.Configuration.CryptoHelper.CreateRsaSecurityKey();
         var jwk = JsonWebKeyConverter.ConvertFromRSASecurityKey(key);
         jwk.Alg = "RS256";
         _jwkJson = JsonSerializer.Serialize(jwk);
@@ -133,3 +134,5 @@ public class DPoPTest : IntegrationTestBase
         apiResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 }
+
+#endif
