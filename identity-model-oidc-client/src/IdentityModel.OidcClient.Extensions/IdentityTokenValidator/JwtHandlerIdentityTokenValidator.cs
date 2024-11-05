@@ -177,7 +177,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
             return await handler.ValidateTokenAsync(identityToken, parameters);
         }
 
-        private static string CheckRequiredClaim(ClaimsPrincipal user)
+        private static string? CheckRequiredClaim(ClaimsPrincipal user)
         {
             var requiredClaims = new List<string>
             {
