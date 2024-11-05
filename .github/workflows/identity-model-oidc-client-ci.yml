@@ -42,28 +42,6 @@ jobs:
         reporter: dotnet-trx
         fail-on-error: true
         fail-on-empty: true
-    - name: Test - IdentityModel.OidcClient.DPoP.Tests
-      run: dotnet test -c Release test/IdentityModel.OidcClient.DPoP.Tests --logger "console;verbosity=normal" --logger "trx;LogFileName=Tests.trx" --collect:"XPlat Code Coverage"
-    - name: Test report - IdentityModel.OidcClient.DPoP.Tests
-      if: success() || failure()
-      uses: dorny/test-reporter@v1
-      with:
-        name: Test Report - IdentityModel.OidcClient.DPoP.Tests
-        path: identity-model-oidc-client/test/IdentityModel.OidcClient.DPoP.Tests/TestResults/Tests.trx
-        reporter: dotnet-trx
-        fail-on-error: true
-        fail-on-empty: true
-    - name: Test - IdentityModel.OidcClient.IdentityTokenValidator.Tests
-      run: dotnet test -c Release test/IdentityModel.OidcClient.IdentityTokenValidator.Tests --logger "console;verbosity=normal" --logger "trx;LogFileName=Tests.trx" --collect:"XPlat Code Coverage"
-    - name: Test report - IdentityModel.OidcClient.IdentityTokenValidator.Tests
-      if: success() || failure()
-      uses: dorny/test-reporter@v1
-      with:
-        name: Test Report - IdentityModel.OidcClient.IdentityTokenValidator.Tests
-        path: identity-model-oidc-client/test/IdentityModel.OidcClient.IdentityTokenValidator.Tests/TestResults/Tests.trx
-        reporter: dotnet-trx
-        fail-on-error: true
-        fail-on-empty: true
     - name: Install Sectigo CodeSiging CA certificates
       run: |-
         sudo apt-get update
@@ -75,10 +53,8 @@ jobs:
       run: dotnet tool restore
     - name: Pack IdentityModel.OidcClient
       run: dotnet pack -c Release src/IdentityModel.OidcClient -o artifacts
-    - name: Pack IdentityModel.OidcClient.DPoP
-      run: dotnet pack -c Release src/IdentityModel.OidcClient.DPoP -o artifacts
-    - name: Pack IdentityModel.OidcClient.IdentityTokenValidator
-      run: dotnet pack -c Release src/IdentityModel.OidcClient.IdentityTokenValidator -o artifacts
+    - name: Pack IdentityModel.OidcClient.Extensions
+      run: dotnet pack -c Release src/IdentityModel.OidcClient.Extensions -o artifacts
     - name: Sign packages
       run: |-
         for file in artifacts/*.nupkg; do

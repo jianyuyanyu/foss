@@ -14,8 +14,8 @@ Component[] components = [
         ["IdentityModel.Tests"]),
 
     new("identity-model-oidc-client",
-        ["IdentityModel.OidcClient", "IdentityModel.OidcClient.DPoP", "IdentityModel.OidcClient.IdentityTokenValidator"],
-        ["IdentityModel.OidcClient.Tests", "IdentityModel.OidcClient.DPoP.Tests", "IdentityModel.OidcClient.IdentityTokenValidator.Tests"])
+        ["IdentityModel.OidcClient", "IdentityModel.OidcClient.Extensions"],
+        ["IdentityModel.OidcClient.Tests"])
 ];
 
 foreach (var component in components)

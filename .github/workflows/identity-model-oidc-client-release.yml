@@ -47,10 +47,8 @@ jobs:
       working-directory: .github/workflows
     - name: Pack IdentityModel.OidcClient
       run: dotnet pack -c Release src/IdentityModel.OidcClient -o artifacts
-    - name: Pack IdentityModel.OidcClient.DPoP
-      run: dotnet pack -c Release src/IdentityModel.OidcClient.DPoP -o artifacts
-    - name: Pack IdentityModel.OidcClient.IdentityTokenValidator
-      run: dotnet pack -c Release src/IdentityModel.OidcClient.IdentityTokenValidator -o artifacts
+    - name: Pack IdentityModel.OidcClient.Extensions
+      run: dotnet pack -c Release src/IdentityModel.OidcClient.Extensions -o artifacts
     - name: Sign packages
       run: |-
         for file in artifacts/*.nupkg; do
