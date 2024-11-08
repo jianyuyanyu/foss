@@ -1,5 +1,5 @@
 ## WinForms WebView2 Sample
-This sample shows how to use IdentityModel.OidcClient to build a windows desktop
+This sample shows how to use Duende.IdentityModel.OidcClient to build a windows desktop
 application with WinForms. It uses [manual
-mode](https://identitymodel.readthedocs.io/en/latest/native/manual.html) with an embedded
+mode](https://docs.duendesoftware.com/foss/identitymodel.oidcclient/manual/) with an embedded
 WebView2 based browser.

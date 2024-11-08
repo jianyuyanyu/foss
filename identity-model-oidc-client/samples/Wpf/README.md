@@ -1,9 +1,9 @@
 ## WPF Sample
-This sample shows how to use IdentityModel.OidcClient to build a windows desktop
+This sample shows how to use Duende.IdentityModel.OidcClient to build a windows desktop
 application in WPF. It uses [manual
-mode](https://identitymodel.readthedocs.io/en/latest/native/manual.html) with the system
-browser, listens for callbacks on a private-use URI scheme, and protects the tokens it 
-obtains from replay attacks with DPoP.
+mode](https://docs.duendesoftware.com/foss/identitymodel.oidcclient/manual/) with the
+system browser, listens for callbacks on a private-use URI scheme, and protects the tokens
+it obtains from replay attacks with DPoP.
 
 ### System Browser
 The login flow opens the authorize endpoint using the system browser. We generally

@@ -1,7 +1,7 @@
-# Samples for IdentityModel.OidcClient
+# Samples for Duende.IdentityModel.OidcClient
 
-This repository contains samples that demonstrate how to use
-[IdentityModel.OidcClient](https://github.com/IdentityModel/IdentityModel) to create
+This directory contains samples that demonstrate how to use
+[Duende.IdentityModel.OidcClient](https://github.com/IdentityModel/IdentityModel) to create
 OpenId Connect client applications with a variety of platforms and tools, including
 - [.NET MAUI](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/main/Maui)
 - [WPF with the system browser](https://github.com/IdentityModel/IdentityModel.OidcClient.Samples/tree/main/Wpf)

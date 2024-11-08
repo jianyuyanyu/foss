@@ -1,15 +1,15 @@
 ## HttpSysConsoleClient Sample
-This sample shows how to use IdentityModel.OidcClient to build a windows desktop
+This sample shows how to use Duende.IdentityModel.OidcClient to build a windows desktop
 application in .NET 8. It uses [manual
-mode](https://identitymodel.readthedocs.io/en/latest/native/manual.html), and listens for
+mode](https://docs.duendesoftware.com/foss/identitymodel.oidcclient/manual/), and listens for
 callbacks on a private-use URI scheme.
 
 ### Description of Implementation
 This sample begins by adding an entry to the windows registry that will allow urls that
 begin with the `sample-windows-client://` scheme to be handled by this sample application.
-After that scheme is registered, it uses IdentityModel.OidcClient to create the state and
-authorize url needed to begin the OIDC protocol. It opens the system browser at the
-authorize url by calling `Process.Start` and passing the url. After the user
+After that scheme is registered, it uses Duende.IdentityModel.OidcClient to create the
+state and authorize url needed to begin the OIDC protocol. It opens the system browser at
+the authorize url by calling `Process.Start` and passing the url. After the user
 authenticates, the system browser redirects to the callback url using the
 sample-windows-client. Since this sample has been registered for that url scheme, the
 browser will start a new instance of the sample and pass its response to that second
