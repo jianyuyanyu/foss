@@ -22,6 +22,7 @@ jobs:
       run:
         shell: bash
         working-directory: ignore-this
+    timeout-minutes: 15
     steps:
     - name: Checkout
       uses: actions/checkout@v4

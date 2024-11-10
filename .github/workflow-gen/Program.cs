@@ -50,6 +50,8 @@ void GenerateCiWorkflow(Component component)
         .Defaults().Run("bash", component.Name)
         .Job;
 
+    job.TimeoutMinutes(15);
+
     job.Step()
         .ActionsCheckout();
 
