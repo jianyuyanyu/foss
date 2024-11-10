@@ -90,6 +90,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ignore-this", "ignore-this"
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0ADF1F03-0E6D-4841-A54E-586E9CA0E8D9}"
+	ProjectSection(SolutionItems) = preProject
+		ignore-this\src\Directory.Build.props = ignore-this\src\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IgnoreThis", "ignore-this\src\IgnoreThis\IgnoreThis.csproj", "{DCC90270-90F2-4AB9-BAD2-B394C30BD654}"
 EndProject
