@@ -95,7 +95,8 @@ void GenerateReleaseWorkflow(Component component)
 
     workflow.EnvDefaults();
 
-    var tagJob = workflow.Job("tag")
+    var tagJob = workflow
+        .Job("tag")
         .Name("Tag and Pack")
         .RunsOn(GitHubHostedRunners.UbuntuLatest)
         .Permissions(contents: Permission.Write, packages: Permission.Write)
@@ -136,6 +137,7 @@ void GenerateReleaseWorkflow(Component component)
     var publishJob = workflow.Job("publish")
         .Name("Publish to nuget.org")
         .RunsOn(GitHubHostedRunners.UbuntuLatest)
+        .Needs("tag")
         .Environment("nuget.org", "");
 
     publishJob.Step()

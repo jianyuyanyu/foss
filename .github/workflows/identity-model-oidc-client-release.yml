@@ -73,6 +73,8 @@ jobs:
         retention-days: 15
   publish:
     name: Publish to nuget.org
+    needs:
+    - tag
     runs-on: ubuntu-latest
     environment:
       name: nuget.org
