@@ -21,7 +21,7 @@ jobs:
       packages: write
     defaults:
       run:
-        shell: pwsh
+        shell: bash
         working-directory: access-token-management
     steps:
     - name: Checkout
@@ -36,8 +36,8 @@ jobs:
       run: |-
         git config --global user.email "github-bot@duendesoftware.com"
         git config --global user.name "Duende Software GitHub Bot"
-        git tag -a it-${{ github.event.inputs.version }} -m "Release v${{ github.event.inputs.version }}"
-        git push origin it-${{ github.event.inputs.version }}
+        git tag -a atm-${{ github.event.inputs.version }} -m "Release v${{ github.event.inputs.version }}"
+        git push origin atm-${{ github.event.inputs.version }}
     - name: Install Sectigo CodeSiging CA certificates
       run: |-
         sudo apt-get update
@@ -49,6 +49,8 @@ jobs:
       run: dotnet pack -c Release src/AccessTokenManagement -o artifacts
     - name: Pack AccessTokenManagement.OpenIdConnect
       run: dotnet pack -c Release src/AccessTokenManagement.OpenIdConnect -o artifacts
+    - name: Tool restore
+      run: dotnet tool restore
     - name: Sign packages
       run: |-
         for file in artifacts/*.nupkg; do

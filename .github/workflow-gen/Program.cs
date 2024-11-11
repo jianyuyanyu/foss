@@ -2,23 +2,30 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Logicality.GitHub.Actions.Workflow;
+using static GitHubContexts;
 
+
+var contexts = Instance;
 Component[] components = [
     new("ignore-this",
         ["IgnoreThis"],
-        ["IgnoreThis.Tests"]),
+        ["IgnoreThis.Tests"],
+        "it"),
 
     new("access-token-management",
         ["AccessTokenManagement", "AccessTokenManagement.OpenIdConnect"],
-        ["AccessTokenManagement.Tests"]),
+        ["AccessTokenManagement.Tests"],
+        "atm"),
 
     new("identity-model", 
         ["IdentityModel"],
-        ["IdentityModel.Tests"]),
+        ["IdentityModel.Tests"],
+        "im"),
 
     new("identity-model-oidc-client",
         ["IdentityModel.OidcClient", "IdentityModel.OidcClient.Extensions"],
-        ["IdentityModel.OidcClient.Tests"])
+        ["IdentityModel.OidcClient.Tests"],
+        "imoc")
 ];
 
 foreach (var component in components)
@@ -76,8 +83,8 @@ void GenerateCiWorkflow(Component component)
     job.StepPush("MyGet", "https://www.myget.org/F/duende_identityserver/api/v2/package", "MYGET");
 
     job.StepPush("GitHub", "https://nuget.pkg.github.com/DuendeSoftware/index.json", "GITHUB_TOKEN")
-        .Env(("GITHUB_TOKEN", "${{ secrets.GITHUB_TOKEN }}"),
-            ("NUGET_AUTH_TOKEN", "${{ secrets.GITHUB_TOKEN }}"));
+        .Env(("GITHUB_TOKEN", contexts.Secrets.GitHubToken),
+            ("NUGET_AUTH_TOKEN", contexts.Secrets.GitHubToken));
 
     job.StepUploadArtifacts(component.Name);
 
@@ -100,8 +107,7 @@ void GenerateReleaseWorkflow(Component component)
         .Name("Tag and Pack")
         .RunsOn(GitHubHostedRunners.UbuntuLatest)
         .Permissions(contents: Permission.Write, packages: Permission.Write)
-        .Defaults().Run("pwsh", component.Name)
-        .Job;
+        .Defaults().Run("bash", component.Name).Job;
 
     tagJob.Step()
         .ActionsCheckout();
@@ -110,12 +116,10 @@ void GenerateReleaseWorkflow(Component component)
 
     tagJob.Step()
         .Name("Git tag")
-        .Run("""
-             git config --global user.email "github-bot@duendesoftware.com"
-             git config --global user.name "Duende Software GitHub Bot"
-             git tag -a it-${{ github.event.inputs.version }} -m "Release v${{ github.event.inputs.version }}"
-             git push origin it-${{ github.event.inputs.version }}
-             """);
+        .Run($@"git config --global user.email ""github-bot@duendesoftware.com""
+git config --global user.name ""Duende Software GitHub Bot""
+git tag -a {component.TagPrefix}-{contexts.Event.Input.Version} -m ""Release v{contexts.Event.Input.Version}""
+git push origin {component.TagPrefix}-{contexts.Event.Input.Version}");
 
     tagJob.StepInstallCACerts();
 
@@ -124,13 +128,15 @@ void GenerateReleaseWorkflow(Component component)
         tagJob.StepPack(project);
     }
 
+    tagJob.StepToolRestore();
+
     tagJob.StepSign();
 
     tagJob.StepPush("MyGet", "https://www.myget.org/F/duende_identityserver/api/v2/package", "MYGET");
 
     tagJob.StepPush("GitHub", "https://nuget.pkg.github.com/DuendeSoftware/index.json", "GITHUB_TOKEN")
-        .Env(("GITHUB_TOKEN", "${{ secrets.GITHUB_TOKEN }}"),
-            ("NUGET_AUTH_TOKEN", "${{ secrets.GITHUB_TOKEN }}"));
+        .Env(("GITHUB_TOKEN", contexts.Secrets.GitHubToken),
+            ("NUGET_AUTH_TOKEN", contexts.Secrets.GitHubToken));
 
     tagJob.StepUploadArtifacts(component.Name);
 
@@ -164,7 +170,7 @@ void WriteWorkflow(Workflow workflow, string fileName)
     Console.WriteLine($"Wrote workflow to {filePath}");
 }
 
-record Component(string Name, string[] Projects, string[] Tests);
+record Component(string Name, string[] Projects, string[] Tests, string TagPrefix);
 
 public static class StepExtensions
 {
@@ -219,7 +225,6 @@ public static class StepExtensions
     public static void StepToolRestore(this Job job)
         => job.Step()
             .Name("Tool restore")
-            //.IfRefMain()
             .Run("dotnet tool restore");
 
     public static void StepPack(this Job job, string project)
@@ -269,5 +274,39 @@ public static class StepExtensions
                 ("path", path),
                 ("overwrite", "true"),
                 ("retention-days", "15"));
+    }
+}
+
+public class GitHubContexts
+{
+    public static  GitHubContexts Instance { get; } = new();
+    public virtual GitHubContext  GitHub   { get; } = new();
+    public virtual SecretsContext Secrets  { get; } = new();
+    public virtual EventContext   Event    { get; } = new();
+
+    public abstract class Context(string name)
+    {
+        protected string Name => name;
+
+        protected string Expression(string s) => "${{ " + s + " }}";
+    }
+
+    public class GitHubContext() : Context("github")
+    {
+    }
+
+    public class SecretsContext() : Context("secrets")
+    {
+        public string GitHubToken => Expression($"{Name}.GITHUB_TOKEN");
+    }
+
+    public class EventContext() : Context("github.event")
+    {
+        public EventsInputContext Input { get; } = new ();
+    }
+
+    public class EventsInputContext() : Context("github.event.inputs")
+    {
+        public string Version => Expression($"{Name}.version");
     }
 }

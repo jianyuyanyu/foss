@@ -21,7 +21,7 @@ jobs:
       packages: write
     defaults:
       run:
-        shell: pwsh
+        shell: bash
         working-directory: ignore-this
     steps:
     - name: Checkout
@@ -47,6 +47,8 @@ jobs:
       working-directory: .github/workflows
     - name: Pack IgnoreThis
       run: dotnet pack -c Release src/IgnoreThis -o artifacts
+    - name: Tool restore
+      run: dotnet tool restore
     - name: Sign packages
       run: |-
         for file in artifacts/*.nupkg; do
