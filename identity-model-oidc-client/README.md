@@ -12,7 +12,7 @@ The features added by this package include:
    not necessary, as id token signature validation is optional when using the code flow. 
 
 ## Samples
-The WPF [sample](https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples/wpf)  
+The WPF [sample](https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples/Wpf)  
 in the [samples directory](https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples)  
 shows how to use Duende.IdentityModel.OidcClient.Extensions to implement DPoP.
 
