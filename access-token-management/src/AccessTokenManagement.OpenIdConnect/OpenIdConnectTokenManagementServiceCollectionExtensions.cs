@@ -61,7 +61,7 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
     public static IServiceCollection AddBlazorServerAccessTokenManagement<TTokenStore>(this IServiceCollection services)
         where TTokenStore : class, IUserTokenStore
     {
-        services.AddSingleton<IUserTokenStore, TTokenStore>();
+        services.AddScoped<IUserTokenStore, TTokenStore>();
         services.AddScoped<IUserAccessor, BlazorServerUserAccessor>();
         services.AddCircuitServicesAccessor();
         services.AddHttpContextAccessor(); // For SSR
