@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Web;
-using IdentityModel;
+using Duende.IdentityModel;
 using Duende.AccessTokenManagement.OpenIdConnect;
 using RichardSzalay.MockHttp;
 

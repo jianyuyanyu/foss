@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Web;
 using Duende.IdentityModel.OidcClient.Infrastructure;
 using FluentAssertions;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 
 namespace Duende.IdentityModel.OidcClient
 {
@@ -167,7 +167,7 @@ namespace Duende.IdentityModel.OidcClient
         public async Task Sending_authorization_header_should_succeed()
         {
             _options.ClientSecret = "secret";
-            _options.TokenClientCredentialStyle = global::IdentityModel.Client.ClientCredentialStyle.AuthorizationHeader;
+            _options.TokenClientCredentialStyle = global::Duende.IdentityModel.Client.ClientCredentialStyle.AuthorizationHeader;
 
             var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
@@ -195,14 +195,14 @@ namespace Duende.IdentityModel.OidcClient
             request.Headers.Authorization.Should().NotBeNull();
             request.Headers.Authorization.Scheme.Should().Be("Basic");
             request.Headers.Authorization.Parameter.Should()
-                .Be(BasicAuthenticationOAuthHeaderValue.EncodeCredential("client", "secret"));
+                .Be(Duende.IdentityModel.Client.BasicAuthenticationOAuthHeaderValue.EncodeCredential("client", "secret"));
         }
 
         [Fact]
         public async Task Sending_client_credentials_in_body_should_succeed()
         {
             _options.ClientSecret = "secret";
-            _options.TokenClientCredentialStyle = global::IdentityModel.Client.ClientCredentialStyle.PostBody;
+            _options.TokenClientCredentialStyle = global::Duende.IdentityModel.Client.ClientCredentialStyle.PostBody;
 
             var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
@@ -511,7 +511,7 @@ namespace Duende.IdentityModel.OidcClient
             request.Headers.Authorization.Should().NotBeNull();
             request.Headers.Authorization.Scheme.Should().Be("Basic");
             request.Headers.Authorization.Parameter.Should()
-                .Be(BasicAuthenticationOAuthHeaderValue.EncodeCredential("client", "secret"));
+                .Be(Duende.IdentityModel.Client.BasicAuthenticationOAuthHeaderValue.EncodeCredential("client", "secret"));
         }
         
         [Fact]

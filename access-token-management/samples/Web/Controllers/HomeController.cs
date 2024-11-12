@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 using Duende.AccessTokenManagement.OpenIdConnect;
 
 namespace Web.Controllers;

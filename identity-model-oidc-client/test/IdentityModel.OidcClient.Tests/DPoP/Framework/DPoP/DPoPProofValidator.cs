@@ -4,7 +4,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using IdentityModel;
+using Duende.IdentityModel;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

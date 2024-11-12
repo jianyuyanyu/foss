@@ -3,7 +3,7 @@
 
 using Duende.IdentityModel.OidcClient.Browser;
 using FluentAssertions;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 
 namespace Duende.IdentityModel.OidcClient
 {

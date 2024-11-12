@@ -6,7 +6,7 @@ using System.Net;
 using Duende.IdentityModel.OidcClient.Results;
 using FluentAssertions;
 using FluentAssertions.Extensions;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 using Xunit.Abstractions;
 
 namespace Duende.IdentityModel.OidcClient

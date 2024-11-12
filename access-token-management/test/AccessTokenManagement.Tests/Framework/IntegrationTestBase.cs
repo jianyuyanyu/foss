@@ -3,7 +3,7 @@
 
 using Duende.AccessTokenManagement.OpenIdConnect;
 using Duende.IdentityServer.Models;
-using IdentityModel;
+using Duende.IdentityModel;
 using System.Security.Claims;
 
 namespace Duende.AccessTokenManagement.Tests;

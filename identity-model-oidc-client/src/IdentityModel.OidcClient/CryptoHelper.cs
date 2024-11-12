@@ -3,7 +3,7 @@
 
 using System.Security.Cryptography;
 using System.Text;
-using IdentityModel;
+using Duende.IdentityModel;
 using Microsoft.Extensions.Logging;
 
 namespace Duende.IdentityModel.OidcClient

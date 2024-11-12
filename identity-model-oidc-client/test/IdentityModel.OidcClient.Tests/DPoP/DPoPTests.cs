@@ -9,7 +9,7 @@ using System.Text.Json;
 using Duende.IdentityModel.OidcClient.DPoP.Framework;
 using Duende.IdentityServer.Models;
 using FluentAssertions;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Duende.IdentityModel.OidcClient.DPoP;
@@ -18,7 +18,7 @@ public class DPoPTest : IntegrationTestBase
 {
     
     private static readonly string _jwkJson;
-    private Client _client;
+    private readonly IdentityServer.Models.Client _client;
 
     static DPoPTest()
     {
@@ -32,7 +32,7 @@ public class DPoPTest : IntegrationTestBase
     {
         IdentityServerHost.ApiScopes.Add(new ApiScope("scope1"));
 
-        IdentityServerHost.Clients.Add(_client = new Client
+        IdentityServerHost.Clients.Add(_client = new IdentityServer.Models.Client
         {
             ClientId = "client_credentials_client",
             ClientSecrets = { new Secret("secret".Sha256()) },

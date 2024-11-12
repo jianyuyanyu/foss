@@ -13,9 +13,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Duende.IdentityModel.OidcClient;
 using Duende.IdentityModel.OidcClient.IdentityTokenValidator;
-using IdentityModel;
+using Duende.IdentityModel;
 using Microsoft.IdentityModel.Tokens;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 
 namespace ConsoleClientWithBrowser
 {
