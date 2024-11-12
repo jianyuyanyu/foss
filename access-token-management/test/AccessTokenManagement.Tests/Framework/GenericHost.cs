@@ -31,6 +31,7 @@ public class GenericHost
     public TestServer Server { get; private set; } = default!;
     public TestBrowserClient BrowserClient { get; set; } = default!;
     public HttpClient HttpClient { get; set; } = default!;
+    public HttpMessageHandler HttpMessageHandler { get; set; } = default!;
 
     public TestLoggerProvider Logger { get; set; } = new TestLoggerProvider();
 
@@ -83,6 +84,7 @@ public class GenericHost
         Server = host.GetTestServer();
         BrowserClient = new TestBrowserClient(Server.CreateHandler());
         HttpClient = Server.CreateClient();
+        HttpMessageHandler = Server.CreateHandler();
     }
 
     public event Action<IServiceCollection> OnConfigureServices = services => { };

@@ -10,14 +10,16 @@ using System.Web;
 using Duende.IdentityModel;
 using Duende.AccessTokenManagement.OpenIdConnect;
 using RichardSzalay.MockHttp;
+using System.Net.Http.Json;
 
 namespace Duende.AccessTokenManagement.Tests;
 
 public class AppHost : GenericHost
 {
+    public string ClientId;
+
     private readonly IdentityServerHost _identityServerHost;
     private readonly ApiHost _apiHost;
-    private readonly string _clientId;
     private readonly Action<UserTokenManagementOptions>? _configureUserTokenManagementOptions;
 
     public AppHost(
@@ -30,7 +32,7 @@ public class AppHost : GenericHost
     {
         _identityServerHost = identityServerHost;
         _apiHost = apiHost;
-        _clientId = clientId;
+        ClientId = clientId;
         _configureUserTokenManagementOptions = configureUserTokenManagementOptions;
         OnConfigureServices += ConfigureServices;
         OnConfigure += Configure;
@@ -58,7 +60,7 @@ public class AppHost : GenericHost
             {
                 options.Authority = _identityServerHost.Url();
 
-                options.ClientId = _clientId;
+                options.ClientId = ClientId;
                 options.ClientSecret = "secret";
                 options.ResponseType = "code";
                 options.ResponseMode = "query";
@@ -68,7 +70,7 @@ public class AppHost : GenericHost
                 options.SaveTokens = true;
 
                 options.Scope.Clear();
-                var client = _identityServerHost.Clients.Single(x => x.ClientId == _clientId);
+                var client = _identityServerHost.Clients.Single(x => x.ClientId == ClientId);
                 foreach (var scope in client.AllowedScopes)
                 {
                     options.Scope.Add(scope);
@@ -107,6 +109,10 @@ public class AppHost : GenericHost
             }
         });
 
+        services.AddUserAccessTokenHttpClient("callApi", configureClient: client => {
+            client.BaseAddress = new Uri(_apiHost.Url());
+        })
+        .ConfigurePrimaryHttpMessageHandler(() => _apiHost.HttpMessageHandler);
     }
 
     private void Configure(IApplicationBuilder app)
@@ -134,6 +140,13 @@ public class AppHost : GenericHost
             {
                 var token = await context.GetUserAccessTokenAsync();
                 await context.Response.WriteAsJsonAsync(token);
+            });
+
+            endpoints.MapGet("/call_api", async (IHttpClientFactory factory, HttpContext context) =>
+            {
+                var http = factory.CreateClient("callApi");
+                var response = await http.GetAsync("test");
+                return await response.Content.ReadFromJsonAsync<TokenEchoResponse>();
             });
 
             endpoints.MapGet("/user_token_with_resource/{resource}", async (string resource, HttpContext context) =>
