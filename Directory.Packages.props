@@ -33,9 +33,9 @@
     <PackageVersion Include="AngleSharp" Version="1.1.2" />
     <PackageVersion Include="BullsEye" Version="5.0.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
+    <PackageVersion Include="Duende.IdentityModel" Version="7.0.0" />
     <PackageVersion Include="Duende.IdentityServer" Version="$(IdentityServerVersion)" />
     <PackageVersion Include="FluentAssertions" Version="6.12.0" />
-    <PackageVersion Include="Duende.IdentityModel" Version="7.0.0-preview.2" />
     <PackageVersion Include="MartinCostello.Logging.XUnit" Version="0.3.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(FrameworkVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(FrameworkVersion)" />
