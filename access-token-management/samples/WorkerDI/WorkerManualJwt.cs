@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Duende.AccessTokenManagement;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 
 namespace WorkerService;
 

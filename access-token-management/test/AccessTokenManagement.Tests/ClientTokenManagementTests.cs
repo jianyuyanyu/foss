@@ -3,8 +3,8 @@
 
 using System.Net;
 using System.Text.Json;
-using IdentityModel;
-using IdentityModel.Client;
+using Duende.IdentityModel;
+using Duende.IdentityModel.Client;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using RichardSzalay.MockHttp;
@@ -131,7 +131,7 @@ public class ClientTokenManagementTests
             mockHttp.Expect("/connect/token")
                 .WithFormData(expectedRequestFormData)
                 .WithHeaders("Authorization",
-                    "Basic " + BasicAuthenticationOAuthHeaderValue.EncodeCredential("client_id", "client_secret"))
+                    "Basic " + Duende.IdentityModel.Client.BasicAuthenticationOAuthHeaderValue.EncodeCredential("client_id", "client_secret"))
                 .Respond("application/json", JsonSerializer.Serialize(response));
         }
 

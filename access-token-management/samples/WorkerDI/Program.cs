@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
 using Duende.AccessTokenManagement;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 using Microsoft.Extensions.Options;
 using Serilog.Sinks.SystemConsole.Themes;
 
