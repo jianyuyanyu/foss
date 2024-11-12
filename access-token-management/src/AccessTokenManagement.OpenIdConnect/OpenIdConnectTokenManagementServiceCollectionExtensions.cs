@@ -44,9 +44,10 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
         // context, and we register different ones in blazor
         
         services.TryAddScoped<IUserAccessor, HttpContextUserAccessor>();
-        // scoped since it will be caching per-request authentication results
         services.TryAddScoped<IUserTokenStore, AuthenticationSessionUserAccessTokenStore>();
-
+        // scoped since it will be caching per-request authentication results
+        services.AddScoped<AuthenticateResultCache>();
+        
         return services;
     }
 
