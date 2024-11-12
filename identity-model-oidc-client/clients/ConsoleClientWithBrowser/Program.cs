@@ -12,7 +12,6 @@ using Serilog.Sinks.SystemConsole.Themes;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Duende.IdentityModel.OidcClient;
-using Duende.IdentityModel.OidcClient.IdentityTokenValidator;
 using Duende.IdentityModel;
 using Microsoft.IdentityModel.Tokens;
 using Duende.IdentityModel.Client;
@@ -99,7 +98,6 @@ namespace ConsoleClientWithBrowser
                 FilterClaims = false,
 
                 Browser = browser,
-                IdentityTokenValidator = new JwtHandlerIdentityTokenValidator(),
                 RefreshTokenInnerHttpHandler = new SocketsHttpHandler(),
             };
 
