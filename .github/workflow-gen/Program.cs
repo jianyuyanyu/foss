@@ -36,7 +36,12 @@ foreach (var component in components)
 void GenerateCiWorkflow(Component component)
 {
     var workflow = new Workflow($"{component.Name}/ci");
-    var paths    = new[] { $".github/workflows/{component.Name}-**", $"{component.Name}/**" };
+    var paths    = new[]
+    {
+        $".github/workflows/{component.Name}-**", 
+        $"{component.Name}/**",
+        "Directory.Packages.props"
+    };
 
     workflow.On
         .WorkflowDispatch();
