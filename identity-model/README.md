@@ -24,8 +24,6 @@ For more documentation, please see the
 - Extensions for IdentityModel.OidcClient, including  
   [DPoP](https://datatracker.ietf.org/doc/html/rfc9449) support:  
   [Duende.IdentityModel.OidcClient.Extensions](https://www.nuget.org/packages/Duende.IdentityModel.OidcClient.Extensions)
-- Authentication handler for introspection tokens: 
-  [IdentityModel.AspNetCore.OAuth2Introspection](https://www.nuget.org/packages/Duende.IdentityModel.AspNetCore.OAuth2Introspection)
 
 ## Feedback
 Duende.IdentityModel is released as open source under the 
