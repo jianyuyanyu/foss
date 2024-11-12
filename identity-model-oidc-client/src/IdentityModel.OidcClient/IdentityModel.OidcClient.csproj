@@ -10,7 +10,7 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="IdentityModel" />
+    <PackageReference Include="Duende.IdentityModel" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
   <!--Conditional Package references -->

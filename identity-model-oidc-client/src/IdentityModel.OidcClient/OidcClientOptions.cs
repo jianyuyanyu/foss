@@ -3,8 +3,8 @@
 
 using System.Text.Json.Serialization;
 using Duende.IdentityModel.OidcClient.Browser;
-using IdentityModel;
-using IdentityModel.Client;
+using Duende.IdentityModel;
+using Duende.IdentityModel.Client;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 

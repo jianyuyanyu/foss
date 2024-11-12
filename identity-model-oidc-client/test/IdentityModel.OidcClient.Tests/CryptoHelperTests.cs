@@ -3,7 +3,7 @@
 
 using System.Text;
 using FluentAssertions;
-using IdentityModel;
+using Duende.IdentityModel;
 
 namespace Duende.IdentityModel.OidcClient;
 

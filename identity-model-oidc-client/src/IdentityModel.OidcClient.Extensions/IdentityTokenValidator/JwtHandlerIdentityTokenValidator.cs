@@ -4,7 +4,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using Duende.IdentityModel.OidcClient.Results;
-using IdentityModel;
+using Duende.IdentityModel;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;

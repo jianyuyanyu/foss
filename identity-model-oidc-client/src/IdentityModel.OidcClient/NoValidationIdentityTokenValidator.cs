@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using Duende.IdentityModel.OidcClient.Results;
-using IdentityModel;
+using Duende.IdentityModel;
 
 namespace Duende.IdentityModel.OidcClient
 {

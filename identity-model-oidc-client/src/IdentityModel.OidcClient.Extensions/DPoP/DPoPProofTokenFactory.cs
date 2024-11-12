@@ -4,7 +4,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using IdentityModel;
+using Duende.IdentityModel;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 

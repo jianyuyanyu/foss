@@ -17,13 +17,13 @@ public class IdentityServerHost : GenericHost
         OnConfigure += Configure;
     }
 
-    public List<Client> Clients { get; set; } = new List<Client>();
-    public List<IdentityResource> IdentityResources { get; set; } = new List<IdentityResource>()
-    {
+    public List<IdentityServer.Models.Client> Clients { get; set; } = new();
+    public List<IdentityResource> IdentityResources { get;   set; } =
+    [
         new IdentityResources.OpenId(),
         new IdentityResources.Profile(),
-        new IdentityResources.Email(),
-    };
+        new IdentityResources.Email()
+    ];
     
     public List<ApiScope> ApiScopes { get; set; } = new();
 

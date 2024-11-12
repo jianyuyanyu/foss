@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Duende.IdentityModel.OidcClient.Browser;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 
 namespace Duende.IdentityModel.OidcClient
 {

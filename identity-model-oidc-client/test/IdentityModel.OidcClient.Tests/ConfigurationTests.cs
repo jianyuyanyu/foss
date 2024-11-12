@@ -4,8 +4,8 @@
 using System.Net;
 using Duende.IdentityModel.OidcClient.Infrastructure;
 using FluentAssertions;
-using IdentityModel.Client;
-using IdentityModel.Jwk;
+using Duende.IdentityModel.Client;
+using Duende.IdentityModel.Jwk;
 
 namespace Duende.IdentityModel.OidcClient
 {

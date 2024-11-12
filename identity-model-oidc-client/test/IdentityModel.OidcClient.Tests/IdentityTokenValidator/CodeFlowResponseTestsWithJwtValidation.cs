@@ -6,8 +6,8 @@ using System.Security.Claims;
 using System.Text.Json;
 using Duende.IdentityModel.OidcClient.IdentityTokenValidator.Infrastructure;
 using FluentAssertions;
-using IdentityModel.Client;
-using IdentityModel.Jwk;
+using Duende.IdentityModel.Client;
+using Duende.IdentityModel.Jwk;
 
 namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
 {
@@ -35,7 +35,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
         [Fact]
         public async Task Valid_response_should_succeed()
         {
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
@@ -73,7 +73,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
         {
             _options.LoadProfile = true;
 
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
@@ -135,7 +135,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
         {
             _options.Policy.RequireIdentityTokenSignature = false;
 
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
@@ -172,7 +172,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
         public async Task Valid_response_with_missing_signature_should_fail()
         {
             _options.Policy.RequireIdentityTokenSignature = true;
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
@@ -203,9 +203,9 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
         public async Task Sending_authorization_header_should_succeed()
         {
             _options.ClientSecret = "secret";
-            _options.TokenClientCredentialStyle = global::IdentityModel.Client.ClientCredentialStyle.AuthorizationHeader;
+            _options.TokenClientCredentialStyle = ClientCredentialStyle.AuthorizationHeader;
 
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
@@ -234,16 +234,16 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
             request.Headers.Authorization.Should().NotBeNull();
             request.Headers.Authorization.Scheme.Should().Be("Basic");
             request.Headers.Authorization.Parameter.Should()
-                .Be(BasicAuthenticationOAuthHeaderValue.EncodeCredential("client", "secret"));
+                .Be(Client.BasicAuthenticationOAuthHeaderValue.EncodeCredential("client", "secret"));
         }
 
         [Fact]
         public async Task Sending_client_credentials_in_body_should_succeed()
         {
             _options.ClientSecret = "secret";
-            _options.TokenClientCredentialStyle = global::IdentityModel.Client.ClientCredentialStyle.PostBody;
+            _options.TokenClientCredentialStyle = ClientCredentialStyle.PostBody;
 
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
@@ -275,7 +275,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
         [Fact]
         public async Task Multi_tenant_token_issuer_name_should_succeed_by_policy_option()
         {
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             _options.Policy.Discovery.ValidateEndpoints = false;
@@ -310,7 +310,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
         [Fact]
         public async Task Extra_parameters_on_backchannel_should_be_sent()
         {
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
@@ -354,7 +354,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
         {
             _options.BackchannelHandler = new NetworkHandler(new Exception("error"));
 
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
@@ -378,7 +378,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
             _options.BackchannelHandler =
                 new NetworkHandler(JsonSerializer.Serialize(tokenResponse), HttpStatusCode.OK);
 
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
@@ -401,7 +401,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
             _options.BackchannelHandler =
                 new NetworkHandler(JsonSerializer.Serialize(tokenResponse), HttpStatusCode.OK);
 
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
@@ -420,7 +420,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
         {
             _options.LoadProfile = true;
 
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
@@ -490,7 +490,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
             _options.BackchannelHandler =
                 new NetworkHandler(JsonSerializer.Serialize(tokenResponse), HttpStatusCode.OK);
 
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
@@ -514,7 +514,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
             _options.BackchannelHandler =
                 new NetworkHandler(JsonSerializer.Serialize(tokenResponse), HttpStatusCode.OK);
 
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
@@ -539,7 +539,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
             _options.BackchannelHandler =
                 new NetworkHandler(JsonSerializer.Serialize(tokenResponse), HttpStatusCode.OK);
 
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
@@ -554,7 +554,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
         [InlineData(false)]
         public async Task At_hash_policy_should_be_enforced(bool atHashRequired)
         {
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
@@ -596,7 +596,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
         [InlineData(false)]
         public async Task Invalid_at_hash_should_fail(bool atHashRequired)
         {
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";
@@ -627,7 +627,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator
         [Fact]
         public async Task Invalid_signing_algorithm_should_fail()
         {
-            var client = new Duende.IdentityModel.OidcClient.OidcClient(_options);
+            var client = new OidcClient(_options);
             var state  = await client.PrepareLoginAsync();
 
             var url = $"?state={state.State}&code=bar";

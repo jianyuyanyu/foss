@@ -5,7 +5,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using IdentityModel;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 
@@ -50,13 +49,13 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator.Infrastructure
             return key;
         }
 
-        public static global::IdentityModel.Jwk.JsonWebKeySet CreateKeySet(RsaSecurityKey key)
+        public static Jwk.JsonWebKeySet CreateKeySet(RsaSecurityKey key)
         {
             var parameters = key.Rsa?.ExportParameters(false) ?? key.Parameters;
             var exponent = Base64Url.Encode(parameters.Exponent);
             var modulus = Base64Url.Encode(parameters.Modulus);
 
-            var webKey = new global::IdentityModel.Jwk.JsonWebKey
+            var webKey = new Jwk.JsonWebKey
             { 
                 Kty = "RSA",
                 Use = "sig",
@@ -65,7 +64,7 @@ namespace Duende.IdentityModel.OidcClient.IdentityTokenValidator.Infrastructure
                 N = modulus,
             };
 
-            var set = new global::IdentityModel.Jwk.JsonWebKeySet();
+            var set = new Jwk.JsonWebKeySet();
             set.Keys.Add(webKey);
             return set;
         }

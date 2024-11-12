@@ -8,7 +8,6 @@
     <Description>DPoP extensions for IdentityModel.OidcClient</Description>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="IdentityModel" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
   </ItemGroup>

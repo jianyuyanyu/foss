@@ -4,8 +4,8 @@
 using Duende.IdentityModel.OidcClient.Browser;
 using Duende.IdentityModel.OidcClient.Infrastructure;
 using Duende.IdentityModel.OidcClient.Results;
-using IdentityModel;
-using IdentityModel.Client;
+using Duende.IdentityModel;
+using Duende.IdentityModel.Client;
 using Microsoft.Extensions.Logging;
 
 namespace Duende.IdentityModel.OidcClient
