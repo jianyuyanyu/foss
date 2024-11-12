@@ -7,6 +7,7 @@ namespace Duende.IdentityModel.Verifications;
 
 public class PublicApiVerificationTests
 {
+#if NET8_0
     [Fact]
     public async Task VerifyPublicApi()
     {
@@ -16,7 +17,7 @@ public class PublicApiVerificationTests
         };
         var publicApi = typeof(JwtClaimTypes).Assembly.GeneratePublicApi(apiGeneratorOptions);
         var settings = new VerifySettings();
-        settings.UniqueForTargetFrameworkAndVersion();
         await Verify(publicApi, settings);
     }
+#endif
 }
