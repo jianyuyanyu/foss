@@ -4,7 +4,6 @@
 using Logicality.GitHub.Actions.Workflow;
 using static GitHubContexts;
 
-
 var contexts = Instance;
 Component[] components = [
     new("ignore-this",
@@ -37,7 +36,7 @@ foreach (var component in components)
 void GenerateCiWorkflow(Component component)
 {
     var workflow = new Workflow($"{component.Name}/ci");
-    var paths    = new[] { $".github/workflows/{component.Name}-**", $"src/{component.Name}/**" };
+    var paths    = new[] { $".github/workflows/{component.Name}-**", $"{component.Name}/**" };
 
     workflow.On
         .WorkflowDispatch();

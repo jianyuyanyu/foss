@@ -6,11 +6,11 @@ on:
   push:
     paths:
     - .github/workflows/ignore-this-**
-    - src/ignore-this/**
+    - ignore-this/**
   pull_request:
     paths:
     - .github/workflows/ignore-this-**
-    - src/ignore-this/**
+    - ignore-this/**
 env:
   DOTNETT_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true

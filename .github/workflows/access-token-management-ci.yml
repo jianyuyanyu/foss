@@ -6,11 +6,11 @@ on:
   push:
     paths:
     - .github/workflows/access-token-management-**
-    - src/access-token-management/**
+    - access-token-management/**
   pull_request:
     paths:
     - .github/workflows/access-token-management-**
-    - src/access-token-management/**
+    - access-token-management/**
 env:
   DOTNETT_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true

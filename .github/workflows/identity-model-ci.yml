@@ -6,11 +6,11 @@ on:
   push:
     paths:
     - .github/workflows/identity-model-**
-    - src/identity-model/**
+    - identity-model/**
   pull_request:
     paths:
     - .github/workflows/identity-model-**
-    - src/identity-model/**
+    - identity-model/**
 env:
   DOTNETT_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
