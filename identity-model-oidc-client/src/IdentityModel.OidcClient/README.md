@@ -39,11 +39,8 @@ Connect relying party implementation, and implements
 
 - Library for claims-based identity, OAuth 2.0, and OpenID Connect:
   [Duende.IdentityModel](https://www.nuget.org/packages/Duende.IdentityModel)
-- Extensions to this library, including DPoP support and an id token validator implemented
-  with the Microsoft JWT handler:
+- Extensions to this library, including DPoP support:
   [Duende.IdentityModel.OidcClient.Extensions](https://www.nuget.org/packages/Duende.IdentityModel.OidcClient.Extensions)
-- Authentication handler for introspection tokens:
-  [IdentityModel.AspNetCore.OAuth2Introspection](https://www.nuget.org/packages/IdentityModel.AspNetCore.OAuth2Introspection)
 
 ## Feedback
 

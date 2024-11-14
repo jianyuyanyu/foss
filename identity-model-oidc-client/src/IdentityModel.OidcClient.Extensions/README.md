@@ -5,14 +5,11 @@ Duende.IdentityModel.OidcClient that are implemented using more dependencies tha
 required in the core Duende.IdentityModel.OidcClient package. Distributing these features
 separately helps prevent certain transitive dependency problems.
 
-The features added by this package include:
- - [DPoP](https://datatracker.ietf.org/doc/html/rfc9449) extensions for
-   sender-constraining tokens.
- - Validation of Id Tokens implemented using the Microsoft JWT handler. This is usually
-   not necessary, as id token signature validation is optional when using the code flow. 
+Currently, this package adds [DPoP](https://datatracker.ietf.org/doc/html/rfc9449) extensions for
+sender-constraining tokens.
 
 ## Samples
-The WPF [sample](https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples/wpf)  
+The WPF [sample](https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples/Wpf)  
 in the [samples directory](https://github.com/DuendeSoftware/foss/tree/main/identity-model-oidc-client/samples)  
 shows how to use Duende.IdentityModel.OidcClient.Extensions to implement DPoP.
 

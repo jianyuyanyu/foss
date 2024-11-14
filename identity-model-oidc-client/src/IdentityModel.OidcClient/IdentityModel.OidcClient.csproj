@@ -8,6 +8,7 @@
     <Description>RFC8252 compliant and certified OpenID Connect and OAuth 2.0 client library for native applications</Description>
     <IsTrimmable Condition="'$(TargetFramework)' != 'netstandard2.0'">true</IsTrimmable>
     <Nullable>disable</Nullable>
+    <PackageReadmePath>README.md</PackageReadmePath>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Duende.IdentityModel" />
