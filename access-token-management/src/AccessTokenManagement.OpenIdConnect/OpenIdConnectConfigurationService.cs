@@ -71,8 +71,7 @@ public class OpenIdConnectConfigurationService : IOpenIdConnectConfigurationServ
             
             Authority = options.Authority,
             TokenEndpoint = configuration.TokenEndpoint,
-            RevocationEndpoint = configuration.AdditionalData.TryGetValue(OidcConstants.Discovery.RevocationEndpoint, out var value) ? value?.ToString() : null,
-            
+            RevocationEndpoint = configuration.RevocationEndpoint,            
             ClientId = options.ClientId,
             ClientSecret = options.ClientSecret,
             HttpClient = options.Backchannel,

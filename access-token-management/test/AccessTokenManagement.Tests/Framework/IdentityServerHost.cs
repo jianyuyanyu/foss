@@ -53,6 +53,9 @@ public class IdentityServerHost : GenericHost
                 // Artificially low durations to force retries
                 options.DPoP.ServerClockSkew = TimeSpan.Zero;
                 options.DPoP.ProofTokenValidityDuration = TimeSpan.FromSeconds(1);
+                
+                // Disable PAR (this keeps test setup simple, and we don't need to integration test PAR here - it is covered by IdentityServer itself)
+                options.Endpoints.EnablePushedAuthorizationEndpoint = false;
             })
             .AddInMemoryClients(Clients)
             .AddInMemoryIdentityResources(IdentityResources)

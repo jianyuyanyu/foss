@@ -11,21 +11,21 @@
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0'">
     <FrameworkVersion>6.0.1</FrameworkVersion>
     <ExtensionsVersion>6.0.0</ExtensionsVersion>
-    <WilsonVersion>7.1.2</WilsonVersion>
-    <IdentityServerVersion>6.1.8</IdentityServerVersion>
+    <WilsonVersion>6.35.0</WilsonVersion>
+    <IdentityServerVersion>6.3.10</IdentityServerVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0'">
     <FrameworkVersion>8.0.1</FrameworkVersion>
     <ExtensionsVersion>8.0.0</ExtensionsVersion>
-    <WilsonVersion>7.1.2</WilsonVersion>
+    <WilsonVersion>[8.0.1,9.0.0)</WilsonVersion> 
     <IdentityServerVersion>7.0.8</IdentityServerVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net9.0'">
     <FrameworkVersion>9.0.0</FrameworkVersion>
     <ExtensionsVersion>9.0.0</ExtensionsVersion>
-    <WilsonVersion>8.0.0</WilsonVersion>
+    <WilsonVersion>[8.0.1,9.0.0)</WilsonVersion>
     <IdentityServerVersion>7.0.8</IdentityServerVersion>
   </PropertyGroup>
 
@@ -57,6 +57,7 @@
     <PackageVersion Include="Shouldly" Version="4.2.1" />
     <PackageVersion Include="SimpleExec" Version="12.0.0" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="$(WilsonVersion)" />
+    <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="$(WilsonVersion)" />
     <PackageVersion Include="System.Text.Json" Version="8.0.5" />
     <PackageVersion Include="Verify.Xunit" Version="27.0.1" />
     <PackageVersion Include="xunit.core" Version="2.9.2" />
