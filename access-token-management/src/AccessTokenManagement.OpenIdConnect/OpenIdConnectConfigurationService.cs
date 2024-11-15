@@ -71,20 +71,7 @@ public class OpenIdConnectConfigurationService : IOpenIdConnectConfigurationServ
             
             Authority = options.Authority,
             TokenEndpoint = configuration.TokenEndpoint,
-            
-            // This conditional compilation is required because the
-            // OpenIdConnectConfiguration type in
-            // Microsoft.IdentityModel.Protocols.OpenIdConnect has a breaking
-            // change in version 8.0.0 that library. The revocation endpoint was
-            // added as a strongly typed property, which means it is no longer
-            // included in the AdditionalData. In our .NET 9 build, we require
-            // wilson >8.0.0, and in our .NET 8 build, we require wilson <8.0.0.
-#if NET9_0_OR_GREATER
             RevocationEndpoint = configuration.RevocationEndpoint,            
-#else
-            RevocationEndpoint = configuration.AdditionalData.TryGetValue(OidcConstants.Discovery.RevocationEndpoint, out var value) ? value?.ToString() : null,
-#endif
-            
             ClientId = options.ClientId,
             ClientSecret = options.ClientSecret,
             HttpClient = options.Backchannel,

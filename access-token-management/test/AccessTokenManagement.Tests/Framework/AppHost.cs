@@ -218,7 +218,7 @@ public class AppHost : GenericHost
         response = await BrowserClient.GetAsync(response.Headers.Location.ToString());
         response.StatusCode.ShouldBe((HttpStatusCode)302); // root
 
-        response = await BrowserClient.GetAsync(Url(response.Headers.Location.ToString()));
+        response = await BrowserClient.GetAsync(Url(response.Headers.Location!.ToString()));
         return response;
     }
 }
