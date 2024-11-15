@@ -7,7 +7,8 @@
     <PublishTrimmed>true</PublishTrimmed>
     <TrimmerSingleWarn>false</TrimmerSingleWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>NU1507</NoWarn>
+    <NoWarn>$(NoWarn);NU1507</NoWarn>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

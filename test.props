@@ -6,11 +6,10 @@
     <DebugType>full</DebugType>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <LangVersion>preview</LangVersion>
     <ImplicitUsings>true</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <NoWarn>NU1507</NoWarn>
+    <NoWarn>$(NoWarn);NU1507</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

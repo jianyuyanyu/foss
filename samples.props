@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);1591;NU1507</NoWarn>
+    <LangVersion>latest</LangVersion>
+    <IsPackable>false</IsPackable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally> -->
+  </PropertyGroup>
+
+</Project>

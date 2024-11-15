@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <DuendePackageDir Condition=" '$(DuendePackageDir)' == '' ">$(MSBuildThisFileDirectory)packages</DuendePackageDir>
+  </PropertyGroup>
+
+  <Target Name="PackAndMove" Condition="'$(IsPackable)' == 'true'">
+    <Exec Command="dotnet pack --configuration Release --output $(DuendePackageDir)" />
+  </Target>
+
+</Project>
