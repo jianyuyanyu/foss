@@ -12,7 +12,7 @@ namespace Duende.IdentityModel.HttpClientExtensions
 {
     public class TokenRevocationExtensionsTests
     {
-        private const string Endpoint = "http://server/endoint";
+        private const string Endpoint = "http://server/endpoint";
 
         [Fact]
         public async Task Http_request_should_have_correct_format()

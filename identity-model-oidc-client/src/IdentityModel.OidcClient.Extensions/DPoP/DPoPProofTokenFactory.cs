@@ -4,7 +4,6 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using Duende.IdentityModel;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
@@ -24,7 +23,7 @@ public class DPoPProofTokenFactory
     {
         _jwk = new JsonWebKey(proofKey);
 
-        if (_jwk.Alg.IsNullOrEmpty())
+        if (string.IsNullOrEmpty(_jwk.Alg))
         {
             throw new ArgumentException("alg must be set on proof key");
         }

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>Duende.AccessTokenManagement</RootNamespace>
@@ -14,6 +14,11 @@
     <PackageReference Include="Duende.IdentityServer"/>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" />
+
+    <!-- Pinned to avoid conflicts - we bring this in via IdentityServer, and that could conflict with 
+     AccessTokenManagement's depednecy on System.IdentityModel.Tokens.Jwt. -->
+    <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" />
+
     <PackageReference Include="RichardSzalay.MockHttp" />
   </ItemGroup>
   <ItemGroup>

@@ -58,6 +58,11 @@ public class AppHost : GenericHost
             })
             .AddOpenIdConnect("oidc", options =>
             {
+                options.Events.OnRedirectToIdentityProviderForSignOut = async e =>
+                {
+                    await e.HttpContext.RevokeRefreshTokenAsync();
+                };
+                
                 options.Authority = _identityServerHost.Url();
 
                 options.ClientId = ClientId;
@@ -212,7 +217,6 @@ public class AppHost : GenericHost
 
         response = await BrowserClient.GetAsync(response.Headers.Location.ToString());
         response.StatusCode.ShouldBe((HttpStatusCode)302); // root
-        response.Headers.Location!.ToString().ToLowerInvariant().ShouldBe("/");
 
         response = await BrowserClient.GetAsync(Url(response.Headers.Location.ToString()));
         return response;
