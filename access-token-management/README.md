@@ -7,13 +7,11 @@ tokens that are no longer needed.
 ## Packages
 The libraries in this directory are distributed as NuGet packages.
 
-- [Duende.AccessTokenManagement](https://www.nuget.org/packages/Duende.AccessTokenManagement)
-manages tokens acquired in machine-to-machine flows in  
-[.NET workers](https://learn.microsoft.com/en-us/dotnet/core/extensions/workers) and  
-[ASP.NET Core worker services](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services).
-- [Duende.AccessTokenManagement.OpenIdConnect](https://www.nuget.org/packages/Duende.AccessTokenManagement.OpenIdConnect)
-manages tokens acquired in user-centric flows in  
-[ASP.NET Core](https://dotnet.microsoft.com/en-us/apps/aspnet) applications.
+- [Duende.AccessTokenManagement](https://www.nuget.org/packages/Duende.AccessTokenManagement) manages tokens acquired in machine-to-machine flows in 
+  [.NET workers](https://learn.microsoft.com/en-us/dotnet/core/extensions/workers) and 
+  [ASP.NET Core worker services](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services).
+- [Duende.AccessTokenManagement.OpenIdConnect](https://www.nuget.org/packages/Duende.AccessTokenManagement.OpenIdConnect) manages tokens
+  acquired in user-centric flows in [ASP.NET Core](https://dotnet.microsoft.com/en-us/apps/aspnet) applications.
 
 ## Documentation
 Documentation is available [here](https://github.com/DuendeSoftware/foss/wiki).
