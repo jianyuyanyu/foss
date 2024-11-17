@@ -29,7 +29,7 @@ jobs:
       with:
         fetch-depth: 0
     - name: Setup Dotnet
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@3e891b0cb619bf60e2c25674b222b8940e2c1c25
       with:
         dotnet-version: |-
           6.0.x
@@ -68,7 +68,7 @@ jobs:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Upload Artifacts
       if: github.ref == 'refs/heads/main'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
       with:
         name: artifacts
         path: ignore-this/artifacts/*.nupkg
@@ -82,12 +82,12 @@ jobs:
     environment:
       name: nuget.org
     steps:
-    - uses: actions/download-artifact@v4
+    - uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
       with:
         name: artifacts
         path: artifacts
     - name: Setup Dotnet
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@3e891b0cb619bf60e2c25674b222b8940e2c1c25
       with:
         dotnet-version: |-
           6.0.x

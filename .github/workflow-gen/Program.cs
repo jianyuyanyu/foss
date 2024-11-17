@@ -151,7 +151,7 @@ git push origin {component.TagPrefix}-{contexts.Event.Input.Version}");
         .Environment("nuget.org", "");
 
     publishJob.Step()
-        .Uses("actions/download-artifact@v4")
+        .Uses("actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16") // 4.1.8
         .With(("name", "artifacts"), ("path", "artifacts"));
 
     publishJob.StepSetupDotNet();
@@ -186,7 +186,7 @@ public static class StepExtensions
     public static void StepSetupDotNet(this Job job)
         => job.Step()
             .Name("Setup .NET")
-            .ActionsSetupDotNet(["6.0.x", "8.0.x", "9.0.x"]);
+            .ActionsSetupDotNet("3e891b0cb619bf60e2c25674b222b8940e2c1c25", ["6.0.x", "8.0.x", "9.0.x"]); // v4.1.0
 
     public static Step IfRefMain(this Step step) 
         => step.If("github.ref == 'refs/heads/main'");
@@ -204,7 +204,7 @@ public static class StepExtensions
 
         job.Step()
             .Name($"Test report - {testProject}")
-            .Uses("dorny/test-reporter@v1")
+            .Uses("dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5") // v1.9.1
             .If("success() || failure()")
             .With(
                 ("name", $"Test Report - {testProject}"),
@@ -272,7 +272,7 @@ public static class StepExtensions
         job.Step()
             .Name("Upload Artifacts")
             .IfRefMain()
-            .Uses("actions/upload-artifact@v4")
+            .Uses("actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882") // 4.4.3
             .With(
                 ("name", "artifacts"),
                 ("path", path),
