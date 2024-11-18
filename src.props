@@ -6,14 +6,14 @@
     <Copyright>Duende Software</Copyright>
     <DebugType>full</DebugType>
     <Nullable>enable</Nullable>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>latest</LangVersion>
     <ImplicitUsings>true</ImplicitUsings>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">True</ContinuousIntegrationBuild>
     <Deterministic>true</Deterministic>
-    <NoWarn>CS1591,NU1507</NoWarn>
+    <NoWarn>$(NoWarn);CS1591,NU1507</NoWarn>
     <IsTestProject>false</IsTestProject>
     <IsPackable>true</IsPackable>
     <IsTrimmable Condition="'$(TargetFramework)' != 'netstandard2.0'">true</IsTrimmable>
