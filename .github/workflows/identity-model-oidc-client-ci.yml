@@ -24,6 +24,7 @@ jobs:
       actions: read
       checks: write
       contents: read
+      packages: write
     defaults:
       run:
         shell: bash

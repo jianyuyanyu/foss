@@ -61,7 +61,11 @@ void GenerateCiWorkflow(Component component)
         .Defaults().Run("bash", component.Name)
         .Job;
 
-    job.Permissions(actions: Permission.Read, contents: Permission.Read, checks: Permission.Write);
+    job.Permissions(
+        actions: Permission.Read,
+        contents: Permission.Read,
+        checks: Permission.Write, 
+        packages: Permission.Write);
 
     job.TimeoutMinutes(15);
 
