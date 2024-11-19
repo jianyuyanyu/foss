@@ -11,6 +11,7 @@ public static class DateTimeExtensions
     /// <summary>
     /// Converts the given date value to epoch time.
     /// </summary>
+    [Obsolete("Please use DateTimeOffset.ToUnixTimeSeconds() instead.")]
     public static long ToEpochTime(this DateTime dateTime)
     {
         var date = dateTime.ToUniversalTime();
@@ -22,6 +23,7 @@ public static class DateTimeExtensions
     /// <summary>
     /// Converts the given epoch time to a <see cref="DateTime"/> with <see cref="DateTimeKind.Utc"/> kind.
     /// </summary>
+    [Obsolete("Please use DateTimeOffset.FromUnixTimeSeconds() instead.")]
     public static DateTime ToDateTimeFromEpoch(this long date)
     {
         var timeInTicks = date * TimeSpan.TicksPerSecond;
