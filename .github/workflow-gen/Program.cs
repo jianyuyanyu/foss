@@ -49,7 +49,7 @@ void GenerateCiWorkflow(Component component)
         .Push()
         .Paths(paths);
     workflow.On
-        .PullRequest()
+        .PullRequestTarget()
         .Paths(paths);
 
     workflow.EnvDefaults();

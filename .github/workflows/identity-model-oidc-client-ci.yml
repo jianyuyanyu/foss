@@ -8,7 +8,7 @@ on:
     - .github/workflows/identity-model-oidc-client-**
     - identity-model-oidc-client/**
     - Directory.Packages.props
-  pull_request:
+  pull_request_target:
     paths:
     - .github/workflows/identity-model-oidc-client-**
     - identity-model-oidc-client/**

@@ -8,7 +8,7 @@ on:
     - .github/workflows/ignore-this-**
     - ignore-this/**
     - Directory.Packages.props
-  pull_request:
+  pull_request_target:
     paths:
     - .github/workflows/ignore-this-**
     - ignore-this/**
