@@ -28,7 +28,7 @@ namespace Duende.IdentityModel.HttpClientExtensions
             };
 
             request.Headers.Add("custom", "custom");
-            request.Properties.Add("custom", "custom");
+            request.GetProperties().Add("custom", "custom");
 
             _ = await client.IntrospectTokenAsync(request);
 
@@ -42,7 +42,7 @@ namespace Duende.IdentityModel.HttpClientExtensions
                 ["Accept"] = new[] { "application/json" },
                 ["custom"] = new[] { "custom" },
             });
-            httpRequest.Properties.Should().BeEquivalentTo(new Dictionary<string, string>
+            httpRequest.GetProperties().Should().BeEquivalentTo(new Dictionary<string, string>
             {
                 ["custom"] = "custom",
             });

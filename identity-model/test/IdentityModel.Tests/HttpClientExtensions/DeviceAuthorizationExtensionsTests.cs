@@ -39,8 +39,6 @@ namespace Duende.IdentityModel.HttpClientExtensions
             
             var headers = httpRequest.Headers;
             headers.Count().Should().Be(2);
-            
-            
         }
         
         [Fact]
@@ -56,7 +54,7 @@ namespace Duende.IdentityModel.HttpClientExtensions
             };
 
             request.Headers.Add("custom", "custom");
-            request.Properties.Add("custom", "custom");
+            request.GetProperties().Add("custom", "custom");
 
             var _ = await client.RequestDeviceAuthorizationAsync(request);
 
@@ -69,7 +67,7 @@ namespace Duende.IdentityModel.HttpClientExtensions
             headers.Count().Should().Be(3);
             headers.Should().Contain(h => h.Key == "custom" && h.Value.First() == "custom");
 
-            var properties = httpRequest.Properties;
+            var properties = httpRequest.GetProperties();
             properties.Count.Should().Be(1);
 
             var prop = properties.First();

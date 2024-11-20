@@ -45,7 +45,7 @@ namespace Duende.IdentityModel.HttpClientExtensions
             };
 
             request.Headers.Add("custom", "custom");
-            request.Properties.Add("custom", "custom");
+            request.GetProperties().Add("custom", "custom");
 
             var response = await client.GetUserInfoAsync(request);
 
@@ -60,7 +60,7 @@ namespace Duende.IdentityModel.HttpClientExtensions
             headers.Should().Contain(h => h.Key == "custom" && h.Value.First() == "custom");
             headers.Should().Contain(h => h.Key == "Authorization" && h.Value.First() == "Bearer token");
 
-            var properties = httpRequest.Properties;
+            var properties = httpRequest.GetProperties();
             properties.Count.Should().Be(1);
 
             var prop = properties.First();
