@@ -45,7 +45,7 @@ namespace Duende.IdentityModel.HttpClientExtensions
             };
 
             request.Headers.Add("custom", "custom");
-            request.Properties.Add("custom", "custom");
+            request.GetProperties().Add("custom", "custom");
 
             var response = await client.RequestBackchannelAuthenticationAsync(request);
 
@@ -59,7 +59,7 @@ namespace Duende.IdentityModel.HttpClientExtensions
             headers.Count().Should().Be(3);
             headers.Should().Contain(h => h.Key == "custom" && h.Value.First() == "custom");
 
-            var properties = httpRequest.Properties;
+            var properties = httpRequest.GetProperties();
             properties.Count.Should().Be(1);
 
             var prop = properties.First();
@@ -133,7 +133,7 @@ namespace Duende.IdentityModel.HttpClientExtensions
             };
 
             request.Headers.Add("custom", "custom");
-            request.Properties.Add("custom", "custom");
+            request.GetProperties().Add("custom", "custom");
 
             var response = await client.RequestBackchannelAuthenticationAsync(request);
 
@@ -147,7 +147,7 @@ namespace Duende.IdentityModel.HttpClientExtensions
             headers.Count().Should().Be(3);
             headers.Should().Contain(h => h.Key == "custom" && h.Value.First() == "custom");
 
-            var properties = httpRequest.Properties;
+            var properties = httpRequest.GetProperties();
             properties.Count.Should().Be(1);
 
             var prop = properties.First();

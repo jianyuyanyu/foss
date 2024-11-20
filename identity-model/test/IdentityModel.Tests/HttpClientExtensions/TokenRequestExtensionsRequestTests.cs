@@ -43,7 +43,7 @@ namespace Duende.IdentityModel.HttpClientExtensions
             };
 
             request.Headers.Add("custom", "custom");
-            request.Properties.Add("custom", "custom");
+            request.GetProperties().Add("custom", "custom");
 
             var _ = await client.RequestTokenAsync(request);
             var httpRequest = handler.Request;
@@ -56,7 +56,7 @@ namespace Duende.IdentityModel.HttpClientExtensions
             headers.Count().Should().Be(3);
             headers.Should().Contain(h => h.Key == "custom" && h.Value.First() == "custom");
 
-            var properties = httpRequest.Properties;
+            var properties = httpRequest.GetProperties();
             properties.Count.Should().Be(1);
 
             var prop = properties.First();
@@ -159,13 +159,13 @@ namespace Duende.IdentityModel.HttpClientExtensions
                 Scope = "scope"
             };
 
-            request.Properties.Add("foo", "bar");
+            request.GetProperties().Add("foo", "bar");
 
             var response = await _client.RequestClientCredentialsTokenAsync(request);
 
             response.IsError.Should().BeFalse();
 
-            var properties = _handler.Request.Properties;
+            var properties = _handler.Request.GetProperties();
             var foo = properties.First().Value as string;
             foo.Should().NotBeNull();
             foo.Should().Be("bar");
