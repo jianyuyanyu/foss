@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0</TargetFrameworks>
     <RootNamespace>Duende.IdentityModel.OidcClient</RootNamespace>
     <AssemblyName>Duende.IdentityModel.OidcClient.Extensions</AssemblyName>
     <PackageId>Duende.IdentityModel.OidcClient.Extensions</PackageId>
     <PackageTags>OAuth2;OAuth 2.0;OpenID Connect;Security;Identity;IdentityServer;DPoP</PackageTags>
     <Description>DPoP extensions for IdentityModel.OidcClient</Description>
     <PackageReadmePath>README.md</PackageReadmePath>
-    <IsTrimmable Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0'))">true</IsTrimmable>
     <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
   </PropertyGroup>
   <ItemGroup>
