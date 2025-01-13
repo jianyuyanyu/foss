@@ -53,13 +53,6 @@ jobs:
         reporter: dotnet-trx
         fail-on-error: true
         fail-on-empty: true
-    - name: Install Sectigo CodeSiging CA certificates
-      run: |-
-        sudo apt-get update
-        sudo apt-get install -y ca-certificates
-        sudo cp SectigoPublicCodeSigningRootCrossAAA.crt /usr/local/share/ca-certificates/
-        sudo update-ca-certificates
-      working-directory: .github/workflows
     - name: Tool restore
       run: dotnet tool restore
     - name: Pack AccessTokenManagement
