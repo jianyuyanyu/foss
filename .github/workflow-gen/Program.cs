@@ -79,8 +79,6 @@ void GenerateCiWorkflow(Component component)
         job.StepTestAndReport(component.Name, testProject);
     }
 
-    job.StepInstallCACerts();
-
     job.StepToolRestore();
 
     foreach (var project in component.Projects)
@@ -130,8 +128,6 @@ void GenerateReleaseWorkflow(Component component)
 git config --global user.name ""Duende Software GitHub Bot""
 git tag -a {component.TagPrefix}-{contexts.Event.Input.Version} -m ""Release v{contexts.Event.Input.Version}""
 git push origin {component.TagPrefix}-{contexts.Event.Input.Version}");
-
-    tagJob.StepInstallCACerts();
 
     foreach (var project in component.Projects)
     {
@@ -219,18 +215,6 @@ public static class StepExtensions
                 ("fail-on-error", "true"),
                 ("fail-on-empty", "true"));
     }
-
-    // These intermediate certificates are required for signing and are not installed on the GitHub runners by default.
-    public static void StepInstallCACerts(this Job job)
-        => job.Step()
-            .Name("Install Sectigo CodeSiging CA certificates") 
-            .WorkingDirectory(".github/workflows")
-            .Run("""
-                 sudo apt-get update
-                 sudo apt-get install -y ca-certificates
-                 sudo cp SectigoPublicCodeSigningRootCrossAAA.crt /usr/local/share/ca-certificates/
-                 sudo update-ca-certificates
-                 """);
 
     public static void StepToolRestore(this Job job)
         => job.Step()

@@ -41,13 +41,6 @@ jobs:
         git config --global user.name "Duende Software GitHub Bot"
         git tag -a imoc-${{ github.event.inputs.version }} -m "Release v${{ github.event.inputs.version }}"
         git push origin imoc-${{ github.event.inputs.version }}
-    - name: Install Sectigo CodeSiging CA certificates
-      run: |-
-        sudo apt-get update
-        sudo apt-get install -y ca-certificates
-        sudo cp SectigoPublicCodeSigningRootCrossAAA.crt /usr/local/share/ca-certificates/
-        sudo update-ca-certificates
-      working-directory: .github/workflows
     - name: Pack IdentityModel.OidcClient
       run: dotnet pack -c Release src/IdentityModel.OidcClient -o artifacts
     - name: Pack IdentityModel.OidcClient.Extensions
