@@ -35,7 +35,6 @@
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
     <PackageVersion Include="Duende.IdentityModel" Version="7.0.0" />
     <PackageVersion Include="Duende.IdentityServer" Version="$(IdentityServerVersion)" />
-    <PackageVersion Include="FluentAssertions" Version="6.12.0" />
     <PackageVersion Include="MartinCostello.Logging.XUnit" Version="0.3.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(FrameworkVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(FrameworkVersion)" />
@@ -58,6 +57,7 @@
     <PackageVersion Include="SimpleExec" Version="12.0.0" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="$(WilsonVersion)" />
     <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="$(WilsonVersion)" />
+    <PackageVersion Include="System.Net.Http" Version="4.3.4" />
     <PackageVersion Include="System.Text.Json" Version="8.0.5" />
     <PackageVersion Include="Verify.Xunit" Version="27.0.1" />
     <PackageVersion Include="xunit.core" Version="2.9.2" />

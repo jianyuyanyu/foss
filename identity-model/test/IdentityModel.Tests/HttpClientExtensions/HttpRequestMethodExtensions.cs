@@ -1,5 +1,4 @@
 ﻿#if NETFRAMEWORK
-using System.Net.Http;
 #endif
 
 namespace Duende.IdentityModel.HttpClientExtensions;
