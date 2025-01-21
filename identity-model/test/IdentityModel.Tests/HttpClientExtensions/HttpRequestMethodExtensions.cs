@@ -1,7 +1,4 @@
-﻿#if NETFRAMEWORK
-#endif
-
-namespace Duende.IdentityModel.HttpClientExtensions;
+﻿namespace Duende.IdentityModel.HttpClientExtensions;
 
 internal static class HttpRequestMethodExtensions
 {
@@ -10,7 +7,7 @@ internal static class HttpRequestMethodExtensions
 #if NETFRAMEWORK
         return requestMessage.Properties;
 #else
-        return (IDictionary<string, object>)requestMessage.Options;
+        return requestMessage.Options;
 #endif
     }
 }
