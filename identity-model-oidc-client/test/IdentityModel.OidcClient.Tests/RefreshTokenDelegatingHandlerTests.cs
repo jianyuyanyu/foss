@@ -5,7 +5,6 @@ using System.Collections.Concurrent;
 using System.Net;
 using Duende.IdentityModel.Client;
 using Duende.IdentityModel.OidcClient.Results;
-using Xunit.Abstractions;
 
 namespace Duende.IdentityModel.OidcClient
 {
