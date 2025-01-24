@@ -13,7 +13,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Duende.IdentityServer" />
-    <PackageReference Include="FluentAssertions" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" />
     <PackageReference Include="Microsoft.Extensions.Primitives" />
