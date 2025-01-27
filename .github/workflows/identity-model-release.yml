@@ -10,7 +10,7 @@ on:
         required: true
         default: '0.0.0'
 env:
-  DOTNETT_NOLOGO: true
+  DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
 jobs:
   tag:

@@ -14,7 +14,7 @@ on:
     - identity-model-oidc-client/**
     - Directory.Packages.props
 env:
-  DOTNETT_NOLOGO: true
+  DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
 jobs:
   build:
