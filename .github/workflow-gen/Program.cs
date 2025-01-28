@@ -182,7 +182,7 @@ public static class StepExtensions
 {
     public static void EnvDefaults(this Workflow workflow)
         => workflow.Env(
-            ("DOTNETT_NOLOGO", "true"),
+            ("DOTNET_NOLOGO", "true"),
             ("DOTNET_CLI_TELEMETRY_OPTOUT", "true"));
 
     public static void StepSetupDotNet(this Job job)
