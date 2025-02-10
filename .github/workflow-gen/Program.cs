@@ -49,7 +49,7 @@ void GenerateCiWorkflow(Component component)
         .Push()
         .Paths(paths);
     workflow.On
-        .PullRequestTarget()
+        .PullRequest()
         .Paths(paths);
 
     workflow.EnvDefaults();
@@ -207,7 +207,7 @@ public static class StepExtensions
         job.Step()
             .Name($"Test report - {testProject}")
             .Uses("dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5") // v1.9.1
-            .If("success() || failure()")
+            .If("github.event == 'push' && (success() || failure())")
             .With(
                 ("name", $"Test Report - {testProject}"),
                 ("path", $"{componentName}/{path}/TestResults/{logFileName}"),
@@ -240,12 +240,19 @@ public static class StepExtensions
                     "--azure-key-vault-certificate NuGetPackageSigning";
         job.Step()
             .Name("Sign packages")
+            .IfGithubEventIsPush()
             .Run($"""
                  for file in artifacts/*.nupkg; do
                     dotnet NuGetKeyVaultSignTool sign "$file" {flags}
                  done
                  """);
     }
+    /// <summary>
+    /// Only run this if the build is triggered on a branch IN the same repo
+    /// this means it's from a trusted contributor.
+    /// </summary>
+    public static Step IfGithubEventIsPush(this Step step)
+        => step.If("github.event == 'push'");
 
     public static Step StepPush(this Job job, string destination, string sourceUrl, string secretName)
     {
