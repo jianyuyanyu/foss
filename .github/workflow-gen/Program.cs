@@ -240,7 +240,7 @@ public static class StepExtensions
                     "--azure-key-vault-certificate NuGetPackageSigning";
         job.Step()
             .Name("Sign packages")
-            .IfGithubEventIsPush()
+            .IfGithubEventIsPushOrWorkflowDispatch()
             .Run($"""
                  for file in artifacts/*.nupkg; do
                     dotnet NuGetKeyVaultSignTool sign "$file" {flags}
@@ -251,8 +251,8 @@ public static class StepExtensions
     /// Only run this if the build is triggered on a branch IN the same repo
     /// this means it's from a trusted contributor.
     /// </summary>
-    public static Step IfGithubEventIsPush(this Step step)
-        => step.If("github.event == 'push'");
+    public static Step IfGithubEventIsPushOrWorkflowDispatch(this Step step)
+        => step.If("github.event == 'push' || github.event == 'workflow_dispatch'");
 
     public static Step StepPush(this Job job, string destination, string sourceUrl, string secretName)
     {
