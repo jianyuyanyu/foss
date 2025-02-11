@@ -48,7 +48,6 @@ jobs:
     - name: Tool restore
       run: dotnet tool restore
     - name: Sign packages
-      if: github.event == 'push' || github.event == 'workflow_dispatch'
       run: |-
         for file in artifacts/*.nupkg; do
            dotnet NuGetKeyVaultSignTool sign "$file" --file-digest sha256 --timestamp-rfc3161 http://timestamp.digicert.com --azure-key-vault-url https://duendecodesigninghsm.vault.azure.net/ --azure-key-vault-client-id 18e3de68-2556-4345-8076-a46fad79e474 --azure-key-vault-tenant-id ed3089f0-5401-4758-90eb-066124e2d907 --azure-key-vault-client-secret ${{ secrets.SignClientSecret }} --azure-key-vault-certificate NuGetPackageSigning
@@ -75,8 +74,6 @@ jobs:
     needs:
     - tag
     runs-on: ubuntu-latest
-    environment:
-      name: nuget.org
     steps:
     - uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
       with:

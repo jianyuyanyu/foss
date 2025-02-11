@@ -88,8 +88,6 @@ void GenerateCiWorkflow(Component component)
 
     job.StepSign();
 
-    job.StepPush("MyGet", "https://www.myget.org/F/duende_identityserver/api/v2/package", "MYGET");
-
     job.StepPush("GitHub", "https://nuget.pkg.github.com/DuendeSoftware/index.json", "GITHUB_TOKEN")
         .Env(("GITHUB_TOKEN", contexts.Secrets.GitHubToken),
             ("NUGET_AUTH_TOKEN", contexts.Secrets.GitHubToken));
@@ -136,7 +134,7 @@ git push origin {component.TagPrefix}-{contexts.Event.Input.Version}");
 
     tagJob.StepToolRestore();
 
-    tagJob.StepSign();
+    tagJob.StepSign(true);
 
     tagJob.StepPush("MyGet", "https://www.myget.org/F/duende_identityserver/api/v2/package", "MYGET");
 
@@ -149,8 +147,7 @@ git push origin {component.TagPrefix}-{contexts.Event.Input.Version}");
     var publishJob = workflow.Job("publish")
         .Name("Publish to nuget.org")
         .RunsOn(GitHubHostedRunners.UbuntuLatest)
-        .Needs("tag")
-        .Environment("nuget.org", "");
+        .Needs("tag");
 
     publishJob.Step()
         .Uses("actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16") // 4.1.8
@@ -193,6 +190,10 @@ public static class StepExtensions
     public static Step IfRefMain(this Step step) 
         => step.If("github.ref == 'refs/heads/main'");
 
+    public static Job RunEitherOnBranchOrAsPR(this Job job)
+        => job.If(
+            "(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) || (github.event_name == 'push')");
+
     public static void StepTestAndReport(this Job job, string componentName, string testProject)
     {
         var path        = $"test/{testProject}";
@@ -207,7 +208,7 @@ public static class StepExtensions
         job.Step()
             .Name($"Test report - {testProject}")
             .Uses("dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5") // v1.9.1
-            .If("github.event == 'push' && (success() || failure())")
+            .If("github.event_name == 'push' && (success() || failure())")
             .With(
                 ("name", $"Test Report - {testProject}"),
                 ("path", $"{componentName}/{path}/TestResults/{logFileName}"),
@@ -229,7 +230,7 @@ public static class StepExtensions
             .Run($"dotnet pack -c Release {path} -o artifacts");
     }
 
-    public static void StepSign(this Job job)
+    public static void StepSign(this Job job, bool always = false)
     {
         var flags = "--file-digest sha256 "                                                +
                     "--timestamp-rfc3161 http://timestamp.digicert.com "                   +
@@ -238,21 +239,24 @@ public static class StepExtensions
                     "--azure-key-vault-tenant-id ed3089f0-5401-4758-90eb-066124e2d907 "    +
                     "--azure-key-vault-client-secret ${{ secrets.SignClientSecret }} "     +
                     "--azure-key-vault-certificate NuGetPackageSigning";
-        job.Step()
-            .Name("Sign packages")
-            .IfGithubEventIsPushOrWorkflowDispatch()
-            .Run($"""
-                 for file in artifacts/*.nupkg; do
-                    dotnet NuGetKeyVaultSignTool sign "$file" {flags}
-                 done
-                 """);
+        var step = job.Step()
+            .Name("Sign packages");
+        if (!always)
+        {
+            step = step.IfGithubEventIsPush();
+        }
+        step.Run($"""
+              for file in artifacts/*.nupkg; do
+                 dotnet NuGetKeyVaultSignTool sign "$file" {flags}
+              done
+              """);
     }
     /// <summary>
     /// Only run this if the build is triggered on a branch IN the same repo
     /// this means it's from a trusted contributor.
     /// </summary>
-    public static Step IfGithubEventIsPushOrWorkflowDispatch(this Step step)
-        => step.If("github.event == 'push' || github.event == 'workflow_dispatch'");
+    public static Step IfGithubEventIsPush(this Step step)
+        => step.If("github.event_name == 'push'");
 
     public static Step StepPush(this Job job, string destination, string sourceUrl, string secretName)
     {
