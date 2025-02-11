@@ -45,7 +45,7 @@ jobs:
     - name: Test - IgnoreThis.Tests
       run: dotnet test -c Release test/IgnoreThis.Tests --logger "console;verbosity=normal" --logger "trx;LogFileName=Tests.trx" --collect:"XPlat Code Coverage"
     - name: Test report - IgnoreThis.Tests
-      if: github.event == 'push' && (success() || failure())
+      if: github.event_name == 'push' && (success() || failure())
       uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
       with:
         name: Test Report - IgnoreThis.Tests
@@ -58,14 +58,11 @@ jobs:
     - name: Pack IgnoreThis
       run: dotnet pack -c Release src/IgnoreThis -o artifacts
     - name: Sign packages
-      if: github.event == 'push' || github.event == 'workflow_dispatch'
+      if: github.event_name == 'push'
       run: |-
         for file in artifacts/*.nupkg; do
            dotnet NuGetKeyVaultSignTool sign "$file" --file-digest sha256 --timestamp-rfc3161 http://timestamp.digicert.com --azure-key-vault-url https://duendecodesigninghsm.vault.azure.net/ --azure-key-vault-client-id 18e3de68-2556-4345-8076-a46fad79e474 --azure-key-vault-tenant-id ed3089f0-5401-4758-90eb-066124e2d907 --azure-key-vault-client-secret ${{ secrets.SignClientSecret }} --azure-key-vault-certificate NuGetPackageSigning
         done
-    - name: Push packages to MyGet
-      if: github.ref == 'refs/heads/main'
-      run: dotnet nuget push artifacts/*.nupkg --source https://www.myget.org/F/duende_identityserver/api/v2/package --api-key ${{ secrets.MYGET }} --skip-duplicate
     - name: Push packages to GitHub
       if: github.ref == 'refs/heads/main'
       run: dotnet nuget push artifacts/*.nupkg --source https://nuget.pkg.github.com/DuendeSoftware/index.json --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
