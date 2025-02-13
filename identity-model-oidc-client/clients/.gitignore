@@ -1,0 +1,4 @@
+# Files we create in some of the samples
+# (real implementations would use secure OS storage)
+proofkey
+refresh_token

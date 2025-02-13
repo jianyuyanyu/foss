@@ -1,5 +1,5 @@
-﻿using IdentityModel.OidcClient;
-using IdentityModel.OidcClient.DPoP;
+﻿using Duende.IdentityModel.OidcClient;
+using Duende.IdentityModel.OidcClient.DPoP;
 using System;
 using System.Diagnostics;
 using System.IO;

@@ -4,13 +4,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
 using Duende.IdentityModel.OidcClient.Browser;
 
 namespace ConsoleClientWithBrowser
@@ -18,9 +15,9 @@ namespace ConsoleClientWithBrowser
     public class SystemBrowser : IBrowser
     {
         public int Port { get; }
-        private readonly string _path;
+        private readonly string? _path;
 
-        public SystemBrowser(int? port = null, string path = null)
+        public SystemBrowser(int? port = null, string? path = null)
         {
             _path = path;
 
@@ -110,7 +107,7 @@ namespace ConsoleClientWithBrowser
 
         public string Url => _url;
 
-        public LoopbackHttpListener(int port, string path = null)
+        public LoopbackHttpListener(int port, string? path = null)
         {
             path = path ?? String.Empty;
             if (path.StartsWith("/")) path = path.Substring(1);
@@ -140,6 +137,8 @@ namespace ConsoleClientWithBrowser
             {
                 if (ctx.Request.Method == "GET")
                 {
+                    var queryString = ctx.Request.QueryString.Value ??
+                        throw new InvalidOperationException("Unexpected null query string");
                     await SetResultAsync(ctx.Request.QueryString.Value, ctx);
                 }
                 else

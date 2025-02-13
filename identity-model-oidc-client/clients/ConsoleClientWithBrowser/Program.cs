@@ -2,11 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Serilog.Sinks.SystemConsole.Themes;
 using System.IdentityModel.Tokens.Jwt;
@@ -22,7 +18,6 @@ namespace ConsoleClientWithBrowser
     {
         static string _api = "https://demo.duendesoftware.com/api/test";
 
-        static OidcClient _oidcClient;
         static HttpClient _apiClient = new HttpClient { BaseAddress = new Uri(_api) };
 
         public static async Task Main()
@@ -109,8 +104,8 @@ namespace ConsoleClientWithBrowser
 
             options.LoggerFactory = new LoggerFactory().AddSerilog(serilog);
 
-            _oidcClient = new OidcClient(options);
-            var result = await _oidcClient.LoginAsync(new LoginRequest());
+            var oidcClient = new OidcClient(options);
+            var result = await oidcClient.LoginAsync(new LoginRequest());
 
             _apiClient = new HttpClient(result.RefreshTokenHandler)
             {
@@ -135,10 +130,11 @@ namespace ConsoleClientWithBrowser
                 Console.WriteLine("{0}: {1}", claim.Type, claim.Value);
             }
 
-            var values = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(result.TokenResponse.Raw);
+            var raw = result.TokenResponse.Raw ?? throw new InvalidOperationException("unexpected null token response");
+            var values = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(raw);
 
             Console.WriteLine($"token response...");
-            foreach (var item in values)
+            foreach (var item in values ?? [])
             {
                 Console.WriteLine($"{item.Key}: {item.Value}");
             }

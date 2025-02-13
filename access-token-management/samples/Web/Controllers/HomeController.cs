@@ -4,11 +4,10 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Duende.IdentityModel.Client;
 using Duende.AccessTokenManagement.OpenIdConnect;
+using Microsoft.Extensions.Options;
 
 namespace Web.Controllers;
 
@@ -16,11 +15,13 @@ public class HomeController : Controller
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IUserTokenManagementService _tokenManagementService;
+    private readonly SampleConfiguration _configuration;
 
-    public HomeController(IHttpClientFactory httpClientFactory, IUserTokenManagementService tokenManagementService)
+    public HomeController(IHttpClientFactory httpClientFactory, IUserTokenManagementService tokenManagementService, IOptions<SampleConfiguration> options)
     {
         _httpClientFactory = httpClientFactory;
         _tokenManagementService = tokenManagementService;
+        _configuration = options.Value;
     }
 
     [AllowAnonymous]
@@ -36,7 +37,7 @@ public class HomeController : Controller
         var client = _httpClientFactory.CreateClient();
         client.SetToken(token.AccessTokenType!, token.AccessToken!);
 
-        var response = await client.GetStringAsync($"{Startup.ApiBaseUrl}test");
+        var response = await client.GetStringAsync($"{_configuration.ApiBaseUrl}test");
         ViewBag.Json = PrettyPrint(response);
 
         return View("CallApi");
@@ -48,7 +49,7 @@ public class HomeController : Controller
         var client = _httpClientFactory.CreateClient();
         client.SetToken(token.AccessTokenType!, token.AccessToken!);
             
-        var response = await client.GetStringAsync($"{Startup.ApiBaseUrl}test");
+        var response = await client.GetStringAsync($"{_configuration.ApiBaseUrl}test");
         ViewBag.Json = PrettyPrint(response);
 
         return View("CallApi");
@@ -90,7 +91,7 @@ public class HomeController : Controller
         var client = _httpClientFactory.CreateClient();
         client.SetToken(token.AccessTokenType!, token.AccessToken!);
 
-        var response = await client.GetStringAsync($"{Startup.ApiBaseUrl}test");
+        var response = await client.GetStringAsync($"{_configuration.ApiBaseUrl}test");
         
         ViewBag.Json = PrettyPrint(response);
         return View("CallApi");

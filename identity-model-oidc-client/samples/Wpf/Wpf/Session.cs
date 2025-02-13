@@ -1,4 +1,4 @@
-﻿using IdentityModel.OidcClient;
+﻿using Duende.IdentityModel.OidcClient;
 using System;
 using System.Collections;
 using System.Collections.Generic;
