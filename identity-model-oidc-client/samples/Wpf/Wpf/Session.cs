@@ -14,9 +14,9 @@ namespace Wpf
     {
         private static readonly string SessionFile = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/session";
 
-        public string IdToken { get; set; }
-        public string RefreshToken { get; set; }
-        public IEnumerable<ClaimData> Claims { get; set; }
+        public string? IdToken { get; set; }
+        public string? RefreshToken { get; set; }
+        public IEnumerable<ClaimData> Claims { get; set; } = [];
 
         internal static void Store(LoginResult loginResult)
         {

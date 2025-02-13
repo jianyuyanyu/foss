@@ -168,7 +168,46 @@
       "console": "integratedTerminal",
       "presentation": {
         "group": "2_imoc-samples"
-      }
+      },
+    },
+    {
+      "name": "WindowsConsoleSystemBrowser  (imoc sample)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-imoc-WindowsConsoleSystemBrowser",
+      "program": "${workspaceFolder}/identity-model-oidc-client/samples/WindowsConsoleSystemBrowser/WindowsConsoleSystemBrowser/bin/Debug/net9.0-windows/WindowsConsoleSystemBrowser.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/identity-model-oidc-client/samples/WindowsConsoleSystemBrowser/WindowsConsoleSystemBrowser",
+      "console": "integratedTerminal",
+      "presentation": {
+        "group": "2_imoc-samples"
+      },
+    },
+    {
+      "name": "WPF  (imoc sample)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-imoc-Wpf",
+      "program": "${workspaceFolder}/identity-model-oidc-client/samples/Wpf/Wpf/bin/Debug/net9.0-windows/Wpf.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/identity-model-oidc-client/samples/Wpf/Wpf",
+      "console": "integratedTerminal",
+      "presentation": {
+        "group": "2_imoc-samples"
+      },
+    },
+    {
+      "name": "WPF with WebView2  (imoc sample)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-imoc-WpfWebView2",
+      "program": "${workspaceFolder}/identity-model-oidc-client/samples/WpfWebView2/WpfWebView2/bin/Debug/net9.0-windows/WpfWebView2.exe",
+      "args": [],
+      "cwd": "${workspaceFolder}/identity-model-oidc-client/samples/WpfWebView2/WpfWebView2",
+      "console": "integratedTerminal",
+      "presentation": {
+        "group": "2_imoc-samples"
+      },
     }
   ]
 }

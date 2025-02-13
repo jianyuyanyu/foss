@@ -1,20 +1,13 @@
 ﻿using Duende.IdentityModel.OidcClient.Browser;
 using Microsoft.Web.WebView2.Wpf;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace WpfWebView2
 {
     public class WpfEmbeddedBrowser : IBrowser
     {
-        private BrowserOptions _options = null;
-
         public async Task<BrowserResult> InvokeAsync(BrowserOptions options, CancellationToken cancellationToken = default)
         {
-            _options = options;
-
             var semaphoreSlim = new SemaphoreSlim(0, 1);
             var browserResult = new BrowserResult()
             {
@@ -36,7 +29,7 @@ namespace WpfWebView2
             var webView = new WebView2();
             webView.NavigationStarting += (s, e) =>
             {
-                if (IsBrowserNavigatingToRedirectUri(new Uri(e.Uri)))
+                if (IsBrowserNavigatingToRedirectUri(new Uri(e.Uri), options))
                 {
                     e.Cancel = true;
 
@@ -61,16 +54,16 @@ namespace WpfWebView2
             webView.CoreWebView2.CookieManager.DeleteAllCookies();
 
             // Navigate
-            webView.CoreWebView2.Navigate(_options.StartUrl);
+            webView.CoreWebView2.Navigate(options.StartUrl);
 
             await semaphoreSlim.WaitAsync();
 
             return browserResult;
         }
 
-        private bool IsBrowserNavigatingToRedirectUri(Uri uri)
+        private bool IsBrowserNavigatingToRedirectUri(Uri uri, BrowserOptions options)
         {
-            return uri.AbsoluteUri.StartsWith(_options.EndUrl);
+            return uri.AbsoluteUri.StartsWith(options.EndUrl);
         }
     }
 }

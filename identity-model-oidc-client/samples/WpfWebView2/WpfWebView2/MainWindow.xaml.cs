@@ -48,7 +48,7 @@ namespace WpfWebView2
             }
             else
             {
-                txbMessage.Text = loginResult.User.Identity.Name;
+                txbMessage.Text = loginResult.User.Identity?.Name;
             }
         }
     }

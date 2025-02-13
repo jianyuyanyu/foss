@@ -16,9 +16,9 @@ namespace Wpf;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private HttpClient _apiClient;
-    private OidcClient _oidcClient;
-    private AuthorizeState _state;
+    private HttpClient? _apiClient;
+    private OidcClient? _oidcClient;
+    private AuthorizeState? _state;
 
     public MainWindow()
     {
@@ -51,6 +51,7 @@ public partial class MainWindow : Window
 
     private async void CallApi_Click(object sender, RoutedEventArgs e)
     {
+        if (_apiClient == null) throw new InvalidOperationException("api client uninitialized");
         Details.Text = "Loading...";
         var response = await _apiClient.GetAsync("");
 
@@ -67,6 +68,7 @@ public partial class MainWindow : Window
 
     private async void Logout_Click(object sender, RoutedEventArgs e)
     {
+        if (_oidcClient == null) throw new InvalidOperationException("oidc client uninitialized");
         var session = Session.Get();
         var url = await _oidcClient.PrepareLogoutAsync(new LogoutRequest
         {
@@ -107,6 +109,7 @@ public partial class MainWindow : Window
 
     private async void Login_Click(object sender, RoutedEventArgs e)
     {
+        if (_oidcClient == null) throw new InvalidOperationException("oidc client uninitialized");
         _state = await _oidcClient.PrepareLoginAsync();
 
         // open system browser to start authentication
@@ -151,6 +154,7 @@ public partial class MainWindow : Window
 
     private void InitializeApiClient(string proofKey, string refreshToken)
     {
+        if (_oidcClient == null) throw new InvalidOperationException("oidc client uninitialized");
         // Use saved refresh token
         var handler = _oidcClient.CreateDPoPHandler(proofKey, refreshToken);
         _apiClient = new HttpClient(handler)
@@ -169,6 +173,9 @@ public partial class MainWindow : Window
 
     private async Task<LoginResult> ReceiveSignInCallback()
     {
+        if (_oidcClient == null) throw new InvalidOperationException("oidc client uninitialized");
+        if (_state == null) throw new InvalidOperationException("state uninitialized");
+
         var callbackManager = new CallbackManager(_state.State);
         var response = await callbackManager.RunServer();
         return await _oidcClient.ProcessResponseAsync(response, _state);
