@@ -33,9 +33,12 @@ foreach (var component in components)
     GenerateReleaseWorkflow(component);
 }
 
+GenerateUploadTestResultsWorkflow();
+
+
 void GenerateCiWorkflow(Component component)
 {
-    var workflow = new Workflow($"{component.Name}/ci");
+    var workflow = new Workflow(component.CiWorkflowName);
     var paths    = new[]
     {
         $".github/workflows/{component.Name}-**", 
@@ -76,8 +79,10 @@ void GenerateCiWorkflow(Component component)
 
     foreach (var testProject in component.Tests)
     {
-        job.StepTestAndReport(component.Name, testProject);
+        job.StepTest(component.Name, testProject);
     }
+
+    job.StepUploadTestResultsAsArtifact(component);
 
     job.StepToolRestore();
 
@@ -100,7 +105,7 @@ void GenerateCiWorkflow(Component component)
 
 void GenerateReleaseWorkflow(Component component)
 {
-    var workflow = new Workflow($"{component.Name}/release");
+    var workflow = new Workflow(component.ReleaseWorkflowName);
 
     workflow.On
         .WorkflowDispatch()
@@ -166,6 +171,37 @@ git push origin {component.TagPrefix}-{contexts.Event.Input.Version}");
     WriteWorkflow(workflow, fileName);
 }
 
+void GenerateUploadTestResultsWorkflow()
+{
+    var workflow = new Workflow("generate-test-reports");
+    workflow.On
+        .WorkflowRun()
+        .Workflows(components.Select(x => x.CiWorkflowName).ToArray())
+        .Types("completed");
+
+    var job = workflow
+        .Job("report")
+        .Name("report")
+        .RunsOn(GitHubHostedRunners.UbuntuLatest);
+        
+    job.Permissions(
+        actions: Permission.Read,
+        contents: Permission.Read,
+        checks: Permission.Write,
+        packages: Permission.Write);
+
+    foreach (var component in components)
+    {
+        foreach (var testProject in component.Tests)
+        {
+            job.StepGenerateReportFromTestArtifact(component, testProject);
+        }
+    }
+
+    var fileName = $"generate-test-reports";
+    WriteWorkflow(workflow, fileName);
+}
+
 void WriteWorkflow(Workflow workflow, string fileName)
 {
     var filePath = $"../workflows/{fileName}.yml";
@@ -173,7 +209,11 @@ void WriteWorkflow(Workflow workflow, string fileName)
     Console.WriteLine($"Wrote workflow to {filePath}");
 }
 
-record Component(string Name, string[] Projects, string[] Tests, string TagPrefix);
+record Component(string Name, string[] Projects, string[] Tests, string TagPrefix)
+{
+    public string CiWorkflowName => $"{Name}/ci";
+    public string ReleaseWorkflowName => $"{Name}/release";
+}
 
 public static class StepExtensions
 {
@@ -190,14 +230,10 @@ public static class StepExtensions
     public static Step IfRefMain(this Step step) 
         => step.If("github.ref == 'refs/heads/main'");
 
-    public static Job RunEitherOnBranchOrAsPR(this Job job)
-        => job.If(
-            "(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) || (github.event_name == 'push')");
-
-    public static void StepTestAndReport(this Job job, string componentName, string testProject)
+    public static void StepTest(this Job job, string componentName, string testProject)
     {
         var path        = $"test/{testProject}";
-        var logFileName = "Tests.trx";
+        var logFileName = $"{testProject}.trx";
         var flags = $"--logger \"console;verbosity=normal\" "      +
                     $"--logger \"trx;LogFileName={logFileName}\" " +
                     $"--collect:\"XPlat Code Coverage\"";
@@ -205,13 +241,32 @@ public static class StepExtensions
             .Name($"Test - {testProject}")
             .Run($"dotnet test -c Release {path} {flags}");
 
+    }
+
+    internal static void StepUploadTestResultsAsArtifact(this Job job, Component component)
+    {
         job.Step()
-            .Name($"Test report - {testProject}")
-            .Uses("dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5") // v1.9.1
-            .If("github.event_name == 'push' && (success() || failure())")
+            .Name($"Test report")
+            .If("success() || failure()")
+            .Uses("actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882") // 4.4.3
             .With(
+                ("name", "test-results"),
+                ("path", string.Join(Environment.NewLine, component.Tests
+                    .Select(testProject => $"{component.Name}/test/{testProject}/TestResults/{testProject}.trx"))),
+                ("retention-days", "5"));
+    }
+
+    internal static void StepGenerateReportFromTestArtifact(this Job job, Component component, string testProject)
+    {
+        var path = $"test/{testProject}";
+        job.Step()
+            .Name($"Test report - {component.Name} - {testProject}")
+            .Uses("dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5") // v1.9.1
+            .If($"event.workflow.name == '{component.CiWorkflowName}'")
+            .With(
+                ("artifact", "test-results"),
                 ("name", $"Test Report - {testProject}"),
-                ("path", $"{componentName}/{path}/TestResults/{logFileName}"),
+                ("path", $"{testProject}.trx"),
                 ("reporter", "dotnet-trx"),
                 ("fail-on-error", "true"),
                 ("fail-on-empty", "true"));
@@ -272,7 +327,7 @@ public static class StepExtensions
         var path = $"{componentName}/artifacts/*.nupkg";
         job.Step()
             .Name("Upload Artifacts")
-            .IfRefMain()
+            .IfGithubEventIsPush()
             .Uses("actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882") // 4.4.3
             .With(
                 ("name", "artifacts"),

@@ -43,16 +43,14 @@ jobs:
           8.0.x
           9.0.x
     - name: Test - IdentityModel.Tests
-      run: dotnet test -c Release test/IdentityModel.Tests --logger "console;verbosity=normal" --logger "trx;LogFileName=Tests.trx" --collect:"XPlat Code Coverage"
-    - name: Test report - IdentityModel.Tests
-      if: github.event_name == 'push' && (success() || failure())
-      uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
+      run: dotnet test -c Release test/IdentityModel.Tests --logger "console;verbosity=normal" --logger "trx;LogFileName=IdentityModel.Tests.trx" --collect:"XPlat Code Coverage"
+    - name: Test report
+      if: success() || failure()
+      uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
       with:
-        name: Test Report - IdentityModel.Tests
-        path: identity-model/test/IdentityModel.Tests/TestResults/Tests.trx
-        reporter: dotnet-trx
-        fail-on-error: true
-        fail-on-empty: true
+        name: test-results
+        path: identity-model/test/IdentityModel.Tests/TestResults/IdentityModel.Tests.trx
+        retention-days: 5
     - name: Tool restore
       run: dotnet tool restore
     - name: Pack IdentityModel
@@ -70,7 +68,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Upload Artifacts
-      if: github.ref == 'refs/heads/main'
+      if: github.event_name == 'push'
       uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
       with:
         name: artifacts
