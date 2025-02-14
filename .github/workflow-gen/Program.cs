@@ -262,7 +262,7 @@ public static class StepExtensions
         job.Step()
             .Name($"Test report - {component.Name} - {testProject}")
             .Uses("dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5") // v1.9.1
-            .If($"event.workflow.name == '{component.CiWorkflowName}'")
+            .If($"github.event.workflow.name == '{component.CiWorkflowName}'")
             .With(
                 ("artifact", "test-results"),
                 ("name", $"Test Report - {testProject}"),

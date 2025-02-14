@@ -21,7 +21,7 @@ jobs:
       packages: write
     steps:
     - name: Test report - ignore-this - IgnoreThis.Tests
-      if: event.workflow.name == 'ignore-this/ci'
+      if: github.event.workflow.name == 'ignore-this/ci'
       uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
       with:
         artifact: test-results
@@ -31,7 +31,7 @@ jobs:
         fail-on-error: true
         fail-on-empty: true
     - name: Test report - access-token-management - AccessTokenManagement.Tests
-      if: event.workflow.name == 'access-token-management/ci'
+      if: github.event.workflow.name == 'access-token-management/ci'
       uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
       with:
         artifact: test-results
@@ -41,7 +41,7 @@ jobs:
         fail-on-error: true
         fail-on-empty: true
     - name: Test report - identity-model - IdentityModel.Tests
-      if: event.workflow.name == 'identity-model/ci'
+      if: github.event.workflow.name == 'identity-model/ci'
       uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
       with:
         artifact: test-results
@@ -51,7 +51,7 @@ jobs:
         fail-on-error: true
         fail-on-empty: true
     - name: Test report - identity-model-oidc-client - IdentityModel.OidcClient.Tests
-      if: event.workflow.name == 'identity-model-oidc-client/ci'
+      if: github.event.workflow.name == 'identity-model-oidc-client/ci'
       uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
       with:
         artifact: test-results
