@@ -65,8 +65,6 @@ async void SignIn()
 
     var result = await client.ProcessResponseAsync(context.Request.RawUrl, state);
 
-    // BringConsoleToFront();
-
     if (result.IsError)
     {
         Console.WriteLine("\n\nError:\n{0}", result.Error);
