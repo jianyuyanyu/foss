@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Json;
 using Duende.IdentityModel.Client;
@@ -9,7 +10,7 @@ using RichardSzalay.MockHttp;
 
 namespace Duende.AccessTokenManagement.Tests;
 
-public class BackChannelClientTests
+public class BackChannelClientTests(ITestOutputHelper output)
 {
     [Fact]
     public async Task Get_access_token_uses_default_backchannel_client_from_factory()
@@ -164,7 +165,7 @@ public class BackChannelClientTests
 
             });
         });
-        await Task.Delay(10);
+        await Task.Delay(100);
 
 
         ClientCredentialsToken token2 = null!;
@@ -180,14 +181,14 @@ public class BackChannelClientTests
         });
 
 
-        Console.WriteLine("before delay");
+        output.WriteLine("before delay");
 
-        await Task.Delay(10);
+        await Task.Delay(100);
 
         mockHttp.Flush();
-        Console.WriteLine("flushed");
-        await t1;
-        await t2;
+        output.WriteLine("flushed");
+        await t1.ThrowOnTimeout();
+        await t2.ThrowOnTimeout();
 
         mockHttp.GetMatchCount(request).ShouldBe(2);
 
@@ -255,14 +256,14 @@ public class BackChannelClientTests
         });
 
 
-        Console.WriteLine("before delay");
+        output.WriteLine("before delay");
 
         await Task.Delay(100);
 
         mockHttp.Flush();
-        Console.WriteLine("flushed");
-        await t1;
-        await t2;
+        output.WriteLine("flushed");
+        await t1.ThrowOnTimeout();
+        await t1.ThrowOnTimeout();
 
         mockHttp.GetMatchCount(request).ShouldBe(1);
 
@@ -296,5 +297,53 @@ public class BackChannelClientTests
         token.AccessTokenType.ShouldBeNull();
         token.Error.ShouldBe("Not Found");
         mockHttp.GetMatchCount(request).ShouldBe(1);
+    }
+}
+
+
+public static class TimeoutExtensions
+{
+    public static async Task<T> ThrowOnTimeout<T>(this Task<T> task, TimeSpan timeout = default, string? message = null)
+    {
+        Stopwatch sw = Stopwatch.StartNew();
+        timeout = GetTimeOutOrDefault(timeout);
+
+        using (var cts = new CancellationTokenSource())
+        {
+            var delayTask = Task.Delay(timeout, cts.Token);
+
+            var resultTask = await Task.WhenAny(task, delayTask);
+            if (resultTask == delayTask)
+                // Operation cancelled
+                throw new OperationCanceledException((message ?? "operation cancelled") + " after " + sw.ElapsedMilliseconds + "ms");
+            cts.Cancel();
+
+            return await task;
+        }
+    }
+
+    private static TimeSpan GetTimeOutOrDefault(TimeSpan timeout)
+    {
+        if (Debugger.IsAttached) return TimeSpan.FromMinutes(5);
+
+        return timeout == default ? TimeSpan.FromSeconds(2) : timeout;
+    }
+
+    public static async Task ThrowOnTimeout(this Task task, TimeSpan timeout = default)
+    {
+        timeout = GetTimeOutOrDefault(timeout);
+
+        using (var cts = new CancellationTokenSource())
+        {
+            var delayTask = Task.Delay(timeout, cts.Token);
+
+            var resultTask = await Task.WhenAny(task, delayTask);
+            if (resultTask == delayTask)
+                // Operation cancelled
+                throw new OperationCanceledException();
+            cts.Cancel();
+
+            await task;
+        }
     }
 }

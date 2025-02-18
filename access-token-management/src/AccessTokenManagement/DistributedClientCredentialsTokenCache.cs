@@ -58,7 +58,6 @@ public class DistributedClientCredentialsTokenCache(
 
         var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
 
-
         return await _synchronization.SynchronizeAsync(cacheKey, async () =>
         {
             var token = await factory(clientName, requestParameters, cancellationToken).ConfigureAwait(false);
