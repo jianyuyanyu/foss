@@ -148,8 +148,6 @@ git push origin {component.TagPrefix}-{contexts.Event.Input.Version}");
 
     tagJob.StepSign(true);
 
-    tagJob.StepPush("MyGet", "https://www.myget.org/F/duende_identityserver/api/v2/package", "MYGET");
-
     tagJob.StepPush("GitHub", "https://nuget.pkg.github.com/DuendeSoftware/index.json", "GITHUB_TOKEN")
         .Env(("GITHUB_TOKEN", contexts.Secrets.GitHubToken),
             ("NUGET_AUTH_TOKEN", contexts.Secrets.GitHubToken));
