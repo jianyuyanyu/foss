@@ -73,7 +73,7 @@ void GenerateCiWorkflow(Component component)
     job.TimeoutMinutes(15);
 
     job.Step()
-        .ActionsCheckout();
+        .ActionsCheckout("11bd71901bbe5b1630ceea73d27597364c9af683"); // Pinned to 4.2.2
 
     job.StepSetupDotNet();
 
