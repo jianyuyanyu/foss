@@ -27,7 +27,7 @@ public static class DPoPExtensions
     public static string? GetDPoPNonce(this HttpResponseMessage response)
     {
         var nonce = response.Headers
-            .FirstOrDefault(x => x.Key == OidcConstants.HttpHeaders.DPoPNonce)
+            .FirstOrDefault(x => string.Equals(OidcConstants.HttpHeaders.DPoPNonce, x.Key, StringComparison.OrdinalIgnoreCase))
             .Value?.FirstOrDefault();
         return nonce;
     }
