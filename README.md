@@ -17,9 +17,9 @@ doesn't indicate other big changes: Duende Software is the company Brock and Dom
 founded, they remain involved in these libraries, and we are committed to keeping them
 open source.
 
-## License and Feedback
-Duende's open source  projects are released under the [Apache 2.0 license](/LICENSE).  
-[Bug reports, feature requests](https://github.com/DuendeSoftware/foss/issues) and
-[contributions](https://github.com/DuendeSoftware/foss/pulls) are welcome. If you have an
-idea for a new feature or significant code change you'd like to propose, please start with
-a GitHub issue so that we can discuss it. Thanks in advance!
+## License
+Duende's open source  projects are released under the [Apache 2.0 license](/LICENSE).
+
+## Contributions
+- For bug reports, please create an [issue](https://github.com/DuendeSoftware/foss/issues).
+- For support, feature request, proposals etc please start a [discussion](https://github.com/orgs/DuendeSoftware/discussions).
