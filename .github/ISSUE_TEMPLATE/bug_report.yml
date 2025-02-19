@@ -1,6 +1,6 @@
 name: Bug report
 description: Report a reproducible bug
-issue_type: bug
+type: bug
 body:
   - type: checkboxes
     attributes:
