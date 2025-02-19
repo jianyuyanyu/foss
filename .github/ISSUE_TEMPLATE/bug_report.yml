@@ -2,15 +2,20 @@ name: Bug report
 description: Report a reproducible bug
 type: bug
 body:
-  - type: checkboxes
+  - type: dropdown
     attributes:
-      label: Affected component(s)
-      description: Select the affected Duende component(s)
+      label: Affected component
+      description: Select the affected Duende component
       options:
         - label: Duende.AccessTokenManagement
         - label: Duende.IdentityModel
         - label: Duende.IdentityModel.OidcClient
         - label: Other
+  - type: input
+    attributes:
+      label: Version
+      description: Specify the version of the affected component.
+      placeholder: e.g., 7.0.2
   - type: textarea
     attributes:
       label: Describe the bug
