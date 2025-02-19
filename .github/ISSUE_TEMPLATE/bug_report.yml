@@ -7,10 +7,10 @@ body:
       label: Affected component
       description: Select the affected Duende component
       options:
-        - label: Duende.AccessTokenManagement
-        - label: Duende.IdentityModel
-        - label: Duende.IdentityModel.OidcClient
-        - label: Other
+        - Duende.AccessTokenManagement
+        - Duende.IdentityModel
+        - Duende.IdentityModel.OidcClient
+        - Other
   - type: input
     attributes:
       label: Version
