@@ -22,4 +22,4 @@ Duende's open source  projects are released under the [Apache 2.0 license](/LICE
 
 ## Contributions
 - For bug reports, please create an [issue](https://github.com/DuendeSoftware/foss/issues).
-- For support, feature request, proposals etc please start a [discussion](https://github.com/orgs/DuendeSoftware/discussions).
+- For support, feature requests, proposals, etc, please start a [discussion](https://github.com/orgs/DuendeSoftware/discussions).
