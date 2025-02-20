@@ -21,7 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B716B915-1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "identity-model", "identity-model", "{24895E4F-A225-4A79-95EB-20C34D4971ED}"
 	ProjectSection(SolutionItems) = preProject
-		identity-model\global.json = identity-model\global.json
 		identity-model\README.md = identity-model\README.md
 	EndProjectSection
 EndProject
