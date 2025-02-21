@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleSystemBrowser", "ConsoleSystemBrowser\ConsoleSystemBrowser.csproj", "{119839BA-14F2-4964-8887-961C5A99CCDD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpSysConsoleClient", "HttpSysConsoleClient\HttpSysConsoleClient.csproj", "{119839BA-14F2-4964-8887-961C5A99CCDD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

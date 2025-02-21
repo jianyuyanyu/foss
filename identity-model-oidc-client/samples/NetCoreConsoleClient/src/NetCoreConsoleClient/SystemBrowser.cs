@@ -1,4 +1,4 @@
-﻿using IdentityModel.OidcClient.Browser;
+﻿using Duende.IdentityModel.OidcClient.Browser;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -17,9 +17,9 @@ namespace ConsoleClientWithBrowser
     public class SystemBrowser : IBrowser
     {
         public int Port { get; }
-        private readonly string _path;
+        private readonly string? _path;
 
-        public SystemBrowser(int? port = null, string path = null)
+        public SystemBrowser(int? port = null, string? path = null)
         {
             _path = path;
 
@@ -100,7 +100,7 @@ namespace ConsoleClientWithBrowser
 
         public string Url => _url;
 
-        public LoopbackHttpListener(int port, string path = null)
+        public LoopbackHttpListener(int port, string? path = null)
         {
             path = path ?? String.Empty;
             if (path.StartsWith("/")) path = path.Substring(1);
@@ -130,11 +130,13 @@ namespace ConsoleClientWithBrowser
             {
                 if (ctx.Request.Method == "GET")
                 {
-                    await SetResultAsync(ctx.Request.QueryString.Value, ctx);
+                    var result = ctx.Request.QueryString.Value ??
+                        throw new InvalidOperationException("QueryString cannot be null");
+                    await SetResultAsync(result, ctx);
                 }
                 else if (ctx.Request.Method == "POST")
                 {
-                    if (!ctx.Request.ContentType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase))
+                    if (ctx.Request.ContentType?.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase) == false)
                     {
                         ctx.Response.StatusCode = 415;
                     }

@@ -1,32 +1,31 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using System;
 using System.Security.Cryptography;
 using System.Text.Json;
 using Duende.AccessTokenManagement.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
 
 namespace Web;
 
+public class SampleConfiguration
+{
+    public bool UseDPoP { get; init; }
+    public string BaseUrl { get; init; } = null!;
+    public string ApiBaseUrl => UseDPoP ? $"{BaseUrl}/api/dpop/" : $"{BaseUrl}/api/";
+}
+
 public static class Startup
 {
-    public const bool UseDPoP = true;
-
-    // public const string BaseUrl = "https://localhost:5001";
-    public const string BaseUrl = "https://demo.duendesoftware.com";
-
-    public const string ApiBaseUrl = UseDPoP ? 
-        $"{BaseUrl}/api/dpop/" :
-        $"{BaseUrl}/api/";
-
     internal static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
+        var config = new SampleConfiguration();
+        builder.Services.Configure<SampleConfiguration>(builder.Configuration);
+        builder.Configuration.Bind(config);
+        
         builder.Services.AddControllersWithViews();
 
         builder.Services.AddAuthentication(options =>
@@ -42,7 +41,7 @@ public static class Startup
             })
             .AddOpenIdConnect("oidc", options =>
             {
-                options.Authority = BaseUrl;
+                options.Authority = config.BaseUrl;
 
                 options.ClientId = "interactive.confidential.short";
                 options.ClientSecret = "secret";
@@ -76,15 +75,16 @@ public static class Startup
         jsonWebKey.Alg = "PS256";
         var jwk = JsonSerializer.Serialize(jsonWebKey);
         
-        builder.Services.AddOpenIdConnectAccessTokenManagement(options => 
+        builder.Services.AddOpenIdConnectAccessTokenManagement(options =>
         {
-            options.DPoPJsonWebKey = UseDPoP ? jwk : null;
+            var useDPoP = builder.Configuration.GetValue<bool>("UseDPoP");
+            options.DPoPJsonWebKey = useDPoP ? jwk : null;
         });
 
         // registers HTTP client that uses the managed user access token
         builder.Services.AddUserAccessTokenHttpClient("user",
             configureClient: client => {
-                client.BaseAddress = new Uri(ApiBaseUrl);
+                client.BaseAddress = new Uri(config.ApiBaseUrl);
             });
 
         // registers HTTP client that uses the managed user access token and
@@ -95,12 +95,12 @@ public static class Startup
                 Resource = "urn:resource1"
             },
             configureClient: client => {
-                client.BaseAddress = new Uri(ApiBaseUrl);
+                client.BaseAddress = new Uri(config.ApiBaseUrl);
             });
 
         // registers HTTP client that uses the managed client access token
         builder.Services.AddClientAccessTokenHttpClient("client",
-            configureClient: client => { client.BaseAddress = new Uri(ApiBaseUrl); });
+            configureClient: client => { client.BaseAddress = new Uri(config.ApiBaseUrl); });
 
         // registers HTTP client that uses the managed client access token and
         // includes a resource indicator
@@ -109,18 +109,18 @@ public static class Startup
             {
                 Resource = "urn:resource1"
             },
-            configureClient: client => { client.BaseAddress = new Uri(ApiBaseUrl); });
+            configureClient: client => { client.BaseAddress = new Uri(config.ApiBaseUrl); });
 
         // registers a typed HTTP client with token management support
         builder.Services.AddHttpClient<TypedUserClient>(client =>
             {
-                client.BaseAddress = new Uri(ApiBaseUrl);
+                client.BaseAddress = new Uri(config.ApiBaseUrl);
             })
             .AddUserAccessTokenHandler();
 
         builder.Services.AddHttpClient<TypedClientClient>(client =>
             {
-                client.BaseAddress = new Uri(ApiBaseUrl);
+                client.BaseAddress = new Uri(config.ApiBaseUrl);
             })
             .AddClientAccessTokenHandler();
 

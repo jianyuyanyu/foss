@@ -1,10 +1,13 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.Extensions.Options
+@inject IOptions<SampleConfiguration> Options
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <h3>Call API as Client</h3>
 
-@if (!Startup.UseDPoP)
+@if (!Options.Value.UseDPoP)
 {
     <a asp-controller="Home" asp-action = "CallApiAsClientExtensionMethod" > Extension method </a> 
     @("|")

@@ -1,12 +1,12 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using IdentityModel.Client;
-using IdentityModel.OidcClient.Browser;
+using Duende.IdentityModel.Client;
+using Duende.IdentityModel.OidcClient.Browser;
 
 namespace MauiApp1;
 
-public class MauiAuthenticationBrowser : IdentityModel.OidcClient.Browser.IBrowser
+public class MauiAuthenticationBrowser : Duende.IdentityModel.OidcClient.Browser.IBrowser
 {
     public async Task<BrowserResult> InvokeAsync(BrowserOptions options, CancellationToken cancellationToken = default)
     {

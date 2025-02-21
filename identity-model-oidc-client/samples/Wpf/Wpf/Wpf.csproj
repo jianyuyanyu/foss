@@ -2,14 +2,13 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IdentityModel.OidcClient" Version="6.0.0" />
-    <PackageReference Include="IdentityModel.OidcClient.DPoP" Version="6.0.0" />
+    <PackageReference Include="Duende.IdentityModel.OidcClient.Extensions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.774.44" />
   </ItemGroup>
 

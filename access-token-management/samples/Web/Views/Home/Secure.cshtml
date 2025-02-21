@@ -1,8 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Authentication
+@using Microsoft.Extensions.Options
+@inject IOptions<SampleConfiguration> Options
+@{
+    var useDPoP = Options.Value.UseDPoP;
+}
 
 <h3>Call API as User</h3>
 
-@if (!Startup.UseDPoP)
+@if (!useDPoP)
 {
     <a asp-controller="Home" asp-action="CallApiAsUserManual">Manual</a>
     @("|")
@@ -17,7 +22,7 @@
 
 <h3>Call API as Client</h3>
 
-@if (!Startup.UseDPoP)
+@if (!useDPoP)
 {
     <a asp-controller="Home" asp-action="CallApiAsClientExtensionMethod"> Extension method </a>
     @("|")

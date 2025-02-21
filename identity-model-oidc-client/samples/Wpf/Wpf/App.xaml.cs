@@ -1,4 +1,4 @@
-﻿using IdentityModel.Client;
+﻿using Duende.IdentityModel.Client;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

@@ -1,10 +1,7 @@
-﻿using IdentityModel.Client;
-using IdentityModel.OidcClient;
+﻿using Duende.IdentityModel.Client;
+using Duende.IdentityModel.OidcClient;
 using Newtonsoft.Json.Linq;
 using Serilog;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace ConsoleClientWithBrowser
 {
@@ -13,7 +10,6 @@ namespace ConsoleClientWithBrowser
         static string _authority = "https://demo.duendesoftware.com";
         static string _api = "https://demo.duendesoftware.com/api/test";
 
-        static OidcClient _oidcClient;
         static HttpClient _apiClient = new HttpClient { BaseAddress = new Uri(_api) };
 
         public static void Main(string[] args) => MainAsync().GetAwaiter().GetResult();
@@ -55,11 +51,11 @@ namespace ConsoleClientWithBrowser
 
             options.LoggerFactory.AddSerilog(serilog);
 
-            _oidcClient = new OidcClient(options);
-            var result = await _oidcClient.LoginAsync(new LoginRequest());
+            var oidcClient = new OidcClient(options);
+            var result = await oidcClient.LoginAsync(new LoginRequest());
 
             ShowResult(result);
-            await NextSteps(result);
+            await NextSteps(result, oidcClient);
         }
 
         private static void ShowResult(LoginResult result)
@@ -81,7 +77,7 @@ namespace ConsoleClientWithBrowser
             Console.WriteLine($"refresh token:  {result?.RefreshToken ?? "none"}");
         }
 
-        private static async Task NextSteps(LoginResult result)
+        private static async Task NextSteps(LoginResult result, OidcClient oidcClient)
         {
             var currentAccessToken = result.AccessToken;
             var currentRefreshToken = result.RefreshToken;
@@ -100,7 +96,7 @@ namespace ConsoleClientWithBrowser
                 if (key.Key == ConsoleKey.C) await CallApi(currentAccessToken);
                 if (key.Key == ConsoleKey.R)
                 {
-                    var refreshResult = await _oidcClient.RefreshTokenAsync(currentRefreshToken);
+                    var refreshResult = await oidcClient.RefreshTokenAsync(currentRefreshToken);
                     if (refreshResult.IsError)
                     {
                         Console.WriteLine($"Error: {refreshResult.Error}");

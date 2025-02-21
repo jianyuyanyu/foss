@@ -2,12 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Duende.IdentityModel.OidcClient;
 using Duende.IdentityModel.OidcClient.DPoP;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -20,7 +15,6 @@ namespace ConsoleClientWithBrowserAndDPoP
         static readonly string Api = "https://demo.duendesoftware.com/api/dpop/test";
         static readonly string Authority = "https://demo.duendesoftware.com";
 
-        private static OidcClient _oidcClient;
         private static HttpClient _apiClient = new HttpClient { BaseAddress = new Uri(Api) };
 
         public static async Task Main()
@@ -63,15 +57,15 @@ namespace ConsoleClientWithBrowserAndDPoP
 
             options.LoggerFactory = new LoggerFactory().AddSerilog(serilog);
 
-            _oidcClient = new OidcClient(options);
+            var oidcClient = new OidcClient(options);
 
-            LoginResult result = null;
+            LoginResult? result = null;
             if (File.Exists("refresh_token"))
             {
                 Console.WriteLine("using stored refresh token");
                 
                 var refreshToken = File.ReadAllText("refresh_token");
-                var handler = _oidcClient.CreateDPoPHandler(proofKey, refreshToken);
+                var handler = oidcClient.CreateDPoPHandler(proofKey, refreshToken);
                 
                 _apiClient = new HttpClient(handler)
                 {
@@ -82,7 +76,7 @@ namespace ConsoleClientWithBrowserAndDPoP
             }
             else
             {
-                 result = await _oidcClient.LoginAsync(new LoginRequest());
+                 result = await oidcClient.LoginAsync(new LoginRequest());
                  
                  Console.WriteLine("store refresh token");
                  File.WriteAllText("refresh_token", result.TokenResponse.RefreshToken);
@@ -92,8 +86,6 @@ namespace ConsoleClientWithBrowserAndDPoP
                     BaseAddress = new Uri(Api)
                 };
             }
-            
-            
 
             ShowResult(result);
             await NextSteps();
@@ -113,7 +105,7 @@ namespace ConsoleClientWithBrowserAndDPoP
             return proofKey;
         }
 
-        private static void ShowResult(LoginResult result)
+        private static void ShowResult(LoginResult? result)
         {
             if (result == null) return;
             
@@ -129,10 +121,11 @@ namespace ConsoleClientWithBrowserAndDPoP
                 Console.WriteLine("{0}: {1}", claim.Type, claim.Value);
             }
 
-            var values = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(result.TokenResponse.Raw);
+            var raw = result.TokenResponse.Raw ?? throw new InvalidOperationException("Unexpected null token response");
+            var values = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(raw);
 
             Console.WriteLine($"token response...");
-            foreach (var item in values)
+            foreach (var item in values ?? [])
             {
                 Console.WriteLine($"{item.Key}: {item.Value}");
             }

@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using IdentityModel.OidcClient;
-using IdentityModel.OidcClient.Browser;
+using Duende.IdentityModel.OidcClient;
+using Duende.IdentityModel.OidcClient.Browser;
 using Microsoft.Web.WebView2.WinForms;
 using System;
 using System.Text;
