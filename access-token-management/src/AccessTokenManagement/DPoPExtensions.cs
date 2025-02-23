@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.ComponentModel.DataAnnotations;
 using Duende.IdentityModel;
 
 namespace Duende.AccessTokenManagement;
@@ -33,9 +34,9 @@ public static class DPoPExtensions
     /// </summary>
     public static string? GetDPoPNonce(this HttpResponseMessage response)
     {
-        return response.Headers
-            .FirstOrDefault(x => string.Equals(OidcConstants.HttpHeaders.DPoPNonce, x.Key, StringComparison.OrdinalIgnoreCase))
-            .Value?.FirstOrDefault();
+        return response.Headers.TryGetValues(OidcConstants.HttpHeaders.DPoPNonce, out var values) 
+            ? values.FirstOrDefault() 
+            : null;
     }
 
     /// <summary>
