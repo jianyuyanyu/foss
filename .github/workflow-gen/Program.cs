@@ -188,8 +188,6 @@ git push origin {component.TagPrefix}-{contexts.Event.Input.Version}");
         .Shell("bash")
         .Run("tree");
 
-    tagJob.StepPush("MyGet", "https://www.myget.org/F/duende_identityserver/api/v2/package", "MYGET", pushAlways: true);
-
     publishJob.StepPush("nuget.org", "https://api.nuget.org/v3/index.json", "NUGET_ORG_API_KEY", pushAlways: true);
 
     var fileName = $"{component.Name}-release";
