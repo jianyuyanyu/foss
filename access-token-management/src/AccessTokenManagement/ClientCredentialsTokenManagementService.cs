@@ -1,8 +1,6 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using Microsoft.Extensions.Logging;
-
 namespace Duende.AccessTokenManagement;
 
 /// <summary>
@@ -10,8 +8,7 @@ namespace Duende.AccessTokenManagement;
 /// </summary>
 public class ClientCredentialsTokenManagementService(
     IClientCredentialsTokenEndpointService clientCredentialsTokenEndpointService,
-    IClientCredentialsTokenCache tokenCache,
-    ILogger<ClientCredentialsTokenManagementService> logger
+    IClientCredentialsTokenCache tokenCache
 ) : IClientCredentialsTokenManagementService
 {
 
@@ -22,27 +19,6 @@ public class ClientCredentialsTokenManagementService(
         CancellationToken cancellationToken = default)
     {
         parameters ??= new TokenRequestParameters();
-
-        if (parameters.ForceRenewal == false)
-        {
-            try
-            {
-                var item = await tokenCache.GetAsync(
-                    clientName: clientName,
-                    requestParameters: parameters,
-                    cancellationToken: cancellationToken).ConfigureAwait(false);
-                if (item != null)
-                {
-                    return item;
-                }
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e,
-                    "Error trying to obtain token from cache for client {clientName}. Error = {error}. Will obtain new token.",
-                    clientName, e.Message);
-            }
-        }
 
         return await tokenCache.GetOrCreateAsync(
             clientName: clientName,
@@ -57,12 +33,12 @@ public class ClientCredentialsTokenManagementService(
     }
 
     /// <inheritdoc/>
-    public Task DeleteAccessTokenAsync(
+    public async Task DeleteAccessTokenAsync(
         string clientName,
         TokenRequestParameters? parameters = null,
         CancellationToken cancellationToken = default)
     {
         parameters ??= new TokenRequestParameters();
-        return tokenCache.DeleteAsync(clientName, parameters, cancellationToken);
+        await tokenCache.DeleteAsync(clientName, parameters, cancellationToken);
     }
 }
