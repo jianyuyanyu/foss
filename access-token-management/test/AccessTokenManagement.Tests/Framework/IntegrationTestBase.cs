@@ -8,15 +8,15 @@ using System.Security.Claims;
 
 namespace Duende.AccessTokenManagement.Tests;
 
-public class IntegrationTestBase : IAsyncLifetime
+public class IntegrationTestBase : IAsyncDisposable
 {
     protected readonly IdentityServerHost IdentityServerHost;
     protected ApiHost ApiHost;
     protected AppHost AppHost;
 
-    public IntegrationTestBase(string clientId = "web", Action<UserTokenManagementOptions>? configureUserTokenManagementOptions = null)
+    public IntegrationTestBase(ITestOutputHelper output, string clientId = "web", Action<UserTokenManagementOptions>? configureUserTokenManagementOptions = null)
     {
-        IdentityServerHost = new IdentityServerHost();
+        IdentityServerHost = new IdentityServerHost(output.WriteLine);
 
         IdentityServerHost.Clients.Add(new Client
         {
@@ -67,9 +67,9 @@ public class IntegrationTestBase : IAsyncLifetime
             AccessTokenLifetime = 10
         });
 
-        ApiHost = new ApiHost(IdentityServerHost, "scope1");
+        ApiHost = new ApiHost(output.WriteLine, IdentityServerHost, "scope1");
 
-        AppHost = new AppHost(IdentityServerHost, ApiHost, clientId, configureUserTokenManagementOptions: configureUserTokenManagementOptions);
+        AppHost = new AppHost(output.WriteLine, IdentityServerHost, ApiHost, clientId, configureUserTokenManagementOptions: configureUserTokenManagementOptions);
     }
 
     public async Task Login(string sub)

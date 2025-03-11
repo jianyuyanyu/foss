@@ -14,15 +14,13 @@ using System.Security.Claims;
 
 namespace Duende.AccessTokenManagement.Tests;
 
-public class GenericHost : IAsyncDisposable
+public class GenericHost(WriteTestOutput writeOutput, string baseAddress = "https://server") : IAsyncDisposable
 {
-    public GenericHost(string baseAddress = "https://server")
-    {
-        if (baseAddress.EndsWith("/")) baseAddress = baseAddress.Substring(0, baseAddress.Length - 1);
-        _baseAddress = baseAddress;
-    }
 
-    protected readonly string _baseAddress;
+    protected readonly string BaseAddress = baseAddress.EndsWith("/")
+        ? baseAddress.Substring(0, baseAddress.Length - 1)
+        : baseAddress;
+
     IServiceProvider _appServices = default!;
 
     public Assembly HostAssembly { get; set; } = default!;
@@ -33,7 +31,8 @@ public class GenericHost : IAsyncDisposable
     public HttpClient HttpClient { get; set; } = default!;
     public HttpMessageHandler HttpMessageHandler { get; set; } = default!;
 
-    public TestLoggerProvider Logger { get; set; } = new TestLoggerProvider();
+    private TestLoggerProvider Logger { get; } = new(writeOutput, baseAddress + " - ");
+
 
 
     public T Resolve<T>()
@@ -47,11 +46,13 @@ public class GenericHost : IAsyncDisposable
     {
         path = path ?? String.Empty;
         if (!path.StartsWith("/")) path = "/" + path;
-        return _baseAddress + path;
+        return BaseAddress + path;
     }
 
     public async Task InitializeAsync()
     {
+        if (Server != null) throw new InvalidOperationException("Already initialized");
+
         var hostBuilder = new HostBuilder()
             .ConfigureWebHost(builder =>
             {

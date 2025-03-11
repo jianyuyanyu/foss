@@ -11,21 +11,21 @@ using System.Text.Json;
 
 namespace Duende.AccessTokenManagement.Tests;
 
-public class ClientTokenManagementApiTests : IntegrationTestBase
+public class ClientTokenManagementApiTests(ITestOutputHelper output) : IntegrationTestBase(output), IAsyncLifetime
 {
-    private static readonly string _jwkJson;
+    private static readonly string _jwkJson = CreateJWKJson();
 
-    private HttpClient _client;
-    private IClientCredentialsTokenManagementService _tokenService;
-    private IHttpClientFactory _clientFactory;
-    private ClientCredentialsClient _clientOptions;
+    private IClientCredentialsTokenManagementService _tokenService = null!;
+    private IHttpClientFactory _clientFactory = null!;
+    private ClientCredentialsClient _clientOptions = null!;
 
-    static ClientTokenManagementApiTests()
+    private static string CreateJWKJson()
     {
         var key = CryptoHelper.CreateRsaSecurityKey();
         var jwk = JsonWebKeyConverter.ConvertFromRSASecurityKey(key);
         jwk.Alg = "RS256";
-        _jwkJson = JsonSerializer.Serialize(jwk);
+        var jwkJson = JsonSerializer.Serialize(jwk);
+        return jwkJson;
     }
 
     public override async ValueTask InitializeAsync()
@@ -51,7 +51,6 @@ public class ClientTokenManagementApiTests : IntegrationTestBase
             });
 
         var provider = services.BuildServiceProvider();
-        _client = provider.GetRequiredService<IHttpClientFactory>().CreateClient("test");
         _tokenService = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
         _clientFactory = provider.GetRequiredService<IHttpClientFactory>();
         _clientOptions = provider.GetRequiredService<IOptionsMonitor<ClientCredentialsClient>>().Get("test");

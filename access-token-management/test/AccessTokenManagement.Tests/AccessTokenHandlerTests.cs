@@ -12,9 +12,9 @@ public class AccessTokenHandlerTests
 
     AccessTokenHandlerSubject _subject;
 
-    public AccessTokenHandlerTests()
+    public AccessTokenHandlerTests(ITestOutputHelper output)
     {
-        _subject = new AccessTokenHandlerSubject(_testDPoPProofService, new TestDPoPNonceStore(), new TestLoggerProvider().CreateLogger("AccessTokenHandlerSubject"));
+        _subject = new AccessTokenHandlerSubject(_testDPoPProofService, new TestDPoPNonceStore(), new TestLoggerProvider(output.WriteLine, "AccessTokenHandler").CreateLogger("AccessTokenHandlerSubject"));
         _subject.InnerHandler = _testHttpMessageHandler;
     }
 
