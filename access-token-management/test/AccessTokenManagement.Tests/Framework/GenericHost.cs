@@ -14,7 +14,7 @@ using System.Security.Claims;
 
 namespace Duende.AccessTokenManagement.Tests;
 
-public class GenericHost
+public class GenericHost : IAsyncDisposable
 {
     public GenericHost(string baseAddress = "https://server")
     {
@@ -177,5 +177,24 @@ public class GenericHost
     public Task IssueSessionCookieAsync(string sub, params Claim[] claims)
     {
         return IssueSessionCookieAsync(claims.Append(new Claim("sub", sub)).ToArray());
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await CastAndDispose(Server);
+        await CastAndDispose(BrowserClient);
+        await CastAndDispose(HttpClient);
+        await CastAndDispose(HttpMessageHandler);
+        await CastAndDispose(Logger);
+
+        return;
+
+        static async ValueTask CastAndDispose(IDisposable resource)
+        {
+            if (resource is IAsyncDisposable resourceAsyncDisposable)
+                await resourceAsyncDisposable.DisposeAsync();
+            else
+                resource?.Dispose();
+        }
     }
 }

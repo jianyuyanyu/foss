@@ -28,8 +28,9 @@ public class ClientTokenManagementApiTests : IntegrationTestBase
         _jwkJson = JsonSerializer.Serialize(jwk);
     }
 
-    public ClientTokenManagementApiTests()
+    public override async ValueTask InitializeAsync()
     {
+        await base.InitializeAsync();
         var services = new ServiceCollection();
 
         services.AddDistributedMemoryCache();
@@ -55,6 +56,7 @@ public class ClientTokenManagementApiTests : IntegrationTestBase
         _clientFactory = provider.GetRequiredService<IHttpClientFactory>();
         _clientOptions = provider.GetRequiredService<IOptionsMonitor<ClientCredentialsClient>>().Get("test");
     }
+
     public class ApiHandler : DelegatingHandler
     {
         private HttpMessageHandler? _innerHandler;
