@@ -23,12 +23,13 @@ public class AppHost : GenericHost
     private readonly Action<UserTokenManagementOptions>? _configureUserTokenManagementOptions;
 
     public AppHost(
+        WriteTestOutput writeTestOutput,
         IdentityServerHost identityServerHost, 
         ApiHost apiHost, 
         string clientId,
         string baseAddress = "https://app",
         Action<UserTokenManagementOptions>? configureUserTokenManagementOptions = default)
-        : base(baseAddress)
+        : base(writeTestOutput, baseAddress)
     {
         _identityServerHost = identityServerHost;
         _apiHost = apiHost;

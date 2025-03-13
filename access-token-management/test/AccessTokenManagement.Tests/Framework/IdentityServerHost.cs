@@ -15,8 +15,8 @@ namespace Duende.AccessTokenManagement.Tests;
 
 public class IdentityServerHost : GenericHost
 {
-    public IdentityServerHost(string baseAddress = "https://identityserver") 
-        : base(baseAddress)
+    public IdentityServerHost(WriteTestOutput writeTestOutput, string baseAddress = "https://identityserver") 
+        : base(writeTestOutput, baseAddress)
     {
         OnConfigureServices += ConfigureServices;
         OnConfigure += Configure;
@@ -108,7 +108,7 @@ public class IdentityServerHost : GenericHost
     {
         var descriptor = new SecurityTokenDescriptor
         {
-            Issuer = _baseAddress,
+            Issuer = BaseAddress,
             Audience = clientId,
             Claims = new Dictionary<string, object>
             {

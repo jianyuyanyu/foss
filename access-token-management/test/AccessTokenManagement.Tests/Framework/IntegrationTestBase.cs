@@ -8,15 +8,15 @@ using System.Security.Claims;
 
 namespace Duende.AccessTokenManagement.Tests;
 
-public class IntegrationTestBase
+public class IntegrationTestBase : IAsyncDisposable
 {
     protected readonly IdentityServerHost IdentityServerHost;
     protected ApiHost ApiHost;
     protected AppHost AppHost;
 
-    public IntegrationTestBase(string clientId = "web", Action<UserTokenManagementOptions>? configureUserTokenManagementOptions = null)
+    public IntegrationTestBase(ITestOutputHelper output, string clientId = "web", Action<UserTokenManagementOptions>? configureUserTokenManagementOptions = null)
     {
-        IdentityServerHost = new IdentityServerHost();
+        IdentityServerHost = new IdentityServerHost(output.WriteLine);
 
         IdentityServerHost.Clients.Add(new Client
         {
@@ -67,17 +67,27 @@ public class IntegrationTestBase
             AccessTokenLifetime = 10
         });
 
-        IdentityServerHost.InitializeAsync().Wait();
+        ApiHost = new ApiHost(output.WriteLine, IdentityServerHost, "scope1");
 
-        ApiHost = new ApiHost(IdentityServerHost, "scope1");
-        ApiHost.InitializeAsync().Wait();
-
-        AppHost = new AppHost(IdentityServerHost, ApiHost, clientId, configureUserTokenManagementOptions: configureUserTokenManagementOptions);
-        AppHost.InitializeAsync().Wait();
+        AppHost = new AppHost(output.WriteLine, IdentityServerHost, ApiHost, clientId, configureUserTokenManagementOptions: configureUserTokenManagementOptions);
     }
 
     public async Task Login(string sub)
     {
         await IdentityServerHost.IssueSessionCookieAsync(new Claim("sub", sub));
+    }
+
+    public virtual async ValueTask DisposeAsync()
+    {
+        await IdentityServerHost.DisposeAsync();
+        await ApiHost.DisposeAsync();
+        await AppHost.DisposeAsync();
+    }
+
+    public virtual async ValueTask InitializeAsync()
+    {
+        await ApiHost.InitializeAsync();
+        await AppHost.InitializeAsync();
+        await IdentityServerHost.InitializeAsync();
     }
 }

@@ -14,15 +14,13 @@ using System.Security.Claims;
 
 namespace Duende.AccessTokenManagement.Tests;
 
-public class GenericHost
+public class GenericHost(WriteTestOutput writeOutput, string baseAddress = "https://server") : IAsyncDisposable
 {
-    public GenericHost(string baseAddress = "https://server")
-    {
-        if (baseAddress.EndsWith("/")) baseAddress = baseAddress.Substring(0, baseAddress.Length - 1);
-        _baseAddress = baseAddress;
-    }
 
-    protected readonly string _baseAddress;
+    protected readonly string BaseAddress = baseAddress.EndsWith("/")
+        ? baseAddress.Substring(0, baseAddress.Length - 1)
+        : baseAddress;
+
     IServiceProvider _appServices = default!;
 
     public Assembly HostAssembly { get; set; } = default!;
@@ -33,7 +31,8 @@ public class GenericHost
     public HttpClient HttpClient { get; set; } = default!;
     public HttpMessageHandler HttpMessageHandler { get; set; } = default!;
 
-    public TestLoggerProvider Logger { get; set; } = new TestLoggerProvider();
+    private TestLoggerProvider Logger { get; } = new(writeOutput, baseAddress + " - ");
+
 
 
     public T Resolve<T>()
@@ -47,11 +46,13 @@ public class GenericHost
     {
         path = path ?? String.Empty;
         if (!path.StartsWith("/")) path = "/" + path;
-        return _baseAddress + path;
+        return BaseAddress + path;
     }
 
     public async Task InitializeAsync()
     {
+        if (Server != null) throw new InvalidOperationException("Already initialized");
+
         var hostBuilder = new HostBuilder()
             .ConfigureWebHost(builder =>
             {
@@ -177,5 +178,24 @@ public class GenericHost
     public Task IssueSessionCookieAsync(string sub, params Claim[] claims)
     {
         return IssueSessionCookieAsync(claims.Append(new Claim("sub", sub)).ToArray());
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await CastAndDispose(Server);
+        await CastAndDispose(BrowserClient);
+        await CastAndDispose(HttpClient);
+        await CastAndDispose(HttpMessageHandler);
+        await CastAndDispose(Logger);
+
+        return;
+
+        static async ValueTask CastAndDispose(IDisposable resource)
+        {
+            if (resource is IAsyncDisposable resourceAsyncDisposable)
+                await resourceAsyncDisposable.DisposeAsync();
+            else
+                resource?.Dispose();
+        }
     }
 }

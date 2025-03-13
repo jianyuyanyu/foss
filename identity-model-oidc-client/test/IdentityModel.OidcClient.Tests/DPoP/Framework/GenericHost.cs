@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Duende.IdentityModel.OidcClient.DPoP.Framework;
 
-public class GenericHost
+public class GenericHost : IAsyncDisposable
 {
     public GenericHost(string baseAddress = "https://server")
     {
@@ -99,5 +99,22 @@ public class GenericHost
         _appServices = app.ApplicationServices;
             
         OnConfigure(app);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (Server != null) await CastAndDispose(Server);
+        if (HttpClient != null) await CastAndDispose(HttpClient);
+        if (Logger != null) await CastAndDispose(Logger);
+
+        return;
+
+        static async ValueTask CastAndDispose(IDisposable resource)
+        {
+            if (resource is IAsyncDisposable resourceAsyncDisposable)
+                await resourceAsyncDisposable.DisposeAsync();
+            else
+                resource?.Dispose();
+        }
     }
 }
