@@ -50,7 +50,7 @@ public class ClientAssertionService : IClientAssertionService
         var descriptor = new SecurityTokenDescriptor
         {
             Issuer = config.ClientId,
-            Audience = config.TokenEndpoint,
+            Audience = config.Authority,
             Expires = DateTime.UtcNow.AddMinutes(1),
             SigningCredentials = Credential,
 
