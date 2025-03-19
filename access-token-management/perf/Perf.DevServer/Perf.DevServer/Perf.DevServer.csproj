@@ -17,4 +17,8 @@
 
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\TokenEndpoint\TokenEndpoint.csproj" />
+  </ItemGroup>
+
 </Project>
