@@ -1,10 +1,10 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using Duende.AccessTokenManagement.OpenIdConnect;
-using Duende.IdentityServer.Models;
-using Duende.IdentityModel;
 using System.Security.Claims;
+using Duende.AccessTokenManagement.OpenIdConnect;
+using Duende.IdentityModel;
+using Duende.IdentityServer.Models;
 
 namespace Duende.AccessTokenManagement.Tests;
 
@@ -36,7 +36,7 @@ public class IntegrationTestBase : IAsyncDisposable
             AllowOfflineAccess = true,
             AllowedScopes = { "openid", "profile", "scope1" }
         });
-        
+
         IdentityServerHost.Clients.Add(new Client
         {
             ClientId = "web.short",
@@ -46,7 +46,7 @@ public class IntegrationTestBase : IAsyncDisposable
             PostLogoutRedirectUris = { "https://app/signout-callback-oidc" },
             AllowOfflineAccess = true,
             AllowedScopes = { "openid", "profile", "scope1" },
-            
+
             AccessTokenLifetime = 10
         });
 

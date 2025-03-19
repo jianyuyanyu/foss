@@ -1,13 +1,13 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using Duende.IdentityServer.Configuration;
+using System.Text.Json;
 using Duende.IdentityModel;
+using Duende.IdentityServer.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Text.Json;
 
 namespace Duende.AccessTokenManagement.Tests;
 
@@ -60,7 +60,7 @@ public class ClientTokenManagementApiTests(ITestOutputHelper output) : Integrati
     {
         private HttpMessageHandler? _innerHandler;
 
-        public ApiHandler(HttpMessageHandler innerHandler) 
+        public ApiHandler(HttpMessageHandler innerHandler)
         {
             _innerHandler = innerHandler;
         }
@@ -128,7 +128,7 @@ public class ClientTokenManagementApiTests(ITestOutputHelper output) : Integrati
         var jwk = JsonWebKeyConverter.ConvertFromRSASecurityKey(key);
         jwk.Alg = alg;
         var jwkJson = JsonSerializer.Serialize(jwk);
-        
+
         _clientOptions.DPoPJsonWebKey = jwkJson;
 
         var token = await _tokenService.GetAccessTokenAsync("test");
@@ -178,7 +178,7 @@ public class ClientTokenManagementApiTests(ITestOutputHelper output) : Integrati
         string? scheme = null;
         string? proofToken = null;
 
-        ApiHost.ApiInvoked += ctx => 
+        ApiHost.ApiInvoked += ctx =>
         {
             scheme = ctx.Request.Headers.Authorization.FirstOrDefault()?.Split(' ', StringSplitOptions.RemoveEmptyEntries)[0];
             proofToken = ctx.Request.Headers["DPoP"].FirstOrDefault()?.ToString();

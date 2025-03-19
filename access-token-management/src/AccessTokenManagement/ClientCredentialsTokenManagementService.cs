@@ -1,8 +1,7 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Microsoft.Extensions.Logging;
-using System.Threading;
 
 namespace Duende.AccessTokenManagement;
 
@@ -29,8 +28,8 @@ public class ClientCredentialsTokenManagementService(
             try
             {
                 var item = await tokenCache.GetAsync(
-                    clientName: clientName, 
-                    requestParameters: parameters, 
+                    clientName: clientName,
+                    requestParameters: parameters,
                     cancellationToken: cancellationToken).ConfigureAwait(false);
                 if (item != null)
                 {
@@ -40,15 +39,15 @@ public class ClientCredentialsTokenManagementService(
             catch (Exception e)
             {
                 logger.LogError(e,
-                    "Error trying to obtain token from cache for client {clientName}. Error = {error}. Will obtain new token.", 
+                    "Error trying to obtain token from cache for client {clientName}. Error = {error}. Will obtain new token.",
                     clientName, e.Message);
             }
         }
 
         return await tokenCache.GetOrCreateAsync(
-            clientName: clientName, 
-            requestParameters: parameters, 
-            factory: InvokeGetAccessToken, 
+            clientName: clientName,
+            requestParameters: parameters,
+            factory: InvokeGetAccessToken,
             cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 

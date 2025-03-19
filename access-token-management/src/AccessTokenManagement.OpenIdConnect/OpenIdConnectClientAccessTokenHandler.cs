@@ -1,4 +1,4 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Microsoft.AspNetCore.Authentication;
@@ -26,7 +26,7 @@ public class OpenIdConnectClientAccessTokenHandler : AccessTokenHandler
     public OpenIdConnectClientAccessTokenHandler(
         IDPoPProofService dPoPProofService,
         IDPoPNonceStore dPoPNonceStore,
-        IHttpContextAccessor httpContextAccessor, 
+        IHttpContextAccessor httpContextAccessor,
         ILogger<OpenIdConnectClientAccessTokenHandler> logger,
         UserTokenRequestParameters? parameters = null)
         : base(dPoPProofService, dPoPNonceStore, logger)

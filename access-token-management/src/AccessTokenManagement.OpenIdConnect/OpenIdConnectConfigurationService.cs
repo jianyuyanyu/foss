@@ -1,7 +1,6 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using Duende.IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Options;
@@ -68,10 +67,10 @@ public class OpenIdConnectConfigurationService : IOpenIdConnectConfigurationServ
         return new OpenIdConnectClientConfiguration
         {
             Scheme = configScheme,
-            
+
             Authority = options.Authority,
             TokenEndpoint = configuration.TokenEndpoint,
-            RevocationEndpoint = configuration.RevocationEndpoint,            
+            RevocationEndpoint = configuration.RevocationEndpoint,
             ClientId = options.ClientId,
             ClientSecret = options.ClientSecret,
             HttpClient = options.Backchannel,

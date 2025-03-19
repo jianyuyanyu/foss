@@ -1,10 +1,10 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Net;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System.Net;
 
 namespace Duende.AccessTokenManagement.OpenIdConnect;
 
@@ -95,7 +95,7 @@ internal class AuthorizationServerDPoPHandler : DelegatingHandler
                     return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
                 }
             }
-            
+
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 _logger.LogDebug("The authorization server has supplied a new nonce on a successful response, which will be stored and used in future requests to the authorization server");

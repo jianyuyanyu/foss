@@ -1,4 +1,4 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System.Reflection;
@@ -40,7 +40,7 @@ public class GenericHost : IAsyncDisposable
 
     public string Url(string path = null)
     {
-        path = path ?? String.Empty;
+        path = path ?? string.Empty;
         if (!path.StartsWith("/")) path = "/" + path;
         return _baseAddress + path;
     }
@@ -97,7 +97,7 @@ public class GenericHost : IAsyncDisposable
     void ConfigureApp(IApplicationBuilder app)
     {
         _appServices = app.ApplicationServices;
-            
+
         OnConfigure(app);
     }
 
