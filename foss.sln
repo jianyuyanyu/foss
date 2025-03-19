@@ -115,11 +115,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrimmableAnalysis", "identi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "perf", "perf", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perf.DevServer", "access-token-management\perf\Perf.DevServer\Perf.DevServer\Perf.DevServer.csproj", "{01E2079B-91D4-43C8-A969-B1C4A9E57655}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perf.DevServer", "access-token-management\perf\Perf.DevServer\Perf.DevServer.csproj", "{01E2079B-91D4-43C8-A969-B1C4A9E57655}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perf.DevServer.ServiceDefaults", "access-token-management\perf\Perf.DevServer\Perf.DevServer.ServiceDefaults\Perf.DevServer.ServiceDefaults.csproj", "{BBF617FC-F563-FF1C-96F2-ED3794CAADD8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perf.DevServer.ServiceDefaults", "access-token-management\perf\Perf.DevServer.ServiceDefaults\Perf.DevServer.ServiceDefaults.csproj", "{BBF617FC-F563-FF1C-96F2-ED3794CAADD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenEndpoint", "access-token-management\perf\TokenEndpoint\TokenEndpoint.csproj", "{1025AC93-F1AD-C2BA-BB8E-13ACC1EC74A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perf.TokenEndpoint", "access-token-management\perf\Perf.TokenEndpoint\Perf.TokenEndpoint.csproj", "{1025AC93-F1AD-C2BA-BB8E-13ACC1EC74A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
