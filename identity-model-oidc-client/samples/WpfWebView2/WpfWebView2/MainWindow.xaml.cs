@@ -1,4 +1,4 @@
-﻿using IdentityModel.OidcClient;
+﻿using Duende.IdentityModel.OidcClient;
 using System;
 using System.Windows;
 
@@ -48,7 +48,7 @@ namespace WpfWebView2
             }
             else
             {
-                txbMessage.Text = loginResult.User.Identity.Name;
+                txbMessage.Text = loginResult.User.Identity?.Name;
             }
         }
     }

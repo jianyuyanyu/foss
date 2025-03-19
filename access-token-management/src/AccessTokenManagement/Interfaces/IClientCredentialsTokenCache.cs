@@ -1,4 +1,4 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 namespace Duende.AccessTokenManagement;
@@ -20,6 +20,12 @@ public interface IClientCredentialsTokenCache
         string clientName,
         ClientCredentialsToken clientCredentialsToken,
         TokenRequestParameters requestParameters,
+        CancellationToken cancellationToken = default);
+
+    Task<ClientCredentialsToken> GetOrCreateAsync(
+        string clientName,
+        TokenRequestParameters requestParameters,
+        Func<string, TokenRequestParameters, CancellationToken, Task<ClientCredentialsToken>> factory,
         CancellationToken cancellationToken = default);
 
     /// <summary>

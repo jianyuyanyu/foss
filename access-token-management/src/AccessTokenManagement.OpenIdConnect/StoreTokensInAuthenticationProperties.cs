@@ -62,7 +62,7 @@ public class StoreTokensInAuthenticationProperties(
         var expiresAt = GetTokenValue(tokens, names.Expires, appendChallengeScheme, parameters);
         var refreshToken = GetTokenValue(tokens, names.RefreshToken, appendChallengeScheme, parameters);
 
-        DateTimeOffset dtExpires = DateTimeOffset.MaxValue;
+        var dtExpires = DateTimeOffset.MaxValue;
         if (expiresAt != null)
         {
             dtExpires = DateTimeOffset.Parse(expiresAt, CultureInfo.InvariantCulture);
@@ -80,7 +80,7 @@ public class StoreTokensInAuthenticationProperties(
 
     /// <inheritdoc/>
     public async void SetUserToken(
-        UserToken token, 
+        UserToken token,
         AuthenticationProperties authenticationProperties,
         UserTokenRequestParameters? parameters = null)
     {
@@ -126,7 +126,7 @@ public class StoreTokensInAuthenticationProperties(
 
         if (appendChallengeScheme)
         {
-            string scheme = parameters?.ChallengeScheme ?? throw new InvalidOperationException("Attempt to append challenge scheme to token names, but no challenge scheme specified in UserTokenRequestParameters");
+            var scheme = parameters?.ChallengeScheme ?? throw new InvalidOperationException("Attempt to append challenge scheme to token names, but no challenge scheme specified in UserTokenRequestParameters");
             token = tokens.SingleOrDefault(t => t.Key == ChallengeSuffix(key, scheme)).Value;
         }
 
@@ -152,7 +152,7 @@ public class StoreTokensInAuthenticationProperties(
     /// <inheritdoc/>
     public async Task<string> GetSchemeAsync(UserTokenRequestParameters? parameters = null)
     {
-        return parameters?.SignInScheme ?? 
+        return parameters?.SignInScheme ??
             (await schemeProvider.GetDefaultSignInSchemeAsync().ConfigureAwait(false))?.Name ??
             throw new InvalidOperationException("No sign in scheme configured");
     }
@@ -186,7 +186,7 @@ public class StoreTokensInAuthenticationProperties(
         // them
         var otherResourcesExist = keys.Any(k => k.Contains("::"));
 
-        if(!otherResourcesExist)
+        if (!otherResourcesExist)
         {
             authenticationProperties.Items.Remove(names.DPoPKey);
             authenticationProperties.Items.Remove(names.RefreshToken);
@@ -212,10 +212,10 @@ public class StoreTokensInAuthenticationProperties(
     {
         if (AppendChallengeSchemeToTokenNames(parameters))
         {
-             // parameters?.ChallengeScheme should not be null after the call to AppendChallengeSchemeToTokenNames
-             // We check for that in the default implementation of AppendChallengeSchemeToTokenNames, but if an override
-             // didn't, that's an exception
-            string challengeScheme = parameters?.ChallengeScheme ?? throw new InvalidOperationException("Attempt to append challenge scheme to token names, but no challenge scheme specified in UserTokenRequestParameters");
+            // parameters?.ChallengeScheme should not be null after the call to AppendChallengeSchemeToTokenNames
+            // We check for that in the default implementation of AppendChallengeSchemeToTokenNames, but if an override
+            // didn't, that's an exception
+            var challengeScheme = parameters?.ChallengeScheme ?? throw new InvalidOperationException("Attempt to append challenge scheme to token names, but no challenge scheme specified in UserTokenRequestParameters");
             names = names with
             {
                 Token = ChallengeSuffix(names.Token, challengeScheme),
@@ -223,7 +223,7 @@ public class StoreTokensInAuthenticationProperties(
                 DPoPKey = ChallengeSuffix(names.DPoPKey, challengeScheme),
                 Expires = ChallengeSuffix(names.Expires, challengeScheme),
                 RefreshToken = ChallengeSuffix(names.RefreshToken, challengeScheme)
-            }; 
+            };
         }
         return names;
     }

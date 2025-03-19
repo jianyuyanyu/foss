@@ -1,13 +1,13 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using Duende.IdentityModel;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
-using Microsoft.IdentityModel.JsonWebTokens;
+using Duende.IdentityModel;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Duende.AccessTokenManagement;
 
@@ -32,7 +32,7 @@ public class DefaultDPoPProofService : IDPoPProofService
     public virtual async Task<DPoPProof?> CreateProofTokenAsync(DPoPProofRequest request)
     {
         JsonWebKey jsonWebKey;
-        
+
         try
         {
             jsonWebKey = new JsonWebKey(request.DPoPJsonWebKey);

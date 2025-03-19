@@ -1,4 +1,4 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Duende.IdentityModel.Client;
@@ -39,6 +39,13 @@ public abstract class AccessTokenHandler : DelegatingHandler
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     protected abstract Task<ClientCredentialsToken> GetAccessTokenAsync(bool forceRenewal, CancellationToken cancellationToken);
+
+    /// <inheritdoc/>
+    protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        throw new NotSupportedException(
+            "The (synchronous) Send() method is not supported. Please use the async SendAsync variant. ");
+    }
 
     /// <inheritdoc/>
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -82,7 +89,7 @@ public abstract class AccessTokenHandler : DelegatingHandler
     protected virtual async Task SetTokenAsync(HttpRequestMessage request, bool forceRenewal, CancellationToken cancellationToken, string? dpopNonce = null)
     {
         var token = await GetAccessTokenAsync(forceRenewal, cancellationToken).ConfigureAwait(false);
-        
+
         if (!string.IsNullOrWhiteSpace(token?.AccessToken))
         {
             _logger.LogDebug("Sending access token in request to endpoint: {url}", request.RequestUri?.AbsoluteUri.ToString());

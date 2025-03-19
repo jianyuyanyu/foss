@@ -1,4 +1,4 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Microsoft.Extensions.Caching.Distributed;
@@ -23,13 +23,13 @@ public class DistributedDPoPNonceStore : IDPoPNonceStore
     /// <param name="cache"></param>
     /// <param name="logger"></param>
     public DistributedDPoPNonceStore(
-        IDistributedCache cache, 
+        IDistributedCache cache,
         ILogger<DistributedDPoPNonceStore> logger)
     {
         _cache = cache;
         _logger = logger;
     }
-        
+
     /// <inheritdoc/>
     public virtual async Task<string?> GetNonceAsync(DPoPNonceContext context, CancellationToken cancellationToken = default)
     {

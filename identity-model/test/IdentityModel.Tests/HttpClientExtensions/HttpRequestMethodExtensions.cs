@@ -1,6 +1,5 @@
-﻿#if NETFRAMEWORK
-using System.Net.Http;
-#endif
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 namespace Duende.IdentityModel.HttpClientExtensions;
 
@@ -11,7 +10,7 @@ internal static class HttpRequestMethodExtensions
 #if NETFRAMEWORK
         return requestMessage.Properties;
 #else
-        return (IDictionary<string, object>)requestMessage.Options;
+        return requestMessage.Options;
 #endif
     }
 }

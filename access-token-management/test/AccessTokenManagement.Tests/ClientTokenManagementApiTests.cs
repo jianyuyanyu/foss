@@ -1,35 +1,36 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using Duende.IdentityServer.Configuration;
+using System.Text.Json;
 using Duende.IdentityModel;
+using Duende.IdentityServer.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Text.Json;
 
 namespace Duende.AccessTokenManagement.Tests;
 
-public class ClientTokenManagementApiTests : IntegrationTestBase
+public class ClientTokenManagementApiTests(ITestOutputHelper output) : IntegrationTestBase(output), IAsyncLifetime
 {
-    private static readonly string _jwkJson;
+    private static readonly string _jwkJson = CreateJWKJson();
 
-    private HttpClient _client;
-    private IClientCredentialsTokenManagementService _tokenService;
-    private IHttpClientFactory _clientFactory;
-    private ClientCredentialsClient _clientOptions;
+    private IClientCredentialsTokenManagementService _tokenService = null!;
+    private IHttpClientFactory _clientFactory = null!;
+    private ClientCredentialsClient _clientOptions = null!;
 
-    static ClientTokenManagementApiTests()
+    private static string CreateJWKJson()
     {
         var key = CryptoHelper.CreateRsaSecurityKey();
         var jwk = JsonWebKeyConverter.ConvertFromRSASecurityKey(key);
         jwk.Alg = "RS256";
-        _jwkJson = JsonSerializer.Serialize(jwk);
+        var jwkJson = JsonSerializer.Serialize(jwk);
+        return jwkJson;
     }
 
-    public ClientTokenManagementApiTests()
+    public override async ValueTask InitializeAsync()
     {
+        await base.InitializeAsync();
         var services = new ServiceCollection();
 
         services.AddDistributedMemoryCache();
@@ -50,16 +51,16 @@ public class ClientTokenManagementApiTests : IntegrationTestBase
             });
 
         var provider = services.BuildServiceProvider();
-        _client = provider.GetRequiredService<IHttpClientFactory>().CreateClient("test");
         _tokenService = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
         _clientFactory = provider.GetRequiredService<IHttpClientFactory>();
         _clientOptions = provider.GetRequiredService<IOptionsMonitor<ClientCredentialsClient>>().Get("test");
     }
+
     public class ApiHandler : DelegatingHandler
     {
         private HttpMessageHandler? _innerHandler;
 
-        public ApiHandler(HttpMessageHandler innerHandler) 
+        public ApiHandler(HttpMessageHandler innerHandler)
         {
             _innerHandler = innerHandler;
         }
@@ -127,7 +128,7 @@ public class ClientTokenManagementApiTests : IntegrationTestBase
         var jwk = JsonWebKeyConverter.ConvertFromRSASecurityKey(key);
         jwk.Alg = alg;
         var jwkJson = JsonSerializer.Serialize(jwk);
-        
+
         _clientOptions.DPoPJsonWebKey = jwkJson;
 
         var token = await _tokenService.GetAccessTokenAsync("test");
@@ -177,7 +178,7 @@ public class ClientTokenManagementApiTests : IntegrationTestBase
         string? scheme = null;
         string? proofToken = null;
 
-        ApiHost.ApiInvoked += ctx => 
+        ApiHost.ApiInvoked += ctx =>
         {
             scheme = ctx.Request.Headers.Authorization.FirstOrDefault()?.Split(' ', StringSplitOptions.RemoveEmptyEntries)[0];
             proofToken = ctx.Request.Headers["DPoP"].FirstOrDefault()?.ToString();

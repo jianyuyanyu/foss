@@ -1,0 +1,213 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "BlazorServer (atm)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-atm-BlazorServer",
+      "program": "${workspaceFolder}/access-token-management/samples/BlazorServer/bin/Debug/net9.0/BlazorServer.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/access-token-management/samples/BlazorServer",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "console": "integratedTerminal",
+      "presentation": {
+        "group": "0_atm"
+      }
+    },
+    {
+      "name": "Web (atm)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-atm-Web",
+      "program": "${workspaceFolder}/access-token-management/samples/Web/bin/Debug/net9.0/Web.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/access-token-management/samples/Web",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "console": "integratedTerminal",
+      "presentation": {
+        "group": "0_atm"
+      }
+    },
+    {
+      "name": "WebJarJwt (atm)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-atm-WebJarJwt",
+      "program": "${workspaceFolder}/access-token-management/samples/WebJarJwt/bin/Debug/net9.0/WebJarJwt.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/access-token-management/samples/WebJarJwt",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "console": "integratedTerminal",
+      "presentation": {
+        "group": "0_atm"
+      }
+    },
+    {
+      "name": "Worker (atm)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-atm-Worker",
+      "program": "${workspaceFolder}/access-token-management/samples/Worker/bin/Debug/net9.0/Worker.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/access-token-management/samples/Worker",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "console": "integratedTerminal",
+      "presentation": {
+        "group": "0_atm"
+      }
+    },
+    {
+      "name": "WorkerDI (atm)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-atm-WorkerDI",
+      "program": "${workspaceFolder}/access-token-management/samples/WorkerDI/bin/Debug/net9.0/WorkerDI.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/access-token-management/samples/WorkerDI",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "console": "integratedTerminal",
+      "presentation": {
+        "group": "0_atm"
+      }
+    },
+    {
+      "name": "ConsoleClientWithBrowser (imoc)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-imoc-ConsoleClientWithBrowser",
+      "program": "${workspaceFolder}/clients/ConsoleClientWithBrowser/bin/Debug/net9.0/ConsoleClientWithBrowser.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/clients/ConsoleClientWithBrowser",
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "console": "integratedTerminal",
+      "presentation": {
+        "group": "1_imoc"
+      }
+    },
+    {
+      "name": "ConsoleClientWithBrowserAndDPoP (imoc)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-imoc-ConsoleClientWithBrowserAndDPoP",
+      "program": "${workspaceFolder}/clients/ConsoleClientWithBrowserAndDPoP/bin/Debug/net9.0/ConsoleClientWithBrowserAndDPoP.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/clients/ConsoleClientWithBrowserAndDPoP",
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "console": "integratedTerminal",
+      "presentation": {
+        "group": "1_imoc"
+      }
+    },
+    {
+      "name": "ManualModeConsoleClient (imoc)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-imoc-ManualModeConsoleClient",
+      "program": "${workspaceFolder}/identity-model-oidc-client/clients/ManualModeConsoleClient/bin/Debug/net9.0/ManualModeConsoleClient.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/identity-model-oidc-client/clients/ManualModeConsoleClient",
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "console": "integratedTerminal",
+      "presentation": {
+        "group": "1_imoc"
+      }
+    },
+    {
+      "name": "HttpSysConsoleClient (imoc sample)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-imoc-HttpSysConsoleClient",
+      "program": "${workspaceFolder}/identity-model-oidc-client/samples/HttpSysConsoleClient/Console/bin/Debug/net9.0/ConsoleSystemBrowser.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/ConsoleSystemBrowser",
+      "console": "integratedTerminal",
+      "presentation": {
+        "group": "2_imoc-samples"
+      }
+    },
+    {
+      "name": "NetCoreConsoleClient (imoc sample)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-imoc-NetCoreConsoleClient",
+      "program": "${workspaceFolder}/identity-model-oidc-client/samples/NetCoreConsoleClient/src/NetCoreConsoleClient/bin/Debug/net9.0/NetCoreConsoleClient.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/identity-model-oidc-client/samples/NetCoreConsoleClient/src/NetCoreConsoleClient",
+      "console": "integratedTerminal",
+      "presentation": {
+        "group": "2_imoc-samples"
+      },
+    },
+    {
+      "name": "WindowsConsoleSystemBrowser  (imoc sample)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-imoc-WindowsConsoleSystemBrowser",
+      "program": "${workspaceFolder}/identity-model-oidc-client/samples/WindowsConsoleSystemBrowser/WindowsConsoleSystemBrowser/bin/Debug/net9.0-windows/WindowsConsoleSystemBrowser.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/identity-model-oidc-client/samples/WindowsConsoleSystemBrowser/WindowsConsoleSystemBrowser",
+      "console": "integratedTerminal",
+      "presentation": {
+        "group": "2_imoc-samples"
+      },
+    },
+    {
+      "name": "WPF  (imoc sample)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-imoc-Wpf",
+      "program": "${workspaceFolder}/identity-model-oidc-client/samples/Wpf/Wpf/bin/Debug/net9.0-windows/Wpf.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/identity-model-oidc-client/samples/Wpf/Wpf",
+      "console": "integratedTerminal",
+      "presentation": {
+        "group": "2_imoc-samples"
+      },
+    },
+    {
+      "name": "WPF with WebView2  (imoc sample)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-imoc-WpfWebView2",
+      "program": "${workspaceFolder}/identity-model-oidc-client/samples/WpfWebView2/WpfWebView2/bin/Debug/net9.0-windows/WpfWebView2.exe",
+      "args": [],
+      "cwd": "${workspaceFolder}/identity-model-oidc-client/samples/WpfWebView2/WpfWebView2",
+      "console": "integratedTerminal",
+      "presentation": {
+        "group": "2_imoc-samples"
+      },
+    }
+  ]
+}

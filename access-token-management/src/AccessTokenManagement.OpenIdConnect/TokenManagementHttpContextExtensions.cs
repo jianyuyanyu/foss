@@ -1,10 +1,10 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Duende.AccessTokenManagement;
 using Duende.AccessTokenManagement.OpenIdConnect;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace Microsoft.AspNetCore.Authentication;
@@ -44,10 +44,10 @@ public static class TokenManagementHttpContextExtensions
         CancellationToken cancellationToken = default)
     {
         var service = httpContext.RequestServices.GetRequiredService<IUserTokenManagementService>();
-        
+
         await service.RevokeRefreshTokenAsync(httpContext.User, parameters, cancellationToken).ConfigureAwait(false);
     }
-    
+
     /// <summary>
     /// Returns an access token for the OpenID Connect client using client credentials flow
     /// </summary>
@@ -65,7 +65,7 @@ public static class TokenManagementHttpContextExtensions
         var schemes = httpContext.RequestServices.GetRequiredService<IAuthenticationSchemeProvider>();
 
         var schemeName = parameters?.ChallengeScheme ?? options.Value.ChallengeScheme;
-        
+
         if (string.IsNullOrEmpty(schemeName))
         {
             var defaultScheme = await schemes.GetDefaultChallengeSchemeAsync().ConfigureAwait(false);
@@ -76,7 +76,7 @@ public static class TokenManagementHttpContextExtensions
 
         return await service.GetAccessTokenAsync(
             OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + schemeName,
-            parameters, 
+            parameters,
             cancellationToken).ConfigureAwait(false);
     }
 
