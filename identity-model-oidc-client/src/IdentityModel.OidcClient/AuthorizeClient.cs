@@ -1,4 +1,4 @@
-// Copyright (c) Duende Software. All rights reserved.
+﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Duende.IdentityModel.Client;
@@ -176,9 +176,9 @@ internal class AuthorizeClient
         _logger.LogTrace("CreateEndSessionUrl");
 
         return new RequestUrl(endpoint).CreateEndSessionUrl(
-            idTokenHint: request.IdTokenHint,
+            idTokenHint: request?.IdTokenHint,
             postLogoutRedirectUri: _options.PostLogoutRedirectUri,
-            state: request.State);
+            state: request?.State);
     }
 
     internal Parameters CreateAuthorizeParameters(

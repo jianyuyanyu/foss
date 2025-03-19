@@ -1,4 +1,4 @@
-// Copyright (c) Duende Software. All rights reserved.
+﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Duende.IdentityModel.Client;
@@ -57,6 +57,24 @@ public class OidcClientTests
         var result = await sut.RefreshTokenAsync("test", scope: scope);
 
         result.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public async Task PrepareLogoutAsync_with_no_idtokenhint_should_work()
+    {
+        var options = new OidcClientOptions
+        {
+            Authority = "https://demo.duendesoftware.com/",
+            ClientId = "interactive.public",
+            Scope = "openid profile email offline_access",
+            RedirectUri = "test:/sign-in:",
+            PostLogoutRedirectUri = "test//sign-out:"
+        };
+
+        var client = new OidcClient(options);
+        var state = await client.PrepareLogoutAsync();
+
+        state.ShouldNotBeNull();
     }
 
     class FakeHttpMessageHandler : HttpMessageHandler
