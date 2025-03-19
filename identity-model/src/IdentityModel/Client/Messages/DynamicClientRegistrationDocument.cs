@@ -272,7 +272,7 @@ public class DynamicClientRegistrationDocument
     /// </summary>
     [JsonPropertyName(OidcConstants.ClientMetadata.RequestUris)]
     public ICollection<Uri> RequestUris { get; set; } = new HashSet<Uri>();
-    
+
     /// <summary>
     /// Custom client metadata fields to include in the serialization.
     /// </summary>

@@ -18,10 +18,10 @@ public interface IUserTokenManagementService
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<UserToken> GetAccessTokenAsync(
-        ClaimsPrincipal user, 
-        UserTokenRequestParameters? parameters = null, 
+        ClaimsPrincipal user,
+        UserTokenRequestParameters? parameters = null,
         CancellationToken cancellationToken = default);
-    
+
     /// <summary>
     /// Revokes the current refresh token, and removes the access token from the store.
     /// </summary>
@@ -30,7 +30,7 @@ public interface IUserTokenManagementService
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task RevokeRefreshTokenAsync(
-        ClaimsPrincipal user, 
-        UserTokenRequestParameters? parameters = null, 
+        ClaimsPrincipal user,
+        UserTokenRequestParameters? parameters = null,
         CancellationToken cancellationToken = default);
 }

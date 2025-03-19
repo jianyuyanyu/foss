@@ -1,6 +1,9 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Net;
+using System.Reflection;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,9 +11,6 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.Net;
-using System.Reflection;
-using System.Security.Claims;
 
 namespace Duende.AccessTokenManagement.Tests;
 
@@ -44,7 +44,7 @@ public class GenericHost(WriteTestOutput writeOutput, string baseAddress = "http
 
     public string Url(string? path = null)
     {
-        path = path ?? String.Empty;
+        path = path ?? string.Empty;
         if (!path.StartsWith("/")) path = "/" + path;
         return BaseAddress + path;
     }
@@ -105,7 +105,7 @@ public class GenericHost(WriteTestOutput writeOutput, string baseAddress = "http
     void ConfigureApp(IApplicationBuilder app)
     {
         _appServices = app.ApplicationServices;
-            
+
         OnConfigure(app);
 
         ConfigureSignin(app);
@@ -128,7 +128,7 @@ public class GenericHost(WriteTestOutput writeOutput, string baseAddress = "http
             await next();
         });
     }
-        
+
     public async Task RevokeSessionCookieAsync()
     {
         var response = await BrowserClient.GetAsync(Url("__signout"));
@@ -149,7 +149,7 @@ public class GenericHost(WriteTestOutput writeOutput, string baseAddress = "http
 
                 var props = _propsToSignIn ?? new AuthenticationProperties();
                 await ctx.SignInAsync(_userToSignIn, props);
-                    
+
                 _userToSignIn = null;
                 _propsToSignIn = null;
 
@@ -160,10 +160,10 @@ public class GenericHost(WriteTestOutput writeOutput, string baseAddress = "http
             await next();
         });
     }
-        
+
     ClaimsPrincipal? _userToSignIn = default!;
     AuthenticationProperties? _propsToSignIn = default!;
-        
+
     public async Task IssueSessionCookieAsync(params Claim[] claims)
     {
         _userToSignIn = new ClaimsPrincipal(new ClaimsIdentity(claims, "test", "name", "role"));

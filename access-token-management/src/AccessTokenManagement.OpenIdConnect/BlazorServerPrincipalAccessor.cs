@@ -1,11 +1,11 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
 
 namespace Duende.AccessTokenManagement.OpenIdConnect;
 
@@ -17,7 +17,7 @@ public class BlazorServerUserAccessor(
     // AuthenticationStateProvider, rather than injecting it. Injecting the
     // state provider directly doesn't work here, because this service might be
     // called in a non-blazor DI scope.
-    CircuitServicesAccessor circuitServicesAccessor, 
+    CircuitServicesAccessor circuitServicesAccessor,
     IHttpContextAccessor? httpContextAccessor,
     ILogger<BlazorServerUserAccessor> logger) : IUserAccessor
 {
@@ -34,7 +34,7 @@ public class BlazorServerUserAccessor(
             return authState.User;
         }
         // Otherwise, we should be in an SSR scenario, and the httpContext should be available
-        else if(httpContextAccessor?.HttpContext != null)
+        else if (httpContextAccessor?.HttpContext != null)
         {
             return httpContextAccessor.HttpContext.User;
         }

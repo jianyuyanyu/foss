@@ -133,7 +133,7 @@ public class UserAccessAccessTokenManagementService : IUserTokenManagementServic
     {
         var userToken = await _userAccessTokenStore.GetTokenAsync(user, parameters).ConfigureAwait(false);
 
-        if (String.IsNullOrWhiteSpace(userToken.RefreshToken))
+        if (string.IsNullOrWhiteSpace(userToken.RefreshToken))
         {
             throw new InvalidOperationException("No refresh token in store.");
         }

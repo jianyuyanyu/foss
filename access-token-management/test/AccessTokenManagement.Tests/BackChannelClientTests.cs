@@ -305,7 +305,7 @@ public static class TimeoutExtensions
 {
     public static async Task<T> ThrowOnTimeout<T>(this Task<T> task, TimeSpan timeout = default, string? message = null)
     {
-        Stopwatch sw = Stopwatch.StartNew();
+        var sw = Stopwatch.StartNew();
         timeout = GetTimeOutOrDefault(timeout);
 
         using (var cts = new CancellationTokenSource())

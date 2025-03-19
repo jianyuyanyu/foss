@@ -29,11 +29,11 @@ internal class ServicesAccessorCircuitHandler : CircuitHandler
     readonly IServiceProvider services;
     readonly CircuitServicesAccessor circuitServicesAccessor;
 
-    public ServicesAccessorCircuitHandler(IServiceProvider services, 
+    public ServicesAccessorCircuitHandler(IServiceProvider services,
         CircuitServicesAccessor servicesAccessor)
     {
         this.services = services;
-        this.circuitServicesAccessor = servicesAccessor;
+        circuitServicesAccessor = servicesAccessor;
     }
 
     public override Func<CircuitInboundActivityContext, Task> CreateInboundActivityHandler(

@@ -1,8 +1,8 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using Duende.IdentityModel.Client;
 using Duende.IdentityModel;
+using Duende.IdentityModel.Client;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -49,21 +49,21 @@ public class UserTokenEndpointService : IUserTokenEndpointService
     {
         var refreshToken = userToken.RefreshToken ?? throw new ArgumentNullException(nameof(userToken.RefreshToken));
 
-        _logger.LogTrace("Refreshing refresh token: {token}",  refreshToken);
+        _logger.LogTrace("Refreshing refresh token: {token}", refreshToken);
 
         var oidc = await _configurationService.GetOpenIdConnectConfigurationAsync(parameters.ChallengeScheme).ConfigureAwait(false);
 
         var request = new RefreshTokenRequest
         {
             Address = oidc.TokenEndpoint,
-            
+
             ClientId = oidc.ClientId!,
             ClientSecret = oidc.ClientSecret,
             ClientCredentialStyle = _options.ClientCredentialStyle,
-            
+
             RefreshToken = refreshToken
         };
-        
+
         request.Options.TryAdd(ClientCredentialsTokenManagementDefaults.TokenRequestParametersOptionsName, parameters);
 
         if (!string.IsNullOrWhiteSpace(parameters.Scope))
@@ -75,7 +75,7 @@ public class UserTokenEndpointService : IUserTokenEndpointService
         {
             request.Resource.Add(parameters.Resource);
         }
-        
+
         if (parameters.Assertion != null)
         {
             request.ClientAssertion = parameters.Assertion;
@@ -106,9 +106,9 @@ public class UserTokenEndpointService : IUserTokenEndpointService
         _logger.LogDebug("refresh token request to: {endpoint}", request.Address);
         var response = await oidc.HttpClient!.RequestRefreshTokenAsync(request, cancellationToken).ConfigureAwait(false);
 
-        if (response.IsError && 
-            (response.Error == OidcConstants.TokenErrors.UseDPoPNonce || response.Error == OidcConstants.TokenErrors.InvalidDPoPProof) && 
-            dPoPJsonWebKey != null && 
+        if (response.IsError &&
+            (response.Error == OidcConstants.TokenErrors.UseDPoPNonce || response.Error == OidcConstants.TokenErrors.InvalidDPoPProof) &&
+            dPoPJsonWebKey != null &&
             response.DPoPNonce != null)
         {
             _logger.LogDebug("DPoP error during token refresh. Retrying with server nonce");
@@ -143,7 +143,7 @@ public class UserTokenEndpointService : IUserTokenEndpointService
                 ? DateTimeOffset.MaxValue
                 : DateTimeOffset.UtcNow.AddSeconds(response.ExpiresIn);
             token.RefreshToken = response.RefreshToken ?? userToken.RefreshToken;
-            token.Scope = response.Scope;    
+            token.Scope = response.Scope;
         }
 
         return token;
@@ -156,9 +156,9 @@ public class UserTokenEndpointService : IUserTokenEndpointService
         CancellationToken cancellationToken = default)
     {
         var refreshToken = userToken.RefreshToken ?? throw new ArgumentNullException(nameof(userToken.RefreshToken));
-        
+
         _logger.LogTrace("Revoking refresh token: {token}", refreshToken);
-        
+
         var oidc = await _configurationService.GetOpenIdConnectConfigurationAsync(parameters.ChallengeScheme).ConfigureAwait(false);
 
         if (string.IsNullOrEmpty(oidc.RevocationEndpoint))
@@ -169,17 +169,17 @@ public class UserTokenEndpointService : IUserTokenEndpointService
         var request = new TokenRevocationRequest
         {
             Address = oidc.RevocationEndpoint,
-            
+
             ClientId = oidc.ClientId!,
             ClientSecret = oidc.ClientSecret,
             ClientCredentialStyle = _options.ClientCredentialStyle,
-            
+
             Token = refreshToken,
             TokenTypeHint = OidcConstants.TokenTypes.RefreshToken
         };
-        
+
         request.Options.TryAdd(ClientCredentialsTokenManagementDefaults.TokenRequestParametersOptionsName, parameters);
-       
+
         if (parameters.Assertion != null)
         {
             request.ClientAssertion = parameters.Assertion;
@@ -194,7 +194,7 @@ public class UserTokenEndpointService : IUserTokenEndpointService
                 request.ClientCredentialStyle = ClientCredentialStyle.PostBody;
             }
         }
-        
+
         _logger.LogDebug("token revocation request to: {endpoint}", request.Address);
         var response = await oidc.HttpClient!.RevokeTokenAsync(request, cancellationToken).ConfigureAwait(false);
 

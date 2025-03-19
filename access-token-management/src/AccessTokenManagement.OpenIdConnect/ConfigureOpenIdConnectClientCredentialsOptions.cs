@@ -35,20 +35,20 @@ public class ConfigureOpenIdConnectClientCredentialsOptions : IConfigureNamedOpt
     {
         if (name.IsMissing()) return;
         if (!name.StartsWith(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix)) return;
-        
+
         string? scheme = null;
         if (name.Length > OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix.Length)
         {
             scheme = name[OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix.Length..];
         }
 
-        if (String.IsNullOrWhiteSpace(scheme))
+        if (string.IsNullOrWhiteSpace(scheme))
         {
             throw new ArgumentException("Missing scheme when used with OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix");
         }
-        
+
         var oidc = _configurationService.GetOpenIdConnectConfigurationAsync(scheme).GetAwaiter().GetResult();
-            
+
         options.TokenEndpoint = oidc.TokenEndpoint;
         options.ClientId = oidc.ClientId;
         options.ClientSecret = oidc.ClientSecret;

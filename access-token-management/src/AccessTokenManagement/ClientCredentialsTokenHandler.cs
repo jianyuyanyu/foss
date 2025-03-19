@@ -1,4 +1,4 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Microsoft.Extensions.Logging;
@@ -26,7 +26,7 @@ public class ClientCredentialsTokenHandler : AccessTokenHandler
         IDPoPNonceStore dPoPNonceStore,
         IClientCredentialsTokenManagementService accessTokenManagementService,
         ILogger<ClientCredentialsTokenHandler> logger,
-        string tokenClientName) 
+        string tokenClientName)
         : base(dPoPProofService, dPoPNonceStore, logger)
     {
         _accessTokenManagementService = accessTokenManagementService;
@@ -39,7 +39,7 @@ public class ClientCredentialsTokenHandler : AccessTokenHandler
         var parameters = new TokenRequestParameters
         {
             ForceRenewal = forceRenewal
-        }; 
+        };
         return _accessTokenManagementService.GetAccessTokenAsync(_tokenClientName, parameters, cancellationToken);
     }
 }

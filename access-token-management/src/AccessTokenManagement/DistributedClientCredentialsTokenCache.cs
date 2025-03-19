@@ -1,7 +1,5 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using System.Collections.Concurrent;
 using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
@@ -25,7 +23,7 @@ public class DistributedClientCredentialsTokenCache(
     private readonly ILogger<DistributedClientCredentialsTokenCache> _logger = logger;
     private readonly ClientCredentialsTokenManagementOptions _options = options.Value;
 
-        
+
     /// <inheritdoc/>
     public async Task SetAsync(
         string clientName,
@@ -34,7 +32,7 @@ public class DistributedClientCredentialsTokenCache(
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(clientName);
-            
+
         var cacheExpiration = clientCredentialsToken.Expiration.AddSeconds(-_options.CacheLifetimeBuffer);
         var data = JsonSerializer.Serialize(clientCredentialsToken);
 
@@ -44,7 +42,7 @@ public class DistributedClientCredentialsTokenCache(
         };
 
         _logger.LogTrace("Caching access token for client: {clientName}. Expiration: {expiration}", clientName, cacheExpiration);
-            
+
         var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
         await _cache.SetStringAsync(cacheKey, data, entryOptions, token: cancellationToken).ConfigureAwait(false);
     }
@@ -87,12 +85,12 @@ public class DistributedClientCredentialsTokenCache(
 
     /// <inheritdoc/>
     public async Task<ClientCredentialsToken?> GetAsync(
-        string clientName, 
+        string clientName,
         TokenRequestParameters requestParameters,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(clientName);
-            
+
         var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
         var entry = await _cache.GetStringAsync(cacheKey, token: cancellationToken).ConfigureAwait(false);
 
@@ -134,7 +132,7 @@ public class DistributedClientCredentialsTokenCache(
     /// <param name="parameters"></param>
     /// <returns></returns>
     protected virtual string GenerateCacheKey(
-        ClientCredentialsTokenManagementOptions options, 
+        ClientCredentialsTokenManagementOptions options,
         string clientName,
         TokenRequestParameters? parameters = null)
     {

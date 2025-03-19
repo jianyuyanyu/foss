@@ -1,4 +1,4 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Duende.IdentityModel.Client;
@@ -89,7 +89,7 @@ public abstract class AccessTokenHandler : DelegatingHandler
     protected virtual async Task SetTokenAsync(HttpRequestMessage request, bool forceRenewal, CancellationToken cancellationToken, string? dpopNonce = null)
     {
         var token = await GetAccessTokenAsync(forceRenewal, cancellationToken).ConfigureAwait(false);
-        
+
         if (!string.IsNullOrWhiteSpace(token?.AccessToken))
         {
             _logger.LogDebug("Sending access token in request to endpoint: {url}", request.RequestUri?.AbsoluteUri.ToString());
