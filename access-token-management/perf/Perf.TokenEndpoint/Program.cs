@@ -1,6 +1,7 @@
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
 using Duende.AccessTokenManagement;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,13 +30,19 @@ builder.Services.AddAuthentication("token")
 
 var services = builder.Services;
 services.AddDistributedMemoryCache();
-services.AddClientCredentialsTokenManagement()
+services.AddClientCredentialsTokenManagement(opt => opt.CacheLifetimeBuffer = 0)
     .AddClient("c1", opt =>
     {
         opt.TokenEndpoint = new Uri(Services.IdentityServer.ActualUri(), "/connect/token").ToString();
         opt.ClientId = "tokenendpoint";
         opt.ClientSecret = "secret";
     });
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("cache");
+    options.InstanceName = "SampleInstance";
+});
 
 var app = builder.Build();
 
@@ -56,7 +63,7 @@ var summaries = new[]
 
 app.MapGet("/weatherforecast", () =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
+    var forecast = Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
         (
             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),

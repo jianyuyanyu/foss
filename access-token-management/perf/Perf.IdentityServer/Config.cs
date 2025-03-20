@@ -1,3 +1,6 @@
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
 using Duende.IdentityModel;
 using Duende.IdentityServer.Models;
 
@@ -45,8 +48,8 @@ public static class Config
                     AllowedScopes = { "openid", "profile", "api", "scope-for-isolated-api" },
 
                     RefreshTokenExpiration = TokenExpiration.Absolute,
-                    AbsoluteRefreshTokenLifetime = 60,
-                    AccessTokenLifetime = 15 // Force refresh
+                    AbsoluteRefreshTokenLifetime = 100,
+                    AccessTokenLifetime = 2
                 }
             };
         }

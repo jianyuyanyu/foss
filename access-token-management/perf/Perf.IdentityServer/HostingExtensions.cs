@@ -1,3 +1,5 @@
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 namespace Perf.IdentityServer;
 
@@ -7,7 +9,7 @@ internal static class HostingExtensions
     {
         // uncomment if you want to add a UI
         //builder.Services.AddRazorPages();
-        
+
         builder.Services.AddIdentityServer(options =>
             {
 
@@ -36,6 +38,12 @@ internal static class HostingExtensions
         // uncomment if you want to add a UI
         //app.UseStaticFiles();
         //app.UseRouting();
+
+        app.Use(async (c, n) =>
+        {
+            await Task.Delay(2000);
+            await n();
+        });
 
         app.UseIdentityServer();
 
