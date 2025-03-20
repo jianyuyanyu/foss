@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +19,8 @@ public static class Extensions
 {
     public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
+        builder.Services.AddHttpLogging();
+
         builder.ConfigureOpenTelemetry();
 
         builder.AddDefaultHealthChecks();
@@ -114,6 +118,63 @@ public static class Extensions
             });
         }
 
+        app.UseHttpLogging();
+
         return app;
     }
+}
+
+
+public static class ServiceDiscovery
+{
+    public static Uri ResolveUri(Endpoint endpoint)
+    {
+        var uri = endpoint.LogicalUri();
+        var scheme = uri.Scheme;
+        var resolvedUri = Environment.GetEnvironmentVariable($"services__{endpoint}__{scheme}__0");
+
+        if (resolvedUri == null)
+        {
+            var envVars = Environment.GetEnvironmentVariables();
+            var servicesEnvVars = new Dictionary<string, string>();
+
+            foreach (DictionaryEntry entry in envVars)
+            {
+                var key = entry.Key.ToString();
+                if (key != null && key.StartsWith("services__"))
+                {
+                    servicesEnvVars[key] = entry.Value?.ToString() ?? string.Empty;
+                }
+            }
+
+            var availableServices = string.Join(", ", servicesEnvVars.Select(kv => $"{kv.Key}={kv.Value}"));
+            throw new InvalidOperationException($"Service {endpoint} not found in service discovery. Available are: " + availableServices);
+        }
+
+        return new Uri(resolvedUri);
+    }
+}
+
+
+public static class Services
+{
+    public static readonly Endpoint TokenEndpoint = UsePropertyName();
+    public static readonly Endpoint IdentityServer = UsePropertyName();
+
+    /// <summary>
+    /// Build the name of the property from the caller's name.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    private static Endpoint UsePropertyName([CallerMemberName] string? name = null) =>
+        new Endpoint(name ?? throw new ArgumentNullException());
+}
+
+public class Endpoint(string name)
+{
+    public Uri LogicalUri() => new Uri("https://" + name);
+    public Uri ActualUri() => ServiceDiscovery.ResolveUri(this);
+
+    public override string ToString() => name;
 }

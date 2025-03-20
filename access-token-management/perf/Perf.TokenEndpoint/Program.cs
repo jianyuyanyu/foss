@@ -1,3 +1,8 @@
+using Duende.AccessTokenManagement;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -5,6 +10,32 @@ builder.AddServiceDefaults();
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddAuthentication("token")
+    .AddJwtBearer("token", options =>
+    {
+        options.Authority = Services.IdentityServer.ActualUri().ToString();
+        options.MapInboundClaims = false;
+
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateAudience = false,
+            ValidTypes = new[] { "at+jwt" },
+
+            NameClaimType = "name",
+            RoleClaimType = "role"
+        };
+    });
+
+var services = builder.Services;
+services.AddDistributedMemoryCache();
+services.AddClientCredentialsTokenManagement()
+    .AddClient("c1", opt =>
+    {
+        opt.TokenEndpoint = new Uri(Services.IdentityServer.ActualUri(), "/connect/token").ToString();
+        opt.ClientId = "tokenendpoint";
+        opt.ClientSecret = "secret";
+    });
 
 var app = builder.Build();
 
@@ -36,6 +67,11 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 })
 .WithName("GetWeatherForecast");
+
+app.MapGet("/token", async (IClientCredentialsTokenManagementService svc, CancellationToken ct) =>
+{
+    return await svc.GetAccessTokenAsync("c1");
+});
 
 app.Run();
 

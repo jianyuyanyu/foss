@@ -121,6 +121,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perf.DevServer.ServiceDefau
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perf.TokenEndpoint", "access-token-management\perf\Perf.TokenEndpoint\Perf.TokenEndpoint.csproj", "{1025AC93-F1AD-C2BA-BB8E-13ACC1EC74A7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perf.IdentityServer", "access-token-management\perf\Perf.IdentityServer\Perf.IdentityServer.csproj", "{6E697CE1-145C-448A-A2BC-CF28A75909F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -227,6 +229,10 @@ Global
 		{1025AC93-F1AD-C2BA-BB8E-13ACC1EC74A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1025AC93-F1AD-C2BA-BB8E-13ACC1EC74A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1025AC93-F1AD-C2BA-BB8E-13ACC1EC74A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E697CE1-145C-448A-A2BC-CF28A75909F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E697CE1-145C-448A-A2BC-CF28A75909F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E697CE1-145C-448A-A2BC-CF28A75909F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E697CE1-145C-448A-A2BC-CF28A75909F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -269,6 +275,7 @@ Global
 		{01E2079B-91D4-43C8-A969-B1C4A9E57655} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{BBF617FC-F563-FF1C-96F2-ED3794CAADD8} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{1025AC93-F1AD-C2BA-BB8E-13ACC1EC74A7} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{6E697CE1-145C-448A-A2BC-CF28A75909F6} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {198D25AC-7BC4-48D6-BF04-37AF59E0648D}
