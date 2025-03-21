@@ -59,10 +59,30 @@ public class OidcClientTests
         result.ShouldNotBeNull();
     }
 
+    [Fact]
+    public async Task PrepareLogoutAsync_with_no_idtokenhint_should_work()
+    {
+        var options = new OidcClientOptions
+        {
+            Authority = "https://demo.duendesoftware.com/",
+            ClientId = "interactive.public",
+            Scope = "openid profile email offline_access",
+            RedirectUri = "test:/sign-in:",
+            PostLogoutRedirectUri = "test//sign-out:"
+        };
+
+        var client = new OidcClient(options);
+        var state = await client.PrepareLogoutAsync();
+
+        state.ShouldNotBeNull();
+    }
+
     class FakeHttpMessageHandler : HttpMessageHandler
     {
         public Func<HttpRequestMessage, Task<HttpResponseMessage>> Func { get; set; }
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        => Func(request);
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+            CancellationToken cancellationToken)
+            => Func(request);
     }
 }

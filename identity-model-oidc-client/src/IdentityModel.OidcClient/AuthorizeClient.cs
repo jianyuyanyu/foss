@@ -101,10 +101,12 @@ internal class AuthorizeClient
         };
 
         if (_options.ProviderInformation.PushedAuthorizationRequestEndpoint.IsPresent() &&
-           !_options.DisablePushedAuthorization)
+            !_options.DisablePushedAuthorization)
         {
-            _logger.LogDebug("The IdentityProvider contains a pushed authorization request endpoint. Automatically pushing authorization parameters. Use DisablePushedAuthorization to opt out.");
-            var parResponse = await PushAuthorizationRequestAsync(state.State, pkce.CodeChallenge, frontChannelParameters);
+            _logger.LogDebug(
+                "The IdentityProvider contains a pushed authorization request endpoint. Automatically pushing authorization parameters. Use DisablePushedAuthorization to opt out.");
+            var parResponse =
+                await PushAuthorizationRequestAsync(state.State, pkce.CodeChallenge, frontChannelParameters);
             if (parResponse.IsError)
             {
                 _logger.LogError("Failed to push authorization parameters");
@@ -113,6 +115,7 @@ internal class AuthorizeClient
                 state.ErrorDescription = "Failed to push authorization parameters";
                 return state;
             }
+
             state.StartUrl = CreateAuthorizeUrl(parResponse.RequestUri, _options.ClientId);
         }
         else
@@ -125,7 +128,8 @@ internal class AuthorizeClient
         return state;
     }
 
-    private async Task<PushedAuthorizationResponse> PushAuthorizationRequestAsync(string state, string codeChallenge, Parameters frontChannelParameters)
+    private async Task<PushedAuthorizationResponse> PushAuthorizationRequestAsync(string state, string codeChallenge,
+        Parameters frontChannelParameters)
     {
         var http = _options.CreateClient();
         var par = new PushedAuthorizationRequest
@@ -176,9 +180,9 @@ internal class AuthorizeClient
         _logger.LogTrace("CreateEndSessionUrl");
 
         return new RequestUrl(endpoint).CreateEndSessionUrl(
-            idTokenHint: request.IdTokenHint,
+            idTokenHint: request?.IdTokenHint,
             postLogoutRedirectUri: _options.PostLogoutRedirectUri,
-            state: request.State);
+            state: request?.State);
     }
 
     internal Parameters CreateAuthorizeParameters(
