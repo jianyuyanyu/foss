@@ -36,7 +36,8 @@ services.AddClientCredentialsTokenManagement(opt => opt.CacheLifetimeBuffer = 0)
         opt.TokenEndpoint = new Uri(Services.IdentityServer.ActualUri(), "/connect/token").ToString();
         opt.ClientId = "tokenendpoint";
         opt.ClientSecret = "secret";
-    });
+    })
+    .UsePreviewHybridCache();
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {

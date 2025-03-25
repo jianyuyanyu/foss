@@ -44,7 +44,7 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
 
         // By default, resolve the distributed cache for the DistributedClientCredentialsTokenCache
         // without key. If desired, a consumers can register the distributed cache with a key
-        services.TryAddKeyedTransient<IDistributedCache>(ServiceProviderKeys.DistributedClientCredentialsTokenCache, (sp, _) => sp.GetRequiredService<IDistributedCache>());
+        services.TryAddKeyedSingleton<IDistributedCache>(ServiceProviderKeys.ClientCredentialsTokenCache, (sp, _) => sp.GetRequiredService<IDistributedCache>());
         services.TryAddTransient<IClientCredentialsTokenCache, DistributedClientCredentialsTokenCache>();
         services.TryAddTransient<IClientCredentialsTokenEndpointService, ClientCredentialsTokenEndpointService>();
         services.TryAddTransient<IClientAssertionService, DefaultClientAssertionService>();
@@ -55,7 +55,7 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
         // ** DistributedDPoPNonceStore **
         // By default, resolve the distributed cache for the DistributedClientCredentialsTokenCache
         // without key. If desired, a consumers can register the distributed cache with a key
-        services.TryAddKeyedTransient<IDistributedCache>(ServiceProviderKeys.DistributedDPoPNonceStore, (sp, _) => sp.GetRequiredService<IDistributedCache>());
+        services.TryAddKeyedSingleton<IDistributedCache>(ServiceProviderKeys.DPoPNonceStore, (sp, _) => sp.GetRequiredService<IDistributedCache>());
         services.TryAddTransient<IDPoPNonceStore, DistributedDPoPNonceStore>();
 
         services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName);
