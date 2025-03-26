@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using Duende.AccessTokenManagement.OTel;
 using Duende.IdentityModel;
 using Duende.IdentityModel.Client;
 using Microsoft.Extensions.Logging;
@@ -13,6 +14,7 @@ namespace Duende.AccessTokenManagement;
 /// </summary>
 [Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class ClientCredentialsTokenEndpointService(
+    Metrics metrics,
     IHttpClientFactory httpClientFactory,
     IOptionsMonitor<ClientCredentialsClient> options,
     IClientAssertionService clientAssertionService,
@@ -38,8 +40,8 @@ public class ClientCredentialsTokenEndpointService(
             throw new InvalidOperationException($"No TokenEndpoint configured for client {clientName}");
         }
 
-        using var logScope = logger.BeginScopeKvp(
-            (LogMessages.Parameters.ClientId, client.ClientId)
+        using var logScope = logger.BeginScope(
+            (OTelParameters.ClientId, client.ClientId)
         );
 
         var request = new ClientCredentialsTokenRequest
@@ -132,6 +134,8 @@ public class ClientCredentialsTokenEndpointService(
         {
             logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce(response.Error);
 
+            metrics.DPoPNonceErrorRetry(request.ClientId, Metrics.TokenRequestType.ClientCredentials, response.Error);
+
             var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {
                 Url = request.Address!,
@@ -149,13 +153,17 @@ public class ClientCredentialsTokenEndpointService(
 
         if (response.IsError)
         {
+            metrics.TokenRetrievalFailed(request.ClientId, Metrics.TokenRequestType.ClientCredentials, response.Error);
             logger.FailedToRequestAccessTokenForClient(clientName, response.Error, response.ErrorDescription);
 
             return new ClientCredentialsToken
             {
-                Error = response.Error
+                Error = response.Error,
+                ClientId = request.ClientId
             };
         }
+
+        metrics.TokenRetrieved(request.ClientId, Metrics.TokenRequestType.ClientCredentials);
 
         var token = new ClientCredentialsToken
         {
@@ -165,7 +173,8 @@ public class ClientCredentialsTokenEndpointService(
             Expiration = response.ExpiresIn == 0
                 ? DateTimeOffset.MaxValue
                 : DateTimeOffset.UtcNow.AddSeconds(response.ExpiresIn),
-            Scope = response.Scope
+            Scope = response.Scope,
+            ClientId = request.ClientId
         };
 
         logger.ClientCredentialsTokenForClientRetrieved(clientName, token.AccessTokenType, token.Expiration);

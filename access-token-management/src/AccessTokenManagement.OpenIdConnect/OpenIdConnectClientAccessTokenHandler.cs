@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using Duende.AccessTokenManagement.OTel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -12,11 +13,12 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// </summary>
 [Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class OpenIdConnectClientAccessTokenHandler(
+    Metrics metrics,
     IDPoPProofService dPoPProofService,
     IDPoPNonceStore dPoPNonceStore,
     IHttpContextAccessor httpContextAccessor,
     ILogger<OpenIdConnectClientAccessTokenHandler> logger,
-    UserTokenRequestParameters? parameters = null) : AccessTokenHandler(dPoPProofService, dPoPNonceStore, logger)
+    UserTokenRequestParameters? parameters = null) : AccessTokenHandler(metrics, dPoPProofService, dPoPNonceStore, logger)
 {
     private readonly UserTokenRequestParameters _parameters = parameters ?? new UserTokenRequestParameters();
 
@@ -44,4 +46,6 @@ public class OpenIdConnectClientAccessTokenHandler(
                 cancellationToken)
             .ConfigureAwait(false);
     }
+
+    protected override Metrics.TokenRequestType TokenRequestType => Metrics.TokenRequestType.ClientCredentials;
 }

@@ -2,45 +2,22 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System.Net;
+using Duende.AccessTokenManagement.OTel;
 using Microsoft.Extensions.Logging;
 
 namespace Duende.AccessTokenManagement;
+
 internal static partial class LogMessages
 {
-    /// <summary>
-    /// Log parameters as constants for consistency
-    /// Note, these will be inlined by the compiler to be used in the attributes. 
-    /// </summary>
-    internal class Parameters
-    {
-        public const string Scheme = "Scheme";
-        public const string Error = "Error";
-        public const string ErrorDescription = "ErrorDescription";
-        public const string Url = "Url";
-        public const string ClientId = "ClientId";
-        public const string RequestUrl = "RequestUrl";
-        public const string ClientName = "ClientName";
-        public const string Expiration = "Expiration";
-        public const string TokenHash = "TokenHash";
-        public const string User = "User";
-        public const string Resource = "Resource";
-        public const string Method = "Method";
-        public const string Address = "Address";
-        public const string CacheKey = "CacheKey";
-        public const string TokenType = "TokenType";
-        public const string ForceRenewal = "ForceRenewal";
-        public const string StatusCode = "StatusCode";
-    }
-
     [LoggerMessage(
         Level = LogLevel.Information,
-        Message = $"Cannot authenticate scheme: {{{Parameters.Scheme}}} to acquire user access token.")]
+        Message = $"Cannot authenticate scheme: {{{OTelParameters.Scheme}}} to acquire user access token.")]
     public static partial void CannotAuthenticateSchemeToAcquireUserAccessToken(
         this ILogger logger, string scheme);
 
     [LoggerMessage(
         Level = LogLevel.Information,
-        Message = $"Authentication result properties are null for scheme: {{{Parameters.Scheme}}} after authentication.")]
+        Message = $"Authentication result properties are null for scheme: {{{OTelParameters.Scheme}}} after authentication.")]
     public static partial void AuthenticationResultPropertiesAreNullAfterAuthenticate(
         this ILogger logger, string scheme);
 
@@ -51,23 +28,23 @@ internal static partial class LogMessages
 
     [LoggerMessage(
         Level = LogLevel.Warning,
-        Message = $"Error revoking refresh token. Error = {{{Parameters.Error}}}")]
+        Message = $"Error revoking refresh token. Error = {{{OTelParameters.Error}}}")]
     public static partial void FailedToRevokeAccessToken(this ILogger logger, string? error);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Sending DPoP proof token in request to endpoint: {{{Parameters.Url}}}")]
+        Message = $"Sending DPoP proof token in request to endpoint: {{{OTelParameters.Url}}}")]
     public static partial void SendingDPoPProofToken(this ILogger logger, string? url);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Failed to create DPoP proof token for request to endpoint: {{{Parameters.Url}}}")]
+        Message = $"Failed to create DPoP proof token for request to endpoint: {{{OTelParameters.Url}}}")]
     public static partial void FailedToCreateDPopProofToken(this ILogger logger, string? url);
 
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Sending Access token of type {{{Parameters.TokenType}}} to endpoint: {{{Parameters.Url}}}.")]
+        Message = $"Sending Access token of type {{{OTelParameters.TokenType}}} to endpoint: {{{OTelParameters.Url}}}.")]
     public static partial void SendAccessTokenToEndpoint(this ILogger logger, string? url, string? tokenType);
 
     [LoggerMessage(
@@ -77,9 +54,20 @@ internal static partial class LogMessages
 
 
     [LoggerMessage(
+        Level = LogLevel.Information,
+        Message = $"While sending a request, received UnAuthorized after acquiring a new access token. This means the access token is somehow wrong and is not accepted.")]
+    public static partial void AccessTokenHandlerAuthenticationFailed(this ILogger logger);
+
+
+    [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"DPoP nonce error: '{{{Parameters.Error}}}'while invoking endpoint: {{{Parameters.Url}}}. Retrying using new nonce")]
-    public static partial void RequestFailedWithDPoPErrorWillRetry(this ILogger logger, string? error, string? url);
+        Message = $"DPoP nonce error: '{{{OTelParameters.Error}}}'. Retrying using new nonce")]
+    public static partial void RequestFailedWithDPoPErrorWillRetry(this ILogger logger, string? error);
+
+    [LoggerMessage(
+        Level = LogLevel.Debug,
+        Message = $"Token not accepted while sending request. Retrying with new access token. ")]
+    public static partial void TokenNotAcceptedWhenSendingRequest(this ILogger logger);
 
     /// <summary>
     /// Logs the refreshing of a refresh token. Note, the actual refresh token is not logged, but a hash of the token.
@@ -99,22 +87,22 @@ internal static partial class LogMessages
 
     [LoggerMessage(
         Level = LogLevel.Trace,
-        Message = $"Refreshing access token using refresh token: hash={{{Parameters.TokenHash}}}")]
+        Message = $"Refreshing access token using refresh token: hash={{{OTelParameters.TokenHash}}}")]
     private static partial void RefreshingTokenUsingRefreshTokenImplementation(this ILogger logger, string tokenHash);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Sending Refresh token request to: {{{Parameters.Url}}}")]
+        Message = $"Sending Refresh token request to: {{{OTelParameters.Url}}}")]
     public static partial void SendingRefreshTokenRequest(this ILogger logger, string? url);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"DPoP error '{{{Parameters.Error}}}' during token refresh. Retrying with server nonce")]
+        Message = $"DPoP error '{{{OTelParameters.Error}}}' during token refresh. Retrying with server nonce")]
     public static partial void DPoPErrorDuringTokenRefreshWillRetryWithServerNonce(this ILogger logger, string? error);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Failed to get DPoP Nonce because server didn't respond with ok. StatusCode was: {{{Parameters.StatusCode}}}")]
+        Message = $"Failed to get DPoP Nonce because server didn't respond with ok. StatusCode was: {{{OTelParameters.StatusCode}}}")]
     public static partial void FailedToGetDPoPNonce(this ILogger logger, HttpStatusCode statusCode);
 
     /// <summary>
@@ -135,12 +123,12 @@ internal static partial class LogMessages
 
     [LoggerMessage(
         Level = LogLevel.Trace,
-        Message = $"Revoking refresh token: hash={{{Parameters.TokenHash}}}")]
+        Message = $"Revoking refresh token: hash={{{OTelParameters.TokenHash}}}")]
     private static partial void RevokingRefreshTokenImplementation(this ILogger logger, string tokenHash);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Sending Token revocation request to: {{{Parameters.Url}}}")]
+        Message = $"Sending Token revocation request to: {{{OTelParameters.Url}}}")]
     public static partial void SendingTokenRevocationRequest(this ILogger logger, string url);
 
     [LoggerMessage(
@@ -155,42 +143,42 @@ internal static partial class LogMessages
 
     [LoggerMessage(
         Level = LogLevel.Information,
-        Message = $"Cannot retrieve token: No token data found in user token store for user {{{Parameters.User}}}.")]
+        Message = $"Cannot retrieve token: No token data found in user token store for user {{{OTelParameters.User}}}.")]
     public static partial void CannotRetrieveAccessTokenDueToNoTokenDataFound(this ILogger logger, string user);
 
     [LoggerMessage(
         Level = LogLevel.Information,
-        Message = $"Cannot retrieve token: No refresh token found in user token store for user {{{Parameters.User}}} / resource {{{Parameters.Resource}}}. Returning current access token.")]
+        Message = $"Cannot retrieve token: No refresh token found in user token store for user {{{OTelParameters.User}}} / resource {{{OTelParameters.Resource}}}. Returning current access token.")]
     public static partial void CannotRetrieveAccessTokenDueToNoRefreshTokenFound(this ILogger logger, string user, string resource);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"No access token found in user token store for user {{{Parameters.User}}} / resource {{{Parameters.Resource}}}. Trying to refresh.")]
+        Message = $"No access token found in user token store for user {{{OTelParameters.User}}} / resource {{{OTelParameters.Resource}}}. Trying to refresh.")]
     public static partial void NoAccessTokenFoundWillRefresh(this ILogger logger, string user, string resource);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Token for user {{{Parameters.User}}} will be refreshed. Expiration: {{{Parameters.Expiration}}}, ForceRenewal:{{{Parameters.ForceRenewal}}}")]
+        Message = $"Token for user {{{OTelParameters.User}}} will be refreshed. Expiration: {{{OTelParameters.Expiration}}}, ForceRenewal:{{{OTelParameters.ForceRenewal}}}")]
     public static partial void DebugTokenNeedsRefreshing(this ILogger logger, string user, DateTimeOffset expiration, bool forceRenewal);
 
     [LoggerMessage(
         Level = LogLevel.Trace,
-        Message = $"Returning refreshed token for user: {{{Parameters.User}}}")]
+        Message = $"Returning refreshed token for user: {{{OTelParameters.User}}}")]
     public static partial void ReturningRefreshedToken(this ILogger logger, string user);
 
     [LoggerMessage(
         Level = LogLevel.Trace,
-        Message = $"Returning current token for user: {{{Parameters.User}}}")]
+        Message = $"Returning current token for user: {{{OTelParameters.User}}}")]
     public static partial void ReturningCurrentTokenForUser(this ILogger logger, string user);
 
     [LoggerMessage(
         Level = LogLevel.Error,
-        Message = $"Error refreshing access token. Error = {{{Parameters.Error}}}, Description: {{{Parameters.ErrorDescription}}}")]
+        Message = $"Error refreshing access token. Error = {{{OTelParameters.Error}}}, Description: {{{OTelParameters.ErrorDescription}}}")]
     public static partial void FailedToRefreshAccessToken(this ILogger logger, string? error, string? errorDescription);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Access Token of type {{{Parameters.TokenType}}} refreshed with expiration: {{{Parameters.Expiration}}}")]
+        Message = $"Access Token of type {{{OTelParameters.TokenType}}} refreshed with expiration: {{{OTelParameters.Expiration}}}")]
     public static partial void UserAccessTokenRefreshed(this ILogger logger, string? tokenType, DateTimeOffset expiration);
 
     [LoggerMessage(
@@ -200,53 +188,53 @@ internal static partial class LogMessages
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Caching access token for client: {{{Parameters.ClientName}}}. Expiration: {{{Parameters.Expiration}}}")]
+        Message = $"Caching access token for client: {{{OTelParameters.ClientName}}}. Expiration: {{{OTelParameters.Expiration}}}")]
     public static partial void CachingAccessToken(this ILogger logger, string clientName, DateTimeOffset expiration);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Will not cache token result with error for {{{Parameters.ClientName}}}. Error = {{{Parameters.Error}}}")]
+        Message = $"Will not cache token result with error for {{{OTelParameters.ClientName}}}. Error = {{{OTelParameters.Error}}}")]
     public static partial void WillNotCacheTokenResultWithError(this ILogger logger, string clientName, string? error);
 
 
     [LoggerMessage(
         Level = LogLevel.Error,
-        Message = $"Error requesting access token for client {{{Parameters.ClientName}}}. Error = {{{Parameters.Error}}}, Description: {{{Parameters.ErrorDescription}}}")]
+        Message = $"Error requesting access token for client {{{OTelParameters.ClientName}}}. Error = {{{OTelParameters.Error}}}, Description: {{{OTelParameters.ErrorDescription}}}")]
     public static partial void FailedToRequestAccessTokenForClient(this ILogger logger, string clientName, string? error, string? errorDescription);
 
     [LoggerMessage(
         Level = LogLevel.Error,
-        Message = $"Error trying to set token in cache for client {{{Parameters.ClientName}}}")]
+        Message = $"Error trying to set token in cache for client {{{OTelParameters.ClientName}}}")]
     public static partial void ErrorSettingTokenInCache(this ILogger logger, Exception ex, string clientName);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Cache hit for obtaining access token for client: {{{Parameters.ClientName}}}")]
+        Message = $"Cache hit for obtaining access token for client: {{{OTelParameters.ClientName}}}")]
     public static partial void CacheHitForObtainingAccessToken(this ILogger logger, string clientName);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Cache hit for DPoP nonce for URL: {{{Parameters.Url}}}, method: {{{Parameters.Method}}}")]
+        Message = $"Cache hit for DPoP nonce for URL: {{{OTelParameters.Url}}}, method: {{{OTelParameters.Method}}}")]
     public static partial void CacheHitForDPoPNonce(this ILogger logger, string url, string method);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Writing DPoP nonce to Cache for URL: {{{Parameters.Url}}}, method: {{{Parameters.Method}}}. Expiration: {{{Parameters.Expiration}}}")]
+        Message = $"Writing DPoP nonce to Cache for URL: {{{OTelParameters.Url}}}, method: {{{OTelParameters.Method}}}. Expiration: {{{OTelParameters.Expiration}}}")]
     public static partial void WritingNonceToCache(this ILogger logger, string url, string method, DateTimeOffset expiration);
 
     [LoggerMessage(
         Level = LogLevel.Trace,
-        Message = $"Cache miss for DPoP nonce for URL: {{{Parameters.Url}}}, method: {{{Parameters.Method}}}")]
+        Message = $"Cache miss for DPoP nonce for URL: {{{OTelParameters.Url}}}, method: {{{OTelParameters.Method}}}")]
     public static partial void CacheMissForDPoPNonce(this ILogger logger, string url, string method);
 
     [LoggerMessage(
         Level = LogLevel.Error,
-        Message = $"Error parsing cached access token for client {{{Parameters.ClientName}}}")]
+        Message = $"Error parsing cached access token for client {{{OTelParameters.ClientName}}}")]
     public static partial void FailedToCacheAccessToken(this ILogger logger, Exception ex, string clientName);
 
     [LoggerMessage(
         Level = LogLevel.Trace,
-        Message = $"Cache miss while retrieving access token for client: {{{Parameters.ClientName}}}")]
+        Message = $"Cache miss while retrieving access token for client: {{{OTelParameters.ClientName}}}")]
     public static partial void CacheMissWhileRetrievingAccessToken(this ILogger logger, string clientName);
 
     [LoggerMessage(
@@ -256,17 +244,17 @@ internal static partial class LogMessages
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Requesting client credentials access token at endpoint: {{{Parameters.Url}}}")]
+        Message = $"Requesting client credentials access token at endpoint: {{{OTelParameters.Url}}}")]
     public static partial void RequestingClientCredentialsAccessToken(this ILogger logger, string url);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Client Credentials token of type '{{{Parameters.TokenType}}}' for Client: {{{Parameters.ClientName}}} retrieved with expiration {{{Parameters.Expiration}}} ")]
+        Message = $"Client Credentials token of type '{{{OTelParameters.TokenType}}}' for Client: {{{OTelParameters.ClientName}}} retrieved with expiration {{{OTelParameters.Expiration}}} ")]
     public static partial void ClientCredentialsTokenForClientRetrieved(this ILogger logger, string clientName, string? tokenType, DateTimeOffset expiration);
 
     [LoggerMessage(
         Level = LogLevel.Error,
-        Message = $"Failed to obtain token from cache for client {{{Parameters.ClientName}}} using cacheKey {{{Parameters.CacheKey}}}. Will obtain new token.")]
+        Message = $"Failed to obtain token from cache for client {{{OTelParameters.ClientName}}} using cacheKey {{{OTelParameters.CacheKey}}}. Will obtain new token.")]
     public static partial void FailedToObtainTokenFromCache(this ILogger logger, Exception ex, string clientName, string cacheKey);
 
     [LoggerMessage(

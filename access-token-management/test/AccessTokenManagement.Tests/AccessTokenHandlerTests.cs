@@ -1,6 +1,8 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Diagnostics.Metrics;
+using Duende.AccessTokenManagement.OTel;
 using Microsoft.Extensions.Logging;
 
 namespace Duende.AccessTokenManagement.Tests;
@@ -52,21 +54,38 @@ public class AccessTokenHandlerTests
         }
     }
 
-    public class AccessTokenHandlerSubject : AccessTokenHandler
+    public class AccessTokenHandlerSubject(
+        IDPoPProofService dPoPProofService,
+        IDPoPNonceStore dPoPNonceStore,
+        ILogger logger)
+        : AccessTokenHandler(new Metrics(new DummyMeterFactory()), dPoPProofService, dPoPNonceStore, logger)
     {
         public ClientCredentialsToken AccessToken { get; set; } = new ClientCredentialsToken
         {
             AccessToken = "at",
             AccessTokenType = "bearer",
+            ClientId = "some-client"
         };
-
-        public AccessTokenHandlerSubject(IDPoPProofService dPoPProofService, IDPoPNonceStore dPoPNonceStore, ILogger logger) : base(dPoPProofService, dPoPNonceStore, logger)
-        {
-        }
 
         protected override Task<ClientCredentialsToken> GetAccessTokenAsync(bool forceRenewal, CancellationToken cancellationToken)
         {
             return Task.FromResult(AccessToken);
         }
+
+        protected override Metrics.TokenRequestType TokenRequestType => Metrics.TokenRequestType.ClientCredentials;
+
+        private class DummyMeterFactory : IMeterFactory
+        {
+            public void Dispose()
+            {
+            }
+
+            public Meter Create(MeterOptions options)
+            {
+                return new Meter(options);
+            }
+        }
     }
+
+
 }

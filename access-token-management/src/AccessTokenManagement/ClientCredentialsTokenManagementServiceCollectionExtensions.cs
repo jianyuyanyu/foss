@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Duende.AccessTokenManagement;
+using Duende.AccessTokenManagement.OTel;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -63,6 +64,8 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
 
         services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName);
 
+        services.AddSingleton<Metrics>();
+
         return new ClientCredentialsTokenManagementBuilder(services);
     }
 
@@ -122,15 +125,23 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
 
         return httpClientBuilder.AddHttpMessageHandler(provider =>
         {
+            var metrics = provider.GetRequiredService<Metrics>();
             var dpopService = provider.GetRequiredService<IDPoPProofService>();
             var dpopNonceStore = provider.GetRequiredService<IDPoPNonceStore>();
             var accessTokenManagementService = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
 #pragma warning disable CS0618 // Type or member is obsolete
             var logger = provider.GetRequiredService<ILogger<ClientCredentialsTokenHandler>>();
 
-            return new ClientCredentialsTokenHandler(dpopService, dpopNonceStore, accessTokenManagementService, logger, tokenClientName);
+            return new ClientCredentialsTokenHandler(
+                metrics: metrics,
+                dPoPProofService: dpopService,
+                dPoPNonceStore: dpopNonceStore,
+                accessTokenManagementService: accessTokenManagementService,
+                logger: logger,
+                tokenClientName: tokenClientName);
+        });
+
 #pragma warning restore CS0618 // Type or member is obsolete
 
-        });
     }
 }

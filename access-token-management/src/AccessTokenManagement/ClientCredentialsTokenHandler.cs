@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using Duende.AccessTokenManagement.OTel;
 using Microsoft.Extensions.Logging;
 
 namespace Duende.AccessTokenManagement;
@@ -10,12 +11,13 @@ namespace Duende.AccessTokenManagement;
 /// </summary>
 [Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class ClientCredentialsTokenHandler(
+    Metrics metrics,
     IDPoPProofService dPoPProofService,
     IDPoPNonceStore dPoPNonceStore,
     IClientCredentialsTokenManagementService accessTokenManagementService,
     ILogger<ClientCredentialsTokenHandler> logger,
     string tokenClientName)
-    : AccessTokenHandler(dPoPProofService, dPoPNonceStore, logger)
+    : AccessTokenHandler(metrics, dPoPProofService, dPoPNonceStore, logger)
 {
     /// <inheritdoc/>
     protected override Task<ClientCredentialsToken> GetAccessTokenAsync(bool forceRenewal, CancellationToken cancellationToken)
@@ -26,4 +28,6 @@ public class ClientCredentialsTokenHandler(
         };
         return accessTokenManagementService.GetAccessTokenAsync(tokenClientName, parameters, cancellationToken);
     }
+
+    protected override Metrics.TokenRequestType TokenRequestType => Metrics.TokenRequestType.ClientCredentials;
 }
