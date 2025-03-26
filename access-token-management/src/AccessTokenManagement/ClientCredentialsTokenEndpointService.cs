@@ -11,47 +11,21 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Implements token endpoint operations using IdentityModel
 /// </summary>
-public class ClientCredentialsTokenEndpointService : IClientCredentialsTokenEndpointService
+public class ClientCredentialsTokenEndpointService(
+    IHttpClientFactory httpClientFactory,
+    IOptionsMonitor<ClientCredentialsClient> options,
+    IClientAssertionService clientAssertionService,
+    IDPoPKeyStore dPoPKeyMaterialService,
+    IDPoPProofService dPoPProofService,
+    ILogger<ClientCredentialsTokenEndpointService> logger) : IClientCredentialsTokenEndpointService
 {
-    private readonly IHttpClientFactory _httpClientFactory;
-    private readonly IOptionsMonitor<ClientCredentialsClient> _options;
-    private readonly IClientAssertionService _clientAssertionService;
-    private readonly IDPoPKeyStore _dPoPKeyMaterialService;
-    private readonly IDPoPProofService _dPoPProofService;
-    private readonly ILogger<ClientCredentialsTokenEndpointService> _logger;
-
-    /// <summary>
-    /// ctor
-    /// </summary>
-    /// <param name="httpClientFactory"></param>
-    /// <param name="clientAssertionService"></param>
-    /// <param name="dPoPKeyMaterialService"></param>
-    /// <param name="dPoPProofService"></param>
-    /// <param name="logger"></param>
-    /// <param name="options"></param>
-    public ClientCredentialsTokenEndpointService(
-        IHttpClientFactory httpClientFactory,
-        IOptionsMonitor<ClientCredentialsClient> options,
-        IClientAssertionService clientAssertionService,
-        IDPoPKeyStore dPoPKeyMaterialService,
-        IDPoPProofService dPoPProofService,
-        ILogger<ClientCredentialsTokenEndpointService> logger)
-    {
-        _httpClientFactory = httpClientFactory;
-        _options = options;
-        _clientAssertionService = clientAssertionService;
-        _dPoPKeyMaterialService = dPoPKeyMaterialService;
-        _dPoPProofService = dPoPProofService;
-        _logger = logger;
-    }
-
     /// <inheritdoc/>
     public virtual async Task<ClientCredentialsToken> RequestToken(
         string clientName,
         TokenRequestParameters? parameters = null,
         CancellationToken cancellationToken = default)
     {
-        var client = _options.Get(clientName);
+        var client = options.Get(clientName);
 
         if (string.IsNullOrWhiteSpace(client.ClientId))
         {
@@ -103,7 +77,7 @@ public class ClientCredentialsTokenEndpointService : IClientCredentialsTokenEndp
         }
         else
         {
-            var assertion = await _clientAssertionService.GetClientAssertionAsync(clientName).ConfigureAwait(false);
+            var assertion = await clientAssertionService.GetClientAssertionAsync(clientName).ConfigureAwait(false);
 
             if (assertion != null)
             {
@@ -114,12 +88,12 @@ public class ClientCredentialsTokenEndpointService : IClientCredentialsTokenEndp
 
         request.Options.TryAdd(ClientCredentialsTokenManagementDefaults.TokenRequestParametersOptionsName, parameters);
 
-        var key = await _dPoPKeyMaterialService.GetKeyAsync(clientName);
+        var key = await dPoPKeyMaterialService.GetKeyAsync(clientName);
         if (key != null)
         {
-            _logger.DebugCreatingDPoPProofToken();
+            logger.DebugCreatingDPoPProofToken();
 
-            var proof = await _dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
+            var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {
                 Url = request.Address!,
                 Method = "POST",
@@ -135,14 +109,14 @@ public class ClientCredentialsTokenEndpointService : IClientCredentialsTokenEndp
         }
         else if (!string.IsNullOrWhiteSpace(client.HttpClientName))
         {
-            httpClient = _httpClientFactory.CreateClient(client.HttpClientName);
+            httpClient = httpClientFactory.CreateClient(client.HttpClientName);
         }
         else
         {
-            httpClient = _httpClientFactory.CreateClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName);
+            httpClient = httpClientFactory.CreateClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName);
         }
 
-        _logger.DebugRequestingClientCredentialsAccessToken(request.Address);
+        logger.DebugRequestingClientCredentialsAccessToken(request.Address);
         var response = await httpClient.RequestClientCredentialsTokenAsync(request, cancellationToken).ConfigureAwait(false);
 
         if (response.IsError &&
@@ -150,9 +124,9 @@ public class ClientCredentialsTokenEndpointService : IClientCredentialsTokenEndp
             key != null &&
             response.DPoPNonce != null)
         {
-            _logger.DebugTokenRequestFailedWithDPoPNonceError();
+            logger.DebugTokenRequestFailedWithDPoPNonceError();
 
-            var proof = await _dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
+            var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {
                 Url = request.Address!,
                 Method = "POST",

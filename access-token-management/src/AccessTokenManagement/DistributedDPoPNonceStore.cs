@@ -10,26 +10,12 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// DPoP nonce store using IDistributedCache
 /// </summary>
-public class DistributedDPoPNonceStore : IDPoPNonceStore
+public class DistributedDPoPNonceStore(
+    IDistributedCache cache,
+    ILogger<DistributedDPoPNonceStore> logger) : IDPoPNonceStore
 {
     const string CacheKeyPrefix = "DistributedDPoPNonceStore";
     const char CacheKeySeparator = ':';
-
-    private readonly IDistributedCache _cache;
-    private readonly ILogger<DistributedDPoPNonceStore> _logger;
-
-    /// <summary>
-    /// ctor
-    /// </summary>
-    /// <param name="cache"></param>
-    /// <param name="logger"></param>
-    public DistributedDPoPNonceStore(
-        [FromKeyedServices(ServiceProviderKeys.DistributedDPoPNonceStore)] IDistributedCache cache,
-        ILogger<DistributedDPoPNonceStore> logger)
-    {
-        _cache = cache;
-        _logger = logger;
-    }
 
     /// <inheritdoc/>
     public virtual async Task<string?> GetNonceAsync(DPoPNonceContext context, CancellationToken cancellationToken = default)
@@ -37,15 +23,15 @@ public class DistributedDPoPNonceStore : IDPoPNonceStore
         ArgumentNullException.ThrowIfNull(context);
 
         var cacheKey = GenerateCacheKey(context);
-        var entry = await _cache.GetStringAsync(cacheKey, token: cancellationToken).ConfigureAwait(false);
+        var entry = await cache.GetStringAsync(cacheKey, token: cancellationToken).ConfigureAwait(false);
 
         if (entry != null)
         {
-            _logger.DebugCacheHitForDPoPNonce(context.Url, context.Method);
+            logger.DebugCacheHitForDPoPNonce(context.Url, context.Method);
             return entry;
         }
 
-        _logger.TraceCacheMissForDPoPNonce(context.Url, context.Method);
+        logger.TraceCacheMissForDPoPNonce(context.Url, context.Method);
         return null;
     }
 
@@ -62,10 +48,10 @@ public class DistributedDPoPNonceStore : IDPoPNonceStore
             AbsoluteExpiration = cacheExpiration
         };
 
-        _logger.DebugCachingDPoPNonce(context.Url, context.Method, cacheExpiration);
+        logger.DebugCachingDPoPNonce(context.Url, context.Method, cacheExpiration);
 
         var cacheKey = GenerateCacheKey(context);
-        await _cache.SetStringAsync(cacheKey, data, entryOptions, token: cancellationToken).ConfigureAwait(false);
+        await cache.SetStringAsync(cacheKey, data, entryOptions, token: cancellationToken).ConfigureAwait(false);
     }
 
 
