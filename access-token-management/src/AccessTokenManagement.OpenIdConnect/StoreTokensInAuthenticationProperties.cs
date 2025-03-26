@@ -47,7 +47,7 @@ public class StoreTokensInAuthenticationProperties(
         var tokens = authenticationProperties.Items.Where(i => i.Key.StartsWith(TokenPrefix)).ToList();
         if (!tokens.Any())
         {
-            logger.LogInformation("No tokens found in cookie properties. SaveTokens must be enabled for automatic token refresh.");
+            logger.InformationNoTokensFoundInCookieProperties();
 
             return new UserToken() { Error = "No tokens in properties" };
         }

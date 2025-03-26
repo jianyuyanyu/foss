@@ -117,7 +117,7 @@ public class ClientCredentialsTokenEndpointService : IClientCredentialsTokenEndp
         var key = await _dPoPKeyMaterialService.GetKeyAsync(clientName);
         if (key != null)
         {
-            _logger.LogDebug("Creating DPoP proof token for token request.");
+            _logger.DebugCreatingDPoPProofToken();
 
             var proof = await _dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {
@@ -142,7 +142,7 @@ public class ClientCredentialsTokenEndpointService : IClientCredentialsTokenEndp
             httpClient = _httpClientFactory.CreateClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName);
         }
 
-        _logger.LogDebug("Requesting client credentials access token at endpoint: {endpoint}", request.Address);
+        _logger.DebugRequestingClientCredentialsAccessToken(request.Address);
         var response = await httpClient.RequestClientCredentialsTokenAsync(request, cancellationToken).ConfigureAwait(false);
 
         if (response.IsError &&
@@ -150,7 +150,7 @@ public class ClientCredentialsTokenEndpointService : IClientCredentialsTokenEndp
             key != null &&
             response.DPoPNonce != null)
         {
-            _logger.LogDebug("Token request failed with DPoP nonce error. Retrying with new nonce.");
+            _logger.DebugTokenRequestFailedWithDPoPNonceError();
 
             var proof = await _dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {

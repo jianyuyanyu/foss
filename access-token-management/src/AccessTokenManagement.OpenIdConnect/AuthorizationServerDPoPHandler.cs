@@ -89,7 +89,7 @@ internal class AuthorizationServerDPoPHandler : DelegatingHandler
                 // trigger a retry during code exchange
                 if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
-                    _logger.LogDebug("Token request failed with DPoP nonce error. Retrying with new nonce.");
+                    _logger.DebugTokenRequestFailedWithDPoPNonceError();
                     response.Dispose();
                     await SetDPoPProofTokenForCodeExchangeAsync(request, dPoPNonce, codeExchangeJwk).ConfigureAwait(false);
                     return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
@@ -98,7 +98,7 @@ internal class AuthorizationServerDPoPHandler : DelegatingHandler
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                _logger.LogDebug("The authorization server has supplied a new nonce on a successful response, which will be stored and used in future requests to the authorization server");
+                _logger.DebugAuthorizationServerSuppliedNewNonce();
 
                 await _dPoPNonceStore.StoreNonceAsync(new DPoPNonceContext
                 {
@@ -132,14 +132,12 @@ internal class AuthorizationServerDPoPHandler : DelegatingHandler
 
             if (proofToken != null)
             {
-                _logger.LogDebug("Sending DPoP proof token in request to endpoint: {url}",
-                    request.RequestUri?.GetLeftPart(System.UriPartial.Path));
+                _logger.DebugSendingDPoPProofToken(request.RequestUri?.GetLeftPart(System.UriPartial.Path));
                 request.SetDPoPProofToken(proofToken.ProofToken);
             }
             else
             {
-                _logger.LogDebug("No DPoP proof token in request to endpoint: {url}",
-                    request.RequestUri?.GetLeftPart(System.UriPartial.Path));
+                _logger.DebugNoDPoPProofToken(request.RequestUri?.GetLeftPart(System.UriPartial.Path));
             }
         }
     }

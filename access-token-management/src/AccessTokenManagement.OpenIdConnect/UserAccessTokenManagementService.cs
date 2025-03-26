@@ -51,13 +51,13 @@ public class UserAccessAccessTokenManagementService : IUserTokenManagementServic
         UserTokenRequestParameters? parameters = null,
         CancellationToken cancellationToken = default)
     {
-        _logger.LogTrace("Starting user token acquisition");
+        _logger.TraceStartingUserTokenAcquisition();
 
         parameters ??= new UserTokenRequestParameters();
 
         if (!user.Identity!.IsAuthenticated)
         {
-            _logger.LogDebug("No active user. Cannot retrieve token");
+            _logger.DebugNoActiveUser();
             return new UserToken() { Error = "No active user" };
         }
 
@@ -67,31 +67,27 @@ public class UserAccessAccessTokenManagementService : IUserTokenManagementServic
 
         if (userToken.AccessToken.IsMissing() && userToken.RefreshToken.IsMissing())
         {
-            _logger.LogDebug("No token data found in user token store for user {user}.", userName);
+            _logger.DebugNoTokenDataFound(userName);
             return new UserToken() { Error = "No token data for user" };
         }
 
         if (userToken.AccessToken.IsPresent() && userToken.RefreshToken.IsMissing())
         {
-            _logger.LogDebug(
-                "No refresh token found in user token store for user {user} / resource {resource}. Returning current access token.",
-                userName, parameters.Resource ?? "default");
+            _logger.DebugNoRefreshTokenFound(userName, parameters.Resource ?? "default");
             return userToken;
         }
 
         var needsRenewal = userToken.AccessToken.IsMissing() && userToken.RefreshToken.IsPresent();
         if (needsRenewal)
         {
-            _logger.LogDebug(
-                "No access token found in user token store for user {user} / resource {resource}. Trying to refresh.",
-                userName, parameters.Resource ?? "default");
+            _logger.DebugNoAccessTokenFound(userName, parameters.Resource ?? "default");
         }
 
         var dtRefresh = userToken.Expiration.Subtract(_options.RefreshBeforeExpiration);
         var utcNow = _clock.GetUtcNow();
         if (dtRefresh < utcNow || parameters.ForceRenewal || needsRenewal)
         {
-            _logger.LogDebug("Token for user {user} needs refreshing.", userName);
+            _logger.DebugTokenNeedsRefreshing(userName);
 
             return await _sync.SynchronizeAsync(userToken.RefreshToken!, async () =>
             {
@@ -99,14 +95,14 @@ public class UserAccessAccessTokenManagementService : IUserTokenManagementServic
 
                 if (!token.IsError)
                 {
-                    _logger.LogTrace("Returning refreshed token for user: {user}", userName);
+                    _logger.TraceReturningRefreshedToken(userName);
                 }
 
                 return token;
             }).ConfigureAwait(false);
         }
 
-        _logger.LogTrace("Returning current token for user: {user}", userName);
+        _logger.TraceReturningCurrentToken(userName);
         return userToken;
     }
 
@@ -142,7 +138,7 @@ public class UserAccessAccessTokenManagementService : IUserTokenManagementServic
             await _tokenEndpointService.RefreshAccessTokenAsync(userToken, parameters, cancellationToken).ConfigureAwait(false);
         if (refreshedToken.IsError)
         {
-            _logger.LogError("Error refreshing access token. Error = {error}", refreshedToken.Error);
+            _logger.ErrorRefreshingAccessToken(refreshedToken.Error);
         }
         else
         {

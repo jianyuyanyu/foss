@@ -38,7 +38,7 @@ public class DistributedClientCredentialsTokenCache(
             AbsoluteExpiration = cacheExpiration
         };
 
-        logger.LogTrace("Caching access token for client: {clientName}. Expiration: {expiration}", clientName, cacheExpiration);
+        logger.DebugCachingAccessToken(clientName, cacheExpiration);
 
         var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
         await cache.SetStringAsync(cacheKey, data, entryOptions, token: cancellationToken).ConfigureAwait(false);
@@ -67,9 +67,7 @@ public class DistributedClientCredentialsTokenCache(
             var token = await factory(clientName, requestParameters, cancellationToken).ConfigureAwait(false);
             if (token.IsError)
             {
-                logger.LogError(
-                    "Error requesting access token for client {clientName}. Error = {error}.",
-                    clientName, token.Error);
+                logger.ErrorRequestingAccessToken(clientName, token.Error);
 
                 return token;
             }
@@ -80,9 +78,7 @@ public class DistributedClientCredentialsTokenCache(
             }
             catch (Exception e)
             {
-                logger.LogError(e,
-                    "Error trying to set token in cache for client {clientName}. Error = {error}",
-                    clientName, e.Message);
+                logger.ErrorSettingTokenInCache(e, clientName);
             }
 
             return token;
@@ -110,7 +106,7 @@ public class DistributedClientCredentialsTokenCache(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to acquire cached item for {clientName} using key: {cacheKey}", clientName, cacheKey);
+            logger.ErrorTryingToObtainTokenFromCache(ex, clientName, cacheKey);
             return null;
         }
 
@@ -118,17 +114,17 @@ public class DistributedClientCredentialsTokenCache(
         {
             try
             {
-                logger.LogDebug("Cache hit for access token for client: {clientName}", clientName);
+                logger.DebugCacheHitForAccessToken(clientName);
                 return JsonSerializer.Deserialize<ClientCredentialsToken>(entry);
             }
             catch (Exception ex)
             {
-                logger.LogCritical(ex, "Error parsing cached access token for client {clientName}", clientName);
+                logger.CriticalErrorParsingCachedAccessToken(ex, clientName);
                 return null;
             }
         }
 
-        logger.LogTrace("Cache miss for access token for client: {clientName}", clientName);
+        logger.TraceCacheMissForAccessToken(clientName);
         return null;
     }
 

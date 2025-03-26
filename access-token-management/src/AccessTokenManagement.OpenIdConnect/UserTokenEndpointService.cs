@@ -11,36 +11,13 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// <summary>
 /// Implements token endpoint operations using IdentityModel
 /// </summary>
-public class UserTokenEndpointService : IUserTokenEndpointService
+public class UserTokenEndpointService(
+    IOpenIdConnectConfigurationService configurationService,
+    IOptions<UserTokenManagementOptions> options,
+    IClientAssertionService clientAssertionService,
+    IDPoPProofService dPoPProofService,
+    ILogger<UserTokenEndpointService> logger) : IUserTokenEndpointService
 {
-    private readonly IOpenIdConnectConfigurationService _configurationService;
-    private readonly IClientAssertionService _clientAssertionService;
-    private readonly IDPoPProofService _dPoPProofService;
-    private readonly ILogger<UserTokenEndpointService> _logger;
-    private readonly UserTokenManagementOptions _options;
-
-    /// <summary>
-    /// ctor
-    /// </summary>
-    /// <param name="options"></param>
-    /// <param name="clientAssertionService"></param>
-    /// <param name="dPoPProofService"></param>
-    /// <param name="logger"></param>
-    /// <param name="configurationService"></param>
-    public UserTokenEndpointService(
-        IOpenIdConnectConfigurationService configurationService,
-        IOptions<UserTokenManagementOptions> options,
-        IClientAssertionService clientAssertionService,
-        IDPoPProofService dPoPProofService,
-        ILogger<UserTokenEndpointService> logger)
-    {
-        _configurationService = configurationService;
-        _options = options.Value;
-        _clientAssertionService = clientAssertionService;
-        _dPoPProofService = dPoPProofService;
-        _logger = logger;
-    }
-
     /// <inheritdoc/>
     public async Task<UserToken> RefreshAccessTokenAsync(
         UserToken userToken,
@@ -49,9 +26,9 @@ public class UserTokenEndpointService : IUserTokenEndpointService
     {
         var refreshToken = userToken.RefreshToken ?? throw new ArgumentNullException(nameof(userToken.RefreshToken));
 
-        _logger.LogTrace("Refreshing refresh token: {token}", refreshToken);
+        logger.TraceRefreshingRefreshToken(refreshToken);
 
-        var oidc = await _configurationService.GetOpenIdConnectConfigurationAsync(parameters.ChallengeScheme).ConfigureAwait(false);
+        var oidc = await configurationService.GetOpenIdConnectConfigurationAsync(parameters.ChallengeScheme).ConfigureAwait(false);
 
         var request = new RefreshTokenRequest
         {
@@ -59,7 +36,7 @@ public class UserTokenEndpointService : IUserTokenEndpointService
 
             ClientId = oidc.ClientId!,
             ClientSecret = oidc.ClientSecret,
-            ClientCredentialStyle = _options.ClientCredentialStyle,
+            ClientCredentialStyle = options.Value.ClientCredentialStyle,
 
             RefreshToken = refreshToken
         };
@@ -83,7 +60,7 @@ public class UserTokenEndpointService : IUserTokenEndpointService
         }
         else
         {
-            var assertion = await _clientAssertionService.GetClientAssertionAsync(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + oidc.Scheme, parameters).ConfigureAwait(false);
+            var assertion = await clientAssertionService.GetClientAssertionAsync(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + oidc.Scheme, parameters).ConfigureAwait(false);
             if (assertion != null)
             {
                 request.ClientAssertion = assertion;
@@ -94,7 +71,7 @@ public class UserTokenEndpointService : IUserTokenEndpointService
         var dPoPJsonWebKey = userToken.DPoPJsonWebKey;
         if (dPoPJsonWebKey != null)
         {
-            var proof = await _dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
+            var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {
                 Url = request.Address!,
                 Method = "POST",
@@ -103,7 +80,7 @@ public class UserTokenEndpointService : IUserTokenEndpointService
             request.DPoPProofToken = proof?.ProofToken;
         }
 
-        _logger.LogDebug("refresh token request to: {endpoint}", request.Address);
+        logger.DebugRefreshTokenRequest(request.Address);
         var response = await oidc.HttpClient!.RequestRefreshTokenAsync(request, cancellationToken).ConfigureAwait(false);
 
         if (response.IsError &&
@@ -111,9 +88,9 @@ public class UserTokenEndpointService : IUserTokenEndpointService
             dPoPJsonWebKey != null &&
             response.DPoPNonce != null)
         {
-            _logger.LogDebug("DPoP error during token refresh. Retrying with server nonce");
+            logger.DebugDPoPErrorDuringTokenRefresh();
 
-            var proof = await _dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
+            var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {
                 Url = request.Address!,
                 Method = "POST",
@@ -157,9 +134,9 @@ public class UserTokenEndpointService : IUserTokenEndpointService
     {
         var refreshToken = userToken.RefreshToken ?? throw new ArgumentNullException(nameof(userToken.RefreshToken));
 
-        _logger.LogTrace("Revoking refresh token: {token}", refreshToken);
+        logger.TraceRevokingRefreshToken(refreshToken);
 
-        var oidc = await _configurationService.GetOpenIdConnectConfigurationAsync(parameters.ChallengeScheme).ConfigureAwait(false);
+        var oidc = await configurationService.GetOpenIdConnectConfigurationAsync(parameters.ChallengeScheme).ConfigureAwait(false);
 
         if (string.IsNullOrEmpty(oidc.RevocationEndpoint))
         {
@@ -172,7 +149,7 @@ public class UserTokenEndpointService : IUserTokenEndpointService
 
             ClientId = oidc.ClientId!,
             ClientSecret = oidc.ClientSecret,
-            ClientCredentialStyle = _options.ClientCredentialStyle,
+            ClientCredentialStyle = options.Value.ClientCredentialStyle,
 
             Token = refreshToken,
             TokenTypeHint = OidcConstants.TokenTypes.RefreshToken
@@ -187,7 +164,7 @@ public class UserTokenEndpointService : IUserTokenEndpointService
         }
         else
         {
-            var assertion = await _clientAssertionService.GetClientAssertionAsync(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + oidc.Scheme, parameters).ConfigureAwait(false);
+            var assertion = await clientAssertionService.GetClientAssertionAsync(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + oidc.Scheme, parameters).ConfigureAwait(false);
             if (assertion != null)
             {
                 request.ClientAssertion = assertion;
@@ -195,12 +172,12 @@ public class UserTokenEndpointService : IUserTokenEndpointService
             }
         }
 
-        _logger.LogDebug("token revocation request to: {endpoint}", request.Address);
+        logger.DebugTokenRevocationRequest(request.Address);
         var response = await oidc.HttpClient!.RevokeTokenAsync(request, cancellationToken).ConfigureAwait(false);
 
         if (response.IsError)
         {
-            _logger.LogInformation("Error revoking refresh token. Error = {error}", response.Error);
+            LogMessages.InformationFailedToRefreshToken(logger, response.Error);
         }
     }
 }
