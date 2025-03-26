@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -11,18 +12,14 @@ namespace Duende.AccessTokenManagement;
 /// Client access token cache using IDistributedCache
 /// </summary>
 public class DistributedClientCredentialsTokenCache(
-    IDistributedCache cache,
+    [FromKeyedServices(ServiceProviderKeys.DistributedClientCredentialsTokenCache)] IDistributedCache cache,
     ITokenRequestSynchronization synchronization,
     IOptions<ClientCredentialsTokenManagementOptions> options,
     ILogger<DistributedClientCredentialsTokenCache> logger
     )
     : IClientCredentialsTokenCache
 {
-    private readonly IDistributedCache _cache = cache;
-    private readonly ITokenRequestSynchronization _synchronization = synchronization;
-    private readonly ILogger<DistributedClientCredentialsTokenCache> _logger = logger;
     private readonly ClientCredentialsTokenManagementOptions _options = options.Value;
-
 
     /// <inheritdoc/>
     public async Task SetAsync(
@@ -41,10 +38,10 @@ public class DistributedClientCredentialsTokenCache(
             AbsoluteExpiration = cacheExpiration
         };
 
-        _logger.LogTrace("Caching access token for client: {clientName}. Expiration: {expiration}", clientName, cacheExpiration);
+        logger.LogTrace("Caching access token for client: {clientName}. Expiration: {expiration}", clientName, cacheExpiration);
 
         var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
-        await _cache.SetStringAsync(cacheKey, data, entryOptions, token: cancellationToken).ConfigureAwait(false);
+        await cache.SetStringAsync(cacheKey, data, entryOptions, token: cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<ClientCredentialsToken> GetOrCreateAsync(
@@ -56,12 +53,21 @@ public class DistributedClientCredentialsTokenCache(
 
         var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
 
-        return await _synchronization.SynchronizeAsync(cacheKey, async () =>
+        if (!requestParameters.ForceRenewal)
+        {
+            var token = await GetAsync(clientName, requestParameters, cancellationToken);
+            if (token != null)
+            {
+                return token;
+            }
+        }
+
+        return await synchronization.SynchronizeAsync(cacheKey, async () =>
         {
             var token = await factory(clientName, requestParameters, cancellationToken).ConfigureAwait(false);
             if (token.IsError)
             {
-                _logger.LogError(
+                logger.LogError(
                     "Error requesting access token for client {clientName}. Error = {error}.",
                     clientName, token.Error);
 
@@ -74,7 +80,7 @@ public class DistributedClientCredentialsTokenCache(
             }
             catch (Exception e)
             {
-                _logger.LogError(e,
+                logger.LogError(e,
                     "Error trying to set token in cache for client {clientName}. Error = {error}",
                     clientName, e.Message);
             }
@@ -92,23 +98,37 @@ public class DistributedClientCredentialsTokenCache(
         ArgumentNullException.ThrowIfNull(clientName);
 
         var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
-        var entry = await _cache.GetStringAsync(cacheKey, token: cancellationToken).ConfigureAwait(false);
+        string? entry;
+
+        try
+        {
+            entry = await cache.GetStringAsync(cacheKey, token: cancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to acquire cached item for {clientName} using key: {cacheKey}", clientName, cacheKey);
+            return null;
+        }
 
         if (entry != null)
         {
             try
             {
-                _logger.LogDebug("Cache hit for access token for client: {clientName}", clientName);
+                logger.LogDebug("Cache hit for access token for client: {clientName}", clientName);
                 return JsonSerializer.Deserialize<ClientCredentialsToken>(entry);
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, "Error parsing cached access token for client {clientName}", clientName);
+                logger.LogCritical(ex, "Error parsing cached access token for client {clientName}", clientName);
                 return null;
             }
         }
 
-        _logger.LogTrace("Cache miss for access token for client: {clientName}", clientName);
+        logger.LogTrace("Cache miss for access token for client: {clientName}", clientName);
         return null;
     }
 
@@ -121,7 +141,7 @@ public class DistributedClientCredentialsTokenCache(
         if (clientName is null) throw new ArgumentNullException(nameof(clientName));
 
         var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
-        return _cache.RemoveAsync(cacheKey, cancellationToken);
+        return cache.RemoveAsync(cacheKey, cancellationToken);
     }
 
     /// <summary>

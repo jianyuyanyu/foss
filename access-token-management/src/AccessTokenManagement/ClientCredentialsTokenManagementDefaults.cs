@@ -17,4 +17,11 @@ public static class ClientCredentialsTokenManagementDefaults
     /// Name used to propagate access token parameters to HttpRequestMessage
     /// </summary>
     public const string TokenRequestParametersOptionsName = "Duende.AccessTokenManagement.AccessTokenParameters";
+
+}
+
+public static class ServiceProviderKeys
+{
+    public const string DistributedClientCredentialsTokenCache = "DistributedClientCredentialsTokenCache";
+    public const string DistributedDPoPNonceStore = "DistributedDPoPNonceStore";
 }
