@@ -35,7 +35,7 @@ internal class HybridClientCredentialsTokenCache(
         {
             var entryOptions = GetHybridCacheEntryOptions(clientCredentialsToken);
 
-            var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
+            var cacheKey = _options.GenerateCacheKey(clientName, requestParameters);
             logger.LogTrace("Caching access token for client: {clientName}. Expiration: {expiration}", clientName, entryOptions.Expiration);
             await cache.SetAsync(cacheKey, clientCredentialsToken, entryOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -64,7 +64,7 @@ internal class HybridClientCredentialsTokenCache(
     {
         ArgumentNullException.ThrowIfNull(clientName);
 
-        var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
+        var cacheKey = _options.GenerateCacheKey(clientName, requestParameters);
 
         ClientCredentialsToken? token;
         if (!requestParameters.ForceRenewal)
@@ -117,7 +117,7 @@ internal class HybridClientCredentialsTokenCache(
     {
         if (clientName is null) throw new ArgumentNullException(nameof(clientName));
 
-        var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
+        var cacheKey = _options.GenerateCacheKey(clientName, requestParameters);
 
         return await cache.GetOrDefaultAsync<ClientCredentialsToken>(cacheKey, cancellationToken);
     }
@@ -130,25 +130,7 @@ internal class HybridClientCredentialsTokenCache(
     {
         if (clientName is null) throw new ArgumentNullException(nameof(clientName));
 
-        var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
+        var cacheKey = _options.GenerateCacheKey(clientName, requestParameters);
         await cache.RemoveAsync(cacheKey, cancellationToken);
-    }
-
-    /// <summary>
-    /// Generates the cache key based on various inputs
-    /// </summary>
-    /// <param name="options"></param>
-    /// <param name="clientName"></param>
-    /// <param name="parameters"></param>
-    /// <returns></returns>
-    protected virtual string GenerateCacheKey(
-        ClientCredentialsTokenManagementOptions options,
-        string clientName,
-        TokenRequestParameters? parameters = null)
-    {
-        var s = "s_" + parameters?.Scope ?? "";
-        var r = "r_" + parameters?.Resource ?? "";
-
-        return options.CacheKeyPrefix + clientName + "::" + s + "::" + r;
     }
 }

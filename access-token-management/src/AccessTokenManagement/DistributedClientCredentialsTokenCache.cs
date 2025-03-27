@@ -40,7 +40,9 @@ public class DistributedClientCredentialsTokenCache(
 
         logger.CachingAccessToken(clientName, cacheExpiration);
 
+#pragma warning disable CS0618 // Type or member is obsolete
         var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
+#pragma warning restore CS0618 // Type or member is obsolete
         await cache.SetStringAsync(cacheKey, data, entryOptions, token: cancellationToken).ConfigureAwait(false);
     }
 
@@ -51,7 +53,9 @@ public class DistributedClientCredentialsTokenCache(
     {
         ArgumentNullException.ThrowIfNull(clientName);
 
+#pragma warning disable CS0618 // Type or member is obsolete
         var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         if (!requestParameters.ForceRenewal)
         {
@@ -93,7 +97,9 @@ public class DistributedClientCredentialsTokenCache(
     {
         ArgumentNullException.ThrowIfNull(clientName);
 
+#pragma warning disable CS0618 // Type or member is obsolete
         var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
+#pragma warning restore CS0618 // Type or member is obsolete
         string? entry;
 
         try
@@ -136,7 +142,9 @@ public class DistributedClientCredentialsTokenCache(
     {
         if (clientName is null) throw new ArgumentNullException(nameof(clientName));
 
+#pragma warning disable CS0618 // Type or member is obsolete
         var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
+#pragma warning restore CS0618 // Type or member is obsolete
         return cache.RemoveAsync(cacheKey, cancellationToken);
     }
 
@@ -147,14 +155,12 @@ public class DistributedClientCredentialsTokenCache(
     /// <param name="clientName"></param>
     /// <param name="parameters"></param>
     /// <returns></returns>
+    [Obsolete("This method is deprecated and will be removed in a future version. To customize CacheKeyGeneration, please use the property ClientCredentialsTokenManagementOptions.GenerateCacheKey")]
     protected virtual string GenerateCacheKey(
         ClientCredentialsTokenManagementOptions options,
         string clientName,
         TokenRequestParameters? parameters = null)
     {
-        var s = "s_" + parameters?.Scope ?? "";
-        var r = "r_" + parameters?.Resource ?? "";
-
-        return options.CacheKeyPrefix + clientName + "::" + s + "::" + r;
+        return options.GenerateCacheKey(clientName, parameters);
     }
 }

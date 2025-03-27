@@ -8,6 +8,17 @@ namespace Duende.AccessTokenManagement;
 /// </summary>
 public class ClientCredentialsTokenManagementOptions
 {
+    public ClientCredentialsTokenManagementOptions()
+    {
+        GenerateCacheKey = ((clientName, parameters) =>
+        {
+            var s = "s_" + parameters?.Scope ?? "";
+            var r = "r_" + parameters?.Resource ?? "";
+
+            return CacheKeyPrefix + clientName + "::" + s + "::" + r;
+        });
+    }
+
     /// <summary>
     /// Used to prefix the cache key
     /// </summary>
@@ -17,4 +28,16 @@ public class ClientCredentialsTokenManagementOptions
     /// Value to subtract from token lifetime for the cache entry lifetime (defaults to 60 seconds)
     /// </summary>
     public int CacheLifetimeBuffer { get; set; } = 60;
+
+    /// <summary>
+    /// The logic to generate a cache key. Defaults to a simple key based on client name, scope, and resource.
+    /// Customize this if you add additional <see cref="TokenRequestParameters.Parameters"/> to your TokenRequest that
+    /// impact how this should be cached. 
+    /// </summary>
+    public ClientCredentialsCacheKeyGenerator GenerateCacheKey { get; private set; }
+    
 }
+
+public delegate string ClientCredentialsCacheKeyGenerator(
+    string clientName,
+    TokenRequestParameters? parameters = null);
