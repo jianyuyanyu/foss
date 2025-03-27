@@ -111,11 +111,7 @@ public class UserAccessAccessTokenManagementService(
 
         var refreshedToken =
             await tokenEndpointService.RefreshAccessTokenAsync(userToken, parameters, cancellationToken).ConfigureAwait(false);
-        if (refreshedToken.IsError)
-        {
-            logger.FailedToRefreshAccessToken(refreshedToken.Error);
-        }
-        else
+        if (!refreshedToken.IsError)
         {
             await userAccessTokenStore.StoreTokenAsync(user, refreshedToken, parameters).ConfigureAwait(false);
         }

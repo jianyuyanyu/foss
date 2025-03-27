@@ -25,10 +25,17 @@ public class UserTokenEndpointService(
         CancellationToken cancellationToken = default)
     {
         var refreshToken = userToken.RefreshToken ?? throw new ArgumentNullException(nameof(userToken.RefreshToken));
-        
-        logger.RefreshingAccessTokenUsingRefreshToken(refreshToken, hashAlgorithm: Crypto.HashData);
+
 
         var oidc = await configurationService.GetOpenIdConnectConfigurationAsync(parameters.ChallengeScheme).ConfigureAwait(false);
+
+        // Add the ClientID to all subsequent log messages
+        using var logScope = logger.BeginScope(
+            (LogMessages.Parameters.ClientId, oidc.ClientId)
+        );
+
+        logger.RefreshingAccessTokenUsingRefreshToken(refreshToken, hashAlgorithm: Crypto.HashData);
+
 
         var request = new RefreshTokenRequest
         {
@@ -88,7 +95,7 @@ public class UserTokenEndpointService(
             dPoPJsonWebKey != null &&
             response.DPoPNonce != null)
         {
-            logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce();
+            logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce(response.ErrorDescription);
 
             var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {
@@ -108,6 +115,7 @@ public class UserTokenEndpointService(
         var token = new UserToken();
         if (response.IsError)
         {
+            logger.FailedToRefreshAccessToken(response.Error, response.ErrorDescription);
             token.Error = response.Error;
         }
         else
@@ -122,7 +130,7 @@ public class UserTokenEndpointService(
             token.RefreshToken = response.RefreshToken ?? userToken.RefreshToken;
             token.Scope = response.Scope;
         }
-
+        logger.UserAccessTokenRefreshed(token.AccessTokenType, token.Expiration);
         return token;
     }
 

@@ -25,7 +25,7 @@ public class LogExpirationTests
         {
             logger.LogWithFunction(() => "foo");
         }
-        
+
         loggerProvider.LogEntries.Any(x => x.Contains("foo")).ShouldBeFalse();
         loggerProvider.LogEntries.Any(x => x.Contains("System.Func")).ShouldBeTrue();
 
@@ -37,7 +37,7 @@ public class LogExpirationTests
     [Fact]
     public void Log_using_string_will_write_output()
     {
-        var loggerProvider = new TestLoggerProvider(s => { }, "test"); 
+        var loggerProvider = new TestLoggerProvider(s => { }, "test");
         var loggerFactory = LoggerFactory.Create(builder => builder
             .SetMinimumLevel(LogLevel.Trace)
             .AddProvider(loggerProvider));

@@ -33,6 +33,11 @@ public abstract class AccessTokenHandler(
     /// <inheritdoc/>
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
+        // Add a log scope that adds the Request URL to all subsequent log messages
+        using var logScope = logger.BeginScope(
+            (LogMessages.Parameters.RequestUrl, request.RequestUri?.GetLeftPart(UriPartial.Path))
+        );
+
         await SetTokenAsync(request, forceRenewal: false, cancellationToken).ConfigureAwait(false);
         var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 

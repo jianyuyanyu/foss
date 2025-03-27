@@ -67,7 +67,7 @@ public class DistributedClientCredentialsTokenCache(
             var token = await factory(clientName, requestParameters, cancellationToken).ConfigureAwait(false);
             if (token.IsError)
             {
-                logger.FailedToRequestAccessTokenForClient(clientName, token.Error);
+                logger.WillNotCacheTokenResultWithError(clientName, token.Error);
 
                 return token;
             }
@@ -106,7 +106,7 @@ public class DistributedClientCredentialsTokenCache(
         }
         catch (Exception ex)
         {
-            logger.ErrorTryingToObtainTokenFromCache(ex, clientName, cacheKey);
+            logger.FailedToObtainTokenFromCache(ex, clientName, cacheKey);
             return null;
         }
 
@@ -114,17 +114,17 @@ public class DistributedClientCredentialsTokenCache(
         {
             try
             {
-                logger.DebugCacheHitForAccessToken(clientName);
+                logger.CacheHitForObtainingAccessToken(clientName);
                 return JsonSerializer.Deserialize<ClientCredentialsToken>(entry);
             }
             catch (Exception ex)
             {
-                logger.CriticalErrorParsingCachedAccessToken(ex, clientName);
+                logger.FailedToCacheAccessToken(ex, clientName);
                 return null;
             }
         }
 
-        logger.TraceCacheMissForAccessToken(clientName);
+        logger.CacheMissWhileRetrievingAccessToken(clientName);
         return null;
     }
 

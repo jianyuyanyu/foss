@@ -78,7 +78,7 @@ internal class AuthorizationServerDPoPHandler(
                 // trigger a retry during code exchange
                 if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
-                    _logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce();
+                    _logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce(response.GetDPoPError());
                     response.Dispose();
                     await SetDPoPProofTokenForCodeExchangeAsync(request, dPoPNonce, codeExchangeJwk).ConfigureAwait(false);
                     return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);

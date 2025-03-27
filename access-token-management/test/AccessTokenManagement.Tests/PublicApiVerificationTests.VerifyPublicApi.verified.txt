@@ -2,7 +2,7 @@
 {
     public abstract class AccessTokenHandler : System.Net.Http.DelegatingHandler
     {
-        public AccessTokenHandler(Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Duende.AccessTokenManagement.IDPoPNonceStore dPoPNonceStore, Microsoft.Extensions.Logging.ILogger logger) { }
+        protected AccessTokenHandler(Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Duende.AccessTokenManagement.IDPoPNonceStore dPoPNonceStore, Microsoft.Extensions.Logging.ILogger logger) { }
         protected abstract System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken> GetAccessTokenAsync(bool forceRenewal, System.Threading.CancellationToken cancellationToken);
         protected override System.Net.Http.HttpResponseMessage Send(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken) { }
         protected override System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> SendAsync(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken) { }
@@ -67,6 +67,7 @@
     {
         public static void AddDPoPProofAdditionalPayloadClaims(this System.Net.Http.HttpRequestMessage request, System.Collections.Generic.IDictionary<string, string> customClaims) { }
         public static void ClearDPoPProofToken(this System.Net.Http.HttpRequestMessage request) { }
+        public static string? GetDPoPError(this System.Net.Http.HttpResponseMessage response) { }
         public static string? GetDPoPNonce(this System.Net.Http.HttpResponseMessage response) { }
         public static string GetDPoPUrl(this System.Net.Http.HttpRequestMessage request) { }
         public static bool IsDPoPError(this System.Net.Http.HttpResponseMessage response) { }
@@ -126,7 +127,7 @@
     }
     public class DistributedDPoPNonceStore : Duende.AccessTokenManagement.IDPoPNonceStore
     {
-        public DistributedDPoPNonceStore([Microsoft.Extensions.DependencyInjection.FromKeyedServices("DistributedDPoPNonceStore")] Microsoft.Extensions.Caching.Distributed.IDistributedCache cache, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.DistributedDPoPNonceStore> logger) { }
+        public DistributedDPoPNonceStore(Microsoft.Extensions.Caching.Distributed.IDistributedCache cache, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.DistributedDPoPNonceStore> logger) { }
         protected virtual string GenerateCacheKey(Duende.AccessTokenManagement.DPoPNonceContext context) { }
         public virtual System.Threading.Tasks.Task<string?> GetNonceAsync(Duende.AccessTokenManagement.DPoPNonceContext context, System.Threading.CancellationToken cancellationToken = default) { }
         public virtual System.Threading.Tasks.Task StoreNonceAsync(Duende.AccessTokenManagement.DPoPNonceContext context, string nonce, System.Threading.CancellationToken cancellationToken = default) { }

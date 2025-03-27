@@ -37,7 +37,7 @@ public class AuthenticationSessionUserAccessTokenStore(
 
         if (!result.Succeeded)
         {
-            logger.CannotAuthenticateSchemeToAquireUserAccessToken(parameters.SignInScheme ?? "default signin scheme");
+            logger.CannotAuthenticateSchemeToAcquireUserAccessToken(parameters.SignInScheme ?? "default signin scheme");
 
             return new UserToken() { Error = "Cannot authenticate scheme" };
         }

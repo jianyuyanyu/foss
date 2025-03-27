@@ -25,6 +25,7 @@ public class ClientCredentialsTokenEndpointService(
         TokenRequestParameters? parameters = null,
         CancellationToken cancellationToken = default)
     {
+
         var client = options.Get(clientName);
 
         if (string.IsNullOrWhiteSpace(client.ClientId))
@@ -35,6 +36,10 @@ public class ClientCredentialsTokenEndpointService(
         {
             throw new InvalidOperationException($"No TokenEndpoint configured for client {clientName}");
         }
+
+        using var logScope = logger.BeginScope(
+            (LogMessages.Parameters.ClientId, client.ClientId)
+        );
 
         var request = new ClientCredentialsTokenRequest
         {
@@ -91,7 +96,7 @@ public class ClientCredentialsTokenEndpointService(
         var key = await dPoPKeyMaterialService.GetKeyAsync(clientName);
         if (key != null)
         {
-            logger.DebugCreatingDPoPProofToken();
+            logger.CreatingDPoPProofToken();
 
             var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {
@@ -116,7 +121,7 @@ public class ClientCredentialsTokenEndpointService(
             httpClient = httpClientFactory.CreateClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName);
         }
 
-        logger.DebugRequestingClientCredentialsAccessToken(request.Address);
+        logger.RequestingClientCredentialsAccessToken(request.Address);
         var response = await httpClient.RequestClientCredentialsTokenAsync(request, cancellationToken).ConfigureAwait(false);
 
         if (response.IsError &&
@@ -124,7 +129,7 @@ public class ClientCredentialsTokenEndpointService(
             key != null &&
             response.DPoPNonce != null)
         {
-            logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce();
+            logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce(response.Error);
 
             var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {
@@ -143,13 +148,15 @@ public class ClientCredentialsTokenEndpointService(
 
         if (response.IsError)
         {
+            logger.FailedToRequestAccessTokenForClient(clientName, response.Error, response.ErrorDescription);
+
             return new ClientCredentialsToken
             {
                 Error = response.Error
             };
         }
 
-        return new ClientCredentialsToken
+        var token = new ClientCredentialsToken
         {
             AccessToken = response.AccessToken,
             AccessTokenType = response.TokenType,
@@ -159,5 +166,9 @@ public class ClientCredentialsTokenEndpointService(
                 : DateTimeOffset.UtcNow.AddSeconds(response.ExpiresIn),
             Scope = response.Scope
         };
+
+
+        logger.ClientCredentialsTokenForClientRetrieved(clientName, token.AccessTokenType, token.Expiration);
+        return token;
     }
 }

@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Duende.AccessTokenManagement;
@@ -27,11 +26,11 @@ public class DistributedDPoPNonceStore(
 
         if (entry != null)
         {
-            logger.DebugCacheHitForDPoPNonce(context.Url, context.Method);
+            logger.CacheHitForDPoPNonce(context.Url, context.Method);
             return entry;
         }
 
-        logger.TraceCacheMissForDPoPNonce(context.Url, context.Method);
+        logger.CacheMissForDPoPNonce(context.Url, context.Method);
         return null;
     }
 
@@ -48,7 +47,7 @@ public class DistributedDPoPNonceStore(
             AbsoluteExpiration = cacheExpiration
         };
 
-        logger.DebugCachingDPoPNonce(context.Url, context.Method, cacheExpiration);
+        logger.WritingNonceToCache(context.Url, context.Method, cacheExpiration);
 
         var cacheKey = GenerateCacheKey(context);
         await cache.SetStringAsync(cacheKey, data, entryOptions, token: cancellationToken).ConfigureAwait(false);
