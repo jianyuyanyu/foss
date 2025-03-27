@@ -47,7 +47,7 @@ public class StoreTokensInAuthenticationProperties(
         var tokens = authenticationProperties.Items.Where(i => i.Key.StartsWith(TokenPrefix)).ToList();
         if (!tokens.Any())
         {
-            logger.InformationNoTokensFoundInCookieProperties();
+            logger.FailedToGetUserTokenDueToMissingTokensInCookie();
 
             return new UserToken() { Error = "No tokens in properties" };
         }

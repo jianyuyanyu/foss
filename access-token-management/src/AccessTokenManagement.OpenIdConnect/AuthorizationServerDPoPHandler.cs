@@ -78,7 +78,7 @@ internal class AuthorizationServerDPoPHandler(
                 // trigger a retry during code exchange
                 if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
-                    _logger.DebugTokenRequestFailedWithDPoPNonceError();
+                    _logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce();
                     response.Dispose();
                     await SetDPoPProofTokenForCodeExchangeAsync(request, dPoPNonce, codeExchangeJwk).ConfigureAwait(false);
                     return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
@@ -87,7 +87,7 @@ internal class AuthorizationServerDPoPHandler(
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                _logger.DebugAuthorizationServerSuppliedNewNonce();
+                _logger.AuthorizationServerSuppliedNewNonce();
 
                 await dPoPNonceStore.StoreNonceAsync(new DPoPNonceContext
                 {
@@ -121,12 +121,12 @@ internal class AuthorizationServerDPoPHandler(
 
             if (proofToken != null)
             {
-                _logger.DebugSendingDPoPProofToken(request.RequestUri?.GetLeftPart(System.UriPartial.Path));
+                _logger.SendingDPoPProofToken(request.RequestUri?.GetLeftPart(System.UriPartial.Path));
                 request.SetDPoPProofToken(proofToken.ProofToken);
             }
             else
             {
-                _logger.DebugNoDPoPProofToken(request.RequestUri?.GetLeftPart(System.UriPartial.Path));
+                _logger.FailedToCreateDPopProofToken(request.RequestUri?.GetLeftPart(System.UriPartial.Path));
             }
         }
     }

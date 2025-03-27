@@ -37,14 +37,14 @@ public class AuthenticationSessionUserAccessTokenStore(
 
         if (!result.Succeeded)
         {
-            logger.CannotAuthenticateScheme(parameters.SignInScheme ?? "default signin scheme");
+            logger.CannotAuthenticateSchemeToAquireUserAccessToken(parameters.SignInScheme ?? "default signin scheme");
 
             return new UserToken() { Error = "Cannot authenticate scheme" };
         }
 
         if (result.Properties == null)
         {
-            logger.InformationAuthenticationResultPropertiesAreNull(parameters.SignInScheme ?? "default signin scheme");
+            logger.AuthenticationResultPropertiesAreNullAfterAuthenticate(parameters.SignInScheme ?? "default signin scheme");
 
             return new UserToken() { Error = "No properties on authentication result" };
         }

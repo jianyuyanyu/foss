@@ -47,7 +47,7 @@ public abstract class AccessTokenHandler(
             var force = !response.IsDPoPError();
             if (!force && !string.IsNullOrEmpty(dPoPNonce))
             {
-                logger.DebugDPoPNonceErrorRetrying(response?.GetDPoPError(), request.RequestUri?.AbsoluteUri);
+                logger.RequestFailedWithDPoPErrorWillRetry(response?.GetDPoPError(), request.RequestUri?.AbsoluteUri);
             }
 
             await SetTokenAsync(request, forceRenewal: force, cancellationToken, dPoPNonce).ConfigureAwait(false);
@@ -75,7 +75,7 @@ public abstract class AccessTokenHandler(
 
         if (!string.IsNullOrWhiteSpace(token?.AccessToken))
         {
-            logger.LogDebug("Sending access token in request to endpoint: {url}", request.RequestUri?.AbsoluteUri.ToString());
+            logger.SendAccessTokenToEndpoint(request.RequestUri?.AbsoluteUri, token.AccessTokenType);
 
             var scheme = token.AccessTokenType ?? AuthenticationSchemes.AuthorizationHeaderBearer;
 
@@ -132,14 +132,14 @@ public abstract class AccessTokenHandler(
 
             if (proofToken != null)
             {
-                logger.DebugSendingDPoPProofToken(request.RequestUri?.AbsoluteUri);
+                logger.SendingDPoPProofToken(request.RequestUri?.AbsoluteUri);
 
                 request.SetDPoPProofToken(proofToken.ProofToken);
                 return true;
             }
             else
             {
-                logger.DebugNoDPoPProofToken(request.RequestUri?.AbsoluteUri);
+                logger.FailedToCreateDPopProofToken(request.RequestUri?.AbsoluteUri);
             }
         }
 

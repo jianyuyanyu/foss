@@ -124,7 +124,7 @@ public class ClientCredentialsTokenEndpointService(
             key != null &&
             response.DPoPNonce != null)
         {
-            logger.DebugTokenRequestFailedWithDPoPNonceError();
+            logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce();
 
             var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {

@@ -1,10 +1,13 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Security.Cryptography;
+using System.Text;
+using Duende.IdentityModel;
 using Microsoft.Extensions.Logging;
 
 namespace Duende.AccessTokenManagement;
-public static partial class LogMessages
+internal static partial class LogMessages
 {
     internal class Parameters
     {
@@ -13,141 +16,178 @@ public static partial class LogMessages
         public const string Url = "{url}";
         public const string ClientName = "{clientname}";
         public const string Expiration = "{expiration}";
-        public const string Token = "{token}";
+        public const string TokenHash = "{tokenhash}";
         public const string Endpoint = "{endpoint}";
         public const string User = "{user}";
         public const string Resource = "{resource}";
         public const string Method = "{method}";
         public const string Address = "{address}";
         public const string CacheKey = "{cachekey}";
+        public const string TokenType = "{tokentype}";
+        public const string ForceRenewal = "{forcerenewal}";
     }
 
     [LoggerMessage(
         Level = LogLevel.Information,
-        Message = $"Cannot authenticate scheme: {Parameters.Scheme}")]
-    public static partial void CannotAuthenticateScheme(
+        Message = $"Cannot authenticate scheme: {Parameters.Scheme} to acquire user access token.")]
+    public static partial void CannotAuthenticateSchemeToAquireUserAccessToken(
         this ILogger logger, string scheme);
 
     [LoggerMessage(
         Level = LogLevel.Information,
-        Message = $"Authentication result properties are null for scheme: {Parameters.Scheme}")]
-    public static partial void InformationAuthenticationResultPropertiesAreNull(
+        Message = $"Authentication result properties are null for scheme: {Parameters.Scheme} after authentication.")]
+    public static partial void AuthenticationResultPropertiesAreNullAfterAuthenticate(
         this ILogger logger, string scheme);
 
     [LoggerMessage(
         Level = LogLevel.Information,
-        Message = "No tokens found in cookie properties. SaveTokens must be enabled for automatic token refresh.")]
-    public static partial void InformationNoTokensFoundInCookieProperties(this ILogger logger);
+        Message = "Failed to get a UserToken because no tokens found in cookie properties. SaveTokens must be enabled for automatic token refresh.")]
+    public static partial void FailedToGetUserTokenDueToMissingTokensInCookie(this ILogger logger);
 
     [LoggerMessage(
-        Level = LogLevel.Information,
+        Level = LogLevel.Warning,
         Message = $"Error revoking refresh token. Error = {Parameters.Error}.")]
-    public static partial void InformationFailedToRefreshToken(this ILogger logger, string? error);
+    public static partial void FailedToRevokeAccessToken(this ILogger logger, string? error);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
         Message = $"Sending DPoP proof token in request to endpoint: {Parameters.Url}")]
-    public static partial void DebugSendingDPoPProofToken(this ILogger logger, string? url);
+    public static partial void SendingDPoPProofToken(this ILogger logger, string? url);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"No DPoP proof token in request to endpoint: {Parameters.Url}")]
-    public static partial void DebugNoDPoPProofToken(this ILogger logger, string? url);
+        Message = $"Failed to create DPoP proof token for request to endpoint: {Parameters.Url}")]
+    public static partial void FailedToCreateDPopProofToken(this ILogger logger, string? url);
+
+
+    [LoggerMessage(
+        Level = LogLevel.Debug,
+        Message = $"Sending Access token of type {Parameters.TokenType} to endpoint: {Parameters.Url}.")]
+    public static partial void SendAccessTokenToEndpoint(this ILogger logger, string? url, string? tokenType);
+
 
     [LoggerMessage(
         Level = LogLevel.Debug,
         Message = $"DPoP nonce error: '{Parameters.Error}' while invoking endpoint: {Parameters.Url}. Retrying using new nonce")]
-    public static partial void DebugDPoPNonceErrorRetrying(this ILogger logger, string? error, string? url);
+    public static partial void RequestFailedWithDPoPErrorWillRetry(this ILogger logger, string? error, string? url);
+
+    /// <summary>
+    /// Logs the refreshing of a refresh token. Note, the actual refresh token is not logged, but a hash of the token.
+    /// Because hashing can be costly, we're only doing this when the log level is Trace. This is not something the sourcegenerators
+    /// can do, so we're wrapping this in a method.
+    /// </summary>
+    /// <param name="logger"></param>
+    /// <param name="refreshToken"></param>
+    /// <param name="hashAlgorithm"></param>
+
+    public static void RefreshingAccessTokenUsingRefreshToken(this ILogger logger, string refreshToken, Func<string, string> hashAlgorithm)
+    {
+        if (logger.IsEnabled(LogLevel.Trace))
+        {
+            RefreshingTokenUsingRefreshTokenImplementation(logger, hashAlgorithm(refreshToken));
+        }
+    }
 
     [LoggerMessage(
         Level = LogLevel.Trace,
-        Message = $"Refreshing refresh token: {Parameters.Token}")]
-    public static partial void TraceRefreshingRefreshToken(this ILogger logger, string token);
+        Message = $"Refreshing access token using refresh token: hash={Parameters.TokenHash}")]
+    private static partial void RefreshingTokenUsingRefreshTokenImplementation(this ILogger logger, string tokenHash);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Refresh token request to: {Parameters.Endpoint}")]
-    public static partial void DebugRefreshTokenRequest(this ILogger logger, string? endpoint);
+        Message = $"Sending Refresh token request to: {Parameters.Endpoint}")]
+    public static partial void SendingRefreshTokenRequest(this ILogger logger, string? endpoint);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
         Message = "DPoP error during token refresh. Retrying with server nonce")]
-    public static partial void DebugDPoPErrorDuringTokenRefresh(this ILogger logger);
+    public static partial void DPoPErrorDuringTokenRefreshWillRetryWithServerNonce(this ILogger logger);
+
+    /// <summary>
+    /// Logs the revocation of a refresh token. Note, the actual refresh token is not logged, but a hash of the token.
+    /// Because hashing can be costly, we're only doing this when the log level is Trace. This is not something the sourcegenerators
+    /// can do, so we're wrapping this in a method.
+    /// </summary>
+    /// <param name="logger"></param>
+    /// <param name="refreshToken"></param>
+    /// <param name="hashAlgorithm"></param>
+    public static void RevokingRefreshToken(this ILogger logger, string refreshToken, Func<string, string> hashAlgorithm)
+    {
+        if (logger.IsEnabled(LogLevel.Trace))
+        {
+            RevokingRefreshTokenImplementation(logger, hashAlgorithm(refreshToken));
+        }
+    }
 
     [LoggerMessage(
         Level = LogLevel.Trace,
-        Message = $"Revoking refresh token: {Parameters.Token}")]
-    public static partial void TraceRevokingRefreshToken(this ILogger logger, string token);
+        Message = $"Revoking refresh token: hash={Parameters.TokenHash}")]
+    private static partial void RevokingRefreshTokenImplementation(this ILogger logger, string tokenHash);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Token revocation request to: {Parameters.Endpoint}")]
-    public static partial void DebugTokenRevocationRequest(this ILogger logger, string endpoint);
+        Message = $"Sending Token revocation request to: {Parameters.Endpoint}")]
+    public static partial void SendingTokenRevocationRequest(this ILogger logger, string endpoint);
 
     [LoggerMessage(
         Level = LogLevel.Trace,
         Message = "Starting user token acquisition")]
-    public static partial void TraceStartingUserTokenAcquisition(this ILogger logger);
+    public static partial void StartingUserTokenAcquisition(this ILogger logger);
 
     [LoggerMessage(
-        Level = LogLevel.Debug,
-        Message = "No active user. Cannot retrieve token")]
-    public static partial void DebugNoActiveUser(this ILogger logger);
+        Level = LogLevel.Information,
+        Message = "Cannot retrieve token: No active user")]
+    public static partial void CannotRetrieveAccessTokenDueToNoActiveUser(this ILogger logger);
 
     [LoggerMessage(
-        Level = LogLevel.Debug,
-        Message = $"No token data found in user token store for user {Parameters.User}.")]
-    public static partial void DebugNoTokenDataFound(this ILogger logger, string user);
+        Level = LogLevel.Information,
+        Message = $"Cannot retrieve token: No token data found in user token store for user {Parameters.User}.")]
+    public static partial void CannotRetrieveAccessTokenDueToNoTokenDataFound(this ILogger logger, string user);
 
     [LoggerMessage(
-        Level = LogLevel.Debug,
-        Message = $"No refresh token found in user token store for user {Parameters.User} / resource {Parameters.Resource}. Returning current access token.")]
-    public static partial void DebugNoRefreshTokenFound(this ILogger logger, string user, string resource);
+        Level = LogLevel.Information,
+        Message = $"Cannot retrieve token: No refresh token found in user token store for user {Parameters.User} / resource {Parameters.Resource}. Returning current access token.")]
+    public static partial void CannotRetrieveAccessTokenDueToNoRefreshTokenFound(this ILogger logger, string user, string resource);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
         Message = $"No access token found in user token store for user {Parameters.User} / resource {Parameters.Resource}. Trying to refresh.")]
-    public static partial void DebugNoAccessTokenFound(this ILogger logger, string user, string resource);
+    public static partial void NoAccessTokenFoundWillRefresh(this ILogger logger, string user, string resource);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
-        Message = $"Token for user {Parameters.User} needs refreshing.")]
-    public static partial void DebugTokenNeedsRefreshing(this ILogger logger, string user);
+        Message = $"Token for user {Parameters.User} will be refreshed. Expiration: {Parameters.Expiration}, ForceRenewal:{Parameters.ForceRenewal}")]
+    public static partial void DebugTokenNeedsRefreshing(this ILogger logger, string user, DateTimeOffset expiration, bool forceRenewal);
 
     [LoggerMessage(
         Level = LogLevel.Trace,
         Message = $"Returning refreshed token for user: {Parameters.User}")]
-    public static partial void TraceReturningRefreshedToken(this ILogger logger, string user);
+    public static partial void ReturningRefreshedToken(this ILogger logger, string user);
 
     [LoggerMessage(
         Level = LogLevel.Trace,
         Message = $"Returning current token for user: {Parameters.User}")]
-    public static partial void TraceReturningCurrentToken(this ILogger logger, string user);
+    public static partial void ReturningCurrentTokenForUser(this ILogger logger, string user);
 
     [LoggerMessage(
         Level = LogLevel.Error,
         Message = $"Error refreshing access token. Error = {Parameters.Error}")]
-    public static partial void ErrorRefreshingAccessToken(this ILogger logger, string? error);
-
-    [LoggerMessage(
-        Level = LogLevel.Debug,
-        Message = "Token request failed with DPoP nonce error. Retrying with new nonce.")]
-    public static partial void DebugTokenRequestFailedWithDPoPNonceError(this ILogger logger);
+    public static partial void FailedToRefreshAccessToken(this ILogger logger, string? error);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
         Message = "The authorization server has supplied a new nonce on a successful response, which will be stored and used in future requests to the authorization server")]
-    public static partial void DebugAuthorizationServerSuppliedNewNonce(this ILogger logger);
+    public static partial void AuthorizationServerSuppliedNewNonce(this ILogger logger);
 
     [LoggerMessage(
         Level = LogLevel.Debug,
         Message = $"Caching access token for client: {Parameters.ClientName}. Expiration: {Parameters.Expiration}")]
-    public static partial void DebugCachingAccessToken(this ILogger logger, string clientName, DateTimeOffset expiration);
+    public static partial void CachingAccessToken(this ILogger logger, string clientName, DateTimeOffset expiration);
 
     [LoggerMessage(
         Level = LogLevel.Error,
-        Message = $"Error requesting access token for client {Parameters.ClientName}. Error = {Parameters.Error}.")]
-    public static partial void ErrorRequestingAccessToken(this ILogger logger, string clientName, string? error);
+        Message = $"Error requesting access token for client {Parameters.ClientName}. Error = {Parameters.Error}. This failure will not be cached.")]
+    public static partial void FailedToRequestAccessTokenForClient(this ILogger logger, string clientName, string? error);
 
     [LoggerMessage(
         Level = LogLevel.Error,
@@ -213,4 +253,20 @@ public static partial class LogMessages
         Level = LogLevel.Error,
         Message = $"Error trying to obtain token from cache for client {Parameters.ClientName} using cacheKey {Parameters.CacheKey}. Will obtain new token.")]
     public static partial void ErrorTryingToObtainTokenFromCache(this ILogger logger, Exception ex, string clientName, string cacheKey);
+}
+
+internal class Crypto
+{
+    public static string HashData(string data)
+    {
+        using (var sha = SHA256.Create())
+        {
+            var hash = sha.ComputeHash(Encoding.ASCII.GetBytes(data));
+
+            var leftPart = new byte[16];
+            Array.Copy(hash, leftPart, 16);
+
+            return Base64Url.Encode(leftPart);
+        }
+    }
 }

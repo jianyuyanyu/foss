@@ -38,7 +38,7 @@ public class DistributedClientCredentialsTokenCache(
             AbsoluteExpiration = cacheExpiration
         };
 
-        logger.DebugCachingAccessToken(clientName, cacheExpiration);
+        logger.CachingAccessToken(clientName, cacheExpiration);
 
         var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);
         await cache.SetStringAsync(cacheKey, data, entryOptions, token: cancellationToken).ConfigureAwait(false);
@@ -67,7 +67,7 @@ public class DistributedClientCredentialsTokenCache(
             var token = await factory(clientName, requestParameters, cancellationToken).ConfigureAwait(false);
             if (token.IsError)
             {
-                logger.ErrorRequestingAccessToken(clientName, token.Error);
+                logger.FailedToRequestAccessTokenForClient(clientName, token.Error);
 
                 return token;
             }

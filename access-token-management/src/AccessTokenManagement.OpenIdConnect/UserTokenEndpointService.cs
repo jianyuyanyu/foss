@@ -25,8 +25,8 @@ public class UserTokenEndpointService(
         CancellationToken cancellationToken = default)
     {
         var refreshToken = userToken.RefreshToken ?? throw new ArgumentNullException(nameof(userToken.RefreshToken));
-
-        logger.TraceRefreshingRefreshToken(refreshToken);
+        
+        logger.RefreshingAccessTokenUsingRefreshToken(refreshToken, hashAlgorithm: Crypto.HashData);
 
         var oidc = await configurationService.GetOpenIdConnectConfigurationAsync(parameters.ChallengeScheme).ConfigureAwait(false);
 
@@ -80,7 +80,7 @@ public class UserTokenEndpointService(
             request.DPoPProofToken = proof?.ProofToken;
         }
 
-        logger.DebugRefreshTokenRequest(request.Address);
+        logger.SendingRefreshTokenRequest(request.Address);
         var response = await oidc.HttpClient!.RequestRefreshTokenAsync(request, cancellationToken).ConfigureAwait(false);
 
         if (response.IsError &&
@@ -88,7 +88,7 @@ public class UserTokenEndpointService(
             dPoPJsonWebKey != null &&
             response.DPoPNonce != null)
         {
-            logger.DebugDPoPErrorDuringTokenRefresh();
+            logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce();
 
             var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {
@@ -134,7 +134,7 @@ public class UserTokenEndpointService(
     {
         var refreshToken = userToken.RefreshToken ?? throw new ArgumentNullException(nameof(userToken.RefreshToken));
 
-        logger.TraceRevokingRefreshToken(refreshToken);
+        logger.RevokingRefreshToken(refreshToken, hashAlgorithm: Crypto.HashData);
 
         var oidc = await configurationService.GetOpenIdConnectConfigurationAsync(parameters.ChallengeScheme).ConfigureAwait(false);
 
@@ -172,12 +172,12 @@ public class UserTokenEndpointService(
             }
         }
 
-        logger.DebugTokenRevocationRequest(request.Address);
+        logger.SendingTokenRevocationRequest(request.Address);
         var response = await oidc.HttpClient!.RevokeTokenAsync(request, cancellationToken).ConfigureAwait(false);
 
         if (response.IsError)
         {
-            LogMessages.InformationFailedToRefreshToken(logger, response.Error);
+            logger.FailedToRevokeAccessToken(response.Error);
         }
     }
 }

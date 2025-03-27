@@ -26,13 +26,13 @@ public class UserAccessAccessTokenManagementService(
         UserTokenRequestParameters? parameters = null,
         CancellationToken cancellationToken = default)
     {
-        logger.TraceStartingUserTokenAcquisition();
+        logger.StartingUserTokenAcquisition();
 
         parameters ??= new UserTokenRequestParameters();
 
         if (!user.Identity!.IsAuthenticated)
         {
-            logger.DebugNoActiveUser();
+            logger.CannotRetrieveAccessTokenDueToNoActiveUser();
             return new UserToken() { Error = "No active user" };
         }
 
@@ -42,27 +42,27 @@ public class UserAccessAccessTokenManagementService(
 
         if (userToken.AccessToken.IsMissing() && userToken.RefreshToken.IsMissing())
         {
-            logger.DebugNoTokenDataFound(userName);
+            logger.CannotRetrieveAccessTokenDueToNoTokenDataFound(userName);
             return new UserToken() { Error = "No token data for user" };
         }
 
         if (userToken.AccessToken.IsPresent() && userToken.RefreshToken.IsMissing())
         {
-            logger.DebugNoRefreshTokenFound(userName, parameters.Resource ?? "default");
+            logger.CannotRetrieveAccessTokenDueToNoRefreshTokenFound(userName, parameters.Resource ?? "default");
             return userToken;
         }
 
         var needsRenewal = userToken.AccessToken.IsMissing() && userToken.RefreshToken.IsPresent();
         if (needsRenewal)
         {
-            logger.DebugNoAccessTokenFound(userName, parameters.Resource ?? "default");
+            logger.NoAccessTokenFoundWillRefresh(userName, parameters.Resource ?? "default");
         }
 
         var dtRefresh = userToken.Expiration.Subtract(options.Value.RefreshBeforeExpiration);
         var utcNow = clock.GetUtcNow();
         if (dtRefresh < utcNow || parameters.ForceRenewal || needsRenewal)
         {
-            logger.DebugTokenNeedsRefreshing(userName);
+            logger.DebugTokenNeedsRefreshing(userName, dtRefresh, parameters.ForceRenewal);
 
             return await sync.SynchronizeAsync(userToken.RefreshToken!, async () =>
             {
@@ -70,14 +70,14 @@ public class UserAccessAccessTokenManagementService(
 
                 if (!token.IsError)
                 {
-                    logger.TraceReturningRefreshedToken(userName);
+                    logger.ReturningRefreshedToken(userName);
                 }
 
                 return token;
             }).ConfigureAwait(false);
         }
 
-        logger.TraceReturningCurrentToken(userName);
+        logger.ReturningCurrentTokenForUser(userName);
         return userToken;
     }
 
@@ -113,7 +113,7 @@ public class UserAccessAccessTokenManagementService(
             await tokenEndpointService.RefreshAccessTokenAsync(userToken, parameters, cancellationToken).ConfigureAwait(false);
         if (refreshedToken.IsError)
         {
-            logger.ErrorRefreshingAccessToken(refreshedToken.Error);
+            logger.FailedToRefreshAccessToken(refreshedToken.Error);
         }
         else
         {
