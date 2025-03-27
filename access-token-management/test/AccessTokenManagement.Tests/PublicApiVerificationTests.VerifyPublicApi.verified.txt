@@ -58,7 +58,7 @@
     }
     public class ClientCredentialsTokenManagementService : Duende.AccessTokenManagement.IClientCredentialsTokenManagementService
     {
-        public ClientCredentialsTokenManagementService(Duende.AccessTokenManagement.IClientCredentialsTokenEndpointService clientCredentialsTokenEndpointService, Duende.AccessTokenManagement.IClientCredentialsTokenCache tokenCache, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.ClientCredentialsTokenManagementService> logger) { }
+        public ClientCredentialsTokenManagementService(Duende.AccessTokenManagement.IClientCredentialsTokenEndpointService clientCredentialsTokenEndpointService, Duende.AccessTokenManagement.IClientCredentialsTokenCache tokenCache) { }
         public System.Threading.Tasks.Task DeleteAccessTokenAsync(string clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default) { }
         public System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken> GetAccessTokenAsync(string clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default) { }
     }
@@ -115,7 +115,7 @@
     }
     public class DistributedClientCredentialsTokenCache : Duende.AccessTokenManagement.IClientCredentialsTokenCache
     {
-        public DistributedClientCredentialsTokenCache(Microsoft.Extensions.Caching.Distributed.IDistributedCache cache, Duende.AccessTokenManagement.ITokenRequestSynchronization synchronization, Microsoft.Extensions.Options.IOptions<Duende.AccessTokenManagement.ClientCredentialsTokenManagementOptions> options, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.DistributedClientCredentialsTokenCache> logger) { }
+        public DistributedClientCredentialsTokenCache([Microsoft.Extensions.DependencyInjection.FromKeyedServices("DistributedClientCredentialsTokenCache")] Microsoft.Extensions.Caching.Distributed.IDistributedCache cache, Duende.AccessTokenManagement.ITokenRequestSynchronization synchronization, Microsoft.Extensions.Options.IOptions<Duende.AccessTokenManagement.ClientCredentialsTokenManagementOptions> options, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.DistributedClientCredentialsTokenCache> logger) { }
         public System.Threading.Tasks.Task DeleteAsync(string clientName, Duende.AccessTokenManagement.TokenRequestParameters requestParameters, System.Threading.CancellationToken cancellationToken = default) { }
         protected virtual string GenerateCacheKey(Duende.AccessTokenManagement.ClientCredentialsTokenManagementOptions options, string clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null) { }
         public System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken?> GetAsync(string clientName, Duende.AccessTokenManagement.TokenRequestParameters requestParameters, System.Threading.CancellationToken cancellationToken = default) { }
@@ -124,7 +124,7 @@
     }
     public class DistributedDPoPNonceStore : Duende.AccessTokenManagement.IDPoPNonceStore
     {
-        public DistributedDPoPNonceStore(Microsoft.Extensions.Caching.Distributed.IDistributedCache cache, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.DistributedDPoPNonceStore> logger) { }
+        public DistributedDPoPNonceStore([Microsoft.Extensions.DependencyInjection.FromKeyedServices("DistributedDPoPNonceStore")] Microsoft.Extensions.Caching.Distributed.IDistributedCache cache, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.DistributedDPoPNonceStore> logger) { }
         protected virtual string GenerateCacheKey(Duende.AccessTokenManagement.DPoPNonceContext context) { }
         public virtual System.Threading.Tasks.Task<string?> GetNonceAsync(Duende.AccessTokenManagement.DPoPNonceContext context, System.Threading.CancellationToken cancellationToken = default) { }
         public virtual System.Threading.Tasks.Task StoreNonceAsync(Duende.AccessTokenManagement.DPoPNonceContext context, string nonce, System.Threading.CancellationToken cancellationToken = default) { }
@@ -166,6 +166,11 @@
     public interface ITokenRequestSynchronization
     {
         System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken> SynchronizeAsync(string name, System.Func<System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken>> func);
+    }
+    public static class ServiceProviderKeys
+    {
+        public const string DistributedClientCredentialsTokenCache = "DistributedClientCredentialsTokenCache";
+        public const string DistributedDPoPNonceStore = "DistributedDPoPNonceStore";
     }
     public class TokenRequestParameters
     {
