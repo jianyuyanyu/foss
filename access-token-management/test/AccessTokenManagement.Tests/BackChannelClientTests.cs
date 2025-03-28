@@ -306,7 +306,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
 
         services.AddDistributedMemoryCache();
         var replacementCache = new FakeCache();
-        services.AddKeyedSingleton<IDistributedCache>(ServiceProviderKeys.DistributedClientCredentialsTokenCache, replacementCache);
+        services.AddKeyedSingleton<IDistributedCache>(ServiceProviderKeys.ClientCredentialsTokenCache, replacementCache);
 
         services.AddClientCredentialsTokenManagement()
             .AddClient("test", client =>

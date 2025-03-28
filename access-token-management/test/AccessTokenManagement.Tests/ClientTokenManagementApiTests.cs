@@ -11,13 +11,55 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Duende.AccessTokenManagement.Tests;
 
-public class ClientTokenManagementApiTests(ITestOutputHelper output) : IntegrationTestBase(output), IAsyncLifetime
+public class DistributedCacheClientTokenManagementApiTests(ITestOutputHelper output)
+    : ClientTokenManagementApiTests(output)
+{
+    public override ClientCredentialsTokenManagementBuilder CreateClientCredentialsTokenManagementBuilder()
+    {
+        var services = new ServiceCollection();
+        services.AddDistributedMemoryCache();
+
+        return services.AddClientCredentialsTokenManagement();
+    }
+    [Fact]
+    public void DistributedCache_should_be_registered()
+    {
+        Provider.GetRequiredService<IClientCredentialsTokenCache>().ShouldBeOfType<DistributedClientCredentialsTokenCache>();
+        Provider.GetRequiredService<IDPoPNonceStore>().ShouldBeOfType<DistributedDPoPNonceStore>();
+    }
+}
+
+public class HybridCacheClientTokenManagementApiTests(ITestOutputHelper output)
+    : ClientTokenManagementApiTests(output)
+{
+    public override ClientCredentialsTokenManagementBuilder CreateClientCredentialsTokenManagementBuilder()
+    {
+        var services = new ServiceCollection();
+        services.AddHybridCache();
+        services.AddDistributedMemoryCache();
+
+        return services.AddClientCredentialsTokenManagement()
+            .UsePreviewHybridCache();
+    }
+
+    [Fact]
+    public void HybridCache_should_be_registered()
+    {
+        Provider.GetRequiredService<IClientCredentialsTokenCache>().ShouldBeOfType<HybridClientCredentialsTokenCache>();
+        Provider.GetRequiredService<IDPoPNonceStore>().ShouldBeOfType<HybridDPoPNonceStore>();
+    }
+
+
+}
+
+public abstract class ClientTokenManagementApiTests(ITestOutputHelper output) : IntegrationTestBase(output), IAsyncLifetime
 {
     private static readonly string _jwkJson = CreateJWKJson();
 
     private IClientCredentialsTokenManagementService _tokenService = null!;
     private IHttpClientFactory _clientFactory = null!;
     private ClientCredentialsClient _clientOptions = null!;
+    protected ServiceProvider Provider = null!;
 
     private static string CreateJWKJson()
     {
@@ -28,13 +70,15 @@ public class ClientTokenManagementApiTests(ITestOutputHelper output) : Integrati
         return jwkJson;
     }
 
+    public abstract ClientCredentialsTokenManagementBuilder CreateClientCredentialsTokenManagementBuilder();
+
     public override async ValueTask InitializeAsync()
     {
         await base.InitializeAsync();
-        var services = new ServiceCollection();
+        var builder = CreateClientCredentialsTokenManagementBuilder();
 
-        services.AddDistributedMemoryCache();
-        services.AddClientCredentialsTokenManagement()
+
+        builder
             .AddClient("test", client =>
             {
                 client.TokenEndpoint = "https://identityserver/connect/token";
@@ -44,16 +88,16 @@ public class ClientTokenManagementApiTests(ITestOutputHelper output) : Integrati
                 client.HttpClient = IdentityServerHost.HttpClient;
                 client.DPoPJsonWebKey = _jwkJson;
             });
-        services.AddClientCredentialsHttpClient("test", "test")
+        builder.Services.AddClientCredentialsHttpClient("test", "test")
             .AddHttpMessageHandler(() =>
             {
                 return new ApiHandler(ApiHost.Server.CreateHandler());
             });
 
-        var provider = services.BuildServiceProvider();
-        _tokenService = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
-        _clientFactory = provider.GetRequiredService<IHttpClientFactory>();
-        _clientOptions = provider.GetRequiredService<IOptionsMonitor<ClientCredentialsClient>>().Get("test");
+        Provider = builder.Services.BuildServiceProvider();
+        _tokenService = Provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        _clientFactory = Provider.GetRequiredService<IHttpClientFactory>();
+        _clientOptions = Provider.GetRequiredService<IOptionsMonitor<ClientCredentialsClient>>().Get("test");
     }
 
     public class ApiHandler : DelegatingHandler

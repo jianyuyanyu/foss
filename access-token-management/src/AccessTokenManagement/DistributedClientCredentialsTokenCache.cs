@@ -12,7 +12,7 @@ namespace Duende.AccessTokenManagement;
 /// Client access token cache using IDistributedCache
 /// </summary>
 public class DistributedClientCredentialsTokenCache(
-    [FromKeyedServices(ServiceProviderKeys.DistributedClientCredentialsTokenCache)] IDistributedCache cache,
+    [FromKeyedServices(ServiceProviderKeys.ClientCredentialsTokenCache)] IDistributedCache cache,
     ITokenRequestSynchronization synchronization,
     IOptions<ClientCredentialsTokenManagementOptions> options,
     ILogger<DistributedClientCredentialsTokenCache> logger

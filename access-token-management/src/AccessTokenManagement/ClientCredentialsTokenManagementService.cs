@@ -8,10 +8,8 @@ namespace Duende.AccessTokenManagement;
 /// </summary>
 public class ClientCredentialsTokenManagementService(
     IClientCredentialsTokenEndpointService clientCredentialsTokenEndpointService,
-    IClientCredentialsTokenCache tokenCache
-) : IClientCredentialsTokenManagementService
+    IClientCredentialsTokenCache tokenCache) : IClientCredentialsTokenManagementService
 {
-
     /// <inheritdoc/>
     public async Task<ClientCredentialsToken> GetAccessTokenAsync(
         string clientName,

@@ -3,11 +3,8 @@
 
 namespace Duende.AccessTokenManagement;
 
-/// <summary>
-/// The keys used to store services in the DI container
-/// </summary>
 public static class ServiceProviderKeys
 {
-    public const string DistributedClientCredentialsTokenCache = "DistributedClientCredentialsTokenCache";
-    public const string DistributedDPoPNonceStore = "DistributedDPoPNonceStore";
+    public const string ClientCredentialsTokenCache = "ClientCredentialsTokenCache";
+    public const string DPoPNonceStore = "DPoPNonceStore";
 }
