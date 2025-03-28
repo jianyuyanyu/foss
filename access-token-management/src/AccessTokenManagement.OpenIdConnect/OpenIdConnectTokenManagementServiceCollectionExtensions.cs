@@ -173,7 +173,7 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
     }
 
     /// <summary>
-    /// Adds a named HTTP client for the factory that automatically sends the current user access token
+    /// Adds a named HTTP client for the factory that automatically sends the current client access token. The client access token is an access token that is not associated with any user, obtained with the client credentials flow.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/>.</param>
     /// <param name="name">The name of the client.</param>
