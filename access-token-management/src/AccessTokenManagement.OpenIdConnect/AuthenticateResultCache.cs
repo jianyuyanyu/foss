@@ -7,6 +7,5 @@ using Microsoft.AspNetCore.Authentication;
 /// This requires this service to be added as scoped to the DI system.
 /// Be VERY CAREFUL to not accidentally capture this service for longer than the appropriate DI scope - e.g., in an HttpClient.
 /// </summary>
-internal class AuthenticateResultCache : Dictionary<string, AuthenticateResult>
-{
-}
+// ReSharper disable once CheckNamespace
+internal class AuthenticateResultCache : Dictionary<string, AuthenticateResult>;

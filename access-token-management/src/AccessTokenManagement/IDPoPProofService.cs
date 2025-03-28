@@ -27,17 +27,17 @@ public class DPoPProofRequest
     /// <summary>
     /// The HTTP URL of the request
     /// </summary>
-    public string Url { get; set; } = default!;
+    public required string Url { get; set; }
 
     /// <summary>
     /// The HTTP method of the request
     /// </summary>
-    public string Method { get; set; } = default!;
+    public required string Method { get; set; }
 
     /// <summary>
     /// The string representation of the JSON web key to use for DPoP.
     /// </summary>
-    public string DPoPJsonWebKey { get; set; } = default!;
+    public required string DPoPJsonWebKey { get; set; }
 
     /// <summary>
     /// The nonce value for the DPoP proof token.

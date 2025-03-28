@@ -59,7 +59,7 @@ public class DistributedClientCredentialsTokenCache(
 
         if (!requestParameters.ForceRenewal)
         {
-            var token = await GetAsync(clientName, requestParameters, cancellationToken);
+            var token = await GetAsync(clientName, requestParameters, cancellationToken).ConfigureAwait(false);
             if (token != null)
             {
                 return token;
@@ -116,22 +116,22 @@ public class DistributedClientCredentialsTokenCache(
             return null;
         }
 
-        if (entry != null)
+        if (entry == null)
         {
-            try
-            {
-                logger.CacheHitForObtainingAccessToken(clientName);
-                return JsonSerializer.Deserialize<ClientCredentialsToken>(entry);
-            }
-            catch (Exception ex)
-            {
-                logger.FailedToCacheAccessToken(ex, clientName);
-                return null;
-            }
+            logger.CacheMissWhileRetrievingAccessToken(clientName);
+            return null;
         }
 
-        logger.CacheMissWhileRetrievingAccessToken(clientName);
-        return null;
+        try
+        {
+            logger.CacheHitForObtainingAccessToken(clientName);
+            return JsonSerializer.Deserialize<ClientCredentialsToken>(entry);
+        }
+        catch (Exception ex)
+        {
+            logger.FailedToCacheAccessToken(ex, clientName);
+            return null;
+        }
     }
 
     /// <inheritdoc/>
@@ -140,7 +140,7 @@ public class DistributedClientCredentialsTokenCache(
         TokenRequestParameters requestParameters,
         CancellationToken cancellationToken = default)
     {
-        if (clientName is null) throw new ArgumentNullException(nameof(clientName));
+        ArgumentNullException.ThrowIfNull(clientName);
 
 #pragma warning disable CS0618 // Type or member is obsolete
         var cacheKey = GenerateCacheKey(_options, clientName, requestParameters);

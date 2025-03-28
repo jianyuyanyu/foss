@@ -22,5 +22,5 @@ public class DPoPKey
     /// <summary>
     /// The string representation of the JSON web key
     /// </summary>
-    public string JsonWebKey { get; set; } = default!;
+    public required string JsonWebKey { get; set; }
 }

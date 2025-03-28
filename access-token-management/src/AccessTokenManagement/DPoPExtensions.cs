@@ -44,28 +44,31 @@ public static class DPoPExtensions
     /// </summary>
     public static string? GetDPoPError(this HttpResponseMessage response)
     {
-        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        if (response.StatusCode != System.Net.HttpStatusCode.Unauthorized)
         {
-            var header = response.Headers.WwwAuthenticate.Where(x => x.Scheme == OidcConstants.AuthenticationSchemes.AuthorizationHeaderDPoP).FirstOrDefault();
-            if (header != null && header.Parameter != null)
-            {
-                // WWW-Authenticate: DPoP error="use_dpop_nonce"
-                var values = header.Parameter.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                var error = values.Select(x =>
-                {
-                    var parts = x.Split('=', StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 2 && parts[0] == OidcConstants.TokenResponse.Error)
-                    {
-                        return parts[1].Trim('"');
-                    }
-                    return null;
-                }).FirstOrDefault();
-
-                return error;
-            }
+            return null;
         }
 
-        return null;
+        var header = response.Headers.WwwAuthenticate.FirstOrDefault(
+            x => x.Scheme == OidcConstants.AuthenticationSchemes.AuthorizationHeaderDPoP);
+        if (header?.Parameter == null)
+        {
+            return null;
+        }
+
+        // WWW-Authenticate: DPoP error="use_dpop_nonce"
+        var values = header.Parameter.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        var error = values.Select(x =>
+        {
+            var parts = x.Split('=', StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length == 2 && parts[0] == OidcConstants.TokenResponse.Error)
+            {
+                return parts[1].Trim('"');
+            }
+            return null;
+        }).FirstOrDefault();
+
+        return error;
     }
 
     /// <summary>
@@ -92,9 +95,12 @@ public static class DPoPExtensions
     /// </summary>
     /// <param name="request"></param>
     /// <param name="customClaims"></param>
-    public static void AddDPoPProofAdditionalPayloadClaims(this HttpRequestMessage request, IDictionary<string, string> customClaims)
+    public static void AddDPoPProofAdditionalPayloadClaims(
+        this HttpRequestMessage request,
+        IDictionary<string, string> customClaims)
     {
-        request.Options.TryAdd(ClientCredentialsTokenManagementDefaults.DPoPProofAdditionalPayloadClaims, customClaims.AsReadOnly());
+        request.Options.TryAdd(ClientCredentialsTokenManagementDefaults.DPoPProofAdditionalPayloadClaims,
+            customClaims.AsReadOnly());
     }
 
     /// <summary>
@@ -103,9 +109,13 @@ public static class DPoPExtensions
     /// <param name="request"></param>
     /// <param name="additionalClaims"></param>
     /// <returns></returns>
-    public static bool TryGetDPopProofAdditionalPayloadClaims(this HttpRequestMessage request,
+    public static bool TryGetDPopProofAdditionalPayloadClaims(
+        this HttpRequestMessage request,
         [NotNullWhen(true)] out IReadOnlyDictionary<string, string>? additionalClaims)
     {
-        return request.Options.TryGetValue(new HttpRequestOptionsKey<IReadOnlyDictionary<string, string>>(ClientCredentialsTokenManagementDefaults.DPoPProofAdditionalPayloadClaims), out additionalClaims);
+        var key = new HttpRequestOptionsKey<IReadOnlyDictionary<string, string>>(
+            ClientCredentialsTokenManagementDefaults.DPoPProofAdditionalPayloadClaims);
+
+        return request.Options.TryGetValue(key, out additionalClaims);
     }
 }

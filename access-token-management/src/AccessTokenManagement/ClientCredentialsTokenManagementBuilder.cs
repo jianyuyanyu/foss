@@ -5,6 +5,7 @@ using Duende.AccessTokenManagement;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
+// ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
@@ -36,7 +37,7 @@ public class ClientCredentialsTokenManagementBuilder(IServiceCollection services
         RemoveDefaultRegistration<IDPoPNonceStore, DistributedDPoPNonceStore>();
         Services.AddTransient<IDPoPNonceStore, HybridDPoPNonceStore>();
 
-        // Make sure the hybridcache is registered. If this is registered by the user, this will be a no-op
+        // Make sure the hybrid cache is registered. If this is registered by the user, this will be a no-op
         Services.AddHybridCache();
 
         // The cache and nonce store don't consume the cache directly, but via a redirect. 
@@ -59,9 +60,12 @@ public class ClientCredentialsTokenManagementBuilder(IServiceCollection services
             x =>
                 !x.IsKeyedService && x.ServiceType == typeof(TService) &&
                 x.ImplementationType == typeof(TImplementation) &&
-                x.Lifetime == ServiceLifetime.Transient &&
-                x.ImplementationFactory == null &&
-                x.ImplementationInstance == null);
+                x is
+                {
+                    Lifetime: ServiceLifetime.Transient,
+                    ImplementationFactory: null,
+                    ImplementationInstance: null
+                });
 
         if (existingRegistration != null)
         {

@@ -26,16 +26,14 @@ public class UserTokenEndpointService(
     {
         var refreshToken = userToken.RefreshToken ?? throw new ArgumentNullException(nameof(userToken.RefreshToken));
 
-
         var oidc = await configurationService.GetOpenIdConnectConfigurationAsync(parameters.ChallengeScheme).ConfigureAwait(false);
 
         // Add the ClientID to all subsequent log messages
-        using var logScope = logger.BeginScope(
+        using var logScope = logger.BeginScopeKvp(
             (LogMessages.Parameters.ClientId, oidc.ClientId)
         );
 
         logger.RefreshingAccessTokenUsingRefreshToken(refreshToken, hashAlgorithm: Crypto.HashData);
-
 
         var request = new RefreshTokenRequest
         {
@@ -129,8 +127,9 @@ public class UserTokenEndpointService(
                 : DateTimeOffset.UtcNow.AddSeconds(response.ExpiresIn);
             token.RefreshToken = response.RefreshToken ?? userToken.RefreshToken;
             token.Scope = response.Scope;
+
+            logger.UserAccessTokenRefreshed(token.AccessTokenType, token.Expiration);
         }
-        logger.UserAccessTokenRefreshed(token.AccessTokenType, token.Expiration);
         return token;
     }
 

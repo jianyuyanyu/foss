@@ -37,7 +37,7 @@ public class ClientCredentialsTokenEndpointService(
             throw new InvalidOperationException($"No TokenEndpoint configured for client {clientName}");
         }
 
-        using var logScope = logger.BeginScope(
+        using var logScope = logger.BeginScopeKvp(
             (LogMessages.Parameters.ClientId, client.ClientId)
         );
 
@@ -166,7 +166,6 @@ public class ClientCredentialsTokenEndpointService(
                 : DateTimeOffset.UtcNow.AddSeconds(response.ExpiresIn),
             Scope = response.Scope
         };
-
 
         logger.ClientCredentialsTokenForClientRetrieved(clientName, token.AccessTokenType, token.Expiration);
         return token;

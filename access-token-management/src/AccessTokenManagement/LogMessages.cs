@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Net;
 using Microsoft.Extensions.Logging;
 
 namespace Duende.AccessTokenManagement;
@@ -28,6 +29,7 @@ internal static partial class LogMessages
         public const string CacheKey = "CacheKey";
         public const string TokenType = "TokenType";
         public const string ForceRenewal = "ForceRenewal";
+        public const string StatusCode = "StatusCode";
     }
 
     [LoggerMessage(
@@ -68,6 +70,11 @@ internal static partial class LogMessages
         Message = $"Sending Access token of type {{{Parameters.TokenType}}} to endpoint: {{{Parameters.Url}}}.")]
     public static partial void SendAccessTokenToEndpoint(this ILogger logger, string? url, string? tokenType);
 
+    [LoggerMessage(
+        Level = LogLevel.Error,
+        Message = "Failed to obtain an access token while sending the request.")]
+    public static partial void FailedToObtainAccessTokenWhileSendingRequest(this ILogger logger);
+
 
     [LoggerMessage(
         Level = LogLevel.Debug,
@@ -76,7 +83,7 @@ internal static partial class LogMessages
 
     /// <summary>
     /// Logs the refreshing of a refresh token. Note, the actual refresh token is not logged, but a hash of the token.
-    /// Because hashing can be costly, we're only doing this when the log level is Trace. This is not something the sourcegenerators
+    /// Because hashing can be costly, we're only doing this when the log level is Trace. This is not something the source generators
     /// can do, so we're wrapping this in a method.
     /// </summary>
     /// <param name="logger"></param>
@@ -105,9 +112,14 @@ internal static partial class LogMessages
         Message = $"DPoP error '{{{Parameters.Error}}}' during token refresh. Retrying with server nonce")]
     public static partial void DPoPErrorDuringTokenRefreshWillRetryWithServerNonce(this ILogger logger, string? error);
 
+    [LoggerMessage(
+        Level = LogLevel.Debug,
+        Message = $"Failed to get DPoP Nonce because server didn't respond with ok. StatusCode was: {{{Parameters.StatusCode}}}")]
+    public static partial void FailedToGetDPoPNonce(this ILogger logger, HttpStatusCode statusCode);
+
     /// <summary>
     /// Logs the revocation of a refresh token. Note, the actual refresh token is not logged, but a hash of the token.
-    /// Because hashing can be costly, we're only doing this when the log level is Trace. This is not something the sourcegenerators
+    /// Because hashing can be costly, we're only doing this when the log level is Trace. This is not something the source generators
     /// can do, so we're wrapping this in a method.
     /// </summary>
     /// <param name="logger"></param>
@@ -257,9 +269,24 @@ internal static partial class LogMessages
         Message = $"Failed to obtain token from cache for client {{{Parameters.ClientName}}} using cacheKey {{{Parameters.CacheKey}}}. Will obtain new token.")]
     public static partial void FailedToObtainTokenFromCache(this ILogger logger, Exception ex, string clientName, string cacheKey);
 
-    public static IDisposable BeginScope(this ILogger logger, params (string Key, string Value)[] parameters)
+    [LoggerMessage(
+        Level = LogLevel.Error,
+        Message = "Failed to parse JsonWebKey")]
+    public static partial void FailedToParseJsonWebKey(this ILogger logger, Exception ex);
+
+    [LoggerMessage(
+        Level = LogLevel.Error,
+        Message = "Failed to create thumbprint from JSON web key.")]
+    public static partial void FailedToCreateThumbprintFromJsonWebKey(this ILogger logger, Exception ex);
+
+    public static IDisposable BeginScopeKvp(this ILogger logger, params (string Key, string? Value)[] parameters)
     {
-        return logger.BeginScope(parameters.ToDictionary(x => x.Key, x => (object)x.Value)) ?? new EmptyDisposable();
+        var logParameters = parameters
+            .Where(x => x.Value != null)
+            .ToDictionary(x => x.Key, x => (object)(x.Value!));
+
+        return logger.BeginScope(logParameters)
+               ?? new EmptyDisposable();
     }
     private struct EmptyDisposable : IDisposable
     {

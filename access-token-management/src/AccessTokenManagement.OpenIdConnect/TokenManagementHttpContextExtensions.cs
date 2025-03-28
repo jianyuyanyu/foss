@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
+// ReSharper disable once CheckNamespace
 namespace Microsoft.AspNetCore.Authentication;
 
 /// <summary>
@@ -87,18 +88,11 @@ public static class TokenManagementHttpContextExtensions
     }
     internal static string? GetProofKey(this AuthenticationProperties properties)
     {
-        if (properties.Items.ContainsKey(AuthenticationPropertiesDPoPKey))
+        if (properties.Items.TryGetValue(AuthenticationPropertiesDPoPKey, out var key))
         {
-            return properties.Items[AuthenticationPropertiesDPoPKey] as string;
+            return key;
         }
         return null;
-    }
-    internal static void RemoveProofKey(this AuthenticationProperties properties)
-    {
-        if (properties.Items.ContainsKey(AuthenticationPropertiesDPoPKey))
-        {
-            properties.Items.Remove(AuthenticationPropertiesDPoPKey);
-        }
     }
 
     const string HttpContextDPoPKey = "dpop_proof_key";
@@ -108,9 +102,9 @@ public static class TokenManagementHttpContextExtensions
     }
     internal static string? GetCodeExchangeDPoPKey(this HttpContext context)
     {
-        if (context.Items.ContainsKey(HttpContextDPoPKey))
+        if (context.Items.TryGetValue(HttpContextDPoPKey, out var item))
         {
-            return context.Items[HttpContextDPoPKey] as string;
+            return item as string;
         }
         return null;
     }

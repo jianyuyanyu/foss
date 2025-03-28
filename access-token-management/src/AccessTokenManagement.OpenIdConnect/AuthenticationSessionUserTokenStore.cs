@@ -26,13 +26,13 @@ public class AuthenticationSessionUserAccessTokenStore(
         // Resolve the cache here because it needs to have a per-request
         // lifetime. Sometimes the store itself is captured for longer than
         // that inside an HttpClient.
-        var cache = contextAccessor.HttpContext?.RequestServices.GetRequiredService<AuthenticateResultCache>();
+        var cache = GetHttpContext().RequestServices.GetRequiredService<AuthenticateResultCache>();
 
         // check the cache in case the cookie was re-issued via StoreTokenAsync
         // we use String.Empty as the key for a null SignInScheme
-        if (!cache!.TryGetValue(parameters.SignInScheme ?? string.Empty, out var result))
+        if (!cache.TryGetValue(parameters.SignInScheme ?? string.Empty, out var result))
         {
-            result = await contextAccessor!.HttpContext!.AuthenticateAsync(parameters.SignInScheme).ConfigureAwait(false);
+            result = await contextAccessor.HttpContext!.AuthenticateAsync(parameters.SignInScheme).ConfigureAwait(false);
         }
 
         if (!result.Succeeded)
@@ -52,6 +52,11 @@ public class AuthenticationSessionUserAccessTokenStore(
         return tokensInProps.GetUserToken(result.Properties, parameters);
     }
 
+    private HttpContext GetHttpContext()
+    {
+        return contextAccessor.HttpContext ?? throw new InvalidOperationException("HttpContext should not be null!");
+    }
+
     /// <inheritdoc/>
     public async Task StoreTokenAsync(
         ClaimsPrincipal user,
@@ -63,13 +68,14 @@ public class AuthenticationSessionUserAccessTokenStore(
         // Resolve the cache here because it needs to have a per-request
         // lifetime. Sometimes the store itself is captured for longer than
         // that inside an HttpClient.
-        var cache = contextAccessor.HttpContext?.RequestServices.GetRequiredService<AuthenticateResultCache>();
+        var cache = GetHttpContext().RequestServices.GetRequiredService<AuthenticateResultCache>();
 
         // check the cache in case the cookie was re-issued via StoreTokenAsync
         // we use String.Empty as the key for a null SignInScheme
-        if (!cache!.TryGetValue(parameters.SignInScheme ?? string.Empty, out var result))
+        if (!cache.TryGetValue(parameters.SignInScheme ?? string.Empty, out var result))
         {
-            result = await contextAccessor.HttpContext!.AuthenticateAsync(parameters.SignInScheme)!.ConfigureAwait(false);
+
+            result = await contextAccessor.HttpContext!.AuthenticateAsync(parameters.SignInScheme).ConfigureAwait(false);
         }
 
         if (result is not { Succeeded: true })
@@ -88,7 +94,7 @@ public class AuthenticationSessionUserAccessTokenStore(
 
         // add to the cache so if GetTokenAsync is called again, we will use the updated property values
         // we use String.Empty as the key for a null SignInScheme
-        cache[parameters.SignInScheme ?? string.Empty] = AuthenticateResult.Success(new AuthenticationTicket(transformedPrincipal, result.Properties, scheme!));
+        cache[parameters.SignInScheme ?? string.Empty] = AuthenticateResult.Success(new AuthenticationTicket(transformedPrincipal, result.Properties, scheme));
     }
 
     /// <inheritdoc/>

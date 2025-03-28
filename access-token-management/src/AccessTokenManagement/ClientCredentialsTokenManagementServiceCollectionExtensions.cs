@@ -6,6 +6,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
+// ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
@@ -23,8 +24,6 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
         this IServiceCollection services,
         Action<ClientCredentialsTokenManagementOptions> options)
     {
-        ArgumentNullException.ThrowIfNull(options);
-
         services.Configure(options);
         return services.AddClientCredentialsTokenManagement();
     }
@@ -69,21 +68,6 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
     /// <param name="services">The <see cref="IServiceCollection"/>.</param>
     /// <param name="httpClientName">The name of the client.</param>
     /// <param name="tokenClientName">The name of the token client.</param>
-    /// <returns></returns>
-    public static IHttpClientBuilder AddClientCredentialsHttpClient(
-        this IServiceCollection services,
-        string httpClientName,
-        string tokenClientName)
-    {
-        return services.AddClientCredentialsHttpClient(httpClientName, tokenClientName, (Action<HttpClient>)null!);
-    }
-
-    /// <summary>
-    /// Adds a named HTTP client for the factory that automatically sends a client access token
-    /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection"/>.</param>
-    /// <param name="httpClientName">The name of the client.</param>
-    /// <param name="tokenClientName">The name of the token client.</param>
     /// <param name="configureClient">A delegate that is used to configure a <see cref="HttpClient"/>.</param>
     /// <returns></returns>
     public static IHttpClientBuilder AddClientCredentialsHttpClient(
@@ -92,9 +76,6 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
     string tokenClientName,
     Action<HttpClient>? configureClient = null)
     {
-        ArgumentNullException.ThrowIfNull(httpClientName);
-        ArgumentNullException.ThrowIfNull(tokenClientName);
-
         if (configureClient != null)
         {
             return services.AddHttpClient(httpClientName, configureClient)
@@ -117,18 +98,9 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
         this IServiceCollection services,
         string httpClientName,
         string tokenClientName,
-        Action<IServiceProvider, HttpClient>? configureClient = null)
+        Action<IServiceProvider, HttpClient> configureClient)
     {
-        ArgumentNullException.ThrowIfNull(httpClientName);
-        ArgumentNullException.ThrowIfNull(tokenClientName);
-
-        if (configureClient != null)
-        {
-            return services.AddHttpClient(httpClientName, configureClient)
-                .AddClientCredentialsTokenHandler(tokenClientName);
-        }
-
-        return services.AddHttpClient(httpClientName)
+        return services.AddHttpClient(httpClientName, configureClient)
             .AddClientCredentialsTokenHandler(tokenClientName);
     }
 

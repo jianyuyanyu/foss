@@ -15,35 +15,28 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// </summary>
 public class CircuitServicesAccessor
 {
-    static readonly AsyncLocal<IServiceProvider> blazorServices = new();
+    static readonly AsyncLocal<IServiceProvider> BlazorServices = new();
 
     internal IServiceProvider? Services
     {
-        get => blazorServices.Value;
-        set => blazorServices.Value = value!;
+        get => BlazorServices.Value;
+        set => BlazorServices.Value = value!;
     }
 }
 
-internal class ServicesAccessorCircuitHandler : CircuitHandler
+internal class ServicesAccessorCircuitHandler(
+    IServiceProvider services,
+    CircuitServicesAccessor servicesAccessor)
+    : CircuitHandler
 {
-    readonly IServiceProvider services;
-    readonly CircuitServicesAccessor circuitServicesAccessor;
-
-    public ServicesAccessorCircuitHandler(IServiceProvider services,
-        CircuitServicesAccessor servicesAccessor)
-    {
-        this.services = services;
-        circuitServicesAccessor = servicesAccessor;
-    }
-
     public override Func<CircuitInboundActivityContext, Task> CreateInboundActivityHandler(
         Func<CircuitInboundActivityContext, Task> next)
     {
         return async context =>
         {
-            circuitServicesAccessor.Services = services;
+            servicesAccessor.Services = services;
             await next(context);
-            circuitServicesAccessor.Services = null;
+            servicesAccessor.Services = null;
         };
     }
 }

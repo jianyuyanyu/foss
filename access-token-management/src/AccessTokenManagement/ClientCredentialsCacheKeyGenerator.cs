@@ -6,8 +6,8 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Delegate to generate a cache key for a client credentials token request
 /// </summary>
-/// <param name="clientName"></param>
-/// <param name="parameters"></param>
+/// <param name="clientName">The name of the client</param>
+/// <param name="parameters">The parameters</param>
 /// <returns></returns>
 public delegate string ClientCredentialsCacheKeyGenerator(
     string clientName,
