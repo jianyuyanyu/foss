@@ -18,10 +18,9 @@ public static class ClientCredentialsTokenManagementDefaults
     /// </summary>
     public const string TokenRequestParametersOptionsName = "Duende.AccessTokenManagement.AccessTokenParameters";
 
-}
-
-public static class ServiceProviderKeys
-{
-    public const string DistributedClientCredentialsTokenCache = "DistributedClientCredentialsTokenCache";
-    public const string DistributedDPoPNonceStore = "DistributedDPoPNonceStore";
+    /// <summary>
+    /// Name used to propagate additional claims to DPoP proof. The value is a dictionary of claims.
+    /// </summary>
+    public const string DPoPProofAdditionalPayloadClaims =
+        "Duende.AccessTokenManagement.DPoPProofAdditionalPayloadClaims";
 }
