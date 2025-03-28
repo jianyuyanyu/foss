@@ -10,28 +10,11 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Delegating handler that injects access token into an outgoing request
 /// </summary>
-public abstract class AccessTokenHandler : DelegatingHandler
+public abstract class AccessTokenHandler(
+    IDPoPProofService dPoPProofService,
+    IDPoPNonceStore dPoPNonceStore,
+    ILogger logger) : DelegatingHandler
 {
-    private readonly IDPoPProofService _dPoPProofService;
-    private readonly IDPoPNonceStore _dPoPNonceStore;
-    private readonly ILogger _logger;
-
-    /// <summary>
-    /// ctor
-    /// </summary>
-    /// <param name="dPoPProofService"></param>
-    /// <param name="dPoPNonceStore"></param>
-    /// <param name="logger"></param>
-    public AccessTokenHandler(
-        IDPoPProofService dPoPProofService,
-        IDPoPNonceStore dPoPNonceStore,
-        ILogger logger)
-    {
-        _dPoPProofService = dPoPProofService;
-        _dPoPNonceStore = dPoPNonceStore;
-        _logger = logger;
-    }
-
     /// <summary>
     /// Returns the access token for the outbound call.
     /// </summary>
@@ -50,6 +33,11 @@ public abstract class AccessTokenHandler : DelegatingHandler
     /// <inheritdoc/>
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
+        // Add a log scope that adds the Request URL to all subsequent log messages
+        using var logScope = logger.BeginScope(
+            (LogMessages.Parameters.RequestUrl, request.RequestUri?.GetLeftPart(UriPartial.Path))
+        );
+
         await SetTokenAsync(request, forceRenewal: false, cancellationToken).ConfigureAwait(false);
         var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
@@ -64,7 +52,7 @@ public abstract class AccessTokenHandler : DelegatingHandler
             var force = !response.IsDPoPError();
             if (!force && !string.IsNullOrEmpty(dPoPNonce))
             {
-                _logger.LogDebug("DPoP nonce error invoking endpoint: {url}, retrying using new nonce", request.RequestUri?.AbsoluteUri.ToString());
+                logger.RequestFailedWithDPoPErrorWillRetry(response?.GetDPoPError(), request.RequestUri?.AbsoluteUri);
             }
 
             await SetTokenAsync(request, forceRenewal: force, cancellationToken, dPoPNonce).ConfigureAwait(false);
@@ -72,11 +60,11 @@ public abstract class AccessTokenHandler : DelegatingHandler
         }
         else if (dPoPNonce != null)
         {
-            await _dPoPNonceStore.StoreNonceAsync(new DPoPNonceContext
+            await dPoPNonceStore.StoreNonceAsync(new DPoPNonceContext
             {
                 Url = request.GetDPoPUrl(),
                 Method = request.Method.ToString(),
-            }, dPoPNonce);
+            }, dPoPNonce, cancellationToken);
         }
 
         return response;
@@ -92,7 +80,7 @@ public abstract class AccessTokenHandler : DelegatingHandler
 
         if (!string.IsNullOrWhiteSpace(token?.AccessToken))
         {
-            _logger.LogDebug("Sending access token in request to endpoint: {url}", request.RequestUri?.AbsoluteUri.ToString());
+            logger.SendAccessTokenToEndpoint(request.RequestUri?.AbsoluteUri, token.AccessTokenType);
 
             var scheme = token.AccessTokenType ?? AuthenticationSchemes.AuthorizationHeaderBearer;
 
@@ -137,7 +125,7 @@ public abstract class AccessTokenHandler : DelegatingHandler
             request.TryGetDPopProofAdditionalPayloadClaims(out var additionalClaims);
 
             // create proof
-            var proofToken = await _dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
+            var proofToken = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {
                 AccessToken = token.AccessToken,
                 Url = request.GetDPoPUrl(),
@@ -149,14 +137,14 @@ public abstract class AccessTokenHandler : DelegatingHandler
 
             if (proofToken != null)
             {
-                _logger.LogDebug("Sending DPoP proof token in request to endpoint: {url}", request.RequestUri?.AbsoluteUri.ToString());
+                logger.SendingDPoPProofToken(request.RequestUri?.AbsoluteUri);
 
                 request.SetDPoPProofToken(proofToken.ProofToken);
                 return true;
             }
             else
             {
-                _logger.LogDebug("No DPoP proof token in request to endpoint: {url}", request.RequestUri?.AbsoluteUri.ToString());
+                logger.FailedToCreateDPopProofToken(request.RequestUri?.AbsoluteUri);
             }
         }
 

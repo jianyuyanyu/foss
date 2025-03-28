@@ -40,9 +40,9 @@ public static class DPoPExtensions
     }
 
     /// <summary>
-    /// Reads the WWW-Authenticate response header to determine if the response is in error due to DPoP
+    /// Reads the DPoP error from the response
     /// </summary>
-    public static bool IsDPoPError(this HttpResponseMessage response)
+    public static string? GetDPoPError(this HttpResponseMessage response)
     {
         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
@@ -59,13 +59,22 @@ public static class DPoPExtensions
                         return parts[1].Trim('"');
                     }
                     return null;
-                }).Where(x => x != null).FirstOrDefault();
+                }).FirstOrDefault();
 
-                return error == OidcConstants.TokenErrors.UseDPoPNonce || error == OidcConstants.TokenErrors.InvalidDPoPProof;
+                return error;
             }
         }
 
-        return false;
+        return null;
+    }
+
+    /// <summary>
+    /// Checks if the DPoP error matches specific errors
+    /// </summary>
+    public static bool IsDPoPError(this HttpResponseMessage response)
+    {
+        var error = response.GetDPoPError();
+        return error == OidcConstants.TokenErrors.UseDPoPNonce || error == OidcConstants.TokenErrors.InvalidDPoPProof;
     }
 
     /// <summary>

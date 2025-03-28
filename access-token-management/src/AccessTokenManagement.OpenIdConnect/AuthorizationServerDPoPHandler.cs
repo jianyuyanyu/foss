@@ -29,32 +29,21 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 ///    header. When it does, this handler retries those code exchange requests.
 ///
 /// </summary>
-internal class AuthorizationServerDPoPHandler : DelegatingHandler
+internal class AuthorizationServerDPoPHandler(
+    IDPoPProofService dPoPProofService,
+    IDPoPNonceStore dPoPNonceStore,
+    IHttpContextAccessor httpContextAccessor,
+    ILoggerFactory loggerFactory) : DelegatingHandler
 {
-    private readonly IDPoPProofService _dPoPProofService;
-    private readonly IDPoPNonceStore _dPoPNonceStore;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ILogger<AuthorizationServerDPoPHandler> _logger;
-
-    internal AuthorizationServerDPoPHandler(
-        IDPoPProofService dPoPProofService,
-        IDPoPNonceStore dPoPNonceStore,
-        IHttpContextAccessor httpContextAccessor,
-        ILoggerFactory loggerFactory)
-    {
-        _dPoPProofService = dPoPProofService;
-        _dPoPNonceStore = dPoPNonceStore;
-        _httpContextAccessor = httpContextAccessor;
-        // We depend on the logger factory, rather than the logger itself, since
-        // the type parameter of the logger (referencing this class) will not
-        // always be accessible.
-        _logger = loggerFactory.CreateLogger<AuthorizationServerDPoPHandler>();
-    }
+    // We depend on the logger factory, rather than the logger itself, since
+    // the type parameter of the logger (referencing this class) will not
+    // always be accessible.
+    private readonly ILogger<AuthorizationServerDPoPHandler> _logger = loggerFactory.CreateLogger<AuthorizationServerDPoPHandler>();
 
     /// <inheritdoc/>
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var codeExchangeJwk = _httpContextAccessor.HttpContext?.GetCodeExchangeDPoPKey();
+        var codeExchangeJwk = httpContextAccessor.HttpContext?.GetCodeExchangeDPoPKey();
         if (codeExchangeJwk != null)
         {
             await SetDPoPProofTokenForCodeExchangeAsync(request, jwk: codeExchangeJwk).ConfigureAwait(false);
@@ -89,7 +78,7 @@ internal class AuthorizationServerDPoPHandler : DelegatingHandler
                 // trigger a retry during code exchange
                 if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
-                    _logger.LogDebug("Token request failed with DPoP nonce error. Retrying with new nonce.");
+                    _logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce(response.GetDPoPError());
                     response.Dispose();
                     await SetDPoPProofTokenForCodeExchangeAsync(request, dPoPNonce, codeExchangeJwk).ConfigureAwait(false);
                     return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
@@ -98,9 +87,9 @@ internal class AuthorizationServerDPoPHandler : DelegatingHandler
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                _logger.LogDebug("The authorization server has supplied a new nonce on a successful response, which will be stored and used in future requests to the authorization server");
+                _logger.AuthorizationServerSuppliedNewNonce();
 
-                await _dPoPNonceStore.StoreNonceAsync(new DPoPNonceContext
+                await dPoPNonceStore.StoreNonceAsync(new DPoPNonceContext
                 {
                     Url = request.GetDPoPUrl(),
                     Method = request.Method.ToString(),
@@ -122,7 +111,7 @@ internal class AuthorizationServerDPoPHandler : DelegatingHandler
             request.ClearDPoPProofToken();
 
             // create proof
-            var proofToken = await _dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
+            var proofToken = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {
                 Url = request.GetDPoPUrl(),
                 Method = request.Method.ToString(),
@@ -132,14 +121,12 @@ internal class AuthorizationServerDPoPHandler : DelegatingHandler
 
             if (proofToken != null)
             {
-                _logger.LogDebug("Sending DPoP proof token in request to endpoint: {url}",
-                    request.RequestUri?.GetLeftPart(System.UriPartial.Path));
+                _logger.SendingDPoPProofToken(request.RequestUri?.GetLeftPart(System.UriPartial.Path));
                 request.SetDPoPProofToken(proofToken.ProofToken);
             }
             else
             {
-                _logger.LogDebug("No DPoP proof token in request to endpoint: {url}",
-                    request.RequestUri?.GetLeftPart(System.UriPartial.Path));
+                _logger.FailedToCreateDPopProofToken(request.RequestUri?.GetLeftPart(System.UriPartial.Path));
             }
         }
     }
