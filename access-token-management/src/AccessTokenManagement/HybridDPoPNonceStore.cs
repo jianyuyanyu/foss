@@ -4,25 +4,24 @@
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Duende.AccessTokenManagement;
 
 /// <summary>
 /// DPoP nonce store using IDistributedCache
 /// </summary>
-internal class HybridDPoPNonceStore(
+public class HybridDPoPNonceStore(
     [FromKeyedServices(ServiceProviderKeys.DPoPNonceStore)] HybridCache cache,
+    IOptions<ClientCredentialsTokenManagementOptions> options,
     ILogger<HybridDPoPNonceStore> logger) : IDPoPNonceStore
 {
-    const string CacheKeyPrefix = "DistributedDPoPNonceStore";
-    const char CacheKeySeparator = ':';
-
     /// <inheritdoc/>
     public virtual async Task<string?> GetNonceAsync(DPoPNonceContext context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        var cacheKey = GenerateCacheKey(context);
+        var cacheKey = options.Value.GenerateNonceStoreKey(context);
         var entry = await cache.GetOrDefaultAsync<string>(cacheKey, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (entry != null)
@@ -49,16 +48,7 @@ internal class HybridDPoPNonceStore(
 
         logger.LogTrace("Caching DPoP nonce for URL: {url}, method: {method}. Expiration: {expiration}", context.Url, context.Method, entryOptions.Expiration);
 
-        var cacheKey = GenerateCacheKey(context);
+        var cacheKey = options.Value.GenerateNonceStoreKey(context);
         await cache.SetAsync(cacheKey, data, entryOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
-    }
-
-
-    /// <summary>
-    /// Generates the cache key based on various inputs
-    /// </summary>
-    protected virtual string GenerateCacheKey(DPoPNonceContext context)
-    {
-        return $"{CacheKeyPrefix}{CacheKeySeparator}{context.Url}{CacheKeySeparator}{context.Method}";
     }
 }
