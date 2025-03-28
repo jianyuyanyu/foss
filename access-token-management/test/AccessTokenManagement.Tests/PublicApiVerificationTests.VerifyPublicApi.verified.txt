@@ -78,15 +78,26 @@
         public static void SetDPoPProofToken(this System.Net.Http.HttpRequestMessage request, string? proofToken) { }
         public static bool TryGetDPopProofAdditionalPayloadClaims(this System.Net.Http.HttpRequestMessage request, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out System.Collections.Generic.IReadOnlyDictionary<string, string>? additionalClaims) { }
     }
+    [System.Runtime.CompilerServices.RequiredMember]
     public class DPoPKey
     {
+        [System.Obsolete(("Constructors of types with required members are not supported in this version of " +
+            "your compiler."), true)]
+        [System.Runtime.CompilerServices.CompilerFeatureRequired("RequiredMembers")]
         public DPoPKey() { }
+        [System.Runtime.CompilerServices.RequiredMember]
         public string JsonWebKey { get; set; }
     }
+    [System.Runtime.CompilerServices.RequiredMember]
     public class DPoPNonceContext
     {
+        [System.Obsolete(("Constructors of types with required members are not supported in this version of " +
+            "your compiler."), true)]
+        [System.Runtime.CompilerServices.CompilerFeatureRequired("RequiredMembers")]
         public DPoPNonceContext() { }
+        [System.Runtime.CompilerServices.RequiredMember]
         public string Method { get; set; }
+        [System.Runtime.CompilerServices.RequiredMember]
         public string Url { get; set; }
     }
     public delegate string DPoPNonceStoreKeyGenerator(Duende.AccessTokenManagement.DPoPNonceContext context);
@@ -95,14 +106,21 @@
         public DPoPProof() { }
         public string ProofToken { get; set; }
     }
+    [System.Runtime.CompilerServices.RequiredMember]
     public class DPoPProofRequest
     {
+        [System.Obsolete(("Constructors of types with required members are not supported in this version of " +
+            "your compiler."), true)]
+        [System.Runtime.CompilerServices.CompilerFeatureRequired("RequiredMembers")]
         public DPoPProofRequest() { }
         public string? AccessToken { get; set; }
         public System.Collections.Generic.IReadOnlyDictionary<string, string>? AdditionalPayloadClaims { get; set; }
+        [System.Runtime.CompilerServices.RequiredMember]
         public string DPoPJsonWebKey { get; set; }
         public string? DPoPNonce { get; set; }
+        [System.Runtime.CompilerServices.RequiredMember]
         public string Method { get; set; }
+        [System.Runtime.CompilerServices.RequiredMember]
         public string Url { get; set; }
     }
     public class DefaultClientAssertionService : Duende.AccessTokenManagement.IClientAssertionService

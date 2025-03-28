@@ -28,7 +28,7 @@ public class TokenRequestParameters
     /// <summary>
     /// Additional parameters to send.
     /// </summary>
-    public Parameters Parameters { get; set; } = new Parameters();
+    public Parameters Parameters { get; set; } = [];
 
     /// <summary>
     /// Specifies the client assertion.
@@ -38,5 +38,5 @@ public class TokenRequestParameters
     /// <summary>
     /// Additional context that might be relevant in the pipeline
     /// </summary>
-    public Parameters Context { get; set; } = new();
+    public Parameters Context { get; set; } = [];
 }

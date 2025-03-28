@@ -27,23 +27,23 @@ public class BlazorServerUserAccessor(
     {
         var authStateProvider = circuitServicesAccessor.Services?
             .GetService<AuthenticationStateProvider>();
+
         // If we are in blazor server (streaming over a circuit), this provider will be non-null
         if (authStateProvider != null)
         {
             var authState = await authStateProvider.GetAuthenticationStateAsync();
             return authState.User;
         }
+
         // Otherwise, we should be in an SSR scenario, and the httpContext should be available
-        else if (httpContextAccessor?.HttpContext != null)
+        if (httpContextAccessor?.HttpContext != null)
         {
             return httpContextAccessor.HttpContext.User;
         }
+
         // If we are in neither blazor server or SSR, something weird is going on.
-        else
-        {
-            logger.LogWarning("Neither an authentication state provider or http context are available to obtain the current principal.");
-            return new ClaimsPrincipal();
-        }
+        logger.LogWarning("Neither an authentication state provider or http context are available to obtain the current principal.");
+        return new ClaimsPrincipal();
     }
 
 }

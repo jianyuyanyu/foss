@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+// ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
@@ -23,7 +24,6 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
     public static IServiceCollection AddOpenIdConnectAccessTokenManagement(this IServiceCollection services)
     {
         services.AddHttpContextAccessor();
-
 
         services.AddClientCredentialsTokenManagement();
         services.AddSingleton<IConfigureOptions<ClientCredentialsClient>, ConfigureOpenIdConnectClientCredentialsOptions>();

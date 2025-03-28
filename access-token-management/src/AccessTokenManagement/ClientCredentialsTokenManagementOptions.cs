@@ -12,8 +12,8 @@ public class ClientCredentialsTokenManagementOptions
     {
         GenerateCacheKey = ((clientName, parameters) =>
         {
-            var s = "s_" + parameters?.Scope ?? "";
-            var r = "r_" + parameters?.Resource ?? "";
+            var s = "s_" + parameters?.Scope;
+            var r = "r_" + parameters?.Resource;
 
             return CacheKeyPrefix + clientName + "::" + s + "::" + r;
         });

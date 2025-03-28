@@ -74,11 +74,11 @@ internal class HybridClientCredentialsTokenCache(
                 key: cacheKey,
                 cancellationToken: cancellationToken);
 
-            if (token?.Expiration > DateTimeOffset.MinValue)
+            if (token != null)
             {
                 var absoluteCacheExpiration = token.Expiration.AddSeconds(-_options.CacheLifetimeBuffer);
 
-                if (absoluteCacheExpiration > time.GetUtcNow())
+                if (token.Expiration > DateTimeOffset.MinValue && absoluteCacheExpiration > time.GetUtcNow())
                 {
                     // It's possible that we have only read the token from L2 cache, not L1 cache. 
                     // just to be sure, write the token also into L1 cache (which should be fast)
@@ -128,7 +128,7 @@ internal class HybridClientCredentialsTokenCache(
         TokenRequestParameters requestParameters,
         CancellationToken cancellationToken = default)
     {
-        if (clientName is null) throw new ArgumentNullException(nameof(clientName));
+        ArgumentNullException.ThrowIfNull(clientName);
 
         var cacheKey = _options.GenerateCacheKey(clientName, requestParameters);
         await cache.RemoveAsync(cacheKey, cancellationToken);

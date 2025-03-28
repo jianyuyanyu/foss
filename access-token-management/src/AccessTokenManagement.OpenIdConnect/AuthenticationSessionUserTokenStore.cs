@@ -32,7 +32,7 @@ public class AuthenticationSessionUserAccessTokenStore(
         // we use String.Empty as the key for a null SignInScheme
         if (!cache!.TryGetValue(parameters.SignInScheme ?? string.Empty, out var result))
         {
-            result = await contextAccessor!.HttpContext!.AuthenticateAsync(parameters.SignInScheme).ConfigureAwait(false);
+            result = await contextAccessor.HttpContext!.AuthenticateAsync(parameters.SignInScheme).ConfigureAwait(false);
         }
 
         if (!result.Succeeded)
@@ -69,7 +69,7 @@ public class AuthenticationSessionUserAccessTokenStore(
         // we use String.Empty as the key for a null SignInScheme
         if (!cache!.TryGetValue(parameters.SignInScheme ?? string.Empty, out var result))
         {
-            result = await contextAccessor.HttpContext!.AuthenticateAsync(parameters.SignInScheme)!.ConfigureAwait(false);
+            result = await contextAccessor.HttpContext!.AuthenticateAsync(parameters.SignInScheme).ConfigureAwait(false);
         }
 
         if (result is not { Succeeded: true })
@@ -88,7 +88,7 @@ public class AuthenticationSessionUserAccessTokenStore(
 
         // add to the cache so if GetTokenAsync is called again, we will use the updated property values
         // we use String.Empty as the key for a null SignInScheme
-        cache[parameters.SignInScheme ?? string.Empty] = AuthenticateResult.Success(new AuthenticationTicket(transformedPrincipal, result.Properties, scheme!));
+        cache[parameters.SignInScheme ?? string.Empty] = AuthenticateResult.Success(new AuthenticationTicket(transformedPrincipal, result.Properties, scheme));
     }
 
     /// <inheritdoc/>
