@@ -10,7 +10,7 @@ namespace Duende.AccessTokenManagement;
 /// </summary>
 [Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class ClientCredentialsTokenManagementService(
-    Metrics metrics,
+    AccessTokenManagementMetrics metrics,
     IClientCredentialsTokenEndpointService clientCredentialsTokenEndpointService,
     IClientCredentialsTokenCache tokenCache) : IClientCredentialsTokenManagementService
 {
@@ -28,7 +28,7 @@ public class ClientCredentialsTokenManagementService(
             factory: InvokeGetAccessToken,
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        metrics.AccessTokenUsed(token.ClientId, Metrics.TokenRequestType.ClientCredentials);
+        metrics.AccessTokenUsed(token.ClientId, AccessTokenManagementMetrics.TokenRequestType.ClientCredentials);
 
         return token;
     }

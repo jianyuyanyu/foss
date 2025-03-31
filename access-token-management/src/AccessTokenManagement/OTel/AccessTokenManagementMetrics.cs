@@ -7,9 +7,9 @@ using System.Diagnostics.Metrics;
 namespace Duende.AccessTokenManagement.OTel;
 
 
-public sealed class Metrics
+public sealed class AccessTokenManagementMetrics
 {
-    private const string MeterName = "Duende.AccessTokenManagement";
+    public const string MeterName = "Duende.AccessTokenManagement";
 
     private readonly Meter _meter;
     private readonly Counter<int> _accessTokenUsed;
@@ -19,7 +19,7 @@ public sealed class Metrics
     private readonly Counter<int> _authenticationFailedCounter;
     private readonly Counter<int> _dpopNonceErrorRetry;
 
-    public Metrics(IMeterFactory meterFactory)
+    public AccessTokenManagementMetrics(IMeterFactory meterFactory)
     {
         _meter = meterFactory.Create(MeterName);
 

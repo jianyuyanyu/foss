@@ -216,7 +216,7 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
     {
         return httpClientBuilder.AddHttpMessageHandler(provider =>
         {
-            var metrics = provider.GetRequiredService<Metrics>();
+            var metrics = provider.GetRequiredService<AccessTokenManagementMetrics>();
             var dpopService = provider.GetRequiredService<IDPoPProofService>();
             var dpopNonceStore = provider.GetRequiredService<IDPoPNonceStore>();
             var userTokenManagement = provider.GetRequiredService<IUserTokenManagementService>();
@@ -250,7 +250,7 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
     {
         return httpClientBuilder.AddHttpMessageHandler(provider =>
         {
-            var metrics = provider.GetRequiredService<Metrics>();
+            var metrics = provider.GetRequiredService<AccessTokenManagementMetrics>();
             var dpopService = provider.GetRequiredService<IDPoPProofService>();
             var dpopNonceStore = provider.GetRequiredService<IDPoPNonceStore>();
             var contextAccessor = provider.GetRequiredService<IHttpContextAccessor>();

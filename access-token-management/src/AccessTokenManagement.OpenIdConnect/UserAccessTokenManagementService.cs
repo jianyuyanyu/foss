@@ -13,7 +13,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// Implements basic token management logic
 /// </summary>
 public class UserAccessAccessTokenManagementService(
-    Metrics metrics,
+    AccessTokenManagementMetrics metrics,
     IUserTokenRequestSynchronization sync,
     IUserTokenStore userAccessTokenStore,
     TimeProvider clock,
@@ -84,7 +84,7 @@ public class UserAccessAccessTokenManagementService(
         }
 
         logger.ReturningCurrentTokenForUser(userName);
-        metrics.AccessTokenUsed(userToken.ClientId, Metrics.TokenRequestType.User);
+        metrics.AccessTokenUsed(userToken.ClientId, AccessTokenManagementMetrics.TokenRequestType.User);
         return userToken;
     }
 

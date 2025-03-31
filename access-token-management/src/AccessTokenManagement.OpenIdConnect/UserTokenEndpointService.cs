@@ -13,7 +13,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// Implements token endpoint operations using IdentityModel
 /// </summary>
 public class UserTokenEndpointService(
-    Metrics metrics,
+    AccessTokenManagementMetrics metrics,
     IOpenIdConnectConfigurationService configurationService,
     IOptions<UserTokenManagementOptions> options,
     IClientAssertionService clientAssertionService,
@@ -107,7 +107,7 @@ public class UserTokenEndpointService(
 
             if (request.DPoPProofToken != null)
             {
-                metrics.DPoPNonceErrorRetry(request.ClientId, Metrics.TokenRequestType.User, response.Error);
+                metrics.DPoPNonceErrorRetry(request.ClientId, AccessTokenManagementMetrics.TokenRequestType.User, response.Error);
                 response = await oidc.HttpClient!.RequestRefreshTokenAsync(request, cancellationToken).ConfigureAwait(false);
             }
         }
@@ -118,11 +118,11 @@ public class UserTokenEndpointService(
         {
             logger.FailedToRefreshAccessToken(response.Error, response.ErrorDescription);
             token.Error = response.Error;
-            metrics.TokenRetrievalFailed(request.ClientId, Metrics.TokenRequestType.User, response.Error);
+            metrics.TokenRetrievalFailed(request.ClientId, AccessTokenManagementMetrics.TokenRequestType.User, response.Error);
         }
         else
         {
-            metrics.TokenRetrieved(request.ClientId, Metrics.TokenRequestType.User);
+            metrics.TokenRetrieved(request.ClientId, AccessTokenManagementMetrics.TokenRequestType.User);
 
             token.IdentityToken = response.IdentityToken;
             token.AccessToken = response.AccessToken;

@@ -58,7 +58,7 @@ public class AccessTokenHandlerTests
         IDPoPProofService dPoPProofService,
         IDPoPNonceStore dPoPNonceStore,
         ILogger logger)
-        : AccessTokenHandler(new Metrics(new DummyMeterFactory()), dPoPProofService, dPoPNonceStore, logger)
+        : AccessTokenHandler(new AccessTokenManagementMetrics(new DummyMeterFactory()), dPoPProofService, dPoPNonceStore, logger)
     {
         public ClientCredentialsToken AccessToken { get; set; } = new ClientCredentialsToken
         {
@@ -72,7 +72,7 @@ public class AccessTokenHandlerTests
             return Task.FromResult(AccessToken);
         }
 
-        protected override Metrics.TokenRequestType TokenRequestType => Metrics.TokenRequestType.ClientCredentials;
+        protected override AccessTokenManagementMetrics.TokenRequestType TokenRequestType => AccessTokenManagementMetrics.TokenRequestType.ClientCredentials;
 
         private class DummyMeterFactory : IMeterFactory
         {

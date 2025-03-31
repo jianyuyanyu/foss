@@ -64,7 +64,7 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
 
         services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName);
 
-        services.AddSingleton<Metrics>();
+        services.AddSingleton<AccessTokenManagementMetrics>();
 
         return new ClientCredentialsTokenManagementBuilder(services);
     }
@@ -125,7 +125,7 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
 
         return httpClientBuilder.AddHttpMessageHandler(provider =>
         {
-            var metrics = provider.GetRequiredService<Metrics>();
+            var metrics = provider.GetRequiredService<AccessTokenManagementMetrics>();
             var dpopService = provider.GetRequiredService<IDPoPProofService>();
             var dpopNonceStore = provider.GetRequiredService<IDPoPNonceStore>();
             var accessTokenManagementService = provider.GetRequiredService<IClientCredentialsTokenManagementService>();

@@ -14,7 +14,7 @@ namespace Duende.AccessTokenManagement;
 /// </summary>
 [Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class ClientCredentialsTokenEndpointService(
-    Metrics metrics,
+    AccessTokenManagementMetrics metrics,
     IHttpClientFactory httpClientFactory,
     IOptionsMonitor<ClientCredentialsClient> options,
     IClientAssertionService clientAssertionService,
@@ -134,7 +134,7 @@ public class ClientCredentialsTokenEndpointService(
         {
             logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce(response.Error);
 
-            metrics.DPoPNonceErrorRetry(request.ClientId, Metrics.TokenRequestType.ClientCredentials, response.Error);
+            metrics.DPoPNonceErrorRetry(request.ClientId, AccessTokenManagementMetrics.TokenRequestType.ClientCredentials, response.Error);
 
             var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {
@@ -153,7 +153,7 @@ public class ClientCredentialsTokenEndpointService(
 
         if (response.IsError)
         {
-            metrics.TokenRetrievalFailed(request.ClientId, Metrics.TokenRequestType.ClientCredentials, response.Error);
+            metrics.TokenRetrievalFailed(request.ClientId, AccessTokenManagementMetrics.TokenRequestType.ClientCredentials, response.Error);
             logger.FailedToRequestAccessTokenForClient(clientName, response.Error, response.ErrorDescription);
 
             return new ClientCredentialsToken
@@ -163,7 +163,7 @@ public class ClientCredentialsTokenEndpointService(
             };
         }
 
-        metrics.TokenRetrieved(request.ClientId, Metrics.TokenRequestType.ClientCredentials);
+        metrics.TokenRetrieved(request.ClientId, AccessTokenManagementMetrics.TokenRequestType.ClientCredentials);
 
         var token = new ClientCredentialsToken
         {

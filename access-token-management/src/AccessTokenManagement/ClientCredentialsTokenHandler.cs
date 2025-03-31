@@ -11,7 +11,7 @@ namespace Duende.AccessTokenManagement;
 /// </summary>
 [Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class ClientCredentialsTokenHandler(
-    Metrics metrics,
+    AccessTokenManagementMetrics metrics,
     IDPoPProofService dPoPProofService,
     IDPoPNonceStore dPoPNonceStore,
     IClientCredentialsTokenManagementService accessTokenManagementService,
@@ -29,5 +29,5 @@ public class ClientCredentialsTokenHandler(
         return accessTokenManagementService.GetAccessTokenAsync(tokenClientName, parameters, cancellationToken);
     }
 
-    protected override Metrics.TokenRequestType TokenRequestType => Metrics.TokenRequestType.ClientCredentials;
+    protected override AccessTokenManagementMetrics.TokenRequestType TokenRequestType => AccessTokenManagementMetrics.TokenRequestType.ClientCredentials;
 }

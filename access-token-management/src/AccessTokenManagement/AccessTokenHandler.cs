@@ -12,7 +12,7 @@ namespace Duende.AccessTokenManagement;
 /// Delegating handler that injects access token into an outgoing request
 /// </summary>
 public abstract class AccessTokenHandler(
-    Metrics metrics,
+    AccessTokenManagementMetrics metrics,
     IDPoPProofService dPoPProofService,
     IDPoPNonceStore dPoPNonceStore,
     ILogger logger) : DelegatingHandler
@@ -25,7 +25,7 @@ public abstract class AccessTokenHandler(
     /// <returns></returns>
     protected abstract Task<ClientCredentialsToken> GetAccessTokenAsync(bool forceRenewal, CancellationToken cancellationToken);
 
-    protected abstract Metrics.TokenRequestType TokenRequestType { get; }
+    protected abstract AccessTokenManagementMetrics.TokenRequestType TokenRequestType { get; }
 
     /// <inheritdoc/>
     protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken) =>

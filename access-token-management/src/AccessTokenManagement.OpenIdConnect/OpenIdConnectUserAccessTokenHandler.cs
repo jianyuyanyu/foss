@@ -11,7 +11,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// </summary>
 [Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class OpenIdConnectUserAccessTokenHandler(
-    Metrics metrics,
+    AccessTokenManagementMetrics metrics,
     IDPoPProofService dPoPProofService,
     IDPoPNonceStore dPoPNonceStore,
     IUserAccessor userAccessor,
@@ -38,5 +38,5 @@ public class OpenIdConnectUserAccessTokenHandler(
         return await userTokenManagement.GetAccessTokenAsync(user, parameters, cancellationToken).ConfigureAwait(false);
     }
 
-    protected override Metrics.TokenRequestType TokenRequestType => Metrics.TokenRequestType.User;
+    protected override AccessTokenManagementMetrics.TokenRequestType TokenRequestType => AccessTokenManagementMetrics.TokenRequestType.User;
 }
