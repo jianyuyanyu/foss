@@ -79,7 +79,7 @@ public class StoreTokensInAuthenticationProperties(
     }
 
     /// <inheritdoc/>
-    public async void SetUserToken(
+    public async Task SetUserToken(
         UserToken token,
         AuthenticationProperties authenticationProperties,
         UserTokenRequestParameters? parameters = null)
