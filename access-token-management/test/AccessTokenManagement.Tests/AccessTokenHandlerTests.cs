@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Duende.AccessTokenManagement.Tests;
 
-public class AccessTokenHandlerTests 
+public class AccessTokenHandlerTests
 {
     TestDPoPProofService _testDPoPProofService = new TestDPoPProofService();
     TestHttpMessageHandler _testHttpMessageHandler = new TestHttpMessageHandler();
@@ -30,7 +30,7 @@ public class AccessTokenHandlerTests
 
             _testHttpMessageHandler.Request!.Headers.Authorization!.Scheme.ShouldBe("Bearer");
         }
-        
+
         {
             _subject.AccessToken.AccessTokenType = "dpop";
 

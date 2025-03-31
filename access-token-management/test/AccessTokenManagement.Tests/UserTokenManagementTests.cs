@@ -426,8 +426,8 @@ public class UserTokenManagementTests(ITestOutputHelper output) : IntegrationTes
         thirdToken.sub.ShouldNotBe(secondToken.sub);
         thirdToken.token.ShouldNotBe(firstToken.token);
     }
-    
-    
+
+
     [Fact]
     public async Task Logout_should_revoke_refresh_tokens()
     {
@@ -437,7 +437,7 @@ public class UserTokenManagementTests(ITestOutputHelper output) : IntegrationTes
         var response = await AppHost.BrowserClient.GetAsync(AppHost.Url("/user_token"));
         var token = await response.Content.ReadFromJsonAsync<UserToken>();
         var refreshToken = token?.RefreshToken;
-     
+
         refreshToken.ShouldNotBeNull();
 
         var introspectionParams = new TokenIntrospectionRequest
@@ -448,18 +448,18 @@ public class UserTokenManagementTests(ITestOutputHelper output) : IntegrationTes
             ClientSecret = "secret",
             Address = IdentityServerHost.Url("/connect/introspect")
         };
-        
+
         var introspectionResponse = await IdentityServerHost.HttpClient.IntrospectTokenAsync(introspectionParams);
         introspectionResponse.ShouldNotBeNull();
         introspectionResponse.IsError.ShouldBeFalse(introspectionResponse.Error);
         introspectionResponse.IsActive.ShouldBeTrue();
-        
+
         await AppHost.BrowserClient.GetAsync(AppHost.Url("/logout"));
 
         var postLogoutIntrospectionResponse = await IdentityServerHost.HttpClient.IntrospectTokenAsync(introspectionParams);
         postLogoutIntrospectionResponse.ShouldNotBeNull();
         postLogoutIntrospectionResponse.IsError.ShouldBeFalse(introspectionResponse.Error);
         postLogoutIntrospectionResponse.IsActive.ShouldBeFalse();
-        
+
     }
 }

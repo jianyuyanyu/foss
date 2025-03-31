@@ -29,7 +29,7 @@ public interface IUserTokenStore
     /// <param name="parameters">Extra optional parameters</param>
     /// <returns>access and refresh token and access token expiration</returns>
     Task<UserToken> GetTokenAsync(
-        ClaimsPrincipal user, 
+        ClaimsPrincipal user,
         UserTokenRequestParameters? parameters = null);
 
     /// <summary>
@@ -39,6 +39,6 @@ public interface IUserTokenStore
     /// <param name="parameters">Extra optional parameters</param>
     /// <returns></returns>
     Task ClearTokenAsync(
-        ClaimsPrincipal user, 
+        ClaimsPrincipal user,
         UserTokenRequestParameters? parameters = null);
 }

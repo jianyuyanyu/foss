@@ -1,36 +1,34 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using System.Security.Claims;
-
 namespace Duende.AccessTokenManagement.OpenIdConnect;
 
 /// <summary>
-/// Abstraction for managing user access tokens
+/// Abstraction for token endpoint operations
 /// </summary>
-public interface IUserTokenManagementService
+public interface IUserTokenEndpointService
 {
     /// <summary>
-    /// Returns the user access token. If the current token is expired, it will try to refresh it.
+    /// Refreshes a user access token.
     /// </summary>
-    /// <param name="user"></param>
+    /// <param name="userToken"></param>
     /// <param name="parameters"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<UserToken> GetAccessTokenAsync(
-        ClaimsPrincipal user, 
-        UserTokenRequestParameters? parameters = null, 
+    Task<UserToken> RefreshAccessTokenAsync(
+        UserToken userToken,
+        UserTokenRequestParameters parameters,
         CancellationToken cancellationToken = default);
-    
+
     /// <summary>
-    /// Revokes the current refresh token, and removes the access token from the store.
+    /// Revokes a refresh token.
     /// </summary>
-    /// <param name="user"></param>
+    /// <param name="userToken"></param>
     /// <param name="parameters"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task RevokeRefreshTokenAsync(
-        ClaimsPrincipal user, 
-        UserTokenRequestParameters? parameters = null, 
+        UserToken userToken,
+        UserTokenRequestParameters parameters,
         CancellationToken cancellationToken = default);
 }

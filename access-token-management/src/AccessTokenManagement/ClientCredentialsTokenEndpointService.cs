@@ -1,4 +1,4 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Duende.IdentityModel;
@@ -11,47 +11,22 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Implements token endpoint operations using IdentityModel
 /// </summary>
-public class ClientCredentialsTokenEndpointService : IClientCredentialsTokenEndpointService
+public class ClientCredentialsTokenEndpointService(
+    IHttpClientFactory httpClientFactory,
+    IOptionsMonitor<ClientCredentialsClient> options,
+    IClientAssertionService clientAssertionService,
+    IDPoPKeyStore dPoPKeyMaterialService,
+    IDPoPProofService dPoPProofService,
+    ILogger<ClientCredentialsTokenEndpointService> logger) : IClientCredentialsTokenEndpointService
 {
-    private readonly IHttpClientFactory _httpClientFactory;
-    private readonly IOptionsMonitor<ClientCredentialsClient> _options;
-    private readonly IClientAssertionService _clientAssertionService;
-    private readonly IDPoPKeyStore _dPoPKeyMaterialService;
-    private readonly IDPoPProofService _dPoPProofService;
-    private readonly ILogger<ClientCredentialsTokenEndpointService> _logger;
-
-    /// <summary>
-    /// ctor
-    /// </summary>
-    /// <param name="httpClientFactory"></param>
-    /// <param name="clientAssertionService"></param>
-    /// <param name="dPoPKeyMaterialService"></param>
-    /// <param name="dPoPProofService"></param>
-    /// <param name="logger"></param>
-    /// <param name="options"></param>
-    public ClientCredentialsTokenEndpointService(
-        IHttpClientFactory httpClientFactory,
-        IOptionsMonitor<ClientCredentialsClient> options,
-        IClientAssertionService clientAssertionService,
-        IDPoPKeyStore dPoPKeyMaterialService,
-        IDPoPProofService dPoPProofService,
-        ILogger<ClientCredentialsTokenEndpointService> logger)
-    {
-        _httpClientFactory = httpClientFactory;
-        _options = options;
-        _clientAssertionService = clientAssertionService;
-        _dPoPKeyMaterialService = dPoPKeyMaterialService;
-        _dPoPProofService = dPoPProofService;
-        _logger = logger;
-    }
-
     /// <inheritdoc/>
     public virtual async Task<ClientCredentialsToken> RequestToken(
         string clientName,
         TokenRequestParameters? parameters = null,
         CancellationToken cancellationToken = default)
     {
-        var client = _options.Get(clientName);
+
+        var client = options.Get(clientName);
 
         if (string.IsNullOrWhiteSpace(client.ClientId))
         {
@@ -61,6 +36,10 @@ public class ClientCredentialsTokenEndpointService : IClientCredentialsTokenEndp
         {
             throw new InvalidOperationException($"No TokenEndpoint configured for client {clientName}");
         }
+
+        using var logScope = logger.BeginScopeKvp(
+            (LogMessages.Parameters.ClientId, client.ClientId)
+        );
 
         var request = new ClientCredentialsTokenRequest
         {
@@ -103,7 +82,7 @@ public class ClientCredentialsTokenEndpointService : IClientCredentialsTokenEndp
         }
         else
         {
-            var assertion = await _clientAssertionService.GetClientAssertionAsync(clientName).ConfigureAwait(false);
+            var assertion = await clientAssertionService.GetClientAssertionAsync(clientName).ConfigureAwait(false);
 
             if (assertion != null)
             {
@@ -114,12 +93,12 @@ public class ClientCredentialsTokenEndpointService : IClientCredentialsTokenEndp
 
         request.Options.TryAdd(ClientCredentialsTokenManagementDefaults.TokenRequestParametersOptionsName, parameters);
 
-        var key = await _dPoPKeyMaterialService.GetKeyAsync(clientName);
+        var key = await dPoPKeyMaterialService.GetKeyAsync(clientName);
         if (key != null)
         {
-            _logger.LogDebug("Creating DPoP proof token for token request.");
+            logger.CreatingDPoPProofToken();
 
-            var proof = await _dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
+            var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {
                 Url = request.Address!,
                 Method = "POST",
@@ -135,14 +114,14 @@ public class ClientCredentialsTokenEndpointService : IClientCredentialsTokenEndp
         }
         else if (!string.IsNullOrWhiteSpace(client.HttpClientName))
         {
-            httpClient = _httpClientFactory.CreateClient(client.HttpClientName);
+            httpClient = httpClientFactory.CreateClient(client.HttpClientName);
         }
         else
         {
-            httpClient = _httpClientFactory.CreateClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName);
+            httpClient = httpClientFactory.CreateClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName);
         }
 
-        _logger.LogDebug("Requesting client credentials access token at endpoint: {endpoint}", request.Address);
+        logger.RequestingClientCredentialsAccessToken(request.Address);
         var response = await httpClient.RequestClientCredentialsTokenAsync(request, cancellationToken).ConfigureAwait(false);
 
         if (response.IsError &&
@@ -150,9 +129,9 @@ public class ClientCredentialsTokenEndpointService : IClientCredentialsTokenEndp
             key != null &&
             response.DPoPNonce != null)
         {
-            _logger.LogDebug("Token request failed with DPoP nonce error. Retrying with new nonce.");
+            logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce(response.Error);
 
-            var proof = await _dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
+            var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {
                 Url = request.Address!,
                 Method = "POST",
@@ -169,13 +148,15 @@ public class ClientCredentialsTokenEndpointService : IClientCredentialsTokenEndp
 
         if (response.IsError)
         {
+            logger.FailedToRequestAccessTokenForClient(clientName, response.Error, response.ErrorDescription);
+
             return new ClientCredentialsToken
             {
                 Error = response.Error
             };
         }
 
-        return new ClientCredentialsToken
+        var token = new ClientCredentialsToken
         {
             AccessToken = response.AccessToken,
             AccessTokenType = response.TokenType,
@@ -185,5 +166,8 @@ public class ClientCredentialsTokenEndpointService : IClientCredentialsTokenEndp
                 : DateTimeOffset.UtcNow.AddSeconds(response.ExpiresIn),
             Scope = response.Scope
         };
+
+        logger.ClientCredentialsTokenForClientRetrieved(clientName, token.AccessTokenType, token.Expiration);
+        return token;
     }
 }

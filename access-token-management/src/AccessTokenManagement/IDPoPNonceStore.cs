@@ -1,4 +1,4 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 namespace Duende.AccessTokenManagement;
@@ -12,7 +12,7 @@ public interface IDPoPNonceStore
     /// Gets the nonce 
     /// </summary>
     Task<string?> GetNonceAsync(DPoPNonceContext context, CancellationToken cancellationToken = default);
-    
+
     /// <summary>
     /// Stores the nonce 
     /// </summary>
@@ -27,10 +27,10 @@ public class DPoPNonceContext
     /// <summary>
     /// The HTTP URL of the request
     /// </summary>
-    public string Url { get; set; } = default!;
+    public required string Url { get; set; }
 
     /// <summary>
     /// The HTTP method of the request
     /// </summary>
-    public string Method { get; set; } = default!;
+    public required string Method { get; set; }
 }

@@ -1,45 +1,33 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using Duende.IdentityModel;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
-using Microsoft.IdentityModel.JsonWebTokens;
+using Duende.IdentityModel;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Duende.AccessTokenManagement;
 
 /// <summary>
 /// Default implementation of IDPoPProofService
 /// </summary>
-public class DefaultDPoPProofService : IDPoPProofService
+public class DefaultDPoPProofService(IDPoPNonceStore dPoPNonceStore, ILogger<DefaultDPoPProofService> logger) : IDPoPProofService
 {
-    private readonly IDPoPNonceStore _dPoPNonceStore;
-    private readonly ILogger<DefaultDPoPProofService> _logger;
-
-    /// <summary>
-    /// ctor
-    /// </summary>
-    public DefaultDPoPProofService(IDPoPNonceStore dPoPNonceStore, ILogger<DefaultDPoPProofService> logger)
-    {
-        _dPoPNonceStore = dPoPNonceStore;
-        _logger = logger;
-    }
-
     /// <inheritdoc/>
     public virtual async Task<DPoPProof?> CreateProofTokenAsync(DPoPProofRequest request)
     {
         JsonWebKey jsonWebKey;
-        
+
         try
         {
             jsonWebKey = new JsonWebKey(request.DPoPJsonWebKey);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to parse JSON web key.");
+            logger.FailedToParseJsonWebKey(ex);
             return null;
         }
 
@@ -67,7 +55,7 @@ public class DefaultDPoPProofService : IDPoPProofService
         }
         else
         {
-            throw new InvalidOperationException("invalid key type.");
+            throw new InvalidOperationException("invalid key type: " + jsonWebKey.Kty);
         }
 
         var header = new Dictionary<string, object>()
@@ -99,7 +87,7 @@ public class DefaultDPoPProofService : IDPoPProofService
         var nonce = request.DPoPNonce;
         if (string.IsNullOrEmpty(nonce))
         {
-            nonce = await _dPoPNonceStore.GetNonceAsync(new DPoPNonceContext
+            nonce = await dPoPNonceStore.GetNonceAsync(new DPoPNonceContext
             {
                 Url = request.Url,
                 Method = request.Method,
@@ -107,7 +95,7 @@ public class DefaultDPoPProofService : IDPoPProofService
         }
         else
         {
-            await _dPoPNonceStore.StoreNonceAsync(new DPoPNonceContext
+            await dPoPNonceStore.StoreNonceAsync(new DPoPNonceContext
             {
                 Url = request.Url,
                 Method = request.Method,
@@ -117,6 +105,14 @@ public class DefaultDPoPProofService : IDPoPProofService
         if (!string.IsNullOrEmpty(nonce))
         {
             payload.Add(JwtClaimTypes.Nonce, nonce);
+        }
+
+        if (request.AdditionalPayloadClaims?.Count > 0)
+        {
+            foreach (var claim in request.AdditionalPayloadClaims)
+            {
+                payload.Add(claim.Key, claim.Value);
+            }
         }
 
         var handler = new JsonWebTokenHandler() { SetDefaultTimesOnTokenCreation = false };
@@ -136,7 +132,7 @@ public class DefaultDPoPProofService : IDPoPProofService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to create thumbprint from JSON web key.");
+            logger.FailedToCreateThumbprintFromJsonWebKey(ex);
         }
         return null;
     }

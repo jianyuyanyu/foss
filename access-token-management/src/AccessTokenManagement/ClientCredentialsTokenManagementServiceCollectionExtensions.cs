@@ -1,10 +1,12 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Duende.AccessTokenManagement;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
+// ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
@@ -22,8 +24,6 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
         this IServiceCollection services,
         Action<ClientCredentialsTokenManagementOptions> options)
     {
-        ArgumentNullException.ThrowIfNull(options);
-
         services.Configure(options);
         return services.AddClientCredentialsTokenManagement();
     }
@@ -38,32 +38,28 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
         services.TryAddSingleton<ITokenRequestSynchronization, TokenRequestSynchronization>();
 
         services.TryAddTransient<IClientCredentialsTokenManagementService, ClientCredentialsTokenManagementService>();
+
+        services.TryAddSingleton(TimeProvider.System);
+
+        // By default, resolve the distributed cache for the DistributedClientCredentialsTokenCache
+        // without key. If desired, a consumers can register the distributed cache with a key
+        services.TryAddKeyedSingleton<IDistributedCache>(ServiceProviderKeys.ClientCredentialsTokenCache, (sp, _) => sp.GetRequiredService<IDistributedCache>());
         services.TryAddTransient<IClientCredentialsTokenCache, DistributedClientCredentialsTokenCache>();
         services.TryAddTransient<IClientCredentialsTokenEndpointService, ClientCredentialsTokenEndpointService>();
         services.TryAddTransient<IClientAssertionService, DefaultClientAssertionService>();
 
         services.TryAddTransient<IDPoPProofService, DefaultDPoPProofService>();
         services.TryAddTransient<IDPoPKeyStore, DefaultDPoPKeyStore>();
+
+        // ** DistributedDPoPNonceStore **
+        // By default, resolve the distributed cache for the DistributedClientCredentialsTokenCache
+        // without key. If desired, a consumers can register the distributed cache with a key
+        services.TryAddKeyedSingleton<IDistributedCache>(ServiceProviderKeys.DPoPNonceStore, (sp, _) => sp.GetRequiredService<IDistributedCache>());
         services.TryAddTransient<IDPoPNonceStore, DistributedDPoPNonceStore>();
 
         services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName);
 
         return new ClientCredentialsTokenManagementBuilder(services);
-    }
-
-    /// <summary>
-    /// Adds a named HTTP client for the factory that automatically sends a client access token
-    /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection"/>.</param>
-    /// <param name="httpClientName">The name of the client.</param>
-    /// <param name="tokenClientName">The name of the token client.</param>
-    /// <returns></returns>
-    public static IHttpClientBuilder AddClientCredentialsHttpClient(
-        this IServiceCollection services,
-        string httpClientName,
-        string tokenClientName)
-    {
-        return services.AddClientCredentialsHttpClient(httpClientName, tokenClientName, (Action<HttpClient>)null!);
     }
 
     /// <summary>
@@ -80,9 +76,6 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
     string tokenClientName,
     Action<HttpClient>? configureClient = null)
     {
-        ArgumentNullException.ThrowIfNull(httpClientName);
-        ArgumentNullException.ThrowIfNull(tokenClientName);
-
         if (configureClient != null)
         {
             return services.AddHttpClient(httpClientName, configureClient)
@@ -105,18 +98,9 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
         this IServiceCollection services,
         string httpClientName,
         string tokenClientName,
-        Action<IServiceProvider, HttpClient>? configureClient = null)
+        Action<IServiceProvider, HttpClient> configureClient)
     {
-        ArgumentNullException.ThrowIfNull(httpClientName);
-        ArgumentNullException.ThrowIfNull(tokenClientName);
-
-        if (configureClient != null)
-        {
-            return services.AddHttpClient(httpClientName, configureClient)
-                .AddClientCredentialsTokenHandler(tokenClientName);
-        }
-
-        return services.AddHttpClient(httpClientName)
+        return services.AddHttpClient(httpClientName, configureClient)
             .AddClientCredentialsTokenHandler(tokenClientName);
     }
 
