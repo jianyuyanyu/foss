@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 namespace Duende.AccessTokenManagement.OpenIdConnect;
 
 /// <inheritdoc />
+[Obsolete("This type is going to be removed in a future release.")]
 public class OpenIdConnectConfigurationService(
     IOptions<UserTokenManagementOptions> userAccessTokenManagementOptions,
     IOptionsMonitor<OpenIdConnectOptions> oidcOptionsMonitor,

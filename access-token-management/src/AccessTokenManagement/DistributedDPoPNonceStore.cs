@@ -11,6 +11,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// DPoP nonce store using IDistributedCache
 /// </summary>
+[Obsolete("This type is going to be removed in a future release.")]
 public class DistributedDPoPNonceStore(
     [FromKeyedServices(ServiceProviderKeys.DPoPNonceStore)] IDistributedCache cache,
     IOptions<ClientCredentialsTokenManagementOptions> options,

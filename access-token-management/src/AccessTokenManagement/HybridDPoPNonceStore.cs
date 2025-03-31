@@ -11,7 +11,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// DPoP nonce store using IDistributedCache
 /// </summary>
-public class HybridDPoPNonceStore(
+internal class HybridDPoPNonceStore(
     [FromKeyedServices(ServiceProviderKeys.DPoPNonceStore)] HybridCache cache,
     IOptions<ClientCredentialsTokenManagementOptions> options,
     ILogger<HybridDPoPNonceStore> logger) : IDPoPNonceStore

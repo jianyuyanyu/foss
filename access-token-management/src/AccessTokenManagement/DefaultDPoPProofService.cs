@@ -14,6 +14,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Default implementation of IDPoPProofService
 /// </summary>
+[Obsolete("This type is going to be removed in a future release.")]
 public class DefaultDPoPProofService(IDPoPNonceStore dPoPNonceStore, ILogger<DefaultDPoPProofService> logger) : IDPoPProofService
 {
     /// <inheritdoc/>

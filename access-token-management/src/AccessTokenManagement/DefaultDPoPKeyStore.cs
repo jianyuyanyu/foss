@@ -8,6 +8,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Default implementation
 /// </summary>
+[Obsolete("This type is going to be removed in a future release.")]
 public class DefaultDPoPKeyStore(IOptionsMonitor<ClientCredentialsClient> options) : IDPoPKeyStore
 {
     /// <inheritdoc/>

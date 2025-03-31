@@ -10,6 +10,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// <summary>
 /// Delegating handler that injects the current access token into an outgoing request
 /// </summary>
+[Obsolete("This type is going to be made internal in future releases.")]
 public class OpenIdConnectClientAccessTokenHandler(
     IDPoPProofService dPoPProofService,
     IDPoPNonceStore dPoPNonceStore,

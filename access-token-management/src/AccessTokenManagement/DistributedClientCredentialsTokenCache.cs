@@ -11,6 +11,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Client access token cache using IDistributedCache
 /// </summary>
+[Obsolete("This type is going to be removed in a future release.")]
 public class DistributedClientCredentialsTokenCache(
     [FromKeyedServices(ServiceProviderKeys.ClientCredentialsTokenCache)] IDistributedCache cache,
     ITokenRequestSynchronization synchronization,

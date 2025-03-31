@@ -31,11 +31,14 @@ public class ClientCredentialsTokenManagementBuilder(IServiceCollection services
     public ClientCredentialsTokenManagementBuilder UsePreviewHybridCache()
     {
         // Replace the default implementations with the hybrid cache versions
+#pragma warning disable CS0618 // Type or member is obsolete
         RemoveDefaultRegistration<IClientCredentialsTokenCache, DistributedClientCredentialsTokenCache>();
         Services.AddTransient<IClientCredentialsTokenCache, HybridClientCredentialsTokenCache>();
 
         RemoveDefaultRegistration<IDPoPNonceStore, DistributedDPoPNonceStore>();
         Services.AddTransient<IDPoPNonceStore, HybridDPoPNonceStore>();
+
+#pragma warning restore CS0618 // Type or member is obsolete
 
         // Make sure the hybrid cache is registered. If this is registered by the user, this will be a no-op
         Services.AddHybridCache();

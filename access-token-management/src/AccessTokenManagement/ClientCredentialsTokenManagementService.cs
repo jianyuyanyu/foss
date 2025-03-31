@@ -6,6 +6,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Implements token management logic
 /// </summary>
+[Obsolete("This type is going to be removed in a future release.")]
 public class ClientCredentialsTokenManagementService(
     IClientCredentialsTokenEndpointService clientCredentialsTokenEndpointService,
     IClientCredentialsTokenCache tokenCache) : IClientCredentialsTokenManagementService

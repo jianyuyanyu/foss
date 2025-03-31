@@ -31,7 +31,9 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
         // for example, per-scheme client credentials style, scope, etc settings
 
         services.TryAddTransient<IUserTokenManagementService, UserAccessAccessTokenManagementService>();
+#pragma warning disable CS0618 // Type or member is obsolete
         services.TryAddTransient<IOpenIdConnectConfigurationService, OpenIdConnectConfigurationService>();
+#pragma warning restore CS0618 // Type or member is obsolete
         services.TryAddSingleton<IUserTokenRequestSynchronization, UserTokenRequestSynchronization>();
         services.TryAddTransient<IUserTokenEndpointService, UserTokenEndpointService>();
 
@@ -43,8 +45,11 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
         // where we can use the http context. The services below depend on http
         // context, and we register different ones in blazor
 
+#pragma warning disable CS0618 // Type or member is obsolete
         services.TryAddScoped<IUserAccessor, HttpContextUserAccessor>();
         services.TryAddScoped<IUserTokenStore, AuthenticationSessionUserAccessTokenStore>();
+#pragma warning restore CS0618 // Type or member is obsolete
+
         // scoped since it will be caching per-request authentication results
         services.AddScoped<AuthenticateResultCache>();
 
@@ -63,7 +68,9 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
         where TTokenStore : class, IUserTokenStore
     {
         services.AddScoped<IUserTokenStore, TTokenStore>();
+#pragma warning disable CS0618 // Type or member is obsolete
         services.AddScoped<IUserAccessor, BlazorServerUserAccessor>();
+#pragma warning restore CS0618 // Type or member is obsolete
         services.AddCircuitServicesAccessor();
         services.AddHttpContextAccessor(); // For SSR
 
@@ -211,11 +218,15 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
             var dpopService = provider.GetRequiredService<IDPoPProofService>();
             var dpopNonceStore = provider.GetRequiredService<IDPoPNonceStore>();
             var userTokenManagement = provider.GetRequiredService<IUserTokenManagementService>();
+#pragma warning disable CS0618 // Type or member is obsolete
             var logger = provider.GetRequiredService<ILogger<OpenIdConnectClientAccessTokenHandler>>();
             var principalAccessor = provider.GetRequiredService<IUserAccessor>();
 
             return new OpenIdConnectUserAccessTokenHandler(
                 dpopService, dpopNonceStore, principalAccessor, userTokenManagement, logger, parameters);
+
+#pragma warning restore CS0618 // Type or member is obsolete
+
         });
     }
 
@@ -234,9 +245,12 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
             var dpopService = provider.GetRequiredService<IDPoPProofService>();
             var dpopNonceStore = provider.GetRequiredService<IDPoPNonceStore>();
             var contextAccessor = provider.GetRequiredService<IHttpContextAccessor>();
+#pragma warning disable CS0618 // Type or member is obsolete
             var logger = provider.GetRequiredService<ILogger<OpenIdConnectClientAccessTokenHandler>>();
 
             return new OpenIdConnectClientAccessTokenHandler(dpopService, dpopNonceStore, contextAccessor, logger, parameters);
+#pragma warning restore CS0618 // Type or member is obsolete
+
         });
     }
 }
