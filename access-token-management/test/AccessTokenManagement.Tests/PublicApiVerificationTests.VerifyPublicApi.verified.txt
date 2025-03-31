@@ -159,6 +159,24 @@
         public virtual System.Threading.Tasks.Task<string?> GetNonceAsync(Duende.AccessTokenManagement.DPoPNonceContext context, System.Threading.CancellationToken cancellationToken = default) { }
         public virtual System.Threading.Tasks.Task StoreNonceAsync(Duende.AccessTokenManagement.DPoPNonceContext context, string nonce, System.Threading.CancellationToken cancellationToken = default) { }
     }
+    [System.Text.Json.Serialization.JsonSerializable(typeof(Duende.AccessTokenManagement.ClientCredentialsToken))]
+    [System.Text.Json.Serialization.JsonSerializable(typeof(System.Collections.Generic.Dictionary<string, object>))]
+    [System.Text.Json.Serialization.JsonSerializable(typeof(long))]
+    public class DuendeAccessTokenSerializationContext : System.Text.Json.Serialization.JsonSerializerContext, System.Text.Json.Serialization.Metadata.IJsonTypeInfoResolver
+    {
+        public DuendeAccessTokenSerializationContext() { }
+        public DuendeAccessTokenSerializationContext(System.Text.Json.JsonSerializerOptions options) { }
+        public System.Text.Json.Serialization.Metadata.JsonTypeInfo<bool> Boolean { get; }
+        public System.Text.Json.Serialization.Metadata.JsonTypeInfo<Duende.AccessTokenManagement.ClientCredentialsToken> ClientCredentialsToken { get; }
+        public System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.DateTimeOffset> DateTimeOffset { get; }
+        public System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.Dictionary<string, object>> DictionaryStringObject { get; }
+        protected override System.Text.Json.JsonSerializerOptions? GeneratedSerializerOptions { get; }
+        public System.Text.Json.Serialization.Metadata.JsonTypeInfo<long> Int64 { get; }
+        public System.Text.Json.Serialization.Metadata.JsonTypeInfo<object> Object { get; }
+        public System.Text.Json.Serialization.Metadata.JsonTypeInfo<string> String { get; }
+        public static Duende.AccessTokenManagement.DuendeAccessTokenSerializationContext Default { get; }
+        public override System.Text.Json.Serialization.Metadata.JsonTypeInfo? GetTypeInfo(System.Type type) { }
+    }
     public static class HybridCacheExtMethods
     {
         public static System.Threading.Tasks.ValueTask<T?> GetOrDefaultAsync<T>(this Microsoft.Extensions.Caching.Hybrid.HybridCache cache, string key, System.Threading.CancellationToken cancellationToken = default) { }
