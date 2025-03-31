@@ -31,7 +31,7 @@ public class DistributedClientCredentialsTokenCache(
         ArgumentNullException.ThrowIfNull(clientName);
 
         var cacheExpiration = clientCredentialsToken.Expiration.AddSeconds(-_options.CacheLifetimeBuffer);
-        var data = JsonSerializer.Serialize(clientCredentialsToken);
+        var data = JsonSerializer.Serialize(clientCredentialsToken, DuendeAccessTokenSerializationContext.Default.ClientCredentialsToken);
 
         var entryOptions = new DistributedCacheEntryOptions
         {
@@ -125,7 +125,7 @@ public class DistributedClientCredentialsTokenCache(
         try
         {
             logger.CacheHitForObtainingAccessToken(clientName);
-            return JsonSerializer.Deserialize<ClientCredentialsToken>(entry);
+            return JsonSerializer.Deserialize<ClientCredentialsToken>(entry, DuendeAccessTokenSerializationContext.Default.ClientCredentialsToken);
         }
         catch (Exception ex)
         {

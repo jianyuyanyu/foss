@@ -117,7 +117,7 @@ public class DefaultDPoPProofService(IDPoPNonceStore dPoPNonceStore, ILogger<Def
 
         var handler = new JsonWebTokenHandler() { SetDefaultTimesOnTokenCreation = false };
         var key = new SigningCredentials(jsonWebKey, jsonWebKey.Alg);
-        var proofToken = handler.CreateToken(JsonSerializer.Serialize(payload), key, header);
+        var proofToken = handler.CreateToken(JsonSerializer.Serialize(payload, DuendeAccessTokenSerializationContext.Default.DictionaryStringObject), key, header);
 
         return new DPoPProof { ProofToken = proofToken! };
     }
