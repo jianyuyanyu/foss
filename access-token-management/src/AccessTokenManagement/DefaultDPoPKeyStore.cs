@@ -8,6 +8,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Default implementation
 /// </summary>
+[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class DefaultDPoPKeyStore(IOptionsMonitor<ClientCredentialsClient> options) : IDPoPKeyStore
 {
     /// <inheritdoc/>

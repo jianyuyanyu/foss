@@ -6,6 +6,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Implements token management logic
 /// </summary>
+[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class ClientCredentialsTokenManagementService(
     IClientCredentialsTokenEndpointService clientCredentialsTokenEndpointService,
     IClientCredentialsTokenCache tokenCache) : IClientCredentialsTokenManagementService

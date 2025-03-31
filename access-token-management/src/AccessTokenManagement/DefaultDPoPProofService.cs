@@ -14,6 +14,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Default implementation of IDPoPProofService
 /// </summary>
+[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class DefaultDPoPProofService(IDPoPNonceStore dPoPNonceStore, ILogger<DefaultDPoPProofService> logger) : IDPoPProofService
 {
     /// <inheritdoc/>

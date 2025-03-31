@@ -13,6 +13,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// Provides access to scoped blazor services from non-blazor DI scopes, such as
 /// scopes created using IHttpClientFactory.
 /// </summary>
+[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class CircuitServicesAccessor
 {
     static readonly AsyncLocal<IServiceProvider> BlazorServices = new();
@@ -26,7 +27,9 @@ public class CircuitServicesAccessor
 
 internal class ServicesAccessorCircuitHandler(
     IServiceProvider services,
+#pragma warning disable CS0618 // Type or member is obsolete
     CircuitServicesAccessor servicesAccessor)
+#pragma warning restore CS0618 // Type or member is obsolete
     : CircuitHandler
 {
     public override Func<CircuitInboundActivityContext, Task> CreateInboundActivityHandler(
@@ -46,7 +49,9 @@ internal static class CircuitServicesServiceCollectionExtensions
     public static IServiceCollection AddCircuitServicesAccessor(
         this IServiceCollection services)
     {
+#pragma warning disable CS0618 // Type or member is obsolete
         services.AddScoped<CircuitServicesAccessor>();
+#pragma warning restore CS0618 // Type or member is obsolete
         services.AddScoped<CircuitHandler, ServicesAccessorCircuitHandler>();
 
         return services;

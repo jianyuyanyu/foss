@@ -11,6 +11,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// DPoP nonce store using IDistributedCache
 /// </summary>
+[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class DistributedDPoPNonceStore(
     [FromKeyedServices(ServiceProviderKeys.DPoPNonceStore)] IDistributedCache cache,
     IOptions<ClientCredentialsTokenManagementOptions> options,
@@ -61,7 +62,7 @@ public class DistributedDPoPNonceStore(
     /// <summary>
     /// Generates the cache key based on various inputs
     /// </summary>
-    [Obsolete("This method is deprecated and will be removed in future versions. ")]
+    [Obsolete("This method is deprecated and will be removed in a future version. To customize CacheKeyGeneration, please use the property ClientCredentialsTokenManagementOptions.GenerateNonceStoreKey")]
     protected virtual string GenerateCacheKey(DPoPNonceContext context)
     {
         return options.Value.GenerateNonceStoreKey(context);

@@ -37,9 +37,9 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
     {
         services.TryAddSingleton<ITokenRequestSynchronization, TokenRequestSynchronization>();
 
+#pragma warning disable CS0618 // Type or member is obsolete
         services.TryAddTransient<IClientCredentialsTokenManagementService, ClientCredentialsTokenManagementService>();
 
-        services.TryAddSingleton(TimeProvider.System);
 
         // By default, resolve the distributed cache for the DistributedClientCredentialsTokenCache
         // without key. If desired, a consumers can register the distributed cache with a key
@@ -56,6 +56,10 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
         // without key. If desired, a consumers can register the distributed cache with a key
         services.TryAddKeyedSingleton<IDistributedCache>(ServiceProviderKeys.DPoPNonceStore, (sp, _) => sp.GetRequiredService<IDistributedCache>());
         services.TryAddTransient<IDPoPNonceStore, DistributedDPoPNonceStore>();
+
+#pragma warning restore CS0618 // Type or member is obsolete
+
+        services.TryAddSingleton(TimeProvider.System);
 
         services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName);
 
@@ -121,9 +125,12 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
             var dpopService = provider.GetRequiredService<IDPoPProofService>();
             var dpopNonceStore = provider.GetRequiredService<IDPoPNonceStore>();
             var accessTokenManagementService = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+#pragma warning disable CS0618 // Type or member is obsolete
             var logger = provider.GetRequiredService<ILogger<ClientCredentialsTokenHandler>>();
 
             return new ClientCredentialsTokenHandler(dpopService, dpopNonceStore, accessTokenManagementService, logger, tokenClientName);
+#pragma warning restore CS0618 // Type or member is obsolete
+
         });
     }
 }

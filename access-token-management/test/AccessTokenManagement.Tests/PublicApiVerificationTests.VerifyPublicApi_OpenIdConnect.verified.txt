@@ -1,5 +1,7 @@
 ﻿namespace Duende.AccessTokenManagement.OpenIdConnect
 {
+    [System.Obsolete(("This will be made internal or removed in a future version. If you are using this " +
+        "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class AuthenticationSessionUserAccessTokenStore : Duende.AccessTokenManagement.OpenIdConnect.IUserTokenStore
     {
         public AuthenticationSessionUserAccessTokenStore(Microsoft.AspNetCore.Http.IHttpContextAccessor contextAccessor, Duende.AccessTokenManagement.OpenIdConnect.IStoreTokensInAuthenticationProperties tokensInProps, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.OpenIdConnect.AuthenticationSessionUserAccessTokenStore> logger) { }
@@ -8,11 +10,15 @@
         public System.Threading.Tasks.Task<Duende.AccessTokenManagement.OpenIdConnect.UserToken> GetTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null) { }
         public System.Threading.Tasks.Task StoreTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserToken token, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null) { }
     }
+    [System.Obsolete(("This will be made internal or removed in a future version. If you are using this " +
+        "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class BlazorServerUserAccessor : Duende.AccessTokenManagement.OpenIdConnect.IUserAccessor
     {
         public BlazorServerUserAccessor(Duende.AccessTokenManagement.OpenIdConnect.CircuitServicesAccessor circuitServicesAccessor, Microsoft.AspNetCore.Http.IHttpContextAccessor? httpContextAccessor, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.OpenIdConnect.BlazorServerUserAccessor> logger) { }
         public System.Threading.Tasks.Task<System.Security.Claims.ClaimsPrincipal> GetCurrentUserAsync() { }
     }
+    [System.Obsolete(("This will be made internal or removed in a future version. If you are using this " +
+        "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class CircuitServicesAccessor
     {
         public CircuitServicesAccessor() { }
@@ -29,6 +35,8 @@
         public void Configure(Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectOptions options) { }
         public void Configure(string? name, Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectOptions options) { }
     }
+    [System.Obsolete(("This will be made internal or removed in a future version. If you are using this " +
+        "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class HttpContextUserAccessor : Duende.AccessTokenManagement.OpenIdConnect.IUserAccessor
     {
         public HttpContextUserAccessor(Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor) { }
@@ -69,6 +77,8 @@
         System.Threading.Tasks.Task<Duende.AccessTokenManagement.OpenIdConnect.UserToken> GetTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null);
         System.Threading.Tasks.Task StoreTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserToken token, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null);
     }
+    [System.Obsolete(("This will be made internal or removed in a future version. If you are using this " +
+        "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class OpenIdConnectClientAccessTokenHandler : Duende.AccessTokenManagement.AccessTokenHandler
     {
         public OpenIdConnectClientAccessTokenHandler(Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Duende.AccessTokenManagement.IDPoPNonceStore dPoPNonceStore, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.OpenIdConnect.OpenIdConnectClientAccessTokenHandler> logger, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null) { }
@@ -85,6 +95,8 @@
         public string? Scheme { get; set; }
         public string? TokenEndpoint { get; set; }
     }
+    [System.Obsolete(("This will be made internal or removed in a future version. If you are using this " +
+        "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class OpenIdConnectConfigurationService : Duende.AccessTokenManagement.OpenIdConnect.IOpenIdConnectConfigurationService
     {
         public OpenIdConnectConfigurationService(Microsoft.Extensions.Options.IOptions<Duende.AccessTokenManagement.OpenIdConnect.UserTokenManagementOptions> userAccessTokenManagementOptions, Microsoft.Extensions.Options.IOptionsMonitor<Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectOptions> oidcOptionsMonitor, Microsoft.AspNetCore.Authentication.IAuthenticationSchemeProvider schemeProvider) { }
@@ -94,6 +106,8 @@
     {
         public const string ClientCredentialsClientNamePrefix = "Duende.TokenManagement.SchemeBasedClient:";
     }
+    [System.Obsolete(("This will be made internal or removed in a future version. If you are using this " +
+        "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class OpenIdConnectUserAccessTokenHandler : Duende.AccessTokenManagement.AccessTokenHandler
     {
         public OpenIdConnectUserAccessTokenHandler(Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Duende.AccessTokenManagement.IDPoPNonceStore dPoPNonceStore, Duende.AccessTokenManagement.OpenIdConnect.IUserAccessor userAccessor, Duende.AccessTokenManagement.OpenIdConnect.IUserTokenManagementService userTokenManagement, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.OpenIdConnect.OpenIdConnectClientAccessTokenHandler> logger, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null) { }

@@ -12,6 +12,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// <summary>
 /// Accesses the current user from blazor server.  
 /// </summary>
+[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class BlazorServerUserAccessor(
     // We use the CircuitServicesAccessor to resolve the
     // AuthenticationStateProvider, rather than injecting it. Injecting the
