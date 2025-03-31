@@ -11,7 +11,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Implements token endpoint operations using IdentityModel
 /// </summary>
-[Obsolete("This type is going to be removed in a future release.")]
+[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class ClientCredentialsTokenEndpointService(
     IHttpClientFactory httpClientFactory,
     IOptionsMonitor<ClientCredentialsClient> options,

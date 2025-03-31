@@ -13,7 +13,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// Provides access to scoped blazor services from non-blazor DI scopes, such as
 /// scopes created using IHttpClientFactory.
 /// </summary>
-[Obsolete("This type is going to be removed in a future release.")]
+[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class CircuitServicesAccessor
 {
     static readonly AsyncLocal<IServiceProvider> BlazorServices = new();

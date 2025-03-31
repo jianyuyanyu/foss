@@ -12,7 +12,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// <summary>
 /// Token store using the ASP.NET Core authentication session
 /// </summary>
-[Obsolete("This type is going to be removed in a future release.")]
+[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class AuthenticationSessionUserAccessTokenStore(
     IHttpContextAccessor contextAccessor,
     IStoreTokensInAuthenticationProperties tokensInProps,

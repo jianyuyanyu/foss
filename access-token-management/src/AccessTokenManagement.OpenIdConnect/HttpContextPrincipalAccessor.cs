@@ -9,7 +9,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// <summary>
 /// Accesses the current principal based on the HttpContext.User.
 /// </summary>
-[Obsolete("This type is going to be removed in a future release.")]
+[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class HttpContextUserAccessor : IUserAccessor
 {
     private readonly IHttpContextAccessor _httpContextAccessor;

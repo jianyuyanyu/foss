@@ -8,7 +8,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Delegating handler that injects a client credentials access token into an outgoing request
 /// </summary>
-[Obsolete("This type is going to be removed in a future release.")]
+[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class ClientCredentialsTokenHandler(
     IDPoPProofService dPoPProofService,
     IDPoPNonceStore dPoPNonceStore,
