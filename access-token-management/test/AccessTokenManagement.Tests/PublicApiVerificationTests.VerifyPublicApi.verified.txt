@@ -9,7 +9,6 @@
         protected virtual System.Threading.Tasks.Task<bool> SetDPoPProofTokenAsync(System.Net.Http.HttpRequestMessage request, Duende.AccessTokenManagement.ClientCredentialsToken token, System.Threading.CancellationToken cancellationToken, string? dpopNonce = null) { }
         protected virtual System.Threading.Tasks.Task SetTokenAsync(System.Net.Http.HttpRequestMessage request, bool forceRenewal, System.Threading.CancellationToken cancellationToken, string? dpopNonce = null) { }
     }
-    public delegate string ClientCredentialsCacheKeyGenerator(string clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null);
     public class ClientCredentialsClient
     {
         public ClientCredentialsClient() { }
@@ -61,8 +60,6 @@
         public ClientCredentialsTokenManagementOptions() { }
         public string CacheKeyPrefix { get; set; }
         public int CacheLifetimeBuffer { get; set; }
-        public Duende.AccessTokenManagement.ClientCredentialsCacheKeyGenerator GenerateCacheKey { get; }
-        public Duende.AccessTokenManagement.DPoPNonceStoreKeyGenerator GenerateNonceStoreKey { get; }
         public string NonceStoreKeyPrefix { get; set; }
     }
     [System.Obsolete(("This will be made internal or removed in a future version. If you are using this " +
@@ -106,7 +103,6 @@
         [System.Runtime.CompilerServices.RequiredMember]
         public string Url { get; set; }
     }
-    public delegate string DPoPNonceStoreKeyGenerator(Duende.AccessTokenManagement.DPoPNonceContext context);
     public class DPoPProof
     {
         public DPoPProof() { }
@@ -155,7 +151,7 @@
         "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class DistributedClientCredentialsTokenCache : Duende.AccessTokenManagement.IClientCredentialsTokenCache
     {
-        public DistributedClientCredentialsTokenCache([Microsoft.Extensions.DependencyInjection.FromKeyedServices("ClientCredentialsTokenCache")] Microsoft.Extensions.Caching.Distributed.IDistributedCache cache, Duende.AccessTokenManagement.ITokenRequestSynchronization synchronization, Microsoft.Extensions.Options.IOptions<Duende.AccessTokenManagement.ClientCredentialsTokenManagementOptions> options, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.DistributedClientCredentialsTokenCache> logger) { }
+        public DistributedClientCredentialsTokenCache([Microsoft.Extensions.DependencyInjection.FromKeyedServices("ClientCredentialsTokenCache")] Microsoft.Extensions.Caching.Distributed.IDistributedCache cache, Duende.AccessTokenManagement.IClientCredentialsCacheKeyGenerator cacheKeyGenerator, Duende.AccessTokenManagement.ITokenRequestSynchronization synchronization, Microsoft.Extensions.Options.IOptions<Duende.AccessTokenManagement.ClientCredentialsTokenManagementOptions> options, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.DistributedClientCredentialsTokenCache> logger) { }
         public System.Threading.Tasks.Task DeleteAsync(string clientName, Duende.AccessTokenManagement.TokenRequestParameters requestParameters, System.Threading.CancellationToken cancellationToken = default) { }
         [System.Obsolete(("This method is deprecated and will be removed in a future version. To customize C" +
             "acheKeyGeneration, please use the property ClientCredentialsTokenManagementOptio" +
@@ -169,7 +165,7 @@
         "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class DistributedDPoPNonceStore : Duende.AccessTokenManagement.IDPoPNonceStore
     {
-        public DistributedDPoPNonceStore([Microsoft.Extensions.DependencyInjection.FromKeyedServices("DPoPNonceStore")] Microsoft.Extensions.Caching.Distributed.IDistributedCache cache, Microsoft.Extensions.Options.IOptions<Duende.AccessTokenManagement.ClientCredentialsTokenManagementOptions> options, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.DistributedDPoPNonceStore> logger) { }
+        public DistributedDPoPNonceStore([Microsoft.Extensions.DependencyInjection.FromKeyedServices("DPoPNonceStore")] Microsoft.Extensions.Caching.Distributed.IDistributedCache cache, Duende.AccessTokenManagement.IDPoPNonceStoreKeyGenerator dPoPNonceStoreKeyGenerator, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.DistributedDPoPNonceStore> logger) { }
         [System.Obsolete(("This method is deprecated and will be removed in a future version. To customize C" +
             "acheKeyGeneration, please use the property ClientCredentialsTokenManagementOptio" +
             "ns.GenerateNonceStoreKey"))]
@@ -203,6 +199,10 @@
     {
         System.Threading.Tasks.Task<Duende.IdentityModel.Client.ClientAssertion?> GetClientAssertionAsync(string? clientName = null, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null);
     }
+    public interface IClientCredentialsCacheKeyGenerator
+    {
+        string GenerateKey(string clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null);
+    }
     public interface IClientCredentialsTokenCache
     {
         System.Threading.Tasks.Task DeleteAsync(string clientName, Duende.AccessTokenManagement.TokenRequestParameters requestParameters, System.Threading.CancellationToken cancellationToken = default);
@@ -227,6 +227,10 @@
     {
         System.Threading.Tasks.Task<string?> GetNonceAsync(Duende.AccessTokenManagement.DPoPNonceContext context, System.Threading.CancellationToken cancellationToken = default);
         System.Threading.Tasks.Task StoreNonceAsync(Duende.AccessTokenManagement.DPoPNonceContext context, string nonce, System.Threading.CancellationToken cancellationToken = default);
+    }
+    public interface IDPoPNonceStoreKeyGenerator
+    {
+        string GenerateKey(Duende.AccessTokenManagement.DPoPNonceContext context);
     }
     public interface IDPoPProofService
     {

@@ -336,10 +336,55 @@ public class BackChannelClientTests(ITestOutputHelper output)
         replacementCache.SetCount.ShouldBe(1);
     }
 
+    [Fact]
+    public async Task Can_use_custom_key_generator()
+    {
+        var services = new ServiceCollection();
+
+        services.AddDistributedMemoryCache();
+        var replacementCache = new FakeCache();
+        services.AddSingleton<IClientCredentialsCacheKeyGenerator>(new AlwaysSameKeyCacheKeyGenerator("always_the_same"));
+        services.AddKeyedSingleton<IDistributedCache>(ServiceProviderKeys.ClientCredentialsTokenCache, replacementCache);
+
+        services.AddClientCredentialsTokenManagement()
+            .AddClient("test", client =>
+            {
+                client.TokenEndpoint = "https://as";
+                client.ClientId = "id";
+
+                client.HttpClientName = "custom";
+            });
+
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When("https://as/*")
+            .Respond(HttpStatusCode.OK, JsonContent.Create(new TokenResponse()));
+
+        services.AddHttpClient("custom")
+            .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
+
+        var provider = services.BuildServiceProvider();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+
+        var token = await sut.GetAccessTokenAsync("test");
+
+        replacementCache.CacheKey.ShouldBe("always_the_same");
+
+    }
+
+    public class AlwaysSameKeyCacheKeyGenerator(string cacheKey) : IClientCredentialsCacheKeyGenerator
+    {
+        public string GenerateKey(string clientName, TokenRequestParameters? parameters = null)
+        {
+            return cacheKey;
+        }
+    }
+
     public class FakeCache : IDistributedCache
     {
         public int GetCount = 0;
         public int SetCount = 0;
+
+        public string? CacheKey = null;
 
         public byte[]? Get(string key)
         {
@@ -348,6 +393,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
 
         public Task<byte[]?> GetAsync(string key, CancellationToken token = new CancellationToken())
         {
+            CacheKey = key;
             Interlocked.Increment(ref GetCount);
             return Task.FromResult<byte[]?>(null);
         }

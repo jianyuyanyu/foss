@@ -14,6 +14,7 @@ namespace Duende.AccessTokenManagement;
 [Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class DistributedClientCredentialsTokenCache(
     [FromKeyedServices(ServiceProviderKeys.ClientCredentialsTokenCache)] IDistributedCache cache,
+    IClientCredentialsCacheKeyGenerator cacheKeyGenerator,
     ITokenRequestSynchronization synchronization,
     IOptions<ClientCredentialsTokenManagementOptions> options,
     ILogger<DistributedClientCredentialsTokenCache> logger
@@ -162,6 +163,6 @@ public class DistributedClientCredentialsTokenCache(
         string clientName,
         TokenRequestParameters? parameters = null)
     {
-        return options.GenerateCacheKey(clientName, parameters);
+        return cacheKeyGenerator.GenerateKey(clientName, parameters);
     }
 }
