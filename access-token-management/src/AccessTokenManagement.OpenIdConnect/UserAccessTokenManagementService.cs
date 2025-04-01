@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System.Security.Claims;
+using Duende.AccessTokenManagement.OTel;
 using Duende.IdentityModel;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -12,6 +13,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// Implements basic token management logic
 /// </summary>
 public class UserAccessAccessTokenManagementService(
+    AccessTokenManagementMetrics metrics,
     IUserTokenRequestSynchronization sync,
     IUserTokenStore userAccessTokenStore,
     TimeProvider clock,
@@ -76,8 +78,13 @@ public class UserAccessAccessTokenManagementService(
                 return token;
             }).ConfigureAwait(false);
         }
+        else
+        {
+            logger.LogTrace("Returning current token for user: {user}", userName);
+        }
 
         logger.ReturningCurrentTokenForUser(userName);
+        metrics.AccessTokenUsed(userToken.ClientId, AccessTokenManagementMetrics.TokenRequestType.User);
         return userToken;
     }
 

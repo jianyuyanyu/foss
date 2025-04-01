@@ -2,12 +2,13 @@
 {
     public abstract class AccessTokenHandler : System.Net.Http.DelegatingHandler
     {
-        protected AccessTokenHandler(Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Duende.AccessTokenManagement.IDPoPNonceStore dPoPNonceStore, Microsoft.Extensions.Logging.ILogger logger) { }
+        protected AccessTokenHandler(Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics metrics, Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Duende.AccessTokenManagement.IDPoPNonceStore dPoPNonceStore, Microsoft.Extensions.Logging.ILogger logger) { }
+        protected abstract Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics.TokenRequestType TokenRequestType { get; }
         protected abstract System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken> GetAccessTokenAsync(bool forceRenewal, System.Threading.CancellationToken cancellationToken);
         protected override System.Net.Http.HttpResponseMessage Send(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken) { }
         protected override System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> SendAsync(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken) { }
         protected virtual System.Threading.Tasks.Task<bool> SetDPoPProofTokenAsync(System.Net.Http.HttpRequestMessage request, Duende.AccessTokenManagement.ClientCredentialsToken token, System.Threading.CancellationToken cancellationToken, string? dpopNonce = null) { }
-        protected virtual System.Threading.Tasks.Task SetTokenAsync(System.Net.Http.HttpRequestMessage request, bool forceRenewal, System.Threading.CancellationToken cancellationToken, string? dpopNonce = null) { }
+        protected virtual System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken> SetTokenAsync(System.Net.Http.HttpRequestMessage request, bool forceRenewal, System.Threading.CancellationToken cancellationToken, string? dpopNonce = null) { }
     }
     public delegate string ClientCredentialsCacheKeyGenerator(string clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null);
     public class ClientCredentialsClient
@@ -30,6 +31,7 @@
         public ClientCredentialsToken() { }
         public string? AccessToken { get; set; }
         public string? AccessTokenType { get; set; }
+        public string? ClientId { get; set; }
         public string? DPoPJsonWebKey { get; set; }
         public string? Error { get; set; }
         public System.DateTimeOffset Expiration { get; set; }
@@ -40,14 +42,15 @@
         "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class ClientCredentialsTokenEndpointService : Duende.AccessTokenManagement.IClientCredentialsTokenEndpointService
     {
-        public ClientCredentialsTokenEndpointService(System.Net.Http.IHttpClientFactory httpClientFactory, Microsoft.Extensions.Options.IOptionsMonitor<Duende.AccessTokenManagement.ClientCredentialsClient> options, Duende.AccessTokenManagement.IClientAssertionService clientAssertionService, Duende.AccessTokenManagement.IDPoPKeyStore dPoPKeyMaterialService, Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.ClientCredentialsTokenEndpointService> logger) { }
+        public ClientCredentialsTokenEndpointService(Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics metrics, System.Net.Http.IHttpClientFactory httpClientFactory, Microsoft.Extensions.Options.IOptionsMonitor<Duende.AccessTokenManagement.ClientCredentialsClient> options, Duende.AccessTokenManagement.IClientAssertionService clientAssertionService, Duende.AccessTokenManagement.IDPoPKeyStore dPoPKeyMaterialService, Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.ClientCredentialsTokenEndpointService> logger) { }
         public virtual System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken> RequestToken(string clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default) { }
     }
     [System.Obsolete(("This will be made internal or removed in a future version. If you are using this " +
         "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class ClientCredentialsTokenHandler : Duende.AccessTokenManagement.AccessTokenHandler
     {
-        public ClientCredentialsTokenHandler(Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Duende.AccessTokenManagement.IDPoPNonceStore dPoPNonceStore, Duende.AccessTokenManagement.IClientCredentialsTokenManagementService accessTokenManagementService, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.ClientCredentialsTokenHandler> logger, string tokenClientName) { }
+        public ClientCredentialsTokenHandler(Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics metrics, Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Duende.AccessTokenManagement.IDPoPNonceStore dPoPNonceStore, Duende.AccessTokenManagement.IClientCredentialsTokenManagementService accessTokenManagementService, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.ClientCredentialsTokenHandler> logger, string tokenClientName) { }
+        protected override Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics.TokenRequestType TokenRequestType { get; }
         protected override System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken> GetAccessTokenAsync(bool forceRenewal, System.Threading.CancellationToken cancellationToken) { }
     }
     public static class ClientCredentialsTokenManagementDefaults
@@ -69,7 +72,7 @@
         "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class ClientCredentialsTokenManagementService : Duende.AccessTokenManagement.IClientCredentialsTokenManagementService
     {
-        public ClientCredentialsTokenManagementService(Duende.AccessTokenManagement.IClientCredentialsTokenEndpointService clientCredentialsTokenEndpointService, Duende.AccessTokenManagement.IClientCredentialsTokenCache tokenCache) { }
+        public ClientCredentialsTokenManagementService(Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics metrics, Duende.AccessTokenManagement.IClientCredentialsTokenEndpointService clientCredentialsTokenEndpointService, Duende.AccessTokenManagement.IClientCredentialsTokenCache tokenCache) { }
         public System.Threading.Tasks.Task DeleteAccessTokenAsync(string clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default) { }
         public System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken> GetAccessTokenAsync(string clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default) { }
     }
@@ -251,5 +254,24 @@
         public Duende.IdentityModel.Client.Parameters Parameters { get; set; }
         public string? Resource { get; set; }
         public string? Scope { get; set; }
+    }
+}
+namespace Duende.AccessTokenManagement.OTel
+{
+    public sealed class AccessTokenManagementMetrics
+    {
+        public const string MeterName = "Duende.AccessTokenManagement";
+        public AccessTokenManagementMetrics(System.Diagnostics.Metrics.IMeterFactory meterFactory) { }
+        public void AccessTokenAccessDeniedRetry(string? clientId, Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics.TokenRequestType type) { }
+        public void AccessTokenAuthenticationFailed(string? clientId, Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics.TokenRequestType type) { }
+        public void AccessTokenUsed(string? clientId, Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics.TokenRequestType type) { }
+        public void DPoPNonceErrorRetry(string? clientId, Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics.TokenRequestType type, string? error) { }
+        public void TokenRetrievalFailed(string? clientId, Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics.TokenRequestType type, string? error) { }
+        public void TokenRetrieved(string? clientId, Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics.TokenRequestType type) { }
+        public enum TokenRequestType
+        {
+            ClientCredentials = 1,
+            User = 2,
+        }
     }
 }

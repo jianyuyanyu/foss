@@ -55,7 +55,9 @@ public static partial class TestLoggers
     [LoggerMessage(
         Level = LogLevel.Information,
         Message = "Loggin With function result {functionResult}")]
+#pragma warning disable LOGGEN036
     public static partial void LogWithFunction(this ILogger logger, Func<string> functionResult);
+#pragma warning restore LOGGEN036
 
     [LoggerMessage(
         Level = LogLevel.Information,

@@ -81,7 +81,8 @@
         "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class OpenIdConnectClientAccessTokenHandler : Duende.AccessTokenManagement.AccessTokenHandler
     {
-        public OpenIdConnectClientAccessTokenHandler(Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Duende.AccessTokenManagement.IDPoPNonceStore dPoPNonceStore, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.OpenIdConnect.OpenIdConnectClientAccessTokenHandler> logger, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null) { }
+        public OpenIdConnectClientAccessTokenHandler(Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics metrics, Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Duende.AccessTokenManagement.IDPoPNonceStore dPoPNonceStore, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.OpenIdConnect.OpenIdConnectClientAccessTokenHandler> logger, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null) { }
+        protected override Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics.TokenRequestType TokenRequestType { get; }
         protected override System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken> GetAccessTokenAsync(bool forceRenewal, System.Threading.CancellationToken cancellationToken) { }
     }
     public class OpenIdConnectClientConfiguration
@@ -110,7 +111,8 @@
         "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class OpenIdConnectUserAccessTokenHandler : Duende.AccessTokenManagement.AccessTokenHandler
     {
-        public OpenIdConnectUserAccessTokenHandler(Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Duende.AccessTokenManagement.IDPoPNonceStore dPoPNonceStore, Duende.AccessTokenManagement.OpenIdConnect.IUserAccessor userAccessor, Duende.AccessTokenManagement.OpenIdConnect.IUserTokenManagementService userTokenManagement, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.OpenIdConnect.OpenIdConnectClientAccessTokenHandler> logger, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null) { }
+        public OpenIdConnectUserAccessTokenHandler(Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics metrics, Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Duende.AccessTokenManagement.IDPoPNonceStore dPoPNonceStore, Duende.AccessTokenManagement.OpenIdConnect.IUserAccessor userAccessor, Duende.AccessTokenManagement.OpenIdConnect.IUserTokenManagementService userTokenManagement, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.OpenIdConnect.OpenIdConnectClientAccessTokenHandler> logger, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null) { }
+        protected override Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics.TokenRequestType TokenRequestType { get; }
         protected override System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken> GetAccessTokenAsync(bool forceRenewal, System.Threading.CancellationToken cancellationToken) { }
     }
     public class StoreTokensInAuthenticationProperties : Duende.AccessTokenManagement.OpenIdConnect.IStoreTokensInAuthenticationProperties
@@ -124,7 +126,7 @@
     }
     public class UserAccessAccessTokenManagementService : Duende.AccessTokenManagement.OpenIdConnect.IUserTokenManagementService
     {
-        public UserAccessAccessTokenManagementService(Duende.AccessTokenManagement.OpenIdConnect.IUserTokenRequestSynchronization sync, Duende.AccessTokenManagement.OpenIdConnect.IUserTokenStore userAccessTokenStore, System.TimeProvider clock, Microsoft.Extensions.Options.IOptions<Duende.AccessTokenManagement.OpenIdConnect.UserTokenManagementOptions> options, Duende.AccessTokenManagement.OpenIdConnect.IUserTokenEndpointService tokenEndpointService, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.OpenIdConnect.UserAccessAccessTokenManagementService> logger) { }
+        public UserAccessAccessTokenManagementService(Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics metrics, Duende.AccessTokenManagement.OpenIdConnect.IUserTokenRequestSynchronization sync, Duende.AccessTokenManagement.OpenIdConnect.IUserTokenStore userAccessTokenStore, System.TimeProvider clock, Microsoft.Extensions.Options.IOptions<Duende.AccessTokenManagement.OpenIdConnect.UserTokenManagementOptions> options, Duende.AccessTokenManagement.OpenIdConnect.IUserTokenEndpointService tokenEndpointService, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.OpenIdConnect.UserAccessAccessTokenManagementService> logger) { }
         public System.Threading.Tasks.Task<Duende.AccessTokenManagement.OpenIdConnect.UserToken> GetAccessTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default) { }
         public System.Threading.Tasks.Task RevokeRefreshTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default) { }
     }
@@ -136,7 +138,7 @@
     }
     public class UserTokenEndpointService : Duende.AccessTokenManagement.OpenIdConnect.IUserTokenEndpointService
     {
-        public UserTokenEndpointService(Duende.AccessTokenManagement.OpenIdConnect.IOpenIdConnectConfigurationService configurationService, Microsoft.Extensions.Options.IOptions<Duende.AccessTokenManagement.OpenIdConnect.UserTokenManagementOptions> options, Duende.AccessTokenManagement.IClientAssertionService clientAssertionService, Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.OpenIdConnect.UserTokenEndpointService> logger) { }
+        public UserTokenEndpointService(Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics metrics, Duende.AccessTokenManagement.OpenIdConnect.IOpenIdConnectConfigurationService configurationService, Microsoft.Extensions.Options.IOptions<Duende.AccessTokenManagement.OpenIdConnect.UserTokenManagementOptions> options, Duende.AccessTokenManagement.IClientAssertionService clientAssertionService, Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.OpenIdConnect.UserTokenEndpointService> logger) { }
         public System.Threading.Tasks.Task<Duende.AccessTokenManagement.OpenIdConnect.UserToken> RefreshAccessTokenAsync(Duende.AccessTokenManagement.OpenIdConnect.UserToken userToken, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters parameters, System.Threading.CancellationToken cancellationToken = default) { }
         public System.Threading.Tasks.Task RevokeRefreshTokenAsync(Duende.AccessTokenManagement.OpenIdConnect.UserToken userToken, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters parameters, System.Threading.CancellationToken cancellationToken = default) { }
     }

@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using Duende.AccessTokenManagement.OTel;
 using Duende.IdentityModel.Client;
 using Microsoft.Extensions.Logging;
 using static Duende.IdentityModel.OidcConstants;
@@ -11,6 +12,7 @@ namespace Duende.AccessTokenManagement;
 /// Delegating handler that injects access token into an outgoing request
 /// </summary>
 public abstract class AccessTokenHandler(
+    AccessTokenManagementMetrics metrics,
     IDPoPProofService dPoPProofService,
     IDPoPNonceStore dPoPNonceStore,
     ILogger logger) : DelegatingHandler
@@ -23,6 +25,8 @@ public abstract class AccessTokenHandler(
     /// <returns></returns>
     protected abstract Task<ClientCredentialsToken> GetAccessTokenAsync(bool forceRenewal, CancellationToken cancellationToken);
 
+    protected abstract AccessTokenManagementMetrics.TokenRequestType TokenRequestType { get; }
+
     /// <inheritdoc/>
     protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken) =>
         throw new NotSupportedException(
@@ -32,11 +36,11 @@ public abstract class AccessTokenHandler(
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         // Add a log scope that adds the Request URL to all subsequent log messages
-        using var logScope = logger.BeginScopeKvp(
-            (LogMessages.Parameters.RequestUrl, request.RequestUri?.GetLeftPart(UriPartial.Path))
+        using var logScope = logger.BeginScope(
+            (OTelParameters.RequestUrl, request.RequestUri?.GetLeftPart(UriPartial.Path))
         );
 
-        await SetTokenAsync(request, forceRenewal: false, cancellationToken).ConfigureAwait(false);
+        var token = await SetTokenAsync(request, forceRenewal: false, cancellationToken: cancellationToken).ConfigureAwait(false);
         var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
         var dPoPNonce = response.GetDPoPNonce();
@@ -45,16 +49,29 @@ public abstract class AccessTokenHandler(
         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
             response.Dispose();
+            metrics.AccessTokenAccessDeniedRetry(token.ClientId, TokenRequestType);
 
             // if it's a DPoP nonce error, we don't need to obtain a new access token
             var force = !response.IsDPoPError();
             if (!force && !string.IsNullOrEmpty(dPoPNonce))
             {
-                logger.RequestFailedWithDPoPErrorWillRetry(response.GetDPoPError(), request.RequestUri?.AbsoluteUri);
+                logger.RequestFailedWithDPoPErrorWillRetry(response.GetDPoPError());
+            }
+            else
+            {
+                logger.TokenNotAcceptedWhenSendingRequest();
             }
 
-            await SetTokenAsync(request, forceRenewal: force, cancellationToken, dPoPNonce).ConfigureAwait(false);
-            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            await SetTokenAsync(request, forceRenewal: force, cancellationToken: cancellationToken, dpopNonce: dPoPNonce).ConfigureAwait(false);
+            response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                logger.AccessTokenHandlerAuthenticationFailed();
+                metrics.AccessTokenAuthenticationFailed(token.ClientId, TokenRequestType);
+            }
+
+            return response;
         }
 
         if (dPoPNonce == null)
@@ -76,8 +93,7 @@ public abstract class AccessTokenHandler(
     /// Set an access token on the HTTP request
     /// </summary>
     /// <returns></returns>
-    protected virtual async Task SetTokenAsync(
-        HttpRequestMessage request,
+    protected virtual async Task<ClientCredentialsToken> SetTokenAsync(HttpRequestMessage request,
         bool forceRenewal,
         CancellationToken cancellationToken,
         string? dpopNonce = null)
@@ -87,7 +103,7 @@ public abstract class AccessTokenHandler(
         if (string.IsNullOrWhiteSpace(token.AccessToken))
         {
             logger.FailedToObtainAccessTokenWhileSendingRequest();
-            return;
+            return token;
         }
 
         logger.SendAccessTokenToEndpoint(request.RequestUri?.AbsoluteUri, token.AccessTokenType);
@@ -119,6 +135,8 @@ public abstract class AccessTokenHandler(
         // checking for null AccessTokenType and falling back to "Bearer" since this might be coming
         // from an old cache/store prior to adding the AccessTokenType property.
         request.SetToken(scheme, token.AccessToken);
+
+        return token;
     }
 
     /// <summary>

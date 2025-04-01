@@ -1,6 +1,8 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using Duende.AccessTokenManagement.OTel;
+
 namespace Duende.AccessTokenManagement;
 
 /// <summary>
@@ -8,6 +10,7 @@ namespace Duende.AccessTokenManagement;
 /// </summary>
 [Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class ClientCredentialsTokenManagementService(
+    AccessTokenManagementMetrics metrics,
     IClientCredentialsTokenEndpointService clientCredentialsTokenEndpointService,
     IClientCredentialsTokenCache tokenCache) : IClientCredentialsTokenManagementService
 {
@@ -19,11 +22,15 @@ public class ClientCredentialsTokenManagementService(
     {
         parameters ??= new TokenRequestParameters();
 
-        return await tokenCache.GetOrCreateAsync(
+        var token = await tokenCache.GetOrCreateAsync(
             clientName: clientName,
             requestParameters: parameters,
             factory: InvokeGetAccessToken,
             cancellationToken: cancellationToken).ConfigureAwait(false);
+
+        metrics.AccessTokenUsed(token.ClientId, AccessTokenManagementMetrics.TokenRequestType.ClientCredentials);
+
+        return token;
     }
 
     private async Task<ClientCredentialsToken> InvokeGetAccessToken(string clientName, TokenRequestParameters parameters, CancellationToken cancellationToken)
