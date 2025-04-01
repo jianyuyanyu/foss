@@ -4,7 +4,6 @@
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Duende.AccessTokenManagement;
 
@@ -13,7 +12,7 @@ namespace Duende.AccessTokenManagement;
 /// </summary>
 internal class HybridDPoPNonceStore(
     [FromKeyedServices(ServiceProviderKeys.DPoPNonceStore)] HybridCache cache,
-    IOptions<ClientCredentialsTokenManagementOptions> options,
+    IDPoPNonceStoreKeyGenerator dPoPNonceStoreKeyGenerator,
     ILogger<HybridDPoPNonceStore> logger) : IDPoPNonceStore
 {
     /// <inheritdoc/>
@@ -21,7 +20,7 @@ internal class HybridDPoPNonceStore(
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        var cacheKey = options.Value.GenerateNonceStoreKey(context);
+        var cacheKey = dPoPNonceStoreKeyGenerator.GenerateKey(context);
         var entry = await cache.GetOrDefaultAsync<string>(cacheKey, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (entry != null)
@@ -48,7 +47,7 @@ internal class HybridDPoPNonceStore(
 
         logger.LogTrace("Caching DPoP nonce for URL: {url}, method: {method}. Expiration: {expiration}", context.Url, context.Method, entryOptions.Expiration);
 
-        var cacheKey = options.Value.GenerateNonceStoreKey(context);
+        var cacheKey = dPoPNonceStoreKeyGenerator.GenerateKey(context);
         await cache.SetAsync(cacheKey, data, entryOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

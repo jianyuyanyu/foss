@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Duende.AccessTokenManagement;
+using Duende.AccessTokenManagement.Implementation;
 using Duende.AccessTokenManagement.OTel;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -64,6 +65,8 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
 
         services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName);
 
+        services.TryAddTransient<IClientCredentialsCacheKeyGenerator, DefaultClientCredentialsCacheKeyGenerator>();
+        services.TryAddTransient<IDPoPNonceStoreKeyGenerator, DPoPNonceStoreKeyGenerator>();
         services.AddSingleton<AccessTokenManagementMetrics>();
 
         return new ClientCredentialsTokenManagementBuilder(services);

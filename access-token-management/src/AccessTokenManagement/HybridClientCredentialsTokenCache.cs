@@ -14,6 +14,7 @@ namespace Duende.AccessTokenManagement;
 internal class HybridClientCredentialsTokenCache(
     [FromKeyedServices(ServiceProviderKeys.ClientCredentialsTokenCache)] HybridCache cache,
     TimeProvider time,
+    IClientCredentialsCacheKeyGenerator cacheKeyGenerator,
     ITokenRequestSynchronization synchronization,
     IOptions<ClientCredentialsTokenManagementOptions> options,
     ILogger<HybridClientCredentialsTokenCache> logger
@@ -35,7 +36,7 @@ internal class HybridClientCredentialsTokenCache(
         {
             var entryOptions = GetHybridCacheEntryOptions(clientCredentialsToken);
 
-            var cacheKey = _options.GenerateCacheKey(clientName, requestParameters);
+            var cacheKey = cacheKeyGenerator.GenerateKey(clientName, requestParameters);
             logger.LogTrace("Caching access token for client: {clientName}. Expiration: {expiration}", clientName, entryOptions.Expiration);
             await cache.SetAsync(cacheKey, clientCredentialsToken, entryOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
         }
@@ -64,7 +65,7 @@ internal class HybridClientCredentialsTokenCache(
     {
         ArgumentNullException.ThrowIfNull(clientName);
 
-        var cacheKey = _options.GenerateCacheKey(clientName, requestParameters);
+        var cacheKey = cacheKeyGenerator.GenerateKey(clientName, requestParameters);
 
         ClientCredentialsToken? token;
         if (!requestParameters.ForceRenewal)
@@ -117,7 +118,7 @@ internal class HybridClientCredentialsTokenCache(
     {
         if (clientName is null) throw new ArgumentNullException(nameof(clientName));
 
-        var cacheKey = _options.GenerateCacheKey(clientName, requestParameters);
+        var cacheKey = cacheKeyGenerator.GenerateKey(clientName, requestParameters);
 
         return await cache.GetOrDefaultAsync<ClientCredentialsToken>(cacheKey, cancellationToken);
     }
@@ -130,7 +131,7 @@ internal class HybridClientCredentialsTokenCache(
     {
         ArgumentNullException.ThrowIfNull(clientName);
 
-        var cacheKey = _options.GenerateCacheKey(clientName, requestParameters);
+        var cacheKey = cacheKeyGenerator.GenerateKey(clientName, requestParameters);
         await cache.RemoveAsync(cacheKey, cancellationToken);
     }
 }

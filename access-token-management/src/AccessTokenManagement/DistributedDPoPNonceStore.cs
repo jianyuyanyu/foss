@@ -4,7 +4,6 @@
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Duende.AccessTokenManagement;
 
@@ -14,7 +13,7 @@ namespace Duende.AccessTokenManagement;
 [Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class DistributedDPoPNonceStore(
     [FromKeyedServices(ServiceProviderKeys.DPoPNonceStore)] IDistributedCache cache,
-    IOptions<ClientCredentialsTokenManagementOptions> options,
+    IDPoPNonceStoreKeyGenerator dPoPNonceStoreKeyGenerator,
     ILogger<DistributedDPoPNonceStore> logger) : IDPoPNonceStore
 {
     /// <inheritdoc/>
@@ -65,6 +64,6 @@ public class DistributedDPoPNonceStore(
     [Obsolete("This method is deprecated and will be removed in a future version. To customize CacheKeyGeneration, please use the property ClientCredentialsTokenManagementOptions.GenerateNonceStoreKey")]
     protected virtual string GenerateCacheKey(DPoPNonceContext context)
     {
-        return options.Value.GenerateNonceStoreKey(context);
+        return dPoPNonceStoreKeyGenerator.GenerateKey(context);
     }
 }
