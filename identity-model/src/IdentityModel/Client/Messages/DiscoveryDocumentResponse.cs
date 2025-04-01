@@ -86,6 +86,12 @@ public class DiscoveryDocumentResponse : ProtocolResponse
     public IEnumerable<string> BackchannelTokenDeliveryModesSupported => TryGetStringArray(OidcConstants.Discovery.BackchannelTokenDeliveryModesSupported);
     public bool? BackchannelUserCodeParameterSupported => TryGetBoolean(OidcConstants.Discovery.BackchannelUserCodeParameterSupported);
     public bool? RequirePushedAuthorizationRequests => TryGetBoolean(OidcConstants.Discovery.RequirePushedAuthorizationRequests);
+    public IEnumerable<string> IntrospectionSigningAlgorithmsSupported =>
+        TryGetStringArray(OidcConstants.Discovery.IntrospectionSigningAlgorithmsSupported);
+    public IEnumerable<string> IntrospectionEncryptionAlgorithmsSupported =>
+        TryGetStringArray(OidcConstants.Discovery.IntrospectionEncryptionAlgorithmsSupported);
+    public IEnumerable<string> IntrospectionEncryptionEncValuesSupported =>
+        TryGetStringArray(OidcConstants.Discovery.IntrospectionEncryptionEncValuesSupported);
 
     // generic
     public JsonElement? TryGetValue(string name) => Json?.TryGetValue(name);

@@ -279,6 +279,15 @@ public class DynamicClientRegistrationDocument
     [JsonExtensionData]
     public IDictionary<string, JsonElement>? Extensions { get; set; } = new Dictionary<string, JsonElement>(StringComparer.Ordinal);
 
+    [JsonPropertyName(OidcConstants.ClientMetadata.IntrospectionSignedResponseAlgorithm)]
+    public string? IntrospectionSignedResponseAlgorithm { get; set; }
+
+    [JsonPropertyName(OidcConstants.ClientMetadata.IntrospectionEncryptedResponseAlgorithm)]
+    public string? IntrospectionEncryptedResponseAlgorithm { get; set; }
+
+    [JsonPropertyName(OidcConstants.ClientMetadata.IntrospectionEncryptedResponseEncryption)]
+    public string? IntrospectionEncryptedResponseEncryption { get; set; }
+
     // Don't serialize empty arrays
     public bool ShouldSerializeRequestUris() => RequestUris.Any();
 

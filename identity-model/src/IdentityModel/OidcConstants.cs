@@ -273,6 +273,9 @@ public static class OidcConstants
         public const string RequestObjectEncryptionEncryption = "request_object_encryption_enc";
         public const string RequireSignedRequestObject = "require_signed_request_object";
         public const string AlwaysUseDPoPBoundAccessTokens = "dpop_bound_access_tokens";
+        public const string IntrospectionSignedResponseAlgorithm = "introspection_signed_response_alg";
+        public const string IntrospectionEncryptedResponseAlgorithm = "introspection_encrypted_response_alg";
+        public const string IntrospectionEncryptedResponseEncryption = "introspection_encrypted_response_enc";
     }
 
     public static class TokenTypes
@@ -495,6 +498,9 @@ public static class OidcConstants
         public const string TlsClientCertificateBoundAccessTokens = "tls_client_certificate_bound_access_tokens";
         public const string AuthorizationResponseIssParameterSupported = "authorization_response_iss_parameter_supported";
         public const string PromptValuesSupported = "prompt_values_supported";
+        public const string IntrospectionSigningAlgorithmsSupported = "introspection_signing_alg_values_supported";
+        public const string IntrospectionEncryptionAlgorithmsSupported = "introspection_encryption_alg_values_supported";
+        public const string IntrospectionEncryptionEncValuesSupported = "introspection_encryption_enc_values_supported";
 
         // CIBA
         public const string BackchannelTokenDeliveryModesSupported = "backchannel_token_delivery_modes_supported";
