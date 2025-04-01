@@ -18,7 +18,8 @@ public interface IStoreTokensInAuthenticationProperties
     /// <summary>
     /// Sets a UserToken in the AuthenticationProperties.
     /// </summary>
-    void SetUserToken(UserToken token, AuthenticationProperties authenticationProperties, UserTokenRequestParameters? parameters = null);
+    Task SetUserToken(UserToken token, AuthenticationProperties authenticationProperties,
+        UserTokenRequestParameters? parameters = null);
 
     /// <summary>
     /// Removes a UserToken from the AuthenticationProperties.

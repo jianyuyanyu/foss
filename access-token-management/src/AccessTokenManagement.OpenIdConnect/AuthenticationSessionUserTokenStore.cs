@@ -87,7 +87,7 @@ public class AuthenticationSessionUserAccessTokenStore(
         // in case you want to filter certain claims before re-issuing the authentication session
         var transformedPrincipal = await FilterPrincipalAsync(result.Principal!).ConfigureAwait(false);
 
-        tokensInProps.SetUserToken(token, result.Properties, parameters);
+        await tokensInProps.SetUserToken(token, result.Properties, parameters);
 
         var scheme = await tokensInProps.GetSchemeAsync(parameters);
 

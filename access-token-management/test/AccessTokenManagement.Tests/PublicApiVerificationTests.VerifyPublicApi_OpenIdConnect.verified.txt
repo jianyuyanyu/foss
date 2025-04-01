@@ -51,7 +51,7 @@
         System.Threading.Tasks.Task<string> GetSchemeAsync(Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null);
         Duende.AccessTokenManagement.OpenIdConnect.UserToken GetUserToken(Microsoft.AspNetCore.Authentication.AuthenticationProperties authenticationProperties, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null);
         void RemoveUserToken(Microsoft.AspNetCore.Authentication.AuthenticationProperties authenticationProperties, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null);
-        void SetUserToken(Duende.AccessTokenManagement.OpenIdConnect.UserToken token, Microsoft.AspNetCore.Authentication.AuthenticationProperties authenticationProperties, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null);
+        System.Threading.Tasks.Task SetUserToken(Duende.AccessTokenManagement.OpenIdConnect.UserToken token, Microsoft.AspNetCore.Authentication.AuthenticationProperties authenticationProperties, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null);
     }
     public interface IUserAccessor
     {
@@ -120,7 +120,7 @@
         public System.Threading.Tasks.Task<string> GetSchemeAsync(Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null) { }
         public Duende.AccessTokenManagement.OpenIdConnect.UserToken GetUserToken(Microsoft.AspNetCore.Authentication.AuthenticationProperties authenticationProperties, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null) { }
         public void RemoveUserToken(Microsoft.AspNetCore.Authentication.AuthenticationProperties authenticationProperties, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null) { }
-        public void SetUserToken(Duende.AccessTokenManagement.OpenIdConnect.UserToken token, Microsoft.AspNetCore.Authentication.AuthenticationProperties authenticationProperties, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null) { }
+        public System.Threading.Tasks.Task SetUserToken(Duende.AccessTokenManagement.OpenIdConnect.UserToken token, Microsoft.AspNetCore.Authentication.AuthenticationProperties authenticationProperties, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null) { }
     }
     public class UserAccessAccessTokenManagementService : Duende.AccessTokenManagement.OpenIdConnect.IUserTokenManagementService
     {
