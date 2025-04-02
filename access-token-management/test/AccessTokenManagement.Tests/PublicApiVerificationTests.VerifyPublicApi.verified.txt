@@ -198,10 +198,6 @@
         public static Duende.AccessTokenManagement.DuendeAccessTokenSerializationContext Default { get; }
         public override System.Text.Json.Serialization.Metadata.JsonTypeInfo? GetTypeInfo(System.Type type) { }
     }
-    public static class HybridCacheExtMethods
-    {
-        public static System.Threading.Tasks.ValueTask<T?> GetOrDefaultAsync<T>(this Microsoft.Extensions.Caching.Hybrid.HybridCache cache, string key, System.Threading.CancellationToken cancellationToken = default) { }
-    }
     public interface IClientAssertionService
     {
         System.Threading.Tasks.Task<Duende.IdentityModel.Client.ClientAssertion?> GetClientAssertionAsync(string? clientName = null, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null);

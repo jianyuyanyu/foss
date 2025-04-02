@@ -6,7 +6,7 @@ using System.Diagnostics;
 namespace Duende.AccessTokenManagement;
 internal static class ActivitySources
 {
-    
+
     internal static ActivitySource Main = new ActivitySource(ActivitySourceNames.Main);
 }
 

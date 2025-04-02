@@ -26,7 +26,7 @@ builder.Services.AddAuthentication("token")
             NameClaimType = "name",
             RoleClaimType = "role"
         };
-        
+
     });
 
 var services = builder.Services;
