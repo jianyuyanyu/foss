@@ -10,6 +10,10 @@
         protected virtual System.Threading.Tasks.Task<bool> SetDPoPProofTokenAsync(System.Net.Http.HttpRequestMessage request, Duende.AccessTokenManagement.ClientCredentialsToken token, System.Threading.CancellationToken cancellationToken, string? dpopNonce = null) { }
         protected virtual System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken> SetTokenAsync(System.Net.Http.HttpRequestMessage request, bool forceRenewal, System.Threading.CancellationToken cancellationToken, string? dpopNonce = null) { }
     }
+    public static class ActivitySourceNames
+    {
+        public const string Main = "Duende.AccessTokenManagement";
+    }
     public class ClientCredentialsClient
     {
         public ClientCredentialsClient() { }

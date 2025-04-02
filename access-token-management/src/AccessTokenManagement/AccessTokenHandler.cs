@@ -98,7 +98,13 @@ public abstract class AccessTokenHandler(
         CancellationToken cancellationToken,
         string? dpopNonce = null)
     {
-        var token = await GetAccessTokenAsync(forceRenewal, cancellationToken).ConfigureAwait(false);
+        ClientCredentialsToken token;
+
+        // ReSharper disable once ExplicitCallerInfoArgument
+        using (ActivitySources.Main.StartActivity(ActivityNames.AcquiringToken))
+        {
+            token = await GetAccessTokenAsync(forceRenewal, cancellationToken).ConfigureAwait(false);
+        }
 
         if (string.IsNullOrWhiteSpace(token.AccessToken))
         {
