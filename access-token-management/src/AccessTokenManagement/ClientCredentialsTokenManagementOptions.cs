@@ -13,6 +13,9 @@ public class ClientCredentialsTokenManagementOptions
     /// </summary>
     public string CacheKeyPrefix { get; set; } = "Duende.AccessTokenManagement.Cache::";
 
+    /// <summary>
+    /// Prefix used for the nonce store key
+    /// </summary>
     public string NonceStoreKeyPrefix { get; set; } = "Duende.AccessTokenManagement.DPoPNonceStore::";
 
     /// <summary>

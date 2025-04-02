@@ -30,6 +30,7 @@ builder.Services.AddAuthentication("token")
 
 var services = builder.Services;
 services.AddDistributedMemoryCache();
+services.AddHttpClient().AddHttpClient("c1").AddHttpMessageHandler<ChaosMonkeyHandler>();
 services.AddClientCredentialsTokenManagement(opt => opt.CacheLifetimeBuffer = 0)
     .AddClient("c1", opt =>
     {
@@ -86,4 +87,20 @@ app.Run();
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+}
+
+public class ChaosMonkeyHandler : DelegatingHandler
+{
+    private static readonly Random _random = new Random();
+
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        // 10% chance to return unauthorized
+        if (_random.Next(0, 100) < 10)
+        {
+            return new HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
+        }
+
+        return await base.SendAsync(request, cancellationToken);
+    }
 }

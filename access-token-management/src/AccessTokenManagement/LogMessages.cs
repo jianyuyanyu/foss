@@ -223,6 +223,11 @@ internal static partial class LogMessages
     public static partial void WritingNonceToCache(this ILogger logger, string url, string method, DateTimeOffset expiration);
 
     [LoggerMessage(
+        Level = LogLevel.Debug,
+        Message = $"Writing DPoP nonce to Cache for URL: {{{OTelParameters.Url}}}, method: {{{OTelParameters.Method}}}. Expiration: {{{OTelParameters.Expiration}}}")]
+    public static partial void WritingNonceToCache(this ILogger logger, string url, string method, TimeSpan expiration);
+
+    [LoggerMessage(
         Level = LogLevel.Trace,
         Message = $"Cache miss for DPoP nonce for URL: {{{OTelParameters.Url}}}, method: {{{OTelParameters.Method}}}")]
     public static partial void CacheMissForDPoPNonce(this ILogger logger, string url, string method);
