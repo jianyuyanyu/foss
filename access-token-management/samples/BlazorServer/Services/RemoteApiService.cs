@@ -9,11 +9,7 @@ public class RemoteApiService
 {
     private readonly HttpClient _client;
 
-    public RemoteApiService(
-        IHttpClientFactory factory)
-    {
-        _client = factory.CreateClient("demoApiClient");
-    }
+    public RemoteApiService(IHttpClientFactory factory) => _client = factory.CreateClient("demoApiClient");
 
     private record Claim(string type, object value);
 

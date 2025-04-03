@@ -104,10 +104,7 @@ public abstract class ClientTokenManagementApiTests(ITestOutputHelper output) : 
     {
         private HttpMessageHandler? _innerHandler;
 
-        public ApiHandler(HttpMessageHandler innerHandler)
-        {
-            _innerHandler = innerHandler;
-        }
+        public ApiHandler(HttpMessageHandler innerHandler) => _innerHandler = innerHandler;
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {

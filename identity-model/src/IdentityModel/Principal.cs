@@ -22,10 +22,8 @@ public static class Principal
     /// <param name="authenticationType">Type of the authentication.</param>
     /// <param name="claims">The claims.</param>
     /// <returns></returns>
-    public static ClaimsPrincipal Create(string authenticationType, params Claim[] claims)
-    {
-        return new ClaimsPrincipal(Identity.Create(authenticationType, claims));
-    }
+    public static ClaimsPrincipal Create(string authenticationType, params Claim[] claims) =>
+        new ClaimsPrincipal(Identity.Create(authenticationType, claims));
 
     /// <summary>
     /// Creates a ClaimsPrincipal based on information found in an X509 certificate.
@@ -34,8 +32,6 @@ public static class Principal
     /// <param name="authenticationType">Type of the authentication.</param>
     /// <param name="includeAllClaims">if set to <c>true</c> [include all claims].</param>
     /// <returns></returns>
-    public static ClaimsPrincipal CreateFromCertificate(X509Certificate2 certificate, string authenticationType = "X.509", bool includeAllClaims = false)
-    {
-        return new ClaimsPrincipal(Identity.CreateFromCertificate(certificate, authenticationType, includeAllClaims));
-    }
+    public static ClaimsPrincipal CreateFromCertificate(X509Certificate2 certificate, string authenticationType = "X.509", bool includeAllClaims = false) =>
+        new ClaimsPrincipal(Identity.CreateFromCertificate(certificate, authenticationType, includeAllClaims));
 }

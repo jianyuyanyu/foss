@@ -5,13 +5,7 @@ namespace Duende.AccessTokenManagement.Tests;
 
 public class TestDPoPNonceStore : IDPoPNonceStore
 {
-    public Task<string?> GetNonceAsync(DPoPNonceContext context, CancellationToken cancellationToken = default)
-    {
-        return Task.FromResult<string?>(null);
-    }
+    public Task<string?> GetNonceAsync(DPoPNonceContext context, CancellationToken cancellationToken = default) => Task.FromResult<string?>(null);
 
-    public Task StoreNonceAsync(DPoPNonceContext context, string nonce, CancellationToken cancellationToken = default)
-    {
-        return Task.CompletedTask;
-    }
+    public Task StoreNonceAsync(DPoPNonceContext context, string nonce, CancellationToken cancellationToken = default) => Task.CompletedTask;
 }

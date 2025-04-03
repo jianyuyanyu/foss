@@ -273,8 +273,7 @@ public static class StepExtensions
     }
 
     internal static void StepUploadTestResultsAsArtifact(this Job job, Component component)
-    {
-        job.Step()
+        => job.Step()
             .Name($"Test report")
             .If("success() || failure()")
             .Uses("actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882") // 4.4.3
@@ -283,7 +282,6 @@ public static class StepExtensions
                 ("path", string.Join(Environment.NewLine, component.Tests
                     .Select(testProject => $"{component.Name}/test/{testProject}/TestResults/{testProject}.trx"))),
                 ("retention-days", "5"));
-    }
 
     internal static void StepGenerateReportFromTestArtifact(this Job job, Component component, string testProject)
     {

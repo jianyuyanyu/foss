@@ -64,10 +64,7 @@ public class DiscoveryCache : IDiscoveryCache
     /// <summary>
     /// Marks the discovery document as stale and will trigger a request to the discovery endpoint on the next request to get the DiscoveryResponse.
     /// </summary>
-    public void Refresh()
-    {
-        _lazyResponse = new AsyncLazy<DiscoveryDocumentResponse>(GetResponseAsync);
-    }
+    public void Refresh() => _lazyResponse = new AsyncLazy<DiscoveryDocumentResponse>(GetResponseAsync);
 
     private async Task<DiscoveryDocumentResponse> GetResponseAsync()
     {

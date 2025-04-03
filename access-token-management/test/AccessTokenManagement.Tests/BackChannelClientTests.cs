@@ -373,10 +373,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
 
     public class AlwaysSameKeyCacheKeyGenerator(string cacheKey) : IClientCredentialsCacheKeyGenerator
     {
-        public string GenerateKey(string clientName, TokenRequestParameters? parameters = null)
-        {
-            return cacheKey;
-        }
+        public string GenerateKey(string clientName, TokenRequestParameters? parameters = null) => cacheKey;
     }
 
     public class FakeCache : IDistributedCache
@@ -386,10 +383,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
 
         public string? CacheKey = null;
 
-        public byte[]? Get(string key)
-        {
-            throw new InvalidOperationException();
-        }
+        public byte[]? Get(string key) => throw new InvalidOperationException();
 
         public Task<byte[]?> GetAsync(string key, CancellationToken token = new CancellationToken())
         {
@@ -398,30 +392,15 @@ public class BackChannelClientTests(ITestOutputHelper output)
             return Task.FromResult<byte[]?>(null);
         }
 
-        public void Refresh(string key)
-        {
-            throw new InvalidOperationException();
-        }
+        public void Refresh(string key) => throw new InvalidOperationException();
 
-        public Task RefreshAsync(string key, CancellationToken token = new CancellationToken())
-        {
-            throw new InvalidOperationException();
-        }
+        public Task RefreshAsync(string key, CancellationToken token = new CancellationToken()) => throw new InvalidOperationException();
 
-        public void Remove(string key)
-        {
-            throw new InvalidOperationException();
-        }
+        public void Remove(string key) => throw new InvalidOperationException();
 
-        public Task RemoveAsync(string key, CancellationToken token = new CancellationToken())
-        {
-            throw new InvalidOperationException();
-        }
+        public Task RemoveAsync(string key, CancellationToken token = new CancellationToken()) => throw new InvalidOperationException();
 
-        public void Set(string key, byte[] value, DistributedCacheEntryOptions options)
-        {
-            throw new InvalidOperationException();
-        }
+        public void Set(string key, byte[] value, DistributedCacheEntryOptions options) => throw new InvalidOperationException();
 
         public Task SetAsync(string key, byte[] value, DistributedCacheEntryOptions options,
             CancellationToken token = new CancellationToken())

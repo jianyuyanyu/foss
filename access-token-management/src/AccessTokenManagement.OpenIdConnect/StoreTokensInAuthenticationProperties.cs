@@ -144,18 +144,13 @@ public class StoreTokensInAuthenticationProperties(
     /// </summary>
     /// <param name="parameters"></param>
     /// <returns></returns>
-    protected virtual bool AppendChallengeSchemeToTokenNames(UserTokenRequestParameters? parameters)
-    {
-        return tokenManagementOptionsMonitor.CurrentValue.UseChallengeSchemeScopedTokens && !string.IsNullOrEmpty(parameters?.ChallengeScheme);
-    }
+    protected virtual bool AppendChallengeSchemeToTokenNames(UserTokenRequestParameters? parameters) =>
+        tokenManagementOptionsMonitor.CurrentValue.UseChallengeSchemeScopedTokens && !string.IsNullOrEmpty(parameters?.ChallengeScheme);
 
     /// <inheritdoc/>
-    public async Task<string> GetSchemeAsync(UserTokenRequestParameters? parameters = null)
-    {
-        return parameters?.SignInScheme ??
+    public async Task<string> GetSchemeAsync(UserTokenRequestParameters? parameters = null) => parameters?.SignInScheme ??
             (await schemeProvider.GetDefaultSignInSchemeAsync().ConfigureAwait(false))?.Name ??
             throw new InvalidOperationException("No sign in scheme configured");
-    }
 
     /// <inheritdoc/>
     public void RemoveUserToken(AuthenticationProperties authenticationProperties, UserTokenRequestParameters? parameters = null)
@@ -193,9 +188,7 @@ public class StoreTokensInAuthenticationProperties(
         }
     }
 
-    private TokenNames GetTokenNamesWithoutScheme(UserTokenRequestParameters? parameters = null)
-    {
-        return new TokenNames
+    private TokenNames GetTokenNamesWithoutScheme(UserTokenRequestParameters? parameters = null) => new TokenNames
         (
             Token: NamePrefixAndResourceSuffix(OpenIdConnectParameterNames.AccessToken, parameters),
             TokenType: NamePrefixAndResourceSuffix(OpenIdConnectParameterNames.TokenType, parameters),
@@ -206,7 +199,6 @@ public class StoreTokensInAuthenticationProperties(
             RefreshToken: NamePrefix(OpenIdConnectParameterNames.RefreshToken),
             DPoPKey: NamePrefix(DPoPKeyName)
         );
-    }
 
     private TokenNames GetTokenNamesWithScheme(TokenNames names, UserTokenRequestParameters? parameters = null)
     {

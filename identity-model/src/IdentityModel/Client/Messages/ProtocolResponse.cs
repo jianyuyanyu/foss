@@ -125,10 +125,7 @@ public class ProtocolResponse
     /// </summary>
     /// <param name="initializationData">The initialization data.</param>
     /// <returns></returns>
-    protected virtual Task InitializeAsync(object? initializationData = null)
-    {
-        return Task.CompletedTask;
-    }
+    protected virtual Task InitializeAsync(object? initializationData = null) => Task.CompletedTask;
 
     /// <summary>
     /// Gets the HTTP response.

@@ -17,14 +17,8 @@ public class HttpContextUserAccessor : IUserAccessor
     /// <summary>
     /// ctor
     /// </summary>
-    public HttpContextUserAccessor(IHttpContextAccessor httpContextAccessor)
-    {
-        _httpContextAccessor = httpContextAccessor;
-    }
+    public HttpContextUserAccessor(IHttpContextAccessor httpContextAccessor) => _httpContextAccessor = httpContextAccessor;
 
     /// <inheritdoc/>
-    public Task<ClaimsPrincipal> GetCurrentUserAsync()
-    {
-        return Task.FromResult(_httpContextAccessor.HttpContext?.User ?? new ClaimsPrincipal());
-    }
+    public Task<ClaimsPrincipal> GetCurrentUserAsync() => Task.FromResult(_httpContextAccessor.HttpContext?.User ?? new ClaimsPrincipal());
 }

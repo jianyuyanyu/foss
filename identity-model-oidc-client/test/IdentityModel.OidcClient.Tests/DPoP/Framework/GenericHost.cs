@@ -30,13 +30,9 @@ public class GenericHost : IAsyncDisposable
 
     public TestLoggerProvider Logger { get; set; } = new TestLoggerProvider();
 
-
-    public T Resolve<T>()
-        where T : notnull
-    {
+    public T Resolve<T>() where T : notnull =>
         // not calling dispose on scope on purpose
-        return _appServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider.GetRequiredService<T>();
-    }
+        _appServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider.GetRequiredService<T>();
 
     public string Url(string path = null)
     {

@@ -34,10 +34,7 @@ public static class LogSerializer
         "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.",
         Justification = "Code using `JsonOptions` is guarded by `RequiresDynamicCodeAttribute`")]
 #endif
-    static LogSerializer()
-    {
-        JsonOptions.Converters.Add(new JsonStringEnumConverter());
-    }
+    static LogSerializer() => JsonOptions.Converters.Add(new JsonStringEnumConverter());
 
     /// <summary>
     /// Serializes the specified object.
@@ -50,10 +47,7 @@ public static class LogSerializer
 #if NET7_0_OR_GREATER
     [RequiresDynamicCode("The log serializer uses reflection in a way that is incompatible with trimming")]
 #endif
-    public static string Serialize(object logObject)
-    {
-        return Enabled ? JsonSerializer.Serialize(logObject, JsonOptions) : "Logging has been disabled";
-    }
+    public static string Serialize(object logObject) => Enabled ? JsonSerializer.Serialize(logObject, JsonOptions) : "Logging has been disabled";
 
     internal static string Serialize(OidcClientOptions opts) => Serialize<OidcClientOptions>(opts);
     internal static string Serialize(AuthorizeState state) => Serialize<AuthorizeState>(state);
@@ -63,10 +57,8 @@ public static class LogSerializer
     /// </summary>
     /// <param name="logObject">The object.</param>
     /// <returns></returns>
-    private static string Serialize<T>(T logObject)
-    {
-        return Enabled ?
+    private static string Serialize<T>(T logObject) =>
+        Enabled ?
             JsonSerializer.Serialize(logObject, (JsonTypeInfo<T>)SourceGenerationContext.Default.GetTypeInfo(typeof(T))) :
             "Logging has been disabled";
-    }
 }

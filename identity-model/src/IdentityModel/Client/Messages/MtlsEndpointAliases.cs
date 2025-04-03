@@ -19,10 +19,7 @@ public class MtlsEndpointAliases
     /// ctor
     /// </summary>
     /// <param name="json"></param>
-    public MtlsEndpointAliases(JsonElement? json)
-    {
-        Json = json;
-    }
+    public MtlsEndpointAliases(JsonElement? json) => Json = json;
 
     /// <summary>
     /// Returns the token endpoint address

@@ -53,10 +53,7 @@ public class AuthenticationSessionUserAccessTokenStore(
         return tokensInProps.GetUserToken(result.Properties, parameters);
     }
 
-    private HttpContext GetHttpContext()
-    {
-        return contextAccessor.HttpContext ?? throw new InvalidOperationException("HttpContext should not be null!");
-    }
+    private HttpContext GetHttpContext() => contextAccessor.HttpContext ?? throw new InvalidOperationException("HttpContext should not be null!");
 
     /// <inheritdoc/>
     public async Task StoreTokenAsync(
@@ -99,21 +96,13 @@ public class AuthenticationSessionUserAccessTokenStore(
     }
 
     /// <inheritdoc/>
-    public Task ClearTokenAsync(
-        ClaimsPrincipal user,
-        UserTokenRequestParameters? parameters = null)
-    {
-        // don't bother here, since likely we're in the middle of signing out
-        return Task.CompletedTask;
-    }
+    // don't bother here, since likely we're in the middle of signing out
+    public Task ClearTokenAsync(ClaimsPrincipal user, UserTokenRequestParameters? parameters = null) => Task.CompletedTask;
 
     /// <summary>
     /// Allows transforming the principal before re-issuing the authentication session
     /// </summary>
     /// <param name="principal"></param>
     /// <returns></returns>
-    protected virtual Task<ClaimsPrincipal> FilterPrincipalAsync(ClaimsPrincipal principal)
-    {
-        return Task.FromResult(principal);
-    }
+    protected virtual Task<ClaimsPrincipal> FilterPrincipalAsync(ClaimsPrincipal principal) => Task.FromResult(principal);
 }

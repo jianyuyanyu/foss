@@ -72,10 +72,7 @@ public class IntegrationTestBase : IAsyncDisposable
         AppHost = new AppHost(output.WriteLine, IdentityServerHost, ApiHost, clientId, configureUserTokenManagementOptions: configureUserTokenManagementOptions);
     }
 
-    public async Task Login(string sub)
-    {
-        await IdentityServerHost.IssueSessionCookieAsync(new Claim("sub", sub));
-    }
+    public async Task Login(string sub) => await IdentityServerHost.IssueSessionCookieAsync(new Claim("sub", sub));
 
     public virtual async ValueTask DisposeAsync()
     {

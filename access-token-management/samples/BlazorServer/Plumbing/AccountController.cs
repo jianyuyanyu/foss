@@ -30,8 +30,5 @@ public class AccountController : ControllerBase
         return Challenge(props);
     }
 
-    public IActionResult LogOut()
-    {
-        return SignOut("cookie", "oidc");
-    }
+    public IActionResult LogOut() => SignOut("cookie", "oidc");
 }

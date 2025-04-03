@@ -38,10 +38,7 @@ public class ClaimComparer : EqualityComparer<Claim>
     /// Initializes a new instance of the <see cref="ClaimComparer"/> class with given comparison options.
     /// </summary>
     /// <param name="options">Comparison options.</param>
-    public ClaimComparer(Options options)
-    {
-        _options = options ?? throw new ArgumentNullException(nameof(options));
-    }
+    public ClaimComparer(Options options) => _options = options ?? throw new ArgumentNullException(nameof(options));
 
     /// <inheritdoc/>
     public override bool Equals(Claim? x, Claim? y)
