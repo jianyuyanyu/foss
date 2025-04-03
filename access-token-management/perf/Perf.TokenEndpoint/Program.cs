@@ -26,16 +26,21 @@ builder.Services.AddAuthentication("token")
             NameClaimType = "name",
             RoleClaimType = "role"
         };
+
     });
 
 var services = builder.Services;
+services.AddTransient<ChaosMonkeyHandler>();
 services.AddDistributedMemoryCache();
+services.AddHttpClient().AddHttpClient("c1").AddHttpMessageHandler<ChaosMonkeyHandler>();
+services.AddClientCredentialsHttpClient("t2", "c1");
 services.AddClientCredentialsTokenManagement(opt => opt.CacheLifetimeBuffer = 0)
     .AddClient("c1", opt =>
     {
         opt.TokenEndpoint = new Uri(Services.IdentityServer.ActualUri(), "/connect/token").ToString();
         opt.ClientId = "tokenendpoint";
         opt.ClientSecret = "secret";
+        opt.HttpClientName = "c1";
     })
     .UsePreviewHybridCache();
 
@@ -76,6 +81,15 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
+app.MapGet("/client", async (HttpContext c, IHttpClientFactory factory, CancellationToken ct) =>
+{
+    var client = factory.CreateClient("t2");
+    var response = await client.GetAsync($"https://{c.Request.Host}/ok");
+    return await response.Content.ReadAsStringAsync();
+});
+
+app.MapGet("/ok", () => "ok");
+
 app.MapGet("/token", async (IClientCredentialsTokenManagementService svc, CancellationToken ct) =>
 {
     return await svc.GetAccessTokenAsync("c1");
@@ -86,4 +100,20 @@ app.Run();
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+}
+
+public class ChaosMonkeyHandler : DelegatingHandler
+{
+    private static readonly Random _random = new Random();
+
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        // 10% chance to return unauthorized
+        if (_random.Next(0, 10) == 0)
+        {
+            return new HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
+        }
+
+        return await base.SendAsync(request, cancellationToken);
+    }
 }

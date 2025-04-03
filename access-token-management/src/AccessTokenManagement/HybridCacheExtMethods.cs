@@ -11,7 +11,7 @@ namespace Duende.AccessTokenManagement;
 ///
 /// https://github.com/dotnet/extensions/issues/5688#issuecomment-2692247434
 /// </summary>
-public static class HybridCacheExtMethods
+internal static class HybridCacheExtMethods
 {
     private static readonly HybridCacheEntryOptions GetOnlyEntryOptions = new()
     {
@@ -20,6 +20,14 @@ public static class HybridCacheExtMethods
                 | HybridCacheEntryFlags.DisableUnderlyingData
     };
 
+    /// <summary>
+    /// Using a get-only entry, this method will return the value if it exists in the cache.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="cache"></param>
+    /// <param name="key"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public static async ValueTask<T?> GetOrDefaultAsync<T>(this HybridCache cache, string key, CancellationToken cancellationToken = default)
     {
         return await cache.GetOrCreateAsync<T?>(

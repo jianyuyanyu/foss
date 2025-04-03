@@ -16,7 +16,7 @@ internal class HybridDPoPNonceStore(
     ILogger<HybridDPoPNonceStore> logger) : IDPoPNonceStore
 {
     /// <inheritdoc/>
-    public virtual async Task<string?> GetNonceAsync(DPoPNonceContext context, CancellationToken cancellationToken = default)
+    public async Task<string?> GetNonceAsync(DPoPNonceContext context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
 
@@ -25,27 +25,27 @@ internal class HybridDPoPNonceStore(
 
         if (entry != null)
         {
-            logger.LogDebug("Cache hit for DPoP nonce for URL: {url}, method: {method}", context.Url, context.Method);
+            logger.CacheHitForDPoPNonce(context.Url, context.Method);
             return entry;
         }
 
-        logger.LogTrace("Cache miss for DPoP nonce for URL: {url}, method: {method}", context.Url, context.Method);
+        logger.CacheMissForDPoPNonce(context.Url, context.Method);
         return null;
     }
 
     /// <inheritdoc/>
-    public virtual async Task StoreNonceAsync(DPoPNonceContext context, string nonce, CancellationToken cancellationToken = default)
+    public async Task StoreNonceAsync(DPoPNonceContext context, string nonce, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
-
+        var cacheExpiration = TimeSpan.FromHours(1);
         var data = nonce;
 
         var entryOptions = new HybridCacheEntryOptions()
         {
-            Expiration = TimeSpan.FromHours(1)
+            Expiration = cacheExpiration
         };
 
-        logger.LogTrace("Caching DPoP nonce for URL: {url}, method: {method}. Expiration: {expiration}", context.Url, context.Method, entryOptions.Expiration);
+        logger.WritingNonceToCache(context.Url, context.Method, cacheExpiration);
 
         var cacheKey = dPoPNonceStoreKeyGenerator.GenerateKey(context);
         await cache.SetAsync(cacheKey, data, entryOptions, cancellationToken: cancellationToken).ConfigureAwait(false);

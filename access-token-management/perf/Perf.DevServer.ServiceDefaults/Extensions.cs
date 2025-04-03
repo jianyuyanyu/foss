@@ -3,6 +3,7 @@
 
 using System.Collections;
 using System.Runtime.CompilerServices;
+using Duende.AccessTokenManagement;
 using Duende.AccessTokenManagement.OTel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -70,7 +71,8 @@ public static class Extensions
                     .AddAspNetCoreInstrumentation()
                     // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
                     //.AddGrpcClientInstrumentation()
-                    .AddHttpClientInstrumentation();
+                    .AddHttpClientInstrumentation()
+                    .AddSource(ActivitySourceNames.Main);
             });
 
         builder.AddOpenTelemetryExporters();

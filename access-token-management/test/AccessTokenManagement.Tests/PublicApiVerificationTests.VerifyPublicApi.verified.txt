@@ -10,6 +10,10 @@
         protected virtual System.Threading.Tasks.Task<bool> SetDPoPProofTokenAsync(System.Net.Http.HttpRequestMessage request, Duende.AccessTokenManagement.ClientCredentialsToken token, System.Threading.CancellationToken cancellationToken, string? dpopNonce = null) { }
         protected virtual System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken> SetTokenAsync(System.Net.Http.HttpRequestMessage request, bool forceRenewal, System.Threading.CancellationToken cancellationToken, string? dpopNonce = null) { }
     }
+    public static class ActivitySourceNames
+    {
+        public const string Main = "Duende.AccessTokenManagement";
+    }
     public class ClientCredentialsClient
     {
         public ClientCredentialsClient() { }
@@ -193,10 +197,6 @@
         public System.Text.Json.Serialization.Metadata.JsonTypeInfo<string> String { get; }
         public static Duende.AccessTokenManagement.DuendeAccessTokenSerializationContext Default { get; }
         public override System.Text.Json.Serialization.Metadata.JsonTypeInfo? GetTypeInfo(System.Type type) { }
-    }
-    public static class HybridCacheExtMethods
-    {
-        public static System.Threading.Tasks.ValueTask<T?> GetOrDefaultAsync<T>(this Microsoft.Extensions.Caching.Hybrid.HybridCache cache, string key, System.Threading.CancellationToken cancellationToken = default) { }
     }
     public interface IClientAssertionService
     {
