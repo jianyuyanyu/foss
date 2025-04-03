@@ -109,7 +109,7 @@ public class ChaosMonkeyHandler : DelegatingHandler
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         // 10% chance to return unauthorized
-        if (_random.Next(0, 2) == 1)
+        if (_random.Next(0, 10) == 0)
         {
             return new HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
         }
