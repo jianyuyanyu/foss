@@ -7,12 +7,20 @@ on:
     paths:
     - .github/workflows/identity-model-oidc-client-**
     - identity-model-oidc-client/**
+    - .editorconfig
     - Directory.Packages.props
+    - global.json
+    - src.props
+    - test.props
   pull_request:
     paths:
     - .github/workflows/identity-model-oidc-client-**
     - identity-model-oidc-client/**
+    - .editorconfig
     - Directory.Packages.props
+    - global.json
+    - src.props
+    - test.props
 env:
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
