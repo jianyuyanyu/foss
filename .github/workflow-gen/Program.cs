@@ -43,7 +43,11 @@ void GenerateCiWorkflow(Component component)
     {
         $".github/workflows/{component.Name}-**",
         $"{component.Name}/**",
-        "Directory.Packages.props"
+        ".editorconfig",
+        "Directory.Packages.props",
+        "global.json",
+        "src.props",
+        "test.props"
     };
 
     workflow.On
