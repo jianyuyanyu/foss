@@ -51,6 +51,7 @@ public static class HttpClientTokenIntrospectionExtensions
             return ProtocolResponse.FromException<TokenIntrospectionResponse>(ex);
         }
 
-        return await ProtocolResponse.FromHttpResponseAsync<TokenIntrospectionResponse>(response, jwtResponseValidator: request.JwtResponseValidator).ConfigureAwait();
+        Action<TokenIntrospectionResponse> onResponseCreated = introspectionResponse => introspectionResponse.JwtResponseValidator = request.JwtResponseValidator;
+        return await ProtocolResponse.FromHttpResponseAsync(response, onResponseCreated: onResponseCreated).ConfigureAwait();
     }
 }

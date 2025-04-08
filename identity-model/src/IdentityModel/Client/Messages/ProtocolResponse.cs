@@ -4,7 +4,6 @@
 using System.Net;
 using System.Text.Json;
 using Duende.IdentityModel.Internal;
-using Duende.IdentityModel.Validation;
 
 namespace Duende.IdentityModel.Client;
 
@@ -20,20 +19,21 @@ public class ProtocolResponse
     /// <param name="httpResponse">The HTTP response.</param>
     /// <param name="initializationData">The initialization data.</param>
     /// <param name="skipJson">Disables parsing of json</param>
-    /// <param name="jwtResponseValidator">Defines a validator for use in Introspection Jwt responses</param>
+    /// <param name="onResponseCreated">Defines an action </param>
     /// <returns></returns>
     public static async Task<T> FromHttpResponseAsync<T>(
         HttpResponseMessage httpResponse,
         object? initializationData = null,
         bool skipJson = false,
-        ITokenIntrospectionJwtResponseValidator? jwtResponseValidator = null)
+        Action<T>? onResponseCreated = null)
         where T : ProtocolResponse, new()
     {
         var response = new T
         {
-            HttpResponse = httpResponse,
-            JwtResponseValidator = jwtResponseValidator
+            HttpResponse = httpResponse
         };
+
+        onResponseCreated?.Invoke(response);
 
         // try to read content
         var content = string.Empty;
@@ -134,14 +134,6 @@ public class ProtocolResponse
     /// <param name="initializationData">The initialization data.</param>
     /// <returns></returns>
     protected virtual Task InitializeAsync(object? initializationData = null) => Task.CompletedTask;
-
-    /// <summary>
-    /// Gets the custom validator instance for validating a JWT introspection response.
-    /// If set, this validator will be invoked to perform any additional or custom validation on the JWT response (for example, verifying its signature, expiration, or other claims).
-    /// If left null, no JWT validation is performed, although the claims will still be extracted and the raw JWT string will be accessible.
-    /// It is the caller's responsibility to provide an implementation of <see cref="ITokenIntrospectionJwtResponseValidator"/> if JWT validation is desired.
-    /// </summary>
-    public ITokenIntrospectionJwtResponseValidator? JwtResponseValidator { get; protected set; }
 
     /// <summary>
     /// Gets the HTTP response.

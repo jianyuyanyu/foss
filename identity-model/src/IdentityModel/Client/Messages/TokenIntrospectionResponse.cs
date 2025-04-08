@@ -3,6 +3,7 @@
 
 using System.Security.Claims;
 using System.Text.Json;
+using Duende.IdentityModel.Validation;
 
 namespace Duende.IdentityModel.Client;
 
@@ -101,5 +102,13 @@ public class TokenIntrospectionResponse : ProtocolResponse
     /// The claims.
     /// </value>
     public IEnumerable<Claim> Claims { get; protected set; } = Enumerable.Empty<Claim>();
+
+    /// <summary>
+    /// Gets the custom validator instance for validating a JWT introspection response.
+    /// If set, this validator will be invoked to perform any additional or custom validation on the JWT response (for example, verifying its signature, expiration, or other claims).
+    /// If left null, no JWT validation is performed, although the claims will still be extracted and the raw JWT string will be accessible.
+    /// It is the caller's responsibility to provide an implementation of <see cref="ITokenIntrospectionJwtResponseValidator"/> if JWT validation is desired.
+    /// </summary>
+    public ITokenIntrospectionJwtResponseValidator? JwtResponseValidator { get; set; }
 
 }
