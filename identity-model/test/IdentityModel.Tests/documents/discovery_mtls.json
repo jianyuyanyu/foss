@@ -24,6 +24,7 @@
     "token_endpoint": "https://mtls.identityserver.io/connect/token",
     "revocation_endpoint": "https://mtls.identityserver.io/connect/revocation",
     "introspection_endpoint": "https://mtls.identityserver.io/connect/introspect",
-    "device_authorization_endpoint": "https://mtls.identityserver.io/connect/deviceauthorization"
+    "device_authorization_endpoint": "https://mtls.identityserver.io/connect/deviceauthorization",
+    "pushed_authorization_request_endpoint": "https://mtls.identityserver.io/connect/par"
   }
 }

@@ -1079,6 +1079,7 @@ namespace Duende.IdentityModel.Client
         public string? DeviceAuthorizationEndpoint { get; }
         public string? IntrospectionEndpoint { get; }
         public System.Text.Json.JsonElement? Json { get; }
+        public string? PushedAuthorizationRequestEndpoint { get; }
         public string? RevocationEndpoint { get; }
         public string? TokenEndpoint { get; }
     }
