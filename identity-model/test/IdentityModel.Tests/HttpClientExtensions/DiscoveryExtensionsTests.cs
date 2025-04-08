@@ -272,6 +272,7 @@ public class DiscoveryExtensionsTests
         disco.MtlsEndpointAliases.RevocationEndpoint.ShouldBe("https://mtls.identityserver.io/connect/revocation");
         disco.MtlsEndpointAliases.IntrospectionEndpoint.ShouldBe("https://mtls.identityserver.io/connect/introspect");
         disco.MtlsEndpointAliases.DeviceAuthorizationEndpoint.ShouldBe("https://mtls.identityserver.io/connect/deviceauthorization");
+        disco.MtlsEndpointAliases.PushedAuthorizationRequestEndpoint.ShouldBe("https://mtls.identityserver.io/connect/par");
     }
 
     [Fact]

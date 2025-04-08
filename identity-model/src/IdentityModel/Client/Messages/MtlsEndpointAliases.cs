@@ -45,4 +45,12 @@ public class MtlsEndpointAliases
     /// </summary>
     public string? IntrospectionEndpoint =>
         Json?.TryGetString(OidcConstants.Discovery.IntrospectionEndpoint);
+
+
+    /// <summary>
+    /// Gets the pushed authorization endpoint address.
+    /// </summary>
+    public string? PushedAuthorizationRequestEndpoint =>
+        Json?.TryGetString(OidcConstants.Discovery.PushedAuthorizationRequestEndpoint);
+
 }
