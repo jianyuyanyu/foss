@@ -172,7 +172,6 @@ public class DiscoveryDocumentResponse : ProtocolResponse
     /// </value>
     public string? PushedAuthorizationRequestEndpoint => TryGetString(OidcConstants.Discovery.PushedAuthorizationRequestEndpoint);
 
-
     /// <summary>
     /// Gets a flag indicating whether front-channel logout is supported.
     /// </summary>
@@ -328,6 +327,7 @@ public class DiscoveryDocumentResponse : ProtocolResponse
     /// <param name="name">The name of the property whose value is to be retrieved.</param>
     /// <returns>The boolean value if found, and <c>null</c> otherwise.</returns>
     public bool? TryGetBoolean(string name) => Json?.TryGetBoolean(name);
+
     /// <summary>
     /// Attempts to retrieve a string array for a given property name from the discovery document.
     /// </summary>
