@@ -6,18 +6,28 @@ using Duende.IdentityModel.Internal;
 namespace Duende.IdentityModel.Client;
 
 /// <summary>
-/// Represents a URL to a discovery endpoint - parsed to separate the URL and authority
+/// Represents a discovery endpoint URL parsed into its authority and discovery endpoint components.
+/// This is commonly used to resolve URLs for OpenID Connect or OAuth2 discovery documents.
 /// </summary>
 public class DiscoveryEndpoint
 {
     /// <summary>
-    /// Parses a URL and turns it into authority and discovery endpoint URL.
+    /// Parses a given URL into its authority and discovery endpoint components.
     /// </summary>
-    /// <param name="input">The input.</param>
-    /// <param name="path">The path to the discovery document. If not specified this defaults to .well-known/open-id-configuration</param>
-    /// <returns></returns>
+    /// <param name="input">The full URL of the discovery endpoint to parse.</param>
+    /// <param name="path">
+    /// An optional custom path to the discovery document. 
+    /// Defaults to <c>.well-known/openid-configuration</c> if not specified.
+    /// </param>
+    /// <returns>
+    /// A <see cref="DiscoveryEndpoint"/> object containing the parsed authority and discovery endpoint URL.
+    /// </returns>
+    /// <exception cref="System.ArgumentNullException">
+    /// Thrown if the <paramref name="input"/> parameter is <c>null</c>.
+    /// </exception>
     /// <exception cref="System.InvalidOperationException">
-    /// Malformed URL
+    /// Thrown if the <paramref name="input"/> parameter is a malformed URL or uses an invalid scheme
+    /// (neither HTTP nor HTTPS).
     /// </exception>
     public static DiscoveryEndpoint ParseUrl(string input, string? path = null)
     {
@@ -56,11 +66,11 @@ public class DiscoveryEndpoint
     }
 
     /// <summary>
-    /// Determines whether the URL uses http or https.
+    /// Determines if the given URI uses a valid scheme for discovery endpoints.
     /// </summary>
-    /// <param name="url">The URL.</param>
+    /// <param name="url">The URI to validate.</param>
     /// <returns>
-    ///   <c>true</c> if [is valid scheme] [the specified URL]; otherwise, <c>false</c>.
+    /// <c>true</c> if the URI scheme is either "http" or "https"; otherwise, <c>false</c>.
     /// </returns>
     public static bool IsValidScheme(Uri url)
     {
@@ -74,12 +84,12 @@ public class DiscoveryEndpoint
     }
 
     /// <summary>
-    /// Determines whether uses a secure scheme accoding to the policy.
+    /// Determines if the specified URL uses a secure scheme based on the provided discovery policy.
     /// </summary>
-    /// <param name="url">The URL.</param>
-    /// <param name="policy">The policy.</param>
+    /// <param name="url">The URL to evaluate.</param>
+    /// <param name="policy">The discovery policy that defines the security requirements.</param>
     /// <returns>
-    ///   <c>true</c> if [is secure scheme] [the specified URL]; otherwise, <c>false</c>.
+    /// <c>true</c> if the URL uses a secure scheme according to the policy; otherwise, <c>false</c>.
     /// </returns>
     public static bool IsSecureScheme(Uri url, DiscoveryPolicy policy)
     {
@@ -107,26 +117,29 @@ public class DiscoveryEndpoint
     /// <summary>
     /// Initializes a new instance of the <see cref="DiscoveryEndpoint"/> class.
     /// </summary>
-    /// <param name="authority">The authority.</param>
-    /// <param name="url">The discovery endpoint URL.</param>
+    /// <param name="authority">The base authority of the discovery endpoint (e.g., https://example.com).</param>
+    /// <param name="url">The full URL of the discovery document (e.g.,
+    /// https://example.com/.well-known/openid-configuration).</param>
     public DiscoveryEndpoint(string authority, string url)
     {
         Authority = authority;
         Url = url;
     }
+
     /// <summary>
-    /// Gets or sets the authority.
+    /// Gets the base authority of the discovery endpoint.
     /// </summary>
     /// <value>
-    /// The authority.
+    /// A string representing the authority portion of the URL (e.g., https://example.com).
     /// </value>
     public string Authority { get; }
 
     /// <summary>
-    /// Gets or sets the discovery endpoint.
+    /// Gets the full URL to the discovery document.
     /// </summary>
     /// <value>
-    /// The discovery endpoint.
+    /// A string representing the complete discovery endpoint URL, including the path to the discovery document (e.g.,
+    /// https://example.com/.well-known/openid-configuration).
     /// </value>
     public string Url { get; }
 }
