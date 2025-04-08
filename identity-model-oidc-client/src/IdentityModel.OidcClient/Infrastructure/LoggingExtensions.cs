@@ -19,8 +19,5 @@ internal static class LoggingExtensions
     }
 
     [DebuggerStepThrough]
-    public static void LogClaims(this ILogger logger, ClaimsPrincipal user)
-    {
-        logger.LogClaims(user.Claims);
-    }
+    public static void LogClaims(this ILogger logger, ClaimsPrincipal user) => logger.LogClaims(user.Claims);
 }

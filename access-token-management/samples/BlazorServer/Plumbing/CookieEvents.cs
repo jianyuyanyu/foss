@@ -11,10 +11,7 @@ public class CookieEvents : CookieAuthenticationEvents
 {
     private readonly IUserTokenStore _store;
 
-    public CookieEvents(IUserTokenStore store)
-    {
-        _store = store;
-    }
+    public CookieEvents(IUserTokenStore store) => _store = store;
 
     public override async Task ValidatePrincipal(CookieValidatePrincipalContext context)
     {

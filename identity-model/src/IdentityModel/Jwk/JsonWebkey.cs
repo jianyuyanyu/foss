@@ -119,7 +119,7 @@ public class JsonWebKey
     [JsonPropertyName(JsonWebKeyParameterNames.KeyOps)]
     public IList<string> KeyOps
     {
-        get { return _keyops; }
+        get => _keyops;
         set
         {
             if (value == null) throw new ArgumentNullException("KeyOps");
@@ -194,7 +194,7 @@ public class JsonWebKey
     [JsonPropertyName(JsonWebKeyParameterNames.X5c)]
     public IList<string> X5c
     {
-        get { return _certificateClauses; }
+        get => _certificateClauses;
         set
         {
             //if (value == null)

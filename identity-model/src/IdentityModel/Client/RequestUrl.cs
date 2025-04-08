@@ -16,10 +16,7 @@ public class RequestUrl
     /// Initializes a new instance of the <see cref="RequestUrl"/> class.
     /// </summary>
     /// <param name="baseUrl">The authorize endpoint.</param>
-    public RequestUrl(string baseUrl)
-    {
-        _baseUrl = baseUrl;
-    }
+    public RequestUrl(string baseUrl) => _baseUrl = baseUrl;
 
     /// <summary>
     /// Creates URL based on key/value input pairs.

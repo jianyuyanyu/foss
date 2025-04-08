@@ -12,10 +12,7 @@ public class RefreshTokenDelegatingHandlerTests
 {
     private readonly Action<string> _writeLine;
 
-    public RefreshTokenDelegatingHandlerTests(ITestOutputHelper output)
-    {
-        _writeLine = output.WriteLine;
-    }
+    public RefreshTokenDelegatingHandlerTests(ITestOutputHelper output) => _writeLine = output.WriteLine;
 
     //private void WriteLine(string message) => _writeLine(message);
 
@@ -79,13 +76,10 @@ public class RefreshTokenDelegatingHandlerTests
     {
         private readonly HttpClient _client;
 
-        public TestClient(RefreshTokenDelegatingHandler refreshTokenHandler)
+        public TestClient(RefreshTokenDelegatingHandler refreshTokenHandler) => _client = new HttpClient(refreshTokenHandler)
         {
-            _client = new HttpClient(refreshTokenHandler)
-            {
-                BaseAddress = new Uri("http://testing")
-            };
-        }
+            BaseAddress = new Uri("http://testing")
+        };
 
         public async Task SecuredPing()
         {
@@ -106,10 +100,7 @@ public class RefreshTokenDelegatingHandlerTests
             throw new Exception("The client was not able to recover.");
         }
 
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
+        public void Dispose() => _client.Dispose();
     }
 
     /// <summary>

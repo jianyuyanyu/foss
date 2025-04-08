@@ -93,30 +93,21 @@ public class Parameters : List<KeyValuePair<string, string>>
     /// Get parameter value(s) based on name
     /// </summary>
     /// <param name="index"></param>
-    public IEnumerable<string> this[string index]
-    {
-        get { return this.Where(i => i.Key.Equals(index)).Select(i => i.Value); }
-    }
+    public IEnumerable<string> this[string index] => this.Where(i => i.Key.Equals(index)).Select(i => i.Value);
 
     /// <summary>
     /// Get parameter values based on name
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public IEnumerable<string> GetValues(string name)
-    {
-        return this[name];
-    }
+    public IEnumerable<string> GetValues(string name) => this[name];
 
     /// <summary>
     /// Checks the existence of a parameter
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>
-    public bool ContainsKey(string key)
-    {
-        return (this.Any(k => string.Equals(k.Key, key)));
-    }
+    public bool ContainsKey(string key) => (this.Any(k => string.Equals(k.Key, key)));
 
     /// <summary>
     /// Adds a parameter if it has a value

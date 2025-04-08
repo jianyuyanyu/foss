@@ -84,10 +84,7 @@ public class ProtocolRequest : HttpRequestMessage
     /// <summary>
     /// Clones this instance.
     /// </summary>
-    public ProtocolRequest Clone()
-    {
-        return Clone<ProtocolRequest>();
-    }
+    public ProtocolRequest Clone() => Clone<ProtocolRequest>();
 
     /// <summary>
     /// Clones this instance.

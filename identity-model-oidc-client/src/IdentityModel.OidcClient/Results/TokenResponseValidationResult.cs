@@ -5,15 +5,9 @@ namespace Duende.IdentityModel.OidcClient.Results;
 
 internal class TokenResponseValidationResult : Result
 {
-    public TokenResponseValidationResult(string error)
-    {
-        Error = error;
-    }
+    public TokenResponseValidationResult(string error) => Error = error;
 
-    public TokenResponseValidationResult(IdentityTokenValidationResult result)
-    {
-        IdentityTokenValidationResult = result;
-    }
+    public TokenResponseValidationResult(IdentityTokenValidationResult result) => IdentityTokenValidationResult = result;
 
     public virtual IdentityTokenValidationResult IdentityTokenValidationResult { get; set; }
 }

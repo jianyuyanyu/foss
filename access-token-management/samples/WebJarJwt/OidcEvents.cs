@@ -10,10 +10,7 @@ public class OidcEvents : OpenIdConnectEvents
 {
     private readonly IClientAssertionService _assertionService;
 
-    public OidcEvents(IClientAssertionService assertionService)
-    {
-        _assertionService = assertionService;
-    }
+    public OidcEvents(IClientAssertionService assertionService) => _assertionService = assertionService;
 
     public override async Task AuthorizationCodeReceived(AuthorizationCodeReceivedContext context)
     {

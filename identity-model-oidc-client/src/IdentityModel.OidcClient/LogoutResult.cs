@@ -20,10 +20,7 @@ public class LogoutResult : Result
     /// Initializes a new instance of the <see cref="LogoutResult"/> class.
     /// </summary>
     /// <param name="error">The error.</param>
-    public LogoutResult(string error)
-    {
-        Error = error;
-    }
+    public LogoutResult(string error) => Error = error;
 
     /// <summary>
     /// Gets or sets the response.

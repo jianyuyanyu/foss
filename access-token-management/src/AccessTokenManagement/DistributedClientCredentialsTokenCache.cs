@@ -161,8 +161,5 @@ public class DistributedClientCredentialsTokenCache(
     protected virtual string GenerateCacheKey(
         ClientCredentialsTokenManagementOptions options,
         string clientName,
-        TokenRequestParameters? parameters = null)
-    {
-        return cacheKeyGenerator.GenerateKey(clientName, parameters);
-    }
+        TokenRequestParameters? parameters = null) => cacheKeyGenerator.GenerateKey(clientName, parameters);
 }

@@ -8,16 +8,10 @@ namespace Duende.IdentityModel.Internal;
 internal static class InternalStringExtensions
 {
     [DebuggerStepThrough]
-    public static bool IsMissing(this string? value)
-    {
-        return string.IsNullOrWhiteSpace(value);
-    }
+    public static bool IsMissing(this string? value) => string.IsNullOrWhiteSpace(value);
 
     [DebuggerStepThrough]
-    public static bool IsPresent(this string? value)
-    {
-        return !(value.IsMissing());
-    }
+    public static bool IsPresent(this string? value) => !(value.IsMissing());
 
     [DebuggerStepThrough]
     public static string EnsureTrailingSlash(this string url)

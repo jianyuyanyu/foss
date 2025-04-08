@@ -17,10 +17,8 @@ public static class AuthorizationHeaderExtensions
     /// <param name="client">The client.</param>
     /// <param name="userName">Name of the user.</param>
     /// <param name="password">The password.</param>
-    public static void SetBasicAuthentication(this HttpClient client, string userName, string password)
-    {
+    public static void SetBasicAuthentication(this HttpClient client, string userName, string password) =>
         client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(userName, password);
-    }
 
     /// <summary>
     /// Sets a basic authentication header for RFC6749 client authentication.
@@ -28,10 +26,8 @@ public static class AuthorizationHeaderExtensions
     /// <param name="client">The client.</param>
     /// <param name="userName">Name of the user.</param>
     /// <param name="password">The password.</param>
-    public static void SetBasicAuthenticationOAuth(this HttpClient client, string userName, string password)
-    {
+    public static void SetBasicAuthenticationOAuth(this HttpClient client, string userName, string password) =>
         client.DefaultRequestHeaders.Authorization = new BasicAuthenticationOAuthHeaderValue(userName, password);
-    }
 
     /// <summary>
     /// Sets an authorization header with a given scheme and value.
@@ -39,20 +35,16 @@ public static class AuthorizationHeaderExtensions
     /// <param name="client">The client.</param>
     /// <param name="scheme">The scheme.</param>
     /// <param name="token">The token.</param>
-    public static void SetToken(this HttpClient client, string scheme, string token)
-    {
+    public static void SetToken(this HttpClient client, string scheme, string token) =>
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme, token);
-    }
 
     /// <summary>
     /// Sets an authorization header with a bearer token.
     /// </summary>
     /// <param name="client">The client.</param>
     /// <param name="token">The token.</param>
-    public static void SetBearerToken(this HttpClient client, string token)
-    {
+    public static void SetBearerToken(this HttpClient client, string token) =>
         client.SetToken(AuthenticationSchemes.AuthorizationHeaderBearer, token);
-    }
 
     /// <summary>
     /// Sets a basic authentication header.
@@ -60,10 +52,8 @@ public static class AuthorizationHeaderExtensions
     /// <param name="request">The HTTP request message.</param>
     /// <param name="userName">Name of the user.</param>
     /// <param name="password">The password.</param>
-    public static void SetBasicAuthentication(this HttpRequestMessage request, string userName, string password)
-    {
+    public static void SetBasicAuthentication(this HttpRequestMessage request, string userName, string password) =>
         request.Headers.Authorization = new BasicAuthenticationHeaderValue(userName, password);
-    }
 
     /// <summary>
     /// Sets a basic authentication header for RFC6749 client authentication.
@@ -71,10 +61,8 @@ public static class AuthorizationHeaderExtensions
     /// <param name="request">The HTTP request message.</param>
     /// <param name="userName">Name of the user.</param>
     /// <param name="password">The password.</param>
-    public static void SetBasicAuthenticationOAuth(this HttpRequestMessage request, string userName, string password)
-    {
+    public static void SetBasicAuthenticationOAuth(this HttpRequestMessage request, string userName, string password) =>
         request.Headers.Authorization = new BasicAuthenticationOAuthHeaderValue(userName, password);
-    }
 
     /// <summary>
     /// Sets an authorization header with a given scheme and value.
@@ -82,20 +70,16 @@ public static class AuthorizationHeaderExtensions
     /// <param name="request">The HTTP request message.</param>
     /// <param name="scheme">The scheme.</param>
     /// <param name="token">The token.</param>
-    public static void SetToken(this HttpRequestMessage request, string scheme, string token)
-    {
+    public static void SetToken(this HttpRequestMessage request, string scheme, string token) =>
         request.Headers.Authorization = new AuthenticationHeaderValue(scheme, token);
-    }
 
     /// <summary>
     /// Sets an authorization header with a bearer token.
     /// </summary>
     /// <param name="request">The HTTP request message.</param>
     /// <param name="token">The token.</param>
-    public static void SetBearerToken(this HttpRequestMessage request, string token)
-    {
+    public static void SetBearerToken(this HttpRequestMessage request, string token) =>
         request.SetToken(AuthenticationSchemes.AuthorizationHeaderBearer, token);
-    }
 
     /// <summary>
     /// Sets an authorization header with a DPoP token, and the DPoP proof token header with a proof token.

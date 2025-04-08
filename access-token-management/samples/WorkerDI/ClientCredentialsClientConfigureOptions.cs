@@ -11,15 +11,9 @@ public class ClientCredentialsClientConfigureOptions : IConfigureNamedOptions<Cl
 {
     private readonly DiscoveryCache _cache;
 
-    public ClientCredentialsClientConfigureOptions(DiscoveryCache cache)
-    {
-        _cache = cache;
-    }
+    public ClientCredentialsClientConfigureOptions(DiscoveryCache cache) => _cache = cache;
 
-    public void Configure(ClientCredentialsClient options)
-    {
-        throw new System.NotImplementedException();
-    }
+    public void Configure(ClientCredentialsClient options) => throw new System.NotImplementedException();
 
     public void Configure(string? name, ClientCredentialsClient options)
     {

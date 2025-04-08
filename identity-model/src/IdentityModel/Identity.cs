@@ -37,10 +37,8 @@ public static class Identity
     /// <param name="authenticationType">Type of the authentication.</param>
     /// <param name="claims">The claims.</param>
     /// <returns></returns>
-    public static ClaimsIdentity Create(string authenticationType, params Claim[] claims)
-    {
-        return new ClaimsIdentity(claims, authenticationType, JwtClaimTypes.Name, JwtClaimTypes.Role);
-    }
+    public static ClaimsIdentity Create(string authenticationType, params Claim[] claims) =>
+        new ClaimsIdentity(claims, authenticationType, JwtClaimTypes.Name, JwtClaimTypes.Role);
 
     /// <summary>
     /// Creates a ClaimsIdentity based on information found in an X509 certificate.

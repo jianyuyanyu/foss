@@ -10,10 +10,8 @@ public abstract class DiscoveryPolicyTestsBase
 {
     private readonly IAuthorityValidationStrategy _authorityValidationStrategy;
 
-    protected DiscoveryPolicyTestsBase(IAuthorityValidationStrategy authorityValidationStrategy)
-    {
+    protected DiscoveryPolicyTestsBase(IAuthorityValidationStrategy authorityValidationStrategy) =>
         _authorityValidationStrategy = authorityValidationStrategy;
-    }
 
     protected DiscoveryPolicy ForceTestedAuthorityValidationStrategy(DiscoveryPolicy policy)
     {

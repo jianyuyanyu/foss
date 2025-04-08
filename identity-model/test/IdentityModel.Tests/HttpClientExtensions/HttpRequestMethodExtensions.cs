@@ -5,12 +5,11 @@ namespace Duende.IdentityModel.HttpClientExtensions;
 
 internal static class HttpRequestMethodExtensions
 {
-    public static IDictionary<string, object> GetProperties(this HttpRequestMessage requestMessage)
-    {
+    public static IDictionary<string, object> GetProperties(this HttpRequestMessage requestMessage) =>
 #if NETFRAMEWORK
-        return requestMessage.Properties;
+        requestMessage.Properties;
 #else
-        return requestMessage.Options;
+        requestMessage.Options;
 #endif
-    }
+
 }

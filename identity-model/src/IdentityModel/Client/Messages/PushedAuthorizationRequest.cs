@@ -104,9 +104,5 @@ public class PushedAuthorizationRequest : ProtocolRequest
     /// Copies properties from a request into a Parameters collection. 
     /// </summary>
     /// <param name="targetParameters">The parameters to copy into.</param>
-    public Parameters MergeInto(Parameters targetParameters)
-    {
-
-        return targetParameters;
-    }
+    public Parameters MergeInto(Parameters targetParameters) => targetParameters;
 }

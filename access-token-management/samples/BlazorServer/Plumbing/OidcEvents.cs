@@ -10,10 +10,7 @@ public class OidcEvents : OpenIdConnectEvents
 {
     private readonly IUserTokenStore _store;
 
-    public OidcEvents(IUserTokenStore store)
-    {
-        _store = store;
-    }
+    public OidcEvents(IUserTokenStore store) => _store = store;
 
     public override async Task TokenValidated(TokenValidatedContext context)
     {

@@ -212,9 +212,8 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
     /// <returns></returns>
     public static IHttpClientBuilder AddUserAccessTokenHandler(
         this IHttpClientBuilder httpClientBuilder,
-        UserTokenRequestParameters? parameters = null)
-    {
-        return httpClientBuilder.AddHttpMessageHandler(provider =>
+        UserTokenRequestParameters? parameters = null) =>
+        httpClientBuilder.AddHttpMessageHandler(provider =>
         {
             var metrics = provider.GetRequiredService<AccessTokenManagementMetrics>();
             var dpopService = provider.GetRequiredService<IDPoPProofService>();
@@ -236,7 +235,6 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
 #pragma warning restore CS0618 // Type or member is obsolete
 
         });
-    }
 
     /// <summary>
     /// Adds the client access token handler to an HttpClient
@@ -246,9 +244,8 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
     /// <returns></returns>
     public static IHttpClientBuilder AddClientAccessTokenHandler(
         this IHttpClientBuilder httpClientBuilder,
-        UserTokenRequestParameters? parameters = null)
-    {
-        return httpClientBuilder.AddHttpMessageHandler(provider =>
+        UserTokenRequestParameters? parameters = null) =>
+        httpClientBuilder.AddHttpMessageHandler(provider =>
         {
             var metrics = provider.GetRequiredService<AccessTokenManagementMetrics>();
             var dpopService = provider.GetRequiredService<IDPoPProofService>();
@@ -267,5 +264,4 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
         });
 #pragma warning restore CS0618 // Type or member is obsolete
 
-    }
 }

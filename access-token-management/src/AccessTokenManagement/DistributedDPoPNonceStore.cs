@@ -62,8 +62,5 @@ public class DistributedDPoPNonceStore(
     /// Generates the cache key based on various inputs
     /// </summary>
     [Obsolete("This method is deprecated and will be removed in a future version. To customize CacheKeyGeneration, please use the property ClientCredentialsTokenManagementOptions.GenerateNonceStoreKey")]
-    protected virtual string GenerateCacheKey(DPoPNonceContext context)
-    {
-        return dPoPNonceStoreKeyGenerator.GenerateKey(context);
-    }
+    protected virtual string GenerateCacheKey(DPoPNonceContext context) => dPoPNonceStoreKeyGenerator.GenerateKey(context);
 }
