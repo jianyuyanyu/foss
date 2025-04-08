@@ -142,5 +142,4 @@ public class DiscoveryEndpoint
     /// https://example.com/.well-known/openid-configuration).
     /// </value>
     public string Url { get; }
-
 }
