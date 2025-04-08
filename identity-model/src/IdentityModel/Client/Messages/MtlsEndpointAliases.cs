@@ -6,42 +6,46 @@ using System.Text.Json;
 namespace Duende.IdentityModel.Client;
 
 /// <summary>
-/// MTLS endpoint aliases
+/// Represents aliases for mutual TLS (mTLS) endpoints in an OpenID Connect discovery document.
+/// Provides access to specific mTLS-based endpoints such as token, revocation, and device authorization endpoints.
 /// </summary>
 public class MtlsEndpointAliases
 {
     /// <summary>
-    /// The raw JSON
+    /// The raw <see cref="JsonElement"/> that contains the mTLS endpoint aliases.
     /// </summary>
     public JsonElement? Json { get; }
 
     /// <summary>
-    /// ctor
+    /// Initializes a new instance of the <see cref="MtlsEndpointAliases"/> class.
     /// </summary>
-    /// <param name="json"></param>
+    /// <param name="json">The raw <see cref="JsonElement"/> that contains the mTLS endpoint aliases.</param>
     public MtlsEndpointAliases(JsonElement? json)
     {
         Json = json;
     }
 
     /// <summary>
-    /// Returns the token endpoint address
+    /// Gets the token endpoint address.
     /// </summary>
-    public string? TokenEndpoint => Json?.TryGetString(OidcConstants.Discovery.TokenEndpoint);
+    public string? TokenEndpoint =>
+        Json?.TryGetString(OidcConstants.Discovery.TokenEndpoint);
 
     /// <summary>
-    /// Returns the revocation endpoint address
+    /// Gets the revocation endpoint address.
     /// </summary>
-    public string? RevocationEndpoint => Json?.TryGetString(OidcConstants.Discovery.RevocationEndpoint);
+    public string? RevocationEndpoint =>
+        Json?.TryGetString(OidcConstants.Discovery.RevocationEndpoint);
 
     /// <summary>
-    /// Returns the device authorization endpoint address
+    /// Gets the device authorization endpoint address.
     /// </summary>
-    public string? DeviceAuthorizationEndpoint => Json?.TryGetString(OidcConstants.Discovery.DeviceAuthorizationEndpoint);
+    public string? DeviceAuthorizationEndpoint =>
+        Json?.TryGetString(OidcConstants.Discovery.DeviceAuthorizationEndpoint);
 
     /// <summary>
-    /// Returns the introspection endpoint address
+    /// Gets the introspection endpoint address.
     /// </summary>
-    public string? IntrospectionEndpoint => Json?.TryGetString(OidcConstants.Discovery.IntrospectionEndpoint);
-
+    public string? IntrospectionEndpoint =>
+        Json?.TryGetString(OidcConstants.Discovery.IntrospectionEndpoint);
 }
