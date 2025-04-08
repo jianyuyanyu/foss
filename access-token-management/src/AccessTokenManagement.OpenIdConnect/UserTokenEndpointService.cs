@@ -12,6 +12,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// <summary>
 /// Implements token endpoint operations using IdentityModel
 /// </summary>
+[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class UserTokenEndpointService(
     AccessTokenManagementMetrics metrics,
     IOpenIdConnectConfigurationService configurationService,

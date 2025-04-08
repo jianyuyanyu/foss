@@ -115,6 +115,8 @@
         protected override Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics.TokenRequestType TokenRequestType { get; }
         protected override System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken> GetAccessTokenAsync(bool forceRenewal, System.Threading.CancellationToken cancellationToken) { }
     }
+    [System.Obsolete(("This will be made internal or removed in a future version. If you are using this " +
+        "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class StoreTokensInAuthenticationProperties : Duende.AccessTokenManagement.OpenIdConnect.IStoreTokensInAuthenticationProperties
     {
         public StoreTokensInAuthenticationProperties(Microsoft.Extensions.Options.IOptionsMonitor<Duende.AccessTokenManagement.OpenIdConnect.UserTokenManagementOptions> tokenManagementOptionsMonitor, Microsoft.Extensions.Options.IOptionsMonitor<Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationOptions> cookieOptionsMonitor, Microsoft.AspNetCore.Authentication.IAuthenticationSchemeProvider schemeProvider, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.OpenIdConnect.StoreTokensInAuthenticationProperties> logger) { }
@@ -124,6 +126,8 @@
         public void RemoveUserToken(Microsoft.AspNetCore.Authentication.AuthenticationProperties authenticationProperties, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null) { }
         public System.Threading.Tasks.Task SetUserToken(Duende.AccessTokenManagement.OpenIdConnect.UserToken token, Microsoft.AspNetCore.Authentication.AuthenticationProperties authenticationProperties, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null) { }
     }
+    [System.Obsolete(("This will be made internal or removed in a future version. If you are using this " +
+        "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class UserAccessAccessTokenManagementService : Duende.AccessTokenManagement.OpenIdConnect.IUserTokenManagementService
     {
         public UserAccessAccessTokenManagementService(Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics metrics, Duende.AccessTokenManagement.OpenIdConnect.IUserTokenRequestSynchronization sync, Duende.AccessTokenManagement.OpenIdConnect.IUserTokenStore userAccessTokenStore, System.TimeProvider clock, Microsoft.Extensions.Options.IOptions<Duende.AccessTokenManagement.OpenIdConnect.UserTokenManagementOptions> options, Duende.AccessTokenManagement.OpenIdConnect.IUserTokenEndpointService tokenEndpointService, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.OpenIdConnect.UserAccessAccessTokenManagementService> logger) { }
@@ -136,6 +140,8 @@
         public string? IdentityToken { get; set; }
         public string? RefreshToken { get; set; }
     }
+    [System.Obsolete(("This will be made internal or removed in a future version. If you are using this " +
+        "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public class UserTokenEndpointService : Duende.AccessTokenManagement.OpenIdConnect.IUserTokenEndpointService
     {
         public UserTokenEndpointService(Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics metrics, Duende.AccessTokenManagement.OpenIdConnect.IOpenIdConnectConfigurationService configurationService, Microsoft.Extensions.Options.IOptions<Duende.AccessTokenManagement.OpenIdConnect.UserTokenManagementOptions> options, Duende.AccessTokenManagement.IClientAssertionService clientAssertionService, Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.OpenIdConnect.UserTokenEndpointService> logger) { }

@@ -28,18 +28,16 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
 
         services.AddClientCredentialsTokenManagement();
         services.AddSingleton<IConfigureOptions<ClientCredentialsClient>, ConfigureOpenIdConnectClientCredentialsOptions>();
+
         // TODO: maybe return a builder with a ConfigureScheme that adds IConfigureNamedOptions/IPostConfigureNamedOptions with the naming convention?
         // for example, per-scheme client credentials style, scope, etc settings
-
-        services.TryAddTransient<IUserTokenManagementService, UserAccessAccessTokenManagementService>();
 #pragma warning disable CS0618 // Type or member is obsolete
+        services.TryAddTransient<IUserTokenManagementService, UserAccessAccessTokenManagementService>();
         services.TryAddTransient<IOpenIdConnectConfigurationService, OpenIdConnectConfigurationService>();
-#pragma warning restore CS0618 // Type or member is obsolete
         services.TryAddSingleton<IUserTokenRequestSynchronization, UserTokenRequestSynchronization>();
         services.TryAddTransient<IUserTokenEndpointService, UserTokenEndpointService>();
-
         services.TryAddSingleton<IStoreTokensInAuthenticationProperties, StoreTokensInAuthenticationProperties>();
-
+#pragma warning restore CS0618 // Type or member is obsolete
         services.ConfigureOptions<ConfigureOpenIdConnectOptions>();
 
         // By default, we assume that we are in a traditional web application
