@@ -72,7 +72,7 @@ public class DiscoveryDocumentResponse : ProtocolResponse
     /// Gets the issuer identifier for the authorization server.
     /// </summary>
     /// <value>
-    /// The issuer URL as a string, if available; otherwise, null.
+    /// The issuer URL as a string, or <c>null</c> if it is not found in the discovery document.
     /// </value>
     public string? Issuer => TryGetString(OidcConstants.Discovery.Issuer);
 
