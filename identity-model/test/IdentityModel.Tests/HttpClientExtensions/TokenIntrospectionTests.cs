@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using Duende.IdentityModel.Client;
 using Duende.IdentityModel.Infrastructure;
+using Duende.IdentityModel.Validation;
 
 namespace Duende.IdentityModel.HttpClientExtensions;
 
@@ -351,7 +352,8 @@ public class TokenIntrospectionTests
         {
             Address = Endpoint,
             Token = "token",
-            ResponseFormat = IntrospectionResponseFormat.Jwt
+            ResponseFormat = IntrospectionResponseFormat.Jwt,
+            JwtResponseValidator = new NoValidationIntrospectionJwtResponseValidator()
         });
 
         response.ShouldNotBeNull();
@@ -396,7 +398,8 @@ public class TokenIntrospectionTests
             Address = Endpoint,
             ClientId = "client",
             ClientSecret = "secret",
-            ResponseFormat = IntrospectionResponseFormat.Jwt
+            ResponseFormat = IntrospectionResponseFormat.Jwt,
+            JwtResponseValidator = new NoValidationIntrospectionJwtResponseValidator()
         };
 
         var handler = new NetworkHandler(document, HttpStatusCode.OK);

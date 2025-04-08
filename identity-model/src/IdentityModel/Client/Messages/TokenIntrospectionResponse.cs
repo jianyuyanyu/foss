@@ -46,6 +46,9 @@ public class TokenIntrospectionResponse : ProtocolResponse
             {
                 throw new InvalidOperationException("token_introspection claim not found in JWT payload");
             }
+
+            // Invoke the optional Jwt validator if provided.
+            JwtResponseValidator?.Validate(this);
         }
 
         if (Json == null)

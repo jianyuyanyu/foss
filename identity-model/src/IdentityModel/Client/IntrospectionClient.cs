@@ -47,6 +47,7 @@ public class IntrospectionClient
         request.ClientCredentialStyle = _options.ClientCredentialStyle;
         request.AuthorizationHeaderStyle = _options.AuthorizationHeaderStyle;
         request.Parameters = new Parameters(_options.Parameters);
+        request.JwtResponseValidator = _options.JwtResponseValidator;
 
         if (parameters != null)
         {

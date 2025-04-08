@@ -18,7 +18,10 @@ public static class HttpClientTokenIntrospectionExtensions
     /// <param name="request">The request.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
-    public static async Task<TokenIntrospectionResponse> IntrospectTokenAsync(this HttpMessageInvoker client, TokenIntrospectionRequest request, CancellationToken cancellationToken = default)
+    public static async Task<TokenIntrospectionResponse> IntrospectTokenAsync(
+        this HttpMessageInvoker client,
+        TokenIntrospectionRequest request,
+        CancellationToken cancellationToken = default)
     {
         var clone = request.Clone();
 
@@ -48,6 +51,6 @@ public static class HttpClientTokenIntrospectionExtensions
             return ProtocolResponse.FromException<TokenIntrospectionResponse>(ex);
         }
 
-        return await ProtocolResponse.FromHttpResponseAsync<TokenIntrospectionResponse>(response).ConfigureAwait();
+        return await ProtocolResponse.FromHttpResponseAsync<TokenIntrospectionResponse>(response, jwtResponseValidator: request.JwtResponseValidator).ConfigureAwait();
     }
 }

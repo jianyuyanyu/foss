@@ -1053,6 +1053,7 @@ namespace Duende.IdentityModel.Client
     public class IntrospectionClientOptions : Duende.IdentityModel.Client.ClientOptions
     {
         public IntrospectionClientOptions() { }
+        public Duende.IdentityModel.Validation.ITokenIntrospectionJwtResponseValidator? JwtResponseValidator { get; set; }
         public Duende.IdentityModel.Client.IntrospectionResponseFormat ResponseFormat { get; set; }
     }
     public enum IntrospectionResponseFormat
@@ -1147,12 +1148,13 @@ namespace Duende.IdentityModel.Client
         public System.Net.HttpStatusCode HttpStatusCode { get; }
         public bool IsError { get; }
         public System.Text.Json.JsonElement? Json { get; set; }
+        public Duende.IdentityModel.Validation.ITokenIntrospectionJwtResponseValidator? JwtResponseValidator { get; set; }
         public string? Raw { get; set; }
         protected virtual System.Threading.Tasks.Task InitializeAsync(object? initializationData = null) { }
         public string? TryGet(string name) { }
         public static T FromException<T>(System.Exception ex, string? errorMessage = null)
             where T : Duende.IdentityModel.Client.ProtocolResponse, new () { }
-        public static System.Threading.Tasks.Task<T> FromHttpResponseAsync<T>(System.Net.Http.HttpResponseMessage httpResponse, object? initializationData = null, bool skipJson = false)
+        public static System.Threading.Tasks.Task<T> FromHttpResponseAsync<T>(System.Net.Http.HttpResponseMessage httpResponse, object? initializationData = null, bool skipJson = false, Duende.IdentityModel.Validation.ITokenIntrospectionJwtResponseValidator? jwtResponseValidator = null)
             where T : Duende.IdentityModel.Client.ProtocolResponse, new () { }
     }
     public class PushedAuthorizationRequest : Duende.IdentityModel.Client.ProtocolRequest
@@ -1265,6 +1267,7 @@ namespace Duende.IdentityModel.Client
     public class TokenIntrospectionRequest : Duende.IdentityModel.Client.ProtocolRequest
     {
         public TokenIntrospectionRequest() { }
+        public Duende.IdentityModel.Validation.ITokenIntrospectionJwtResponseValidator? JwtResponseValidator { get; set; }
         public Duende.IdentityModel.Client.IntrospectionResponseFormat ResponseFormat { get; set; }
         public string Token { get; set; }
         public string? TokenTypeHint { get; set; }
@@ -1422,5 +1425,17 @@ namespace Duende.IdentityModel.Jwk
         public System.Collections.Generic.List<Duende.IdentityModel.Jwk.JsonWebKey> Keys { get; set; }
         [System.Text.Json.Serialization.JsonIgnore]
         public string? RawData { get; set; }
+    }
+}
+namespace Duende.IdentityModel.Validation
+{
+    public interface ITokenIntrospectionJwtResponseValidator
+    {
+        void Validate(Duende.IdentityModel.Client.TokenIntrospectionResponse response);
+    }
+    public class NoValidationIntrospectionJwtResponseValidator : Duende.IdentityModel.Validation.ITokenIntrospectionJwtResponseValidator
+    {
+        public NoValidationIntrospectionJwtResponseValidator() { }
+        public void Validate(Duende.IdentityModel.Client.TokenIntrospectionResponse response) { }
     }
 }
