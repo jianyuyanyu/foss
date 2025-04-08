@@ -1,16 +1,14 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using Duende.AccessTokenManagement;
-using Duende.AccessTokenManagement.OpenIdConnect;
 using Duende.AccessTokenManagement.OTel;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-// ReSharper disable once CheckNamespace
-namespace Microsoft.Extensions.DependencyInjection;
+namespace Duende.AccessTokenManagement.OpenIdConnect;
 
 /// <summary>
 /// Extension methods for IServiceCollection to register the user token management services
@@ -213,7 +211,9 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
         UserTokenRequestParameters? parameters = null) =>
         httpClientBuilder.AddHttpMessageHandler(provider =>
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             var metrics = provider.GetRequiredService<AccessTokenManagementMetrics>();
+#pragma warning restore CS0618 // Type or member is obsolete
             var dpopService = provider.GetRequiredService<IDPoPProofService>();
             var dpopNonceStore = provider.GetRequiredService<IDPoPNonceStore>();
             var userTokenManagement = provider.GetRequiredService<IUserTokenManagementService>();
@@ -245,7 +245,9 @@ public static class OpenIdConnectTokenManagementServiceCollectionExtensions
         UserTokenRequestParameters? parameters = null) =>
         httpClientBuilder.AddHttpMessageHandler(provider =>
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             var metrics = provider.GetRequiredService<AccessTokenManagementMetrics>();
+#pragma warning restore CS0618 // Type or member is obsolete
             var dpopService = provider.GetRequiredService<IDPoPProofService>();
             var dpopNonceStore = provider.GetRequiredService<IDPoPNonceStore>();
             var contextAccessor = provider.GetRequiredService<IHttpContextAccessor>();

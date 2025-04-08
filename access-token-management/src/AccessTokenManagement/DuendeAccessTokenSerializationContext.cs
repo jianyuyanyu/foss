@@ -11,6 +11,6 @@ namespace Duende.AccessTokenManagement;
 [JsonSerializable(typeof(ClientCredentialsToken))]
 [JsonSerializable(typeof(long))]
 [JsonSerializable(typeof(Dictionary<string, object>))]
-public partial class DuendeAccessTokenSerializationContext : JsonSerializerContext
+internal partial class DuendeAccessTokenSerializationContext : JsonSerializerContext
 {
 }

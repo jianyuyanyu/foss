@@ -1,15 +1,14 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using Duende.AccessTokenManagement;
 using Duende.AccessTokenManagement.Implementation;
 using Duende.AccessTokenManagement.OTel;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
-// ReSharper disable once CheckNamespace
-namespace Microsoft.Extensions.DependencyInjection;
+namespace Duende.AccessTokenManagement;
 
 /// <summary>
 /// Extension methods for IServiceCollection to register the client credentials token management services
@@ -67,7 +66,9 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
 
         services.TryAddTransient<IClientCredentialsCacheKeyGenerator, DefaultClientCredentialsCacheKeyGenerator>();
         services.TryAddTransient<IDPoPNonceStoreKeyGenerator, DPoPNonceStoreKeyGenerator>();
+#pragma warning disable CS0618 // Type or member is obsolete
         services.AddSingleton<AccessTokenManagementMetrics>();
+#pragma warning restore CS0618 // Type or member is obsolete
 
         return new ClientCredentialsTokenManagementBuilder(services);
     }
@@ -125,7 +126,9 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
 
         return httpClientBuilder.AddHttpMessageHandler(provider =>
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             var metrics = provider.GetRequiredService<AccessTokenManagementMetrics>();
+#pragma warning restore CS0618 // Type or member is obsolete
             var dpopService = provider.GetRequiredService<IDPoPProofService>();
             var dpopNonceStore = provider.GetRequiredService<IDPoPNonceStore>();
             var accessTokenManagementService = provider.GetRequiredService<IClientCredentialsTokenManagementService>();

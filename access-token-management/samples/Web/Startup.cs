@@ -4,7 +4,6 @@
 using System.Security.Cryptography;
 using System.Text.Json;
 using Duende.AccessTokenManagement.OpenIdConnect;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;

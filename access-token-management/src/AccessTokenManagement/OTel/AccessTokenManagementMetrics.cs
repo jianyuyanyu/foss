@@ -7,6 +7,7 @@ using System.Diagnostics.Metrics;
 namespace Duende.AccessTokenManagement.OTel;
 
 
+[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public sealed class AccessTokenManagementMetrics
 {
     public const string MeterName = "Duende.AccessTokenManagement";

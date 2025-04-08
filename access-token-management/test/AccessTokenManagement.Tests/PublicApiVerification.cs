@@ -42,7 +42,7 @@ public class PublicApiVerificationTests
         var types = typeof(AccessTokenHandler).Assembly.GetExportedTypes()
             .Where(t => t.IsPublic)
             .Select(t => FormatTypeName(t));
-            
+
 
         await Verify(string.Join(Environment.NewLine, types));
     }
