@@ -33,15 +33,13 @@ internal class ServicesAccessorCircuitHandler(
     : CircuitHandler
 {
     public override Func<CircuitInboundActivityContext, Task> CreateInboundActivityHandler(
-        Func<CircuitInboundActivityContext, Task> next)
-    {
-        return async context =>
-        {
-            servicesAccessor.Services = services;
-            await next(context);
-            servicesAccessor.Services = null;
-        };
-    }
+        Func<CircuitInboundActivityContext, Task> next) =>
+        async context =>
+            {
+                servicesAccessor.Services = services;
+                await next(context);
+                servicesAccessor.Services = null;
+            };
 }
 
 internal static class CircuitServicesServiceCollectionExtensions

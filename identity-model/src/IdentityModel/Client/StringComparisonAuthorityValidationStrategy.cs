@@ -17,10 +17,7 @@ public sealed class StringComparisonAuthorityValidationStrategy : IAuthorityVali
     /// Constructor with <see cref="StringComparison"/> argument.
     /// </summary>
     /// <param name="stringComparison"></param>
-    public StringComparisonAuthorityValidationStrategy(StringComparison stringComparison = StringComparison.Ordinal)
-    {
-        _stringComparison = stringComparison;
-    }
+    public StringComparisonAuthorityValidationStrategy(StringComparison stringComparison = StringComparison.Ordinal) => _stringComparison = stringComparison;
 
     /// <summary>
     /// String comparison between issuer and authority (trailing slash ignored).

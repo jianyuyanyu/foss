@@ -22,20 +22,16 @@ public static class DPoPExtensions
     /// <summary>
     /// Reads the DPoP nonce header from the response
     /// </summary>
-    public static string? GetDPoPNonce(this HttpResponseMessage response)
-    {
-        return response.Headers.TryGetValues(OidcConstants.HttpHeaders.DPoPNonce, out var values)
+    public static string? GetDPoPNonce(this HttpResponseMessage response) =>
+        response.Headers.TryGetValues(OidcConstants.HttpHeaders.DPoPNonce, out var values)
             ? values.FirstOrDefault()
             : null;
-    }
 
     /// <summary>
     /// Returns the URL without any query params
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    public static string GetDPoPUrl(this HttpRequestMessage request)
-    {
-        return request.RequestUri!.Scheme + "://" + request.RequestUri!.Authority + request.RequestUri!.LocalPath;
-    }
+    public static string GetDPoPUrl(this HttpRequestMessage request) =>
+        request.RequestUri!.Scheme + "://" + request.RequestUri!.Authority + request.RequestUri!.LocalPath;
 }

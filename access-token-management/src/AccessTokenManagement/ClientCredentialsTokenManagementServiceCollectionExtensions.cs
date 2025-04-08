@@ -108,11 +108,8 @@ public static class ClientCredentialsTokenManagementServiceCollectionExtensions
         this IServiceCollection services,
         string httpClientName,
         string tokenClientName,
-        Action<IServiceProvider, HttpClient> configureClient)
-    {
-        return services.AddHttpClient(httpClientName, configureClient)
-            .AddClientCredentialsTokenHandler(tokenClientName);
-    }
+        Action<IServiceProvider, HttpClient> configureClient) =>
+            services.AddHttpClient(httpClientName, configureClient).AddClientCredentialsTokenHandler(tokenClientName);
 
     /// <summary>
     /// Adds the client access token handler to an HttpClient

@@ -28,10 +28,8 @@ public static class JsonWebKeys
     /// <summary>
     /// Creates a new RSA JWK string.
     /// </summary>
-    public static string CreateRsaJson(string algorithm = OidcConstants.Algorithms.Asymmetric.PS256)
-    {
-        return JsonSerializer.Serialize(CreateRsa(algorithm), SourceGenerationContext.Default.JsonWebKey);
-    }
+    public static string CreateRsaJson(string algorithm = OidcConstants.Algorithms.Asymmetric.PS256) =>
+        JsonSerializer.Serialize(CreateRsa(algorithm), SourceGenerationContext.Default.JsonWebKey);
 
     /// <summary>
     /// Creates a new ECDSA JWK.
@@ -50,33 +48,25 @@ public static class JsonWebKeys
     /// <summary>
     /// Creates a new ECDSA JWK string.
     /// </summary>
-    public static string CreateECDsaJson(string algorithm = OidcConstants.Algorithms.Asymmetric.ES256)
-    {
-        return JsonSerializer.Serialize(CreateECDsa(algorithm), SourceGenerationContext.Default.JsonWebKey);
-    }
+    public static string CreateECDsaJson(string algorithm = OidcConstants.Algorithms.Asymmetric.ES256) =>
+        JsonSerializer.Serialize(CreateECDsa(algorithm), SourceGenerationContext.Default.JsonWebKey);
 
-    internal static string GetCurveNameFromSigningAlgorithm(string alg)
+    internal static string GetCurveNameFromSigningAlgorithm(string alg) => alg switch
     {
-        return alg switch
-        {
-            "ES256" => "P-256",
-            "ES384" => "P-384",
-            "ES512" => "P-521",
-            _ => throw new InvalidOperationException($"Unsupported alg type of {alg}"),
-        };
-    }
+        "ES256" => "P-256",
+        "ES384" => "P-384",
+        "ES512" => "P-521",
+        _ => throw new InvalidOperationException($"Unsupported alg type of {alg}"),
+    };
 
     /// <summary>
     /// Returns the matching named curve for RFC 7518 crv value
     /// </summary>
-    internal static ECCurve GetCurveFromCrvValue(string crv)
+    internal static ECCurve GetCurveFromCrvValue(string crv) => crv switch
     {
-        return crv switch
-        {
-            JsonWebKeyECTypes.P256 => ECCurve.NamedCurves.nistP256,
-            JsonWebKeyECTypes.P384 => ECCurve.NamedCurves.nistP384,
-            JsonWebKeyECTypes.P521 => ECCurve.NamedCurves.nistP521,
-            _ => throw new InvalidOperationException($"Unsupported curve type of {crv}"),
-        };
-    }
+        JsonWebKeyECTypes.P256 => ECCurve.NamedCurves.nistP256,
+        JsonWebKeyECTypes.P384 => ECCurve.NamedCurves.nistP384,
+        JsonWebKeyECTypes.P521 => ECCurve.NamedCurves.nistP521,
+        _ => throw new InvalidOperationException($"Unsupported curve type of {crv}"),
+    };
 }

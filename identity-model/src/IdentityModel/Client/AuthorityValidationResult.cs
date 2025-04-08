@@ -23,14 +23,8 @@ public struct AuthorityValidationResult
         Success = success;
     }
 
-    public static AuthorityValidationResult CreateError(string message)
-    {
-        return new AuthorityValidationResult(false, message);
-    }
+    public static AuthorityValidationResult CreateError(string message) => new AuthorityValidationResult(false, message);
 
-    public override string ToString()
-    {
-        return Success ? "success" : ErrorMessage;
-    }
+    public override string ToString() => Success ? "success" : ErrorMessage;
 }
 #pragma warning restore 1591

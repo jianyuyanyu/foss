@@ -33,10 +33,8 @@ public class ClientCredentialsTokenManagementService(
         return token;
     }
 
-    private async Task<ClientCredentialsToken> InvokeGetAccessToken(string clientName, TokenRequestParameters parameters, CancellationToken cancellationToken)
-    {
-        return await clientCredentialsTokenEndpointService.RequestToken(clientName, parameters, cancellationToken).ConfigureAwait(false);
-    }
+    private async Task<ClientCredentialsToken> InvokeGetAccessToken(string clientName, TokenRequestParameters parameters, CancellationToken cancellationToken) =>
+        await clientCredentialsTokenEndpointService.RequestToken(clientName, parameters, cancellationToken).ConfigureAwait(false);
 
     /// <inheritdoc/>
     public async Task DeleteAccessTokenAsync(

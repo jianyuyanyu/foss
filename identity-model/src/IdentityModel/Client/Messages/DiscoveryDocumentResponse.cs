@@ -364,10 +364,8 @@ public class DiscoveryDocumentResponse : ProtocolResponse
     /// <param name="issuer">The issuer.</param>
     /// <param name="authority">The authority.</param>
     /// <returns></returns>
-    public bool ValidateIssuerName(string issuer, string authority)
-    {
-        return DiscoveryPolicy.DefaultAuthorityValidationStrategy.IsIssuerNameValid(issuer, authority).Success;
-    }
+    public bool ValidateIssuerName(string issuer, string authority) =>
+        DiscoveryPolicy.DefaultAuthorityValidationStrategy.IsIssuerNameValid(issuer, authority).Success;
 
     /// <summary>
     /// Checks if the issuer matches the authority.
@@ -376,10 +374,8 @@ public class DiscoveryDocumentResponse : ProtocolResponse
     /// <param name="authority">The authority.</param>
     /// <param name="nameComparison">The comparison mechanism that should be used when performing the match.</param>
     /// <returns></returns>
-    public bool ValidateIssuerName(string issuer, string authority, StringComparison nameComparison)
-    {
-        return new StringComparisonAuthorityValidationStrategy(nameComparison).IsIssuerNameValid(issuer, authority).Success;
-    }
+    public bool ValidateIssuerName(string issuer, string authority, StringComparison nameComparison) =>
+        new StringComparisonAuthorityValidationStrategy(nameComparison).IsIssuerNameValid(issuer, authority).Success;
 
     /// <summary>
     /// Checks if the issuer matches the authority.
@@ -388,10 +384,8 @@ public class DiscoveryDocumentResponse : ProtocolResponse
     /// <param name="authority">The authority.</param>
     /// <param name="validationStrategy">The strategy to use.</param>
     /// <returns></returns>
-    private bool ValidateIssuerName(string issuer, string authority, IAuthorityValidationStrategy validationStrategy)
-    {
-        return validationStrategy.IsIssuerNameValid(issuer, authority).Success;
-    }
+    private bool ValidateIssuerName(string issuer, string authority, IAuthorityValidationStrategy validationStrategy) =>
+        validationStrategy.IsIssuerNameValid(issuer, authority).Success;
 
     /// <summary>
     /// Validates the endoints and jwks_uri according to the security policy.

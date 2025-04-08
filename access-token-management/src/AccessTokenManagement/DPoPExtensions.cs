@@ -14,30 +14,22 @@ public static class DPoPExtensions
     /// <summary>
     /// Clears any existing DPoP nonce headers.
     /// </summary>
-    public static void ClearDPoPProofToken(this HttpRequestMessage request)
-    {
+    public static void ClearDPoPProofToken(this HttpRequestMessage request) =>
         // remove any old headers
         request.Headers.Remove(OidcConstants.HttpHeaders.DPoP);
-    }
 
     /// <summary>
     /// Sets the DPoP nonce request header if nonce is not null. 
     /// </summary>
-    public static void SetDPoPProofToken(this HttpRequestMessage request, string? proofToken)
-    {
+    public static void SetDPoPProofToken(this HttpRequestMessage request, string? proofToken) =>
         // set new header
         request.Headers.Add(OidcConstants.HttpHeaders.DPoP, proofToken);
-    }
 
     /// <summary>
     /// Reads the DPoP nonce header from the response
     /// </summary>
-    public static string? GetDPoPNonce(this HttpResponseMessage response)
-    {
-        return response.Headers.TryGetValues(OidcConstants.HttpHeaders.DPoPNonce, out var values)
-            ? values.FirstOrDefault()
-            : null;
-    }
+    public static string? GetDPoPNonce(this HttpResponseMessage response) =>
+        response.Headers.TryGetValues(OidcConstants.HttpHeaders.DPoPNonce, out var values) ? values.FirstOrDefault() : null;
 
     /// <summary>
     /// Reads the DPoP error from the response
@@ -85,23 +77,15 @@ public static class DPoPExtensions
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    public static string GetDPoPUrl(this HttpRequestMessage request)
-    {
-        return request.RequestUri!.Scheme + "://" + request.RequestUri!.Authority + request.RequestUri!.LocalPath;
-    }
+    public static string GetDPoPUrl(this HttpRequestMessage request) => request.RequestUri!.Scheme + "://" + request.RequestUri!.Authority + request.RequestUri!.LocalPath;
 
     /// <summary>
     /// Additional claims that will be added to the DPoP proof payload on generation
     /// </summary>
     /// <param name="request"></param>
     /// <param name="customClaims"></param>
-    public static void AddDPoPProofAdditionalPayloadClaims(
-        this HttpRequestMessage request,
-        IDictionary<string, string> customClaims)
-    {
-        request.Options.TryAdd(ClientCredentialsTokenManagementDefaults.DPoPProofAdditionalPayloadClaims,
-            customClaims.AsReadOnly());
-    }
+    public static void AddDPoPProofAdditionalPayloadClaims(this HttpRequestMessage request, IDictionary<string, string> customClaims) =>
+        request.Options.TryAdd(ClientCredentialsTokenManagementDefaults.DPoPProofAdditionalPayloadClaims, customClaims.AsReadOnly());
 
     /// <summary>
     /// Additional claims that will be added to the DPoP proof payload on generation

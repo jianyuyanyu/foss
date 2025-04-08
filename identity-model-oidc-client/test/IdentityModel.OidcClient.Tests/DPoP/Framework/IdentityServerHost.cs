@@ -46,8 +46,5 @@ public class IdentityServerHost : GenericHost
             .AddInMemoryApiScopes(ApiScopes);
     }
 
-    private void Configure(IApplicationBuilder app)
-    {
-        app.UseIdentityServer();
-    }
+    private void Configure(IApplicationBuilder app) => app.UseIdentityServer();
 }

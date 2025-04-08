@@ -20,10 +20,7 @@ public class MtlsEndpointAliases
     /// Initializes a new instance of the <see cref="MtlsEndpointAliases"/> class.
     /// </summary>
     /// <param name="json">The raw <see cref="JsonElement"/> that contains the mTLS endpoint aliases.</param>
-    public MtlsEndpointAliases(JsonElement? json)
-    {
-        Json = json;
-    }
+    public MtlsEndpointAliases(JsonElement? json) => Json = json;
 
     /// <summary>
     /// Gets the token endpoint address.

@@ -32,10 +32,7 @@ public class ClientAssertionService : IClientAssertionService
 
     private static SigningCredentials Credential = new(new JsonWebKey(RsaKey), "RS256");
 
-    public ClientAssertionService(IOptionsMonitor<ClientCredentialsClient> options)
-    {
-        _options = options;
-    }
+    public ClientAssertionService(IOptionsMonitor<ClientCredentialsClient> options) => _options = options;
 
     public Task<ClientAssertion?> GetClientAssertionAsync(string? clientName = null, TokenRequestParameters? parameters = null)
     {

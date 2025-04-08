@@ -17,10 +17,7 @@ public class OidcClientOptions
     /// <summary>
     /// Creates an instance of the OidcClientOptions class.
     /// </summary>
-    public OidcClientOptions()
-    {
-        GetClientAssertionAsync ??= () => Task.FromResult(ClientAssertion);
-    }
+    public OidcClientOptions() => GetClientAssertionAsync ??= () => Task.FromResult(ClientAssertion);
 
     /// <summary>
     /// Gets or sets the authority.

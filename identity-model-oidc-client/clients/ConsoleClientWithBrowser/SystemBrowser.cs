@@ -122,17 +122,14 @@ public class LoopbackHttpListener : IDisposable
         _host.Start();
     }
 
-    public void Dispose()
-    {
+    public void Dispose() =>
         Task.Run(async () =>
         {
             await Task.Delay(500);
             _host.Dispose();
         });
-    }
 
-    void Configure(IApplicationBuilder app)
-    {
+    void Configure(IApplicationBuilder app) =>
         app.Run(async ctx =>
         {
             if (ctx.Request.Method == "GET")
@@ -146,7 +143,6 @@ public class LoopbackHttpListener : IDisposable
                 ctx.Response.StatusCode = 405;
             }
         });
-    }
 
     private async Task SetResultAsync(string value, HttpContext ctx)
     {

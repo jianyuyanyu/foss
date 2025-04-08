@@ -10,18 +10,12 @@ namespace WebApplication1.Controllers;
 
 public class HomeController : Controller
 {
-    public HomeController(IHttpClientFactory httpClientFactory)
-    {
-        HttpClientFactory = httpClientFactory;
-    }
+    public HomeController(IHttpClientFactory httpClientFactory) => HttpClientFactory = httpClientFactory;
 
     public IHttpClientFactory HttpClientFactory { get; }
     public TokenClient TokenClient { get; }
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+    public IActionResult Index() => View();
 
     public async Task<string> NoFactory()
     {

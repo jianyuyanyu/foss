@@ -13,10 +13,7 @@ internal class ResponseValidationResult : Result
 
     }
 
-    public ResponseValidationResult(string error)
-    {
-        Error = error;
-    }
+    public ResponseValidationResult(string error) => Error = error;
 
     public virtual AuthorizeResponse AuthorizeResponse { get; set; }
     public virtual TokenResponse TokenResponse { get; set; }

@@ -36,11 +36,9 @@ public class GenericHost(WriteTestOutput writeOutput, string baseAddress = "http
 
 
     public T Resolve<T>()
-        where T : notnull
-    {
+        where T : notnull =>
         // not calling dispose on scope on purpose
-        return _appServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider.GetRequiredService<T>();
-    }
+        _appServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider.GetRequiredService<T>();
 
     public string Url(string? path = null)
     {
@@ -114,8 +112,7 @@ public class GenericHost(WriteTestOutput writeOutput, string baseAddress = "http
 
 
 
-    void ConfigureSignout(IApplicationBuilder app)
-    {
+    void ConfigureSignout(IApplicationBuilder app) =>
         app.Use(async (ctx, next) =>
         {
             if (ctx.Request.Path == "/__signout")
@@ -127,7 +124,6 @@ public class GenericHost(WriteTestOutput writeOutput, string baseAddress = "http
 
             await next();
         });
-    }
 
     public async Task RevokeSessionCookieAsync()
     {
@@ -136,8 +132,7 @@ public class GenericHost(WriteTestOutput writeOutput, string baseAddress = "http
     }
 
 
-    void ConfigureSignin(IApplicationBuilder app)
-    {
+    void ConfigureSignin(IApplicationBuilder app) =>
         app.Use(async (ctx, next) =>
         {
             if (ctx.Request.Path == "/__signin")
@@ -159,7 +154,6 @@ public class GenericHost(WriteTestOutput writeOutput, string baseAddress = "http
 
             await next();
         });
-    }
 
     ClaimsPrincipal? _userToSignIn = default!;
     AuthenticationProperties? _propsToSignIn = default!;
@@ -175,10 +169,7 @@ public class GenericHost(WriteTestOutput writeOutput, string baseAddress = "http
         _propsToSignIn = props;
         return IssueSessionCookieAsync(claims);
     }
-    public Task IssueSessionCookieAsync(string sub, params Claim[] claims)
-    {
-        return IssueSessionCookieAsync(claims.Append(new Claim("sub", sub)).ToArray());
-    }
+    public Task IssueSessionCookieAsync(string sub, params Claim[] claims) => IssueSessionCookieAsync(claims.Append(new Claim("sub", sub)).ToArray());
 
     public async ValueTask DisposeAsync()
     {

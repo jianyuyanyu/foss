@@ -28,11 +28,10 @@ internal static class HybridCacheExtMethods
     /// <param name="key"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public static async ValueTask<T?> GetOrDefaultAsync<T>(this HybridCache cache, string key, CancellationToken cancellationToken = default)
-    {
-        return await cache.GetOrCreateAsync<T?>(
+    public static async ValueTask<T?> GetOrDefaultAsync<T>(this HybridCache cache, string key, CancellationToken cancellationToken = default) =>
+        await cache.GetOrCreateAsync<T?>(
             key,
             null!, // Don't return a value if it's not in the cache. Also, don't write it to the cache
-            GetOnlyEntryOptions, cancellationToken: cancellationToken);
-    }
+            GetOnlyEntryOptions,
+            cancellationToken: cancellationToken);
 }

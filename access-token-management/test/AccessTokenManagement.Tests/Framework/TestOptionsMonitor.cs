@@ -10,13 +10,7 @@ public class TestOptionsMonitor<TOptions>(TOptions? currentValue = null) : IOpti
 {
     public TOptions CurrentValue { get; set; } = currentValue ?? new();
 
-    public TOptions Get(string? name)
-    {
-        return CurrentValue;
-    }
+    public TOptions Get(string? name) => CurrentValue;
 
-    public IDisposable? OnChange(Action<TOptions, string?> listener)
-    {
-        throw new NotImplementedException();
-    }
+    public IDisposable? OnChange(Action<TOptions, string?> listener) => throw new NotImplementedException();
 }

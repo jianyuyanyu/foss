@@ -16,10 +16,7 @@ public static class RequestUrlExtensions
     /// <param name="request">The request.</param>
     /// <param name="parameters">The parameters.</param>
     /// <returns></returns>
-    public static string Create(this RequestUrl request, Parameters parameters)
-    {
-        return request.Create(parameters);
-    }
+    public static string Create(this RequestUrl request, Parameters parameters) => request.Create(parameters);
 
     /// <summary>
     /// Creates an authorize URL.

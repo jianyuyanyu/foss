@@ -67,10 +67,7 @@ public class AccessTokenHandlerTests
             ClientId = "some-client"
         };
 
-        protected override Task<ClientCredentialsToken> GetAccessTokenAsync(bool forceRenewal, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(AccessToken);
-        }
+        protected override Task<ClientCredentialsToken> GetAccessTokenAsync(bool forceRenewal, CancellationToken cancellationToken) => Task.FromResult(AccessToken);
 
         protected override AccessTokenManagementMetrics.TokenRequestType TokenRequestType => AccessTokenManagementMetrics.TokenRequestType.ClientCredentials;
 
@@ -80,10 +77,7 @@ public class AccessTokenHandlerTests
             {
             }
 
-            public Meter Create(MeterOptions options)
-            {
-                return new Meter(options);
-            }
+            public Meter Create(MeterOptions options) => new Meter(options);
         }
     }
 

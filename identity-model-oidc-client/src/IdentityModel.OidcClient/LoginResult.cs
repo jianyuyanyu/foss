@@ -23,10 +23,7 @@ public class LoginResult : Result
     /// Initializes a new instance of the <see cref="LoginResult"/> class.
     /// </summary>
     /// <param name="error">The error.</param>
-    public LoginResult(string error)
-    {
-        Error = error;
-    }
+    public LoginResult(string error) => Error = error;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LoginResult"/> class.

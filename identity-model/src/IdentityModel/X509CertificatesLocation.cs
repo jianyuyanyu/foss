@@ -13,10 +13,7 @@ public class X509CertificatesLocation
 {
     private readonly StoreLocation _location;
 
-    public X509CertificatesLocation(StoreLocation location)
-    {
-        _location = location;
-    }
+    public X509CertificatesLocation(StoreLocation location) => _location = location;
 
     public X509CertificatesName My => new X509CertificatesName(_location, StoreName.My);
     public X509CertificatesName AddressBook => new X509CertificatesName(_location, StoreName.AddressBook);

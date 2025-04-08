@@ -9,15 +9,9 @@ internal class TestDistributedCache : IDistributedCache
 {
     private readonly Dictionary<string, byte[]?> _cache = new();
 
-    public byte[]? Get(string key)
-    {
-        return _cache[key];
-    }
+    public byte[]? Get(string key) => _cache[key];
 
-    public Task<byte[]?> GetAsync(string key, CancellationToken token = new CancellationToken())
-    {
-        return Task.FromResult(_cache[key]);
-    }
+    public Task<byte[]?> GetAsync(string key, CancellationToken token = new CancellationToken()) => Task.FromResult(_cache[key]);
 
     public void Refresh(string key)
     {
@@ -29,10 +23,7 @@ internal class TestDistributedCache : IDistributedCache
         return Task.CompletedTask;
     }
 
-    public void Remove(string key)
-    {
-        _cache.Remove(key);
-    }
+    public void Remove(string key) => _cache.Remove(key);
 
     public Task RemoveAsync(string key, CancellationToken token = new CancellationToken())
     {
@@ -40,10 +31,7 @@ internal class TestDistributedCache : IDistributedCache
         return Task.CompletedTask;
     }
 
-    public void Set(string key, byte[] value, DistributedCacheEntryOptions options)
-    {
-        _cache.Add(key, value);
-    }
+    public void Set(string key, byte[] value, DistributedCacheEntryOptions options) => _cache.Add(key, value);
 
     public Task SetAsync(string key, byte[] value, DistributedCacheEntryOptions options,
         CancellationToken token = new CancellationToken())
