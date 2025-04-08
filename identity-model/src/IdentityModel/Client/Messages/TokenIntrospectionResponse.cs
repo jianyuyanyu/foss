@@ -48,7 +48,7 @@ public class TokenIntrospectionResponse : ProtocolResponse
             }
 
             // Invoke the optional Jwt validator if provided.
-            JwtResponseValidator?.Validate(this);
+            JwtResponseValidator?.Validate(Raw);
         }
 
         if (Json == null)

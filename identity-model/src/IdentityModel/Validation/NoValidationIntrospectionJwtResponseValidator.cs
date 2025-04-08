@@ -1,8 +1,6 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using Duende.IdentityModel.Client;
-
 namespace Duende.IdentityModel.Validation;
 
 /// <summary>
@@ -11,7 +9,7 @@ namespace Duende.IdentityModel.Validation;
 /// </summary>
 public class NoValidationIntrospectionJwtResponseValidator : ITokenIntrospectionJwtResponseValidator
 {
-    public void Validate(TokenIntrospectionResponse response)
+    public void Validate(string rawJwtResponse)
     {
         // This validator intentionally does nothing.
     }
