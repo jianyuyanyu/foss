@@ -3,8 +3,8 @@
 
 using System.Security.Claims;
 using System.Text.Json;
-using Duende.IdentityModel.Internal;
 using Duende.IdentityModel.Validation;
+using static Duende.IdentityModel.JwtClaimTypes;
 
 namespace Duende.IdentityModel.Client;
 
@@ -26,8 +26,10 @@ public class TokenIntrospectionResponse : ProtocolResponse
             return Task.CompletedTask;
         }
 
-        var contentType = HttpResponse?.Content?.Headers.ContentType?.MediaType;
-        if (contentType == InternalStringExtensions.AsMediaType(JwtClaimTypes.JwtTypes.IntrospectionJwtResponse) && !string.IsNullOrWhiteSpace(Raw))
+        // Note that HttpResponse.Content can be null in .NET framework, even though it cannot be null in modern .NET
+        if (HttpResponse?.Content?.Headers?.ContentType is { MediaType: var mediaType } &&
+            mediaType == JwtTypes.AsMediaType(JwtTypes.IntrospectionJwtResponse) &&
+            !string.IsNullOrWhiteSpace(Raw))
         {
             Json = ExtractJsonFromJwt(Raw!);
             JwtResponseValidator?.Validate(Raw!);

@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Duende.IdentityModel.Internal;
 
-internal static class InternalStringExtensions
+internal static class StringExtensions
 {
     [DebuggerStepThrough]
     public static bool IsMissing(this string? value) => string.IsNullOrWhiteSpace(value);
@@ -35,16 +35,5 @@ internal static class InternalStringExtensions
         }
 
         return url;
-    }
-
-    [DebuggerStepThrough]
-    public static string AsMediaType(string? value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
-
-        return "application/" + value!.Trim().ToLowerInvariant();
     }
 }

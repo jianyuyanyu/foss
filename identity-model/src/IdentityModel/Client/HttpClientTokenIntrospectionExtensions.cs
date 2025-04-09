@@ -3,6 +3,7 @@
 
 using System.Net.Http.Headers;
 using Duende.IdentityModel.Internal;
+using static Duende.IdentityModel.JwtClaimTypes;
 
 namespace Duende.IdentityModel.Client;
 
@@ -32,7 +33,7 @@ public static class HttpClientTokenIntrospectionExtensions
         if (request.ResponseFormat is ResponseFormat.Jwt)
         {
             clone.Headers.Accept.Clear();
-            clone.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(InternalStringExtensions.AsMediaType(JwtClaimTypes.JwtTypes.IntrospectionJwtResponse)));
+            clone.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(JwtTypes.AsMediaType(JwtTypes.IntrospectionJwtResponse)));
         }
 
         clone.Prepare();
@@ -55,7 +56,9 @@ public static class HttpClientTokenIntrospectionExtensions
         var responseFormat = ResponseFormat.Json;
         var skipJson = false;
 
-        if (response.Content?.Headers?.ContentType?.MediaType == InternalStringExtensions.AsMediaType(JwtClaimTypes.JwtTypes.IntrospectionJwtResponse))
+        // Note that HttpResponse.Content can be null in .NET framework, even though it cannot be null in modern .NET
+        if (response.Content?.Headers?.ContentType is { MediaType: var mediaType } &&
+            mediaType == JwtTypes.AsMediaType(JwtTypes.IntrospectionJwtResponse))
         {
             skipJson = true;
             responseFormat = ResponseFormat.Jwt;
