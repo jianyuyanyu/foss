@@ -22,7 +22,7 @@ public class IntrospectionClientOptions : ClientOptions
     /// <value>
     /// The introspection response format (JSON or JWT). Defaults to JSON.
     /// </value>
-    public IntrospectionResponseFormat ResponseFormat { get; set; } = IntrospectionResponseFormat.Json;
+    public ResponseFormat ResponseFormat { get; set; } = ResponseFormat.Json;
 
     /// <summary>
     /// Gets or sets the custom validator instance for validating a JWT introspection response.

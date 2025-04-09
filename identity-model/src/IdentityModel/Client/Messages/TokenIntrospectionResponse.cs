@@ -26,30 +26,10 @@ public class TokenIntrospectionResponse : ProtocolResponse
         }
 
         var contentType = HttpResponse?.Content?.Headers.ContentType?.MediaType;
-        if (contentType is $"application/{JwtClaimTypes.JwtTypes.IntrospectionJwtResponse}" && !string.IsNullOrWhiteSpace(Raw))
+        if (contentType == JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType() && !string.IsNullOrWhiteSpace(Raw))
         {
-            var parts = Raw!.Split('.');
-            if (parts.Length != 3)
-            {
-                throw new InvalidOperationException("Invalid JWT format");
-            }
-
-            var payload = parts[1];
-            var jsonString = Base64Url.Decode(payload);
-            using var rootDoc = JsonDocument.Parse(jsonString);
-
-            if (rootDoc.RootElement.TryGetProperty("token_introspection", out var introspectionElement))
-            {
-                using var introspectionDoc = JsonDocument.Parse(introspectionElement.GetRawText()!);
-                Json = introspectionDoc.RootElement.Clone();
-            }
-            else
-            {
-                throw new InvalidOperationException("token_introspection claim not found in JWT payload");
-            }
-
-            // Invoke the optional Jwt validator if provided.
-            JwtResponseValidator?.Validate(Raw);
+            Json = ExtractJsonFromJwt(Raw!);
+            JwtResponseValidator?.Validate(Raw!);
         }
 
         if (Json == null)
@@ -110,5 +90,37 @@ public class TokenIntrospectionResponse : ProtocolResponse
     /// It is the caller's responsibility to provide an implementation of <see cref="ITokenIntrospectionJwtResponseValidator"/> if JWT validation is desired.
     /// </summary>
     public ITokenIntrospectionJwtResponseValidator? JwtResponseValidator { get; set; }
+
+    /// <summary>
+    /// Extracts the JSON from the JWT token.
+    /// </summary>
+    /// <param name="rawToken"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    protected virtual JsonElement ExtractJsonFromJwt(string rawToken)
+    {
+        // Split the token into parts.
+        var parts = rawToken.Split('.');
+        if (parts.Length != 3)
+        {
+            throw new InvalidOperationException("Invalid JWT format");
+        }
+
+        // Decode and parse the payload.
+        var payload = parts[1];
+        var jsonString = Base64Url.Decode(payload);
+        using var document = JsonDocument.Parse(jsonString);
+
+        // Look for the "token_introspection" property.
+        if (document.RootElement.TryGetProperty("token_introspection", out var introspectionElement))
+        {
+            return introspectionElement.Clone();
+        }
+        else
+        {
+            throw new InvalidOperationException("token_introspection claim not found in JWT payload");
+        }
+    }
+
 
 }

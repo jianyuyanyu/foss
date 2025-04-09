@@ -6,7 +6,7 @@ namespace Duende.IdentityModel.Client;
 /// <summary>
 /// Specifies the format of the token introspection response.
 /// </summary>
-public enum IntrospectionResponseFormat
+public enum ResponseFormat
 {
     /// <summary>
     /// Plain JSON introspection response (default).

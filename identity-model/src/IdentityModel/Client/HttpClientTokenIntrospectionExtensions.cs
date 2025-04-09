@@ -29,10 +29,10 @@ public static class HttpClientTokenIntrospectionExtensions
         clone.Parameters.AddRequired(OidcConstants.TokenIntrospectionRequest.Token, request.Token);
         clone.Parameters.AddOptional(OidcConstants.TokenIntrospectionRequest.TokenTypeHint, request.TokenTypeHint);
 
-        if (request.ResponseFormat is IntrospectionResponseFormat.Jwt)
+        if (request.ResponseFormat is ResponseFormat.Jwt)
         {
             clone.Headers.Accept.Clear();
-            clone.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue($"application/{JwtClaimTypes.JwtTypes.IntrospectionJwtResponse}"));
+            clone.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType()));
         }
 
         clone.Prepare();
@@ -51,7 +51,24 @@ public static class HttpClientTokenIntrospectionExtensions
             return ProtocolResponse.FromException<TokenIntrospectionResponse>(ex);
         }
 
-        Action<TokenIntrospectionResponse> onResponseCreated = introspectionResponse => introspectionResponse.JwtResponseValidator = request.JwtResponseValidator;
-        return await ProtocolResponse.FromHttpResponseAsync(response, onResponseCreated: onResponseCreated).ConfigureAwait();
+        Action<TokenIntrospectionResponse>? onResponseCreated = null;
+        var responseFormat = ResponseFormat.Json;
+        var skipJson = false;
+
+        if (response.Content?.Headers?.ContentType?.MediaType == JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType())
+        {
+            skipJson = true;
+            responseFormat = ResponseFormat.Jwt;
+            onResponseCreated = introspectionResponse => introspectionResponse.JwtResponseValidator = request.JwtResponseValidator;
+        }
+
+        return await ProtocolResponse
+            .FromHttpResponseAsync(
+                httpResponse: response,
+                skipJson: skipJson,
+                responseFormat: responseFormat,
+                onResponseCreated: onResponseCreated
+            )
+            .ConfigureAwait(false);
     }
 }

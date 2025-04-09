@@ -319,11 +319,11 @@ public class TokenIntrospectionTests
             Address = Endpoint,
             ClientId = "client",
             ClientSecret = "secret",
-            ResponseFormat = IntrospectionResponseFormat.Jwt
+            ResponseFormat = ResponseFormat.Jwt
         };
 
         var handler = new NetworkHandler(document, HttpStatusCode.OK);
-        handler.MediaType = $"application/{JwtClaimTypes.JwtTypes.IntrospectionJwtResponse}";
+        handler.MediaType = JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType();
 
         var httpClient = new HttpClient(handler)
         {
@@ -336,7 +336,7 @@ public class TokenIntrospectionTests
 
         handler.Request.ShouldNotBeNull();
         var acceptHeaders = handler.Request.Headers.Accept.ToArray();
-        acceptHeaders.ShouldBe([MediaTypeWithQualityHeaderValue.Parse($"application/{JwtClaimTypes.JwtTypes.IntrospectionJwtResponse}")]);
+        acceptHeaders.ShouldBe([MediaTypeWithQualityHeaderValue.Parse(JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType())]);
     }
 
     [Fact]
@@ -345,20 +345,20 @@ public class TokenIntrospectionTests
         var document = File.ReadAllText(FileName.Create("success_introspection_response.jwt"));
 
         var handler = new NetworkHandler(document, HttpStatusCode.OK);
-        handler.MediaType = $"application/{JwtClaimTypes.JwtTypes.IntrospectionJwtResponse}";
+        handler.MediaType = JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType();
 
         var client = new HttpClient(handler);
         var response = await client.IntrospectTokenAsync(new TokenIntrospectionRequest
         {
             Address = Endpoint,
             Token = "token",
-            ResponseFormat = IntrospectionResponseFormat.Jwt,
+            ResponseFormat = ResponseFormat.Jwt,
             JwtResponseValidator = new NoValidationIntrospectionJwtResponseValidator()
         });
 
         response.ShouldNotBeNull();
         var acceptHeaders = handler.Request.Headers.Accept.ToArray();
-        acceptHeaders.ShouldBe([MediaTypeWithQualityHeaderValue.Parse($"application/{JwtClaimTypes.JwtTypes.IntrospectionJwtResponse}")]);
+        acceptHeaders.ShouldBe([MediaTypeWithQualityHeaderValue.Parse(JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType())]);
     }
 
     [Fact]
@@ -398,12 +398,12 @@ public class TokenIntrospectionTests
             Address = Endpoint,
             ClientId = "client",
             ClientSecret = "secret",
-            ResponseFormat = IntrospectionResponseFormat.Jwt,
+            ResponseFormat = ResponseFormat.Jwt,
             JwtResponseValidator = new NoValidationIntrospectionJwtResponseValidator()
         };
 
         var handler = new NetworkHandler(document, HttpStatusCode.OK);
-        handler.MediaType = $"application/{JwtClaimTypes.JwtTypes.IntrospectionJwtResponse}";
+        handler.MediaType = JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType();
 
         var httpClient = new HttpClient(handler)
         {
@@ -450,7 +450,7 @@ public class TokenIntrospectionTests
             Address = Endpoint,
             ClientId = "client",
             ClientSecret = "secret",
-            ResponseFormat = IntrospectionResponseFormat.Jwt
+            ResponseFormat = ResponseFormat.Jwt
         };
 
         var handler = new NetworkHandler(document, HttpStatusCode.OK);

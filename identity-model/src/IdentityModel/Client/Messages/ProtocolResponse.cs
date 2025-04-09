@@ -19,13 +19,15 @@ public class ProtocolResponse
     /// <param name="httpResponse">The HTTP response.</param>
     /// <param name="initializationData">The initialization data.</param>
     /// <param name="skipJson">Disables parsing of json</param>
-    /// <param name="onResponseCreated">Defines an action </param>
+    /// <param name="onResponseCreated">An action that is invoked after the response is created, allowing for additional processing of the response.</param>
+    /// <param name="responseFormat">Specifies the expected content type format</param>
     /// <returns></returns>
     public static async Task<T> FromHttpResponseAsync<T>(
         HttpResponseMessage httpResponse,
         object? initializationData = null,
         bool skipJson = false,
-        Action<T>? onResponseCreated = null)
+        Action<T>? onResponseCreated = null,
+        ResponseFormat responseFormat = ResponseFormat.Json)
         where T : ProtocolResponse, new()
     {
         var response = new T
@@ -83,7 +85,7 @@ public class ProtocolResponse
         // either 200 or 400 - both cases need a JSON response (if present), otherwise error
         try
         {
-            if (!skipJson && content.IsPresent() && !httpResponse.IsContentJwtMediaType())
+            if (!skipJson && content.IsPresent())
             {
                 response.Json = JsonDocument.Parse(content!).RootElement;
             }
@@ -102,7 +104,7 @@ public class ProtocolResponse
             }
         }
 
-        if (!skipJson || (content.IsPresent() && httpResponse.IsContentJwtMediaType()))
+        if (content.IsPresent() && (!skipJson || responseFormat == ResponseFormat.Jwt))
         {
             await response.InitializeAsync(initializationData).ConfigureAwait();
         }

@@ -605,6 +605,7 @@
     }
     public static class StringExtensions
     {
+        public static string AsMediaType(this string? value) { }
         public static string ToSha256(this string input) { }
         public static string ToSha512(this string input) { }
     }
@@ -1054,12 +1055,7 @@ namespace Duende.IdentityModel.Client
     {
         public IntrospectionClientOptions() { }
         public Duende.IdentityModel.Validation.ITokenIntrospectionJwtResponseValidator? JwtResponseValidator { get; set; }
-        public Duende.IdentityModel.Client.IntrospectionResponseFormat ResponseFormat { get; set; }
-    }
-    public enum IntrospectionResponseFormat
-    {
-        Json = 0,
-        Jwt = 1,
+        public Duende.IdentityModel.Client.ResponseFormat ResponseFormat { get; set; }
     }
     public static class JsonElementExtensions
     {
@@ -1153,7 +1149,7 @@ namespace Duende.IdentityModel.Client
         public string? TryGet(string name) { }
         public static T FromException<T>(System.Exception ex, string? errorMessage = null)
             where T : Duende.IdentityModel.Client.ProtocolResponse, new () { }
-        public static System.Threading.Tasks.Task<T> FromHttpResponseAsync<T>(System.Net.Http.HttpResponseMessage httpResponse, object? initializationData = null, bool skipJson = false, System.Action<T>? onResponseCreated = null)
+        public static System.Threading.Tasks.Task<T> FromHttpResponseAsync<T>(System.Net.Http.HttpResponseMessage httpResponse, object? initializationData = null, bool skipJson = false, System.Action<T>? onResponseCreated = null, Duende.IdentityModel.Client.ResponseFormat responseFormat = 0)
             where T : Duende.IdentityModel.Client.ProtocolResponse, new () { }
     }
     public class PushedAuthorizationRequest : Duende.IdentityModel.Client.ProtocolRequest
@@ -1230,6 +1226,11 @@ namespace Duende.IdentityModel.Client
         Exception = 3,
         PolicyViolation = 4,
     }
+    public enum ResponseFormat
+    {
+        Json = 0,
+        Jwt = 1,
+    }
     public sealed class StringComparisonAuthorityValidationStrategy : Duende.IdentityModel.Client.IAuthorityValidationStrategy
     {
         public StringComparisonAuthorityValidationStrategy(System.StringComparison stringComparison = 4) { }
@@ -1267,7 +1268,7 @@ namespace Duende.IdentityModel.Client
     {
         public TokenIntrospectionRequest() { }
         public Duende.IdentityModel.Validation.ITokenIntrospectionJwtResponseValidator? JwtResponseValidator { get; set; }
-        public Duende.IdentityModel.Client.IntrospectionResponseFormat ResponseFormat { get; set; }
+        public Duende.IdentityModel.Client.ResponseFormat ResponseFormat { get; set; }
         public string Token { get; set; }
         public string? TokenTypeHint { get; set; }
     }
@@ -1277,6 +1278,7 @@ namespace Duende.IdentityModel.Client
         public System.Collections.Generic.IEnumerable<System.Security.Claims.Claim> Claims { get; set; }
         public bool IsActive { get; }
         public Duende.IdentityModel.Validation.ITokenIntrospectionJwtResponseValidator? JwtResponseValidator { get; set; }
+        protected virtual System.Text.Json.JsonElement ExtractJsonFromJwt(string rawToken) { }
         protected override System.Threading.Tasks.Task InitializeAsync(object? initializationData = null) { }
     }
     public class TokenRequest : Duende.IdentityModel.Client.ProtocolRequest

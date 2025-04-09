@@ -30,7 +30,7 @@ public class TokenIntrospectionRequest : ProtocolRequest
     /// <summary>
     /// Sets the desired format for the introspection response.
     /// </summary>
-    public IntrospectionResponseFormat ResponseFormat { get; set; } = IntrospectionResponseFormat.Json;
+    public ResponseFormat ResponseFormat { get; set; } = ResponseFormat.Json;
 
     /// <summary>
     /// Gets or sets the custom validator instance for validating a JWT introspection response.

@@ -57,10 +57,10 @@ public class IntrospectionClient
             }
         }
 
-        if (_options.ResponseFormat is IntrospectionResponseFormat.Jwt)
+        if (_options.ResponseFormat is ResponseFormat.Jwt)
         {
             request.Headers.Accept.Clear();
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue($"application/{JwtClaimTypes.JwtTypes.IntrospectionJwtResponse}"));
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType()));
         }
     }
 
