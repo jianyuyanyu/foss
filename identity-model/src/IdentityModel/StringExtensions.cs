@@ -47,20 +47,4 @@ public static class StringExtensions
             return Convert.ToBase64String(hash);
         }
     }
-
-    /// <summary>
-    /// Returned the specified string as an application media type.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    public static string AsMediaType(this string? value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
-
-        return "application/" + value!.Trim().ToLowerInvariant();
-    }
 }

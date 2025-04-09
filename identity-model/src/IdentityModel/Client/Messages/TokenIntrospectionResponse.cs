@@ -3,6 +3,7 @@
 
 using System.Security.Claims;
 using System.Text.Json;
+using Duende.IdentityModel.Internal;
 using Duende.IdentityModel.Validation;
 
 namespace Duende.IdentityModel.Client;
@@ -26,7 +27,7 @@ public class TokenIntrospectionResponse : ProtocolResponse
         }
 
         var contentType = HttpResponse?.Content?.Headers.ContentType?.MediaType;
-        if (contentType == JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType() && !string.IsNullOrWhiteSpace(Raw))
+        if (contentType == InternalStringExtensions.AsMediaType(JwtClaimTypes.JwtTypes.IntrospectionJwtResponse) && !string.IsNullOrWhiteSpace(Raw))
         {
             Json = ExtractJsonFromJwt(Raw!);
             JwtResponseValidator?.Validate(Raw!);

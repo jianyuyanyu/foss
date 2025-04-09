@@ -32,7 +32,7 @@ public static class HttpClientTokenIntrospectionExtensions
         if (request.ResponseFormat is ResponseFormat.Jwt)
         {
             clone.Headers.Accept.Clear();
-            clone.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType()));
+            clone.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(InternalStringExtensions.AsMediaType(JwtClaimTypes.JwtTypes.IntrospectionJwtResponse)));
         }
 
         clone.Prepare();
@@ -55,7 +55,7 @@ public static class HttpClientTokenIntrospectionExtensions
         var responseFormat = ResponseFormat.Json;
         var skipJson = false;
 
-        if (response.Content?.Headers?.ContentType?.MediaType == JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType())
+        if (response.Content?.Headers?.ContentType?.MediaType == InternalStringExtensions.AsMediaType(JwtClaimTypes.JwtTypes.IntrospectionJwtResponse))
         {
             skipJson = true;
             responseFormat = ResponseFormat.Jwt;

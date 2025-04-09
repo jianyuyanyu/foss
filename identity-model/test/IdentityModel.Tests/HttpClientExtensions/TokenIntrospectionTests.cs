@@ -323,7 +323,7 @@ public class TokenIntrospectionTests
         };
 
         var handler = new NetworkHandler(document, HttpStatusCode.OK);
-        handler.MediaType = JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType();
+        handler.MediaType = "application/" + JwtClaimTypes.JwtTypes.IntrospectionJwtResponse;
 
         var httpClient = new HttpClient(handler)
         {
@@ -336,7 +336,7 @@ public class TokenIntrospectionTests
 
         handler.Request.ShouldNotBeNull();
         var acceptHeaders = handler.Request.Headers.Accept.ToArray();
-        acceptHeaders.ShouldBe([MediaTypeWithQualityHeaderValue.Parse(JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType())]);
+        acceptHeaders.ShouldBe([MediaTypeWithQualityHeaderValue.Parse("application/" + JwtClaimTypes.JwtTypes.IntrospectionJwtResponse)]);
     }
 
     [Fact]
@@ -345,7 +345,7 @@ public class TokenIntrospectionTests
         var document = File.ReadAllText(FileName.Create("success_introspection_response.jwt"));
 
         var handler = new NetworkHandler(document, HttpStatusCode.OK);
-        handler.MediaType = JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType();
+        handler.MediaType = "application/" + JwtClaimTypes.JwtTypes.IntrospectionJwtResponse;
 
         var client = new HttpClient(handler);
         var response = await client.IntrospectTokenAsync(new TokenIntrospectionRequest
@@ -358,7 +358,7 @@ public class TokenIntrospectionTests
 
         response.ShouldNotBeNull();
         var acceptHeaders = handler.Request.Headers.Accept.ToArray();
-        acceptHeaders.ShouldBe([MediaTypeWithQualityHeaderValue.Parse(JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType())]);
+        acceptHeaders.ShouldBe([MediaTypeWithQualityHeaderValue.Parse("application/" + JwtClaimTypes.JwtTypes.IntrospectionJwtResponse)]);
     }
 
     [Fact]
@@ -403,7 +403,7 @@ public class TokenIntrospectionTests
         };
 
         var handler = new NetworkHandler(document, HttpStatusCode.OK);
-        handler.MediaType = JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType();
+        handler.MediaType = "application/" + JwtClaimTypes.JwtTypes.IntrospectionJwtResponse;
 
         var httpClient = new HttpClient(handler)
         {

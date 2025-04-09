@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System.Net.Http.Headers;
+using Duende.IdentityModel.Internal;
 
 namespace Duende.IdentityModel.Client;
 
@@ -60,7 +61,7 @@ public class IntrospectionClient
         if (_options.ResponseFormat is ResponseFormat.Jwt)
         {
             request.Headers.Accept.Clear();
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(JwtClaimTypes.JwtTypes.IntrospectionJwtResponse.AsMediaType()));
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(InternalStringExtensions.AsMediaType(JwtClaimTypes.JwtTypes.IntrospectionJwtResponse)));
         }
     }
 

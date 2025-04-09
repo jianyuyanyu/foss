@@ -605,7 +605,6 @@
     }
     public static class StringExtensions
     {
-        public static string AsMediaType(this string? value) { }
         public static string ToSha256(this string input) { }
         public static string ToSha512(this string input) { }
     }

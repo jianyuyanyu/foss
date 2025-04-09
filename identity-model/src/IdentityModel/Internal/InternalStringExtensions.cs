@@ -36,4 +36,15 @@ internal static class InternalStringExtensions
 
         return url;
     }
+
+    [DebuggerStepThrough]
+    public static string AsMediaType(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+
+        return "application/" + value!.Trim().ToLowerInvariant();
+    }
 }
