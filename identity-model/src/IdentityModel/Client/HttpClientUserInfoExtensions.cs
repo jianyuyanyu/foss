@@ -43,6 +43,6 @@ public static class HttpClientUserInfoExtensions
 
         // response.Content can be null in net462 and net471
         var skipJsonParsing = response.Content?.Headers.ContentType?.MediaType != "application/json";
-        return await ProtocolResponse.FromHttpResponseAsync<UserInfoResponse>(response, skipJson: skipJsonParsing).ConfigureAwait();
+        return await ProtocolResponse.FromHttpResponseAsync<UserInfoResponse>(response, skipJsonParsing: skipJsonParsing).ConfigureAwait();
     }
 }

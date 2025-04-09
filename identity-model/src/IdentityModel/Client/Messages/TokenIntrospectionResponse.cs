@@ -100,7 +100,7 @@ public class TokenIntrospectionResponse : ProtocolResponse
     /// <param name="rawToken"></param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    protected virtual JsonElement ExtractJsonFromJwt(string rawToken)
+    private static JsonElement ExtractJsonFromJwt(string rawToken)
     {
         // Split the token into parts.
         var parts = rawToken.Split('.');
@@ -124,6 +124,4 @@ public class TokenIntrospectionResponse : ProtocolResponse
             throw new InvalidOperationException("token_introspection claim not found in JWT payload");
         }
     }
-
-
 }

@@ -53,7 +53,6 @@ public static class HttpClientTokenIntrospectionExtensions
         }
 
         Action<TokenIntrospectionResponse>? onResponseCreated = null;
-        var responseFormat = ResponseFormat.Json;
         var skipJson = false;
 
         // Note that HttpResponse.Content can be null in .NET framework, even though it cannot be null in modern .NET
@@ -61,15 +60,13 @@ public static class HttpClientTokenIntrospectionExtensions
             mediaType == JwtTypes.AsMediaType(JwtTypes.IntrospectionJwtResponse))
         {
             skipJson = true;
-            responseFormat = ResponseFormat.Jwt;
             onResponseCreated = introspectionResponse => introspectionResponse.JwtResponseValidator = request.JwtResponseValidator;
         }
 
         return await ProtocolResponse
             .FromHttpResponseAsync(
                 httpResponse: response,
-                skipJson: skipJson,
-                responseFormat: responseFormat,
+                skipJsonParsing: skipJson,
                 onResponseCreated: onResponseCreated
             )
             .ConfigureAwait(false);
