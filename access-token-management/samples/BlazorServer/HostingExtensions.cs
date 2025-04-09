@@ -3,6 +3,7 @@
 
 using BlazorServer.Plumbing;
 using BlazorServer.Services;
+using Duende.AccessTokenManagement.OpenIdConnect;
 using Serilog;
 
 namespace BlazorServer;
