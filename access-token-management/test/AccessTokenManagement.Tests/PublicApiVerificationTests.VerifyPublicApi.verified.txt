@@ -1,5 +1,7 @@
 ﻿namespace Duende.AccessTokenManagement
 {
+    [System.Obsolete(("This will be made internal or removed in a future version. If you are using this " +
+        "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public abstract class AccessTokenHandler : System.Net.Http.DelegatingHandler
     {
         protected AccessTokenHandler(Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics metrics, Duende.AccessTokenManagement.IDPoPProofService dPoPProofService, Duende.AccessTokenManagement.IDPoPNonceStore dPoPNonceStore, Microsoft.Extensions.Logging.ILogger logger) { }
@@ -10,9 +12,17 @@
         protected virtual System.Threading.Tasks.Task<bool> SetDPoPProofTokenAsync(System.Net.Http.HttpRequestMessage request, Duende.AccessTokenManagement.ClientCredentialsToken token, System.Threading.CancellationToken cancellationToken, string? dpopNonce = null) { }
         protected virtual System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken> SetTokenAsync(System.Net.Http.HttpRequestMessage request, bool forceRenewal, System.Threading.CancellationToken cancellationToken, string? dpopNonce = null) { }
     }
+    public static class ActivityNames
+    {
+        public const string AcquiringToken = "Duende.AccessTokenManagement.AcquiringToken";
+    }
     public static class ActivitySourceNames
     {
-        public const string Main = "Duende.AccessTokenManagement";
+        public static readonly string Main;
+    }
+    public static class ActivitySources
+    {
+        public static System.Diagnostics.ActivitySource Main;
     }
     public class ClientCredentialsClient
     {
@@ -56,6 +66,13 @@
         protected override Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics.TokenRequestType TokenRequestType { get; }
         protected override System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken> GetAccessTokenAsync(bool forceRenewal, System.Threading.CancellationToken cancellationToken) { }
     }
+    public class ClientCredentialsTokenManagementBuilder
+    {
+        public ClientCredentialsTokenManagementBuilder(Microsoft.Extensions.DependencyInjection.IServiceCollection services) { }
+        public Microsoft.Extensions.DependencyInjection.IServiceCollection Services { get; }
+        public Duende.AccessTokenManagement.ClientCredentialsTokenManagementBuilder AddClient(string name, System.Action<Duende.AccessTokenManagement.ClientCredentialsClient> configureOptions) { }
+        public Duende.AccessTokenManagement.ClientCredentialsTokenManagementBuilder UsePreviewHybridCache() { }
+    }
     public static class ClientCredentialsTokenManagementDefaults
     {
         public const string BackChannelHttpClientName = "Duende.AccessTokenManagement.BackChannelHttpClient";
@@ -76,6 +93,14 @@
         public ClientCredentialsTokenManagementService(Duende.AccessTokenManagement.OTel.AccessTokenManagementMetrics metrics, Duende.AccessTokenManagement.IClientCredentialsTokenEndpointService clientCredentialsTokenEndpointService, Duende.AccessTokenManagement.IClientCredentialsTokenCache tokenCache) { }
         public System.Threading.Tasks.Task DeleteAccessTokenAsync(string clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default) { }
         public System.Threading.Tasks.Task<Duende.AccessTokenManagement.ClientCredentialsToken> GetAccessTokenAsync(string clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default) { }
+    }
+    public static class ClientCredentialsTokenManagementServiceCollectionExtensions
+    {
+        public static Microsoft.Extensions.DependencyInjection.IHttpClientBuilder AddClientCredentialsHttpClient(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, string httpClientName, string tokenClientName, System.Action<System.Net.Http.HttpClient>? configureClient = null) { }
+        public static Microsoft.Extensions.DependencyInjection.IHttpClientBuilder AddClientCredentialsHttpClient(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, string httpClientName, string tokenClientName, System.Action<System.IServiceProvider, System.Net.Http.HttpClient> configureClient) { }
+        public static Microsoft.Extensions.DependencyInjection.IHttpClientBuilder AddClientCredentialsTokenHandler(this Microsoft.Extensions.DependencyInjection.IHttpClientBuilder httpClientBuilder, string tokenClientName) { }
+        public static Duende.AccessTokenManagement.ClientCredentialsTokenManagementBuilder AddClientCredentialsTokenManagement(this Microsoft.Extensions.DependencyInjection.IServiceCollection services) { }
+        public static Duende.AccessTokenManagement.ClientCredentialsTokenManagementBuilder AddClientCredentialsTokenManagement(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<Duende.AccessTokenManagement.ClientCredentialsTokenManagementOptions> options) { }
     }
     public static class DPoPExtensions
     {
@@ -180,24 +205,6 @@
         public virtual System.Threading.Tasks.Task<string?> GetNonceAsync(Duende.AccessTokenManagement.DPoPNonceContext context, System.Threading.CancellationToken cancellationToken = default) { }
         public virtual System.Threading.Tasks.Task StoreNonceAsync(Duende.AccessTokenManagement.DPoPNonceContext context, string nonce, System.Threading.CancellationToken cancellationToken = default) { }
     }
-    [System.Text.Json.Serialization.JsonSerializable(typeof(Duende.AccessTokenManagement.ClientCredentialsToken))]
-    [System.Text.Json.Serialization.JsonSerializable(typeof(System.Collections.Generic.Dictionary<string, object>))]
-    [System.Text.Json.Serialization.JsonSerializable(typeof(long))]
-    public class DuendeAccessTokenSerializationContext : System.Text.Json.Serialization.JsonSerializerContext, System.Text.Json.Serialization.Metadata.IJsonTypeInfoResolver
-    {
-        public DuendeAccessTokenSerializationContext() { }
-        public DuendeAccessTokenSerializationContext(System.Text.Json.JsonSerializerOptions options) { }
-        public System.Text.Json.Serialization.Metadata.JsonTypeInfo<bool> Boolean { get; }
-        public System.Text.Json.Serialization.Metadata.JsonTypeInfo<Duende.AccessTokenManagement.ClientCredentialsToken> ClientCredentialsToken { get; }
-        public System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.DateTimeOffset> DateTimeOffset { get; }
-        public System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.Dictionary<string, object>> DictionaryStringObject { get; }
-        protected override System.Text.Json.JsonSerializerOptions? GeneratedSerializerOptions { get; }
-        public System.Text.Json.Serialization.Metadata.JsonTypeInfo<long> Int64 { get; }
-        public System.Text.Json.Serialization.Metadata.JsonTypeInfo<object> Object { get; }
-        public System.Text.Json.Serialization.Metadata.JsonTypeInfo<string> String { get; }
-        public static Duende.AccessTokenManagement.DuendeAccessTokenSerializationContext Default { get; }
-        public override System.Text.Json.Serialization.Metadata.JsonTypeInfo? GetTypeInfo(System.Type type) { }
-    }
     public interface IClientAssertionService
     {
         System.Threading.Tasks.Task<Duende.IdentityModel.Client.ClientAssertion?> GetClientAssertionAsync(string? clientName = null, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null);
@@ -262,6 +269,8 @@
 }
 namespace Duende.AccessTokenManagement.OTel
 {
+    [System.Obsolete(("This will be made internal or removed in a future version. If you are using this " +
+        "type directly, please see https://duende.link/aacs4dq"), UrlFormat="https://duende.link/aacs4dq")]
     public sealed class AccessTokenManagementMetrics
     {
         public const string MeterName = "Duende.AccessTokenManagement";

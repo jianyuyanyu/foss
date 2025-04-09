@@ -4,18 +4,18 @@
 using System.Diagnostics;
 
 namespace Duende.AccessTokenManagement;
-internal static class ActivitySources
+public static class ActivitySources
 {
 
-    internal static ActivitySource Main = new ActivitySource(ActivitySourceNames.Main);
+    public static ActivitySource Main = new ActivitySource(ActivitySourceNames.Main);
 }
 
 public static class ActivitySourceNames
 {
-    public const string Main = "Duende.AccessTokenManagement";
+    public static readonly string Main = typeof(ActivitySources).Assembly.GetName().Name!;
 }
 
-internal static class ActivityNames
+public static class ActivityNames
 {
     public const string AcquiringToken = "Duende.AccessTokenManagement.AcquiringToken";
 }

@@ -12,6 +12,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// <summary>
 /// Implements basic token management logic
 /// </summary>
+[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class UserAccessAccessTokenManagementService(
     AccessTokenManagementMetrics metrics,
     IUserTokenRequestSynchronization sync,

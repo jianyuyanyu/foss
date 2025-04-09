@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Reflection;
 using Duende.AccessTokenManagement.OpenIdConnect;
 using PublicApiGenerator;
 
@@ -14,7 +15,7 @@ public class PublicApiVerificationTests
     {
         var apiGeneratorOptions = new ApiGeneratorOptions
         {
-            IncludeAssemblyAttributes = false
+            IncludeAssemblyAttributes = false,
         };
         var publicApi = typeof(AccessTokenHandler).Assembly.GeneratePublicApi(apiGeneratorOptions);
         var settings = new VerifySettings();
@@ -28,8 +29,39 @@ public class PublicApiVerificationTests
         {
             IncludeAssemblyAttributes = false
         };
-        var publicApi = typeof(OpenIdConnectUserAccessTokenHandler).Assembly.GeneratePublicApi(apiGeneratorOptions);
+#pragma warning disable CS0618 // Type or member is obsolete
+        var publicApi = typeof(IUserTokenEndpointService).Assembly.GeneratePublicApi(apiGeneratorOptions);
+#pragma warning restore CS0618 // Type or member is obsolete
         var settings = new VerifySettings();
         await Verify(publicApi, settings);
+    }
+
+    [Fact]
+    public async Task GetAllPublicTypes()
+    {
+        var types = typeof(AccessTokenHandler).Assembly.GetExportedTypes()
+            .Where(t => t.IsPublic)
+            .Select(t => FormatTypeName(t));
+
+
+        await Verify(string.Join(Environment.NewLine, types));
+    }
+
+    [Fact]
+    public async Task GetAllPublicTypes_OpenIdConnect()
+    {
+        var types = typeof(IUserTokenEndpointService).Assembly.GetExportedTypes()
+            .Where(t => t.IsPublic)
+            .Select(t => FormatTypeName(t));
+
+
+        await Verify(string.Join(Environment.NewLine, types));
+    }
+
+    private static string FormatTypeName(Type t)
+    {
+
+        var obsolete = (t.GetCustomAttributes().Any(x => x is ObsoleteAttribute) ? " (obsolete)" : "");
+        return $"{t.FullName}{obsolete}";
     }
 }

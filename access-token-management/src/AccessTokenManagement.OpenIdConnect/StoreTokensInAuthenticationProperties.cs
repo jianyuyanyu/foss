@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 namespace Duende.AccessTokenManagement.OpenIdConnect;
 
 /// <inheritdoc/>
+[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public class StoreTokensInAuthenticationProperties(
     IOptionsMonitor<UserTokenManagementOptions> tokenManagementOptionsMonitor,
     IOptionsMonitor<CookieAuthenticationOptions> cookieOptionsMonitor,

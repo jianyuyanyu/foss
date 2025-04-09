@@ -1,14 +1,12 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using Duende.AccessTokenManagement;
-using Duende.AccessTokenManagement.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-// ReSharper disable once CheckNamespace
-namespace Microsoft.AspNetCore.Authentication;
+namespace Duende.AccessTokenManagement.OpenIdConnect;
 
 /// <summary>
 /// Extensions methods for HttpContext for token management

@@ -4,7 +4,6 @@
 using System.Text.Json;
 using Duende.AccessTokenManagement.OpenIdConnect;
 using Duende.IdentityModel.Client;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

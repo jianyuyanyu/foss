@@ -11,6 +11,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Delegating handler that injects access token into an outgoing request
 /// </summary>
+[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public abstract class AccessTokenHandler(
     AccessTokenManagementMetrics metrics,
     IDPoPProofService dPoPProofService,
