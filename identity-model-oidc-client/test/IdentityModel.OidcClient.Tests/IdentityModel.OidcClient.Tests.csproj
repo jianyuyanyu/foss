@@ -6,6 +6,10 @@
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
     <Nullable>disable</Nullable>
+
+    <!-- Ignore CS8002: Target assembly does not have a strong name: 
+     - Duende.IdentityServer.Storage does not have a strong name. Not important for the test-->
+    <NoWarn>8002</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\IdentityModel.OidcClient.Extensions\IdentityModel.OidcClient.Extensions.csproj" />

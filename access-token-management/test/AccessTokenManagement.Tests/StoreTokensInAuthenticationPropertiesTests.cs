@@ -5,6 +5,7 @@ using Duende.AccessTokenManagement.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Logging.Abstractions;
+#pragma warning disable CS0618 // Type or member is obsolete
 
 namespace Duende.AccessTokenManagement.Tests;
 

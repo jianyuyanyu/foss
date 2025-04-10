@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Duende.IdentityModel.Internal;
 
-internal static class InternalStringExtensions
+internal static class StringExtensions
 {
     [DebuggerStepThrough]
     public static bool IsMissing(this string? value) => string.IsNullOrWhiteSpace(value);

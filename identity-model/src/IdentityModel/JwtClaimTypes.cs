@@ -1,6 +1,8 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Diagnostics;
+
 namespace Duende.IdentityModel;
 
 /// <summary>
@@ -230,6 +232,17 @@ public static class JwtClaimTypes
         /// Client authentication JWT (for use with private_key_jwt).
         /// </summary>
         public const string ClientAuthentication = "client-authentication+jwt";
+
+        [DebuggerStepThrough]
+        internal static string AsMediaType(string? value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return "application/" + value!.Trim().ToLowerInvariant();
+        }
     }
 
     /// <summary>
