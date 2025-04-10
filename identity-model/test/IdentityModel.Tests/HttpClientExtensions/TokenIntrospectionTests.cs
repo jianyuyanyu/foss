@@ -352,8 +352,7 @@ public class TokenIntrospectionTests
         {
             Address = Endpoint,
             Token = "token",
-            ResponseFormat = ResponseFormat.Jwt,
-            JwtResponseValidator = new NoValidationIntrospectionJwtResponseValidator()
+            ResponseFormat = ResponseFormat.Jwt
         });
 
         response.ShouldNotBeNull();
@@ -398,8 +397,7 @@ public class TokenIntrospectionTests
             Address = Endpoint,
             ClientId = "client",
             ClientSecret = "secret",
-            ResponseFormat = ResponseFormat.Jwt,
-            JwtResponseValidator = new NoValidationIntrospectionJwtResponseValidator()
+            ResponseFormat = ResponseFormat.Jwt
         };
 
         var handler = new NetworkHandler(document, HttpStatusCode.OK);

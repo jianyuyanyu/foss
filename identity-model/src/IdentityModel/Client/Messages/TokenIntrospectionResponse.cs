@@ -28,7 +28,7 @@ public class TokenIntrospectionResponse : ProtocolResponse
 
         // Note that HttpResponse.Content can be null in .NET framework, even though it cannot be null in modern .NET
         if (HttpResponse?.Content?.Headers?.ContentType is { MediaType: var mediaType } &&
-            mediaType == JwtTypes.AsMediaType(JwtTypes.IntrospectionJwtResponse) &&
+            string.Equals(mediaType, JwtTypes.AsMediaType(JwtTypes.IntrospectionJwtResponse), StringComparison.OrdinalIgnoreCase) &&
             !string.IsNullOrWhiteSpace(Raw))
         {
             Json = ExtractJsonFromJwt(Raw!);

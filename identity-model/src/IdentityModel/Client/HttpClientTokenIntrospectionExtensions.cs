@@ -57,7 +57,7 @@ public static class HttpClientTokenIntrospectionExtensions
 
         // Note that HttpResponse.Content can be null in .NET framework, even though it cannot be null in modern .NET
         if (response.Content?.Headers?.ContentType is { MediaType: var mediaType } &&
-            mediaType == JwtTypes.AsMediaType(JwtTypes.IntrospectionJwtResponse))
+            string.Equals(mediaType, JwtTypes.AsMediaType(JwtTypes.IntrospectionJwtResponse), StringComparison.OrdinalIgnoreCase))
         {
             skipJson = true;
             onResponseCreated = introspectionResponse => introspectionResponse.JwtResponseValidator = request.JwtResponseValidator;
