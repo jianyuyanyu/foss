@@ -1,6 +1,8 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using Duende.IdentityModel.Validation;
+
 namespace Duende.IdentityModel.Client;
 
 /// <summary>
@@ -13,7 +15,23 @@ public class TokenClientOptions : ClientOptions
 /// Options for IntrospectionClient
 /// </summary>
 public class IntrospectionClientOptions : ClientOptions
-{ }
+{
+    /// <summary>
+    /// Gets or sets the response format to request from the introspection endpoint.
+    /// </summary>
+    /// <value>
+    /// The introspection response format (JSON or JWT). Defaults to JSON.
+    /// </value>
+    public ResponseFormat ResponseFormat { get; set; } = ResponseFormat.Json;
+
+    /// <summary>
+    /// Gets or sets the custom validator instance for validating a JWT introspection response.
+    /// If set, this validator will be invoked to perform any additional or custom validation on the JWT response (for example, verifying its signature, expiration, or other claims).
+    /// If left null, no JWT validation is performed, although the claims will still be extracted and the raw JWT string will be accessible.
+    /// It is the caller's responsibility to provide an implementation of <see cref="ITokenIntrospectionJwtResponseValidator"/> if JWT validation is desired.
+    /// </summary>
+    public ITokenIntrospectionJwtResponseValidator? JwtResponseValidator { get; set; }
+}
 
 /// <summary>
 /// Base-class protocol client options
