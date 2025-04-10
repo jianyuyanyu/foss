@@ -225,6 +225,11 @@ public static class JwtClaimTypes
         /// Token introspection JWT response
         /// </summary>
         public const string IntrospectionJwtResponse = "token-introspection+jwt";
+
+        /// <summary>
+        /// Client authentication JWT (for use with private_key_jwt).
+        /// </summary>
+        public const string ClientAuthentication = "client-authentication+jwt";
     }
 
     /// <summary>
