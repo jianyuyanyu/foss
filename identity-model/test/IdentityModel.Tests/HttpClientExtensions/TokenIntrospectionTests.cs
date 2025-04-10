@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Text.Json;
 using Duende.IdentityModel.Client;
 using Duende.IdentityModel.Infrastructure;
-using Duende.IdentityModel.Validation;
 
 namespace Duende.IdentityModel.HttpClientExtensions;
 
