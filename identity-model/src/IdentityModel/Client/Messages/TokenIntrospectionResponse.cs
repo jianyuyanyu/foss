@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System.Globalization;
-using System.Runtime.ExceptionServices;
 using System.Security.Claims;
 using System.Text.Json;
 using Duende.IdentityModel.Validation;
@@ -16,14 +15,6 @@ namespace Duende.IdentityModel.Client;
 /// <seealso cref="ProtocolResponse" />
 public class TokenIntrospectionResponse : ProtocolResponse
 {
-    private DateTimeOffset? _expiration;
-    private DateTimeOffset? _issuedAt;
-    private DateTimeOffset? _notBefore;
-
-    private ExceptionDispatchInfo? _expirationException;
-    private ExceptionDispatchInfo? _issuedAtException;
-    private ExceptionDispatchInfo? _notBeforeException;
-
     /// <summary>
     /// Allows to initialize instance specific data.
     /// </summary>
@@ -79,9 +70,9 @@ public class TokenIntrospectionResponse : ProtocolResponse
         ClientId = claims.FirstOrDefault(c => c.Type == JwtClaimTypes.ClientId)?.Value;
         UserName = claims.FirstOrDefault(c => c.Type == "username")?.Value;
         TokenType = claims.FirstOrDefault(c => c.Type == "token_type")?.Value;
-        _expiration = GetDateTimeOffset(claims, JwtClaimTypes.Expiration, ref _expirationException);
-        _issuedAt = GetDateTimeOffset(claims, JwtClaimTypes.IssuedAt, ref _issuedAtException);
-        _notBefore = GetDateTimeOffset(claims, JwtClaimTypes.NotBefore, ref _notBeforeException);
+        Expiration = GetDateTimeOffset(claims, JwtClaimTypes.Expiration);
+        IssuedAt = GetDateTimeOffset(claims, JwtClaimTypes.IssuedAt);
+        NotBefore = GetDateTimeOffset(claims, JwtClaimTypes.NotBefore);
         Subject = claims.FirstOrDefault(c => c.Type == JwtClaimTypes.Subject)?.Value;
         Audiences = claims.Where(c => c.Type == JwtClaimTypes.Audience).Select(c => c.Value).ToArray();
         Issuer = claims.FirstOrDefault(c => c.Type == JwtClaimTypes.Issuer)?.Value;
@@ -92,24 +83,15 @@ public class TokenIntrospectionResponse : ProtocolResponse
         return Task.CompletedTask;
     }
 
-    private static DateTimeOffset? GetDateTimeOffset(List<Claim> claims, string claimType, ref ExceptionDispatchInfo? exceptionDispatchInfo)
+    private static DateTimeOffset? GetDateTimeOffset(List<Claim> claims, string claimType)
     {
         var claimValue = claims.FirstOrDefault(e => e.Type == claimType)?.Value;
         if (claimValue == null)
         {
             return null;
         }
-
-        try
-        {
-            var seconds = long.Parse(claimValue, NumberStyles.AllowLeadingSign, NumberFormatInfo.InvariantInfo);
-            return DateTimeOffset.FromUnixTimeSeconds(seconds);
-        }
-        catch (Exception exception)
-        {
-            exceptionDispatchInfo = ExceptionDispatchInfo.Capture(exception);
-            return null;
-        }
+        var seconds = long.Parse(claimValue, NumberStyles.AllowLeadingSign, NumberFormatInfo.InvariantInfo);
+        return DateTimeOffset.FromUnixTimeSeconds(seconds);
     }
 
     /// <summary>
@@ -158,14 +140,7 @@ public class TokenIntrospectionResponse : ProtocolResponse
     /// <value>
     /// The expiration time of the token or null if the <c>exp</c> claim is missing.
     /// </value>
-    public DateTimeOffset? Expiration
-    {
-        get
-        {
-            _expirationException?.Throw();
-            return _expiration;
-        }
-    }
+    public DateTimeOffset? Expiration { get; private set; }
 
     /// <summary>
     /// Gets the time when the token was issued.
@@ -173,14 +148,7 @@ public class TokenIntrospectionResponse : ProtocolResponse
     /// <value>
     /// The issuance time of the token or null if the <c>iat</c> claim is missing.
     /// </value>
-    public DateTimeOffset? IssuedAt
-    {
-        get
-        {
-            _issuedAtException?.Throw();
-            return _issuedAt;
-        }
-    }
+    public DateTimeOffset? IssuedAt { get; private set; }
 
     /// <summary>
     /// Gets the time before which the token must not be accepted for processing.
@@ -188,14 +156,7 @@ public class TokenIntrospectionResponse : ProtocolResponse
     /// <value>
     /// The validity start time of the token or null if the <c>nbf</c> claim is missing.
     /// </value>
-    public DateTimeOffset? NotBefore
-    {
-        get
-        {
-            _notBeforeException?.Throw();
-            return _notBefore;
-        }
-    }
+    public DateTimeOffset? NotBefore { get; private set; }
 
     /// <summary>
     /// Gets the subject of the token. Usually a machine-readable identifier of the resource owner who authorized the token.

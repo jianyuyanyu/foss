@@ -1283,12 +1283,12 @@ namespace Duende.IdentityModel.Client
         public System.DateTimeOffset? IssuedAt { get; }
         public string? Issuer { get; }
         public string? JwtId { get; }
+        public Duende.IdentityModel.Validation.ITokenIntrospectionJwtResponseValidator? JwtResponseValidator { get; set; }
         public System.DateTimeOffset? NotBefore { get; }
         public string[] Scopes { get; }
         public string? Subject { get; }
         public string? TokenType { get; }
         public string? UserName { get; }
-        public Duende.IdentityModel.Validation.ITokenIntrospectionJwtResponseValidator? JwtResponseValidator { get; set; }
         protected override System.Threading.Tasks.Task InitializeAsync(object? initializationData = null) { }
     }
     public class TokenRequest : Duende.IdentityModel.Client.ProtocolRequest
