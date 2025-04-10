@@ -1433,9 +1433,4 @@ namespace Duende.IdentityModel.Validation
     {
         void Validate(string rawJwtResponse);
     }
-    public class NoValidationIntrospectionJwtResponseValidator : Duende.IdentityModel.Validation.ITokenIntrospectionJwtResponseValidator
-    {
-        public NoValidationIntrospectionJwtResponseValidator() { }
-        public void Validate(string rawJwtResponse) { }
-    }
 }
