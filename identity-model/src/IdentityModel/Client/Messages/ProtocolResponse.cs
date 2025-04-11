@@ -18,14 +18,22 @@ public class ProtocolResponse
     /// <typeparam name="T">Specific protocol response type</typeparam>
     /// <param name="httpResponse">The HTTP response.</param>
     /// <param name="initializationData">The initialization data.</param>
-    /// <param name="skipJson">Disables parsing of json</param>
+    /// <param name="skipJsonParsing">Disables parsing of json</param>
+    /// <param name="onResponseCreated">An action that is invoked after the response is created, allowing for additional processing of the response.</param>
     /// <returns></returns>
-    public static async Task<T> FromHttpResponseAsync<T>(HttpResponseMessage httpResponse, object? initializationData = null, bool skipJson = false) where T : ProtocolResponse, new()
+    public static async Task<T> FromHttpResponseAsync<T>(
+        HttpResponseMessage httpResponse,
+        object? initializationData = null,
+        bool skipJsonParsing = false,
+        Action<T>? onResponseCreated = null)
+        where T : ProtocolResponse, new()
     {
         var response = new T
         {
             HttpResponse = httpResponse
         };
+
+        onResponseCreated?.Invoke(response);
 
         // try to read content
         var content = string.Empty;
@@ -54,7 +62,7 @@ public class ProtocolResponse
         {
             response.ErrorType = ResponseErrorType.Http;
 
-            if (!skipJson && content.IsPresent())
+            if (!skipJsonParsing && content.IsPresent())
             {
                 try
                 {
@@ -75,7 +83,7 @@ public class ProtocolResponse
         // either 200 or 400 - both cases need a JSON response (if present), otherwise error
         try
         {
-            if (!skipJson && content.IsPresent())
+            if (!skipJsonParsing && content.IsPresent())
             {
                 response.Json = JsonDocument.Parse(content!).RootElement;
             }
@@ -94,10 +102,8 @@ public class ProtocolResponse
             }
         }
 
-        if (!skipJson)
-        {
-            await response.InitializeAsync(initializationData).ConfigureAwait();
-        }
+
+        await response.InitializeAsync(initializationData).ConfigureAwait();
         return response;
     }
 
