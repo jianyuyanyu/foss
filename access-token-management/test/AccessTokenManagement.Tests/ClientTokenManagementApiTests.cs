@@ -24,9 +24,13 @@ public class DistributedCacheClientTokenManagementApiTests(ITestOutputHelper out
     [Fact]
     public void DistributedCache_should_be_registered()
     {
+#pragma warning disable CS0618 // Type or member is obsolete
         Provider.GetRequiredService<IClientCredentialsTokenCache>().ShouldBeOfType<DistributedClientCredentialsTokenCache>();
         Provider.GetRequiredService<IDPoPNonceStore>().ShouldBeOfType<DistributedDPoPNonceStore>();
+#pragma warning restore CS0618 // Type or member is obsolete
+
     }
+
 }
 
 public class HybridCacheClientTokenManagementApiTests(ITestOutputHelper output)

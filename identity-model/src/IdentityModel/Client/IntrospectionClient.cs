@@ -1,6 +1,9 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Net.Http.Headers;
+using static Duende.IdentityModel.JwtClaimTypes;
+
 namespace Duende.IdentityModel.Client;
 
 /// <summary>
@@ -45,6 +48,7 @@ public class IntrospectionClient
         request.ClientCredentialStyle = _options.ClientCredentialStyle;
         request.AuthorizationHeaderStyle = _options.AuthorizationHeaderStyle;
         request.Parameters = new Parameters(_options.Parameters);
+        request.JwtResponseValidator = _options.JwtResponseValidator;
 
         if (parameters != null)
         {
@@ -52,6 +56,12 @@ public class IntrospectionClient
             {
                 request.Parameters.Add(parameter);
             }
+        }
+
+        if (_options.ResponseFormat is ResponseFormat.Jwt)
+        {
+            request.Headers.Accept.Clear();
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(JwtTypes.AsMediaType(JwtTypes.IntrospectionJwtResponse)));
         }
     }
 

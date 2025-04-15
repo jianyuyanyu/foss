@@ -58,7 +58,9 @@ public class AccessTokenHandlerTests
         IDPoPProofService dPoPProofService,
         IDPoPNonceStore dPoPNonceStore,
         ILogger logger)
+#pragma warning disable CS0618 // Type or member is obsolete
         : AccessTokenHandler(new AccessTokenManagementMetrics(new DummyMeterFactory()), dPoPProofService, dPoPNonceStore, logger)
+#pragma warning restore CS0618 // Type or member is obsolete
     {
         public ClientCredentialsToken AccessToken { get; set; } = new ClientCredentialsToken
         {
@@ -69,7 +71,9 @@ public class AccessTokenHandlerTests
 
         protected override Task<ClientCredentialsToken> GetAccessTokenAsync(bool forceRenewal, CancellationToken cancellationToken) => Task.FromResult(AccessToken);
 
+#pragma warning disable CS0618 // Type or member is obsolete
         protected override AccessTokenManagementMetrics.TokenRequestType TokenRequestType => AccessTokenManagementMetrics.TokenRequestType.ClientCredentials;
+#pragma warning restore CS0618 // Type or member is obsolete
 
         private class DummyMeterFactory : IMeterFactory
         {

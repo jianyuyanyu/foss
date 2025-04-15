@@ -4,7 +4,6 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
 using Duende.AccessTokenManagement;
-using Duende.AccessTokenManagement.OTel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,7 +62,7 @@ public static class Extensions
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
-                    .AddMeter(AccessTokenManagementMetrics.MeterName);
+                    .AddMeter("Duende.AccessTokenManagement");
             })
             .WithTracing(tracing =>
             {
