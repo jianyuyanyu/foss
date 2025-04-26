@@ -207,3 +207,7 @@ tools/
 
 # Verify Tests
 *.received.*
+
+# Visual Studio Code - Ignore only settings.json. launch.json and tasks.json 
+# are checked deliberately
+**/.vscode/settings.json
