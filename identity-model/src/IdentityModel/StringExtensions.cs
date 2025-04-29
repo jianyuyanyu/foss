@@ -19,7 +19,10 @@ public static class StringExtensions
     /// <returns>A hash</returns>
     public static string ToSha256(this string input)
     {
-        if (input.IsMissing()) return string.Empty;
+        if (input.IsMissing())
+        {
+            return string.Empty;
+        }
 
         using (var sha = SHA256.Create())
         {
@@ -37,7 +40,10 @@ public static class StringExtensions
     /// <returns>A hash</returns>
     public static string ToSha512(this string input)
     {
-        if (input.IsMissing()) return string.Empty;
+        if (input.IsMissing())
+        {
+            return string.Empty;
+        }
 
         using (var sha = SHA512.Create())
         {

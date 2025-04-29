@@ -43,13 +43,20 @@ public class GenericHost(WriteTestOutput writeOutput, string baseAddress = "http
     public string Url(string? path = null)
     {
         path = path ?? string.Empty;
-        if (!path.StartsWith("/")) path = "/" + path;
+        if (!path.StartsWith("/"))
+        {
+            path = "/" + path;
+        }
+
         return BaseAddress + path;
     }
 
     public async Task InitializeAsync()
     {
-        if (Server != null) throw new InvalidOperationException("Already initialized");
+        if (Server != null)
+        {
+            throw new InvalidOperationException("Already initialized");
+        }
 
         var hostBuilder = new HostBuilder()
             .ConfigureWebHost(builder =>
@@ -184,9 +191,13 @@ public class GenericHost(WriteTestOutput writeOutput, string baseAddress = "http
         static async ValueTask CastAndDispose(IDisposable resource)
         {
             if (resource is IAsyncDisposable resourceAsyncDisposable)
+            {
                 await resourceAsyncDisposable.DisposeAsync();
+            }
             else
+            {
                 resource?.Dispose();
+            }
         }
     }
 }

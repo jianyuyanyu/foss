@@ -31,7 +31,10 @@ public class DiscoveryEndpoint
     /// </exception>
     public static DiscoveryEndpoint ParseUrl(string input, string? path = null)
     {
-        if (input == null) throw new ArgumentNullException(nameof(input));
+        if (input == null)
+        {
+            throw new ArgumentNullException(nameof(input));
+        }
 
         if (string.IsNullOrEmpty(path))
         {

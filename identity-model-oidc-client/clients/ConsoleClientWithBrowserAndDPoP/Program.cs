@@ -107,7 +107,10 @@ public class Program
 
     private static void ShowResult(LoginResult? result)
     {
-        if (result == null) return;
+        if (result == null)
+        {
+            return;
+        }
 
         if (result.IsError)
         {
@@ -142,8 +145,15 @@ public class Program
             Console.Write(menu);
             var key = Console.ReadKey();
 
-            if (key.Key == ConsoleKey.X) return;
-            if (key.Key == ConsoleKey.C) await CallApi();
+            if (key.Key == ConsoleKey.X)
+            {
+                return;
+            }
+
+            if (key.Key == ConsoleKey.C)
+            {
+                await CallApi();
+            }
         }
     }
 

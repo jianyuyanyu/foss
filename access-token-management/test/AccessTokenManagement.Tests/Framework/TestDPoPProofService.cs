@@ -11,7 +11,11 @@ public class TestDPoPProofService : IDPoPProofService
 
     public Task<DPoPProof?> CreateProofTokenAsync(DPoPProofRequest request)
     {
-        if (ProofToken == null) return Task.FromResult<DPoPProof?>(null);
+        if (ProofToken == null)
+        {
+            return Task.FromResult<DPoPProof?>(null);
+        }
+
         Nonce = request.DPoPNonce;
         return Task.FromResult<DPoPProof?>(new DPoPProof { ProofToken = ProofToken + Nonce });
     }

@@ -20,7 +20,10 @@ public static class HttpClientDiscoveryExtensions
     public static async Task<DiscoveryDocumentResponse> GetDiscoveryDocumentAsync(this HttpClient client, string? address = null, CancellationToken cancellationToken = default)
     {
         if (address == null && client.BaseAddress == null)
+        {
             throw new ArgumentException("Either the address parameter or the HttpClient BaseAddress must not be null.");
+        }
+
         return await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest { Address = address }, cancellationToken).ConfigureAwait();
     }
 

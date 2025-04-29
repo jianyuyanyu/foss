@@ -16,7 +16,9 @@ public abstract class DiscoveryPolicyTestsBase
     protected DiscoveryPolicy ForceTestedAuthorityValidationStrategy(DiscoveryPolicy policy)
     {
         if (policy == null)
+        {
             throw new ArgumentNullException(nameof(policy));
+        }
 
         policy.AuthorityValidationStrategy = _authorityValidationStrategy;
         return policy;
@@ -24,8 +26,15 @@ public abstract class DiscoveryPolicyTestsBase
 
     protected NetworkHandler GetHandler(string issuer, string endpointBase = null, string alternateEndpointBase = null)
     {
-        if (endpointBase == null) endpointBase = issuer;
-        if (alternateEndpointBase == null) alternateEndpointBase = issuer;
+        if (endpointBase == null)
+        {
+            endpointBase = issuer;
+        }
+
+        if (alternateEndpointBase == null)
+        {
+            alternateEndpointBase = issuer;
+        }
 
         var discoFileName = FileName.Create("discovery_variable.json");
         var raw = File.ReadAllText(discoFileName);

@@ -70,7 +70,10 @@ public class Parameters : List<KeyValuePair<string, string>>
     /// <param name="parameterReplace">Replace behavior.</param>
     public void Add(string key, string value, ParameterReplaceBehavior parameterReplace = ParameterReplaceBehavior.None)
     {
-        if (key.IsMissing()) throw new ArgumentNullException(nameof(key));
+        if (key.IsMissing())
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
 
         if (parameterReplace == ParameterReplaceBehavior.None)
         {
@@ -119,8 +122,16 @@ public class Parameters : List<KeyValuePair<string, string>>
     /// <exception cref="InvalidOperationException"></exception>
     public void AddOptional(string key, string? value, bool allowDuplicates = false)
     {
-        if (key.IsMissing()) throw new ArgumentNullException(nameof(key));
-        if (value.IsMissing()) return;
+        if (key.IsMissing())
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
+        if (value.IsMissing())
+        {
+            return;
+        }
+
         if (allowDuplicates == false)
         {
             if (ContainsKey(key))
@@ -144,7 +155,10 @@ public class Parameters : List<KeyValuePair<string, string>>
     /// <exception cref="ArgumentException"></exception>
     public void AddRequired(string key, string? value, bool allowDuplicates = false, bool allowEmptyValue = false)
     {
-        if (key.IsMissing()) throw new ArgumentNullException(nameof(key));
+        if (key.IsMissing())
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
 
         var valuePresent = value.IsPresent();
         var parameterPresent = ContainsKey(key);

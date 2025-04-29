@@ -96,10 +96,17 @@ public class RefreshTokenDelegatingHandler : DelegatingHandler
 
         _logger = _oidcClient.Options.LoggerFactory.CreateLogger<RefreshTokenDelegatingHandler>();
 
-        if (refreshToken.IsMissing()) throw new ArgumentNullException(nameof(refreshToken));
+        if (refreshToken.IsMissing())
+        {
+            throw new ArgumentNullException(nameof(refreshToken));
+        }
+
         _refreshToken = refreshToken;
 
-        if (innerHandler != null) InnerHandler = innerHandler;
+        if (innerHandler != null)
+        {
+            InnerHandler = innerHandler;
+        }
     }
 
     /// <summary>

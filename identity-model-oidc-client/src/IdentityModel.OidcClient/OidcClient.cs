@@ -36,11 +36,18 @@ public class OidcClient
     /// <exception cref="System.ArgumentNullException">options</exception>
     public OidcClient(OidcClientOptions options)
     {
-        if (options == null) throw new ArgumentNullException(nameof(options));
+        if (options == null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
 
         if (options.ProviderInformation == null)
         {
-            if (options.Authority.IsMissing()) throw new ArgumentException("No authority specified", nameof(Options.Authority));
+            if (options.Authority.IsMissing())
+            {
+                throw new ArgumentException("No authority specified", nameof(Options.Authority));
+            }
+
             _useDiscovery = true;
         }
 
@@ -61,7 +68,10 @@ public class OidcClient
         _logger.LogTrace("LoginAsync");
         _logger.LogInformation("Starting authentication request.");
 
-        if (request == null) request = new LoginRequest();
+        if (request == null)
+        {
+            request = new LoginRequest();
+        }
 
         await EnsureConfigurationAsync(cancellationToken);
 
@@ -132,7 +142,10 @@ public class OidcClient
     /// <returns></returns>
     public virtual async Task<LogoutResult> LogoutAsync(LogoutRequest request = null, CancellationToken cancellationToken = default)
     {
-        if (request == null) request = new LogoutRequest();
+        if (request == null)
+        {
+            request = new LogoutRequest();
+        }
 
         await EnsureConfigurationAsync(cancellationToken);
 
@@ -276,8 +289,15 @@ public class OidcClient
         _logger.LogTrace("GetUserInfoAsync");
 
         await EnsureConfigurationAsync(cancellationToken);
-        if (accessToken.IsMissing()) throw new ArgumentNullException(nameof(accessToken));
-        if (!Options.ProviderInformation.SupportsUserInfo) throw new InvalidOperationException("No userinfo endpoint specified");
+        if (accessToken.IsMissing())
+        {
+            throw new ArgumentNullException(nameof(accessToken));
+        }
+
+        if (!Options.ProviderInformation.SupportsUserInfo)
+        {
+            throw new InvalidOperationException("No userinfo endpoint specified");
+        }
 
         var userInfoClient = Options.CreateClient();
 

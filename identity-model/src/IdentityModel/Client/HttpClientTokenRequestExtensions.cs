@@ -197,7 +197,10 @@ public static class HttpClientTokenRequestExtensions
     /// <exception cref="ArgumentNullException">parameters</exception>
     public static async Task<TokenResponse> RequestTokenRawAsync(this HttpMessageInvoker client, string address, Parameters parameters, CancellationToken cancellationToken = default)
     {
-        if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+        if (parameters == null)
+        {
+            throw new ArgumentNullException(nameof(parameters));
+        }
 
         var request = new TokenRequest
         {

@@ -88,7 +88,10 @@ internal static class QueryHelpers
         sb.Append(uriToBeAppended);
         foreach (var parameter in queryString)
         {
-            if (parameter.Value == null) continue;
+            if (parameter.Value == null)
+            {
+                continue;
+            }
 
             sb.Append(hasQuery ? '&' : '?');
             sb.Append(UrlEncoder.Default.Encode(parameter.Key));
