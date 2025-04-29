@@ -26,7 +26,10 @@ public static class JsonElementExtensions
 
         foreach (var x in json.EnumerateObject())
         {
-            if (excludeList.Contains(x.Name)) continue;
+            if (excludeList.Contains(x.Name))
+            {
+                continue;
+            }
 
             if (x.Value.ValueKind == JsonValueKind.Array)
             {

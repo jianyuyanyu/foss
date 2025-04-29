@@ -43,15 +43,36 @@ public class ClaimComparer : EqualityComparer<Claim>
     /// <inheritdoc/>
     public override bool Equals(Claim? x, Claim? y)
     {
-        if (x == null && y == null) return true;
-        if (x == null && y != null) return false;
-        if (x != null && y == null) return false;
+        if (x == null && y == null)
+        {
+            return true;
+        }
 
-        if (x == null) throw new ArgumentNullException(nameof(x));
-        if (y == null) throw new ArgumentNullException(nameof(y));
+        if (x == null && y != null)
+        {
+            return false;
+        }
+
+        if (x != null && y == null)
+        {
+            return false;
+        }
+
+        if (x == null)
+        {
+            throw new ArgumentNullException(nameof(x));
+        }
+
+        if (y == null)
+        {
+            throw new ArgumentNullException(nameof(y));
+        }
 
         var valueComparison = StringComparison.Ordinal;
-        if (_options.IgnoreValueCase == true) valueComparison = StringComparison.OrdinalIgnoreCase;
+        if (_options.IgnoreValueCase == true)
+        {
+            valueComparison = StringComparison.OrdinalIgnoreCase;
+        }
 
         var equal = (string.Equals(x.Type, y.Type, StringComparison.OrdinalIgnoreCase) &&
                          string.Equals(x.Value, y.Value, valueComparison) &&
@@ -70,7 +91,10 @@ public class ClaimComparer : EqualityComparer<Claim>
     /// <inheritdoc/>
     public override int GetHashCode(Claim claim)
     {
-        if (claim is null) return 0;
+        if (claim is null)
+        {
+            return 0;
+        }
 
         var typeHash = claim.Type?.ToLowerInvariant().GetHashCode() ?? 0 ^ claim.ValueType?.GetHashCode() ?? 0;
         int valueHash;

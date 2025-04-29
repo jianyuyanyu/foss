@@ -216,7 +216,11 @@ public class HtmlForm
     {
         get
         {
-            if (Inputs.ContainsKey(key)) return Inputs[key];
+            if (Inputs.ContainsKey(key))
+            {
+                return Inputs[key];
+            }
+
             return null;
         }
         set => Inputs[key] = value;

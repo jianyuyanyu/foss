@@ -30,8 +30,15 @@ public class BasicAuthenticationHeaderValue : AuthenticationHeaderValue
     /// <exception cref="ArgumentNullException">userName</exception>
     public static string EncodeCredential(string userName, string password)
     {
-        if (string.IsNullOrWhiteSpace(userName)) throw new ArgumentNullException(nameof(userName));
-        if (password == null) password = "";
+        if (string.IsNullOrWhiteSpace(userName))
+        {
+            throw new ArgumentNullException(nameof(userName));
+        }
+
+        if (password == null)
+        {
+            password = "";
+        }
 
         var encoding = Encoding.UTF8;
         var credential = string.Format("{0}:{1}", userName, password);

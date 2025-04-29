@@ -99,7 +99,11 @@ public class CryptoRandom : Random
     /// </exception>
     public override int Next(int maxValue)
     {
-        if (maxValue < 0) throw new ArgumentOutOfRangeException(nameof(maxValue));
+        if (maxValue < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(maxValue));
+        }
+
         return Next(0, maxValue);
     }
 
@@ -116,8 +120,16 @@ public class CryptoRandom : Random
     /// </exception>
     public override int Next(int minValue, int maxValue)
     {
-        if (minValue > maxValue) throw new ArgumentOutOfRangeException(nameof(minValue));
-        if (minValue == maxValue) return minValue;
+        if (minValue > maxValue)
+        {
+            throw new ArgumentOutOfRangeException(nameof(minValue));
+        }
+
+        if (minValue == maxValue)
+        {
+            return minValue;
+        }
+
         long diff = maxValue - minValue;
 
         while (true)
@@ -156,7 +168,11 @@ public class CryptoRandom : Random
     /// </exception>
     public override void NextBytes(byte[] buffer)
     {
-        if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+        if (buffer == null)
+        {
+            throw new ArgumentNullException(nameof(buffer));
+        }
+
         Rng.GetBytes(buffer);
     }
 }

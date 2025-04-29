@@ -61,7 +61,9 @@ public class RefreshTokenDelegatingHandlerTests
             async Task PerformPingRequests()
             {
                 for (var i = 0; i < callsPerThread; i++)
+                {
                     await client.SecuredPing();
+                }
             }
 
             var tasks = Enumerable.Range(0, logicalThreadCount).Select(i => PerformPingRequests());
@@ -94,7 +96,9 @@ public class RefreshTokenDelegatingHandlerTests
                 var response = await _client.GetAsync("/whatever");
 
                 if (response.IsSuccessStatusCode)
+                {
                     return;
+                }
             }
 
             throw new Exception("The client was not able to recover.");
@@ -164,9 +168,13 @@ public class RefreshTokenDelegatingHandlerTests
                 var expired = useCount > _maxCallsPerAccessToken;
 
                 if (expired)
+                {
                     _writeLine?.Invoke($"{accessToken} is no longer valid because it has been used {useCount} times (more than the {_maxCallsPerAccessToken} allowed)");
+                }
                 else
+                {
                     _writeLine?.Invoke($"{accessToken} is still valid (used {useCount} times now)");
+                }
 
                 return !expired;
             }

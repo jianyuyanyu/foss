@@ -27,7 +27,10 @@ internal static class StringExtensions
     [DebuggerStepThrough]
     public static string RemoveTrailingSlash(this string url)
     {
-        if (url == null) throw new ArgumentNullException(nameof(url));
+        if (url == null)
+        {
+            throw new ArgumentNullException(nameof(url));
+        }
 
         if (url.EndsWith("/"))
         {

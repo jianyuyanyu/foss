@@ -116,7 +116,10 @@ internal class HybridClientCredentialsTokenCache(
     public async Task<ClientCredentialsToken?> GetAsync(string clientName, TokenRequestParameters requestParameters,
         CancellationToken cancellationToken = default)
     {
-        if (clientName is null) throw new ArgumentNullException(nameof(clientName));
+        if (clientName is null)
+        {
+            throw new ArgumentNullException(nameof(clientName));
+        }
 
         var cacheKey = cacheKeyGenerator.GenerateKey(clientName, requestParameters);
 

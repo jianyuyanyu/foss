@@ -32,10 +32,16 @@ public class JsonWebKey
     /// <param name="json">a string that contains JSON Web Key parameters in JSON format.</param>
     public JsonWebKey(string json)
     {
-        if (string.IsNullOrWhiteSpace(json)) throw new ArgumentNullException(nameof(json));
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            throw new ArgumentNullException(nameof(json));
+        }
 
         var key = JsonSerializer.Deserialize<JsonWebKey>(json, JwkSourceGenerationContext.Default.JsonWebKey);
-        if (key == null) throw new InvalidOperationException("malformed key");
+        if (key == null)
+        {
+            throw new InvalidOperationException("malformed key");
+        }
 
         Copy(key);
     }
@@ -122,10 +128,15 @@ public class JsonWebKey
         get => _keyops;
         set
         {
-            if (value == null) throw new ArgumentNullException("KeyOps");
+            if (value == null)
+            {
+                throw new ArgumentNullException("KeyOps");
+            }
 
             foreach (var keyOp in value)
+            {
                 _keyops.Add(keyOp);
+            }
         }
     }
 
@@ -201,7 +212,9 @@ public class JsonWebKey
             //    throw LogHelper.LogException<ArgumentNullException>(LogMessages.IDX10001, "X5c");
 
             foreach (var clause in value)
+            {
                 _certificateClauses.Add(clause);
+            }
         }
     }
 
@@ -235,13 +248,21 @@ public class JsonWebKey
         get
         {
             if (Kty == JsonWebAlgorithmsKeyTypes.RSA)
+            {
                 return Base64Url.Decode(N).Length * 8;
+            }
             else if (Kty == JsonWebAlgorithmsKeyTypes.EllipticCurve)
+            {
                 return Base64Url.Decode(X).Length * 8;
+            }
             else if (Kty == JsonWebAlgorithmsKeyTypes.Octet)
+            {
                 return Base64Url.Decode(K).Length * 8;
+            }
             else
+            {
                 return 0;
+            }
         }
     }
 
@@ -250,11 +271,17 @@ public class JsonWebKey
         get
         {
             if (Kty == JsonWebAlgorithmsKeyTypes.RSA)
+            {
                 return D != null && DP != null && DQ != null && P != null && Q != null && QI != null;
+            }
             else if (Kty == JsonWebAlgorithmsKeyTypes.EllipticCurve)
+            {
                 return D != null;
+            }
             else
+            {
                 return false;
+            }
         }
     }
 }

@@ -110,7 +110,10 @@ public class ProtocolRequest : HttpRequestMessage
 
         if (Parameters != null)
         {
-            foreach (var item in Parameters) clone.Parameters.Add(item);
+            foreach (var item in Parameters)
+            {
+                clone.Parameters.Add(item);
+            }
         }
 
         clone.Headers.Clear();

@@ -27,10 +27,15 @@ public sealed class StringComparisonAuthorityValidationStrategy : IAuthorityVali
     /// <returns></returns>
     public AuthorityValidationResult IsIssuerNameValid(string issuerName, string expectedAuthority)
     {
-        if (string.IsNullOrWhiteSpace(issuerName)) return AuthorityValidationResult.CreateError("Issuer name is missing");
+        if (string.IsNullOrWhiteSpace(issuerName))
+        {
+            return AuthorityValidationResult.CreateError("Issuer name is missing");
+        }
 
         if (string.Equals(issuerName.RemoveTrailingSlash(), expectedAuthority.RemoveTrailingSlash(), _stringComparison))
+        {
             return AuthorityValidationResult.SuccessResult;
+        }
 
         return AuthorityValidationResult.CreateError("Issuer name does not match authority: " + issuerName);
     }
@@ -44,12 +49,16 @@ public sealed class StringComparisonAuthorityValidationStrategy : IAuthorityVali
     public AuthorityValidationResult IsEndpointValid(string endpoint, IEnumerable<string> allowedAuthorities)
     {
         if (string.IsNullOrEmpty(endpoint))
+        {
             return AuthorityValidationResult.CreateError("endpoint is empty");
+        }
 
         foreach (var authority in allowedAuthorities)
         {
             if (endpoint.StartsWith(authority, _stringComparison))
+            {
                 return AuthorityValidationResult.SuccessResult;
+            }
         }
 
         var expectedBaseAddresses = string.Join(",", allowedAuthorities);

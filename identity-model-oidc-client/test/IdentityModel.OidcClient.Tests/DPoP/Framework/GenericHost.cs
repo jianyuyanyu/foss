@@ -15,7 +15,11 @@ public class GenericHost : IAsyncDisposable
 {
     public GenericHost(string baseAddress = "https://server")
     {
-        if (baseAddress.EndsWith("/")) baseAddress = baseAddress.Substring(0, baseAddress.Length - 1);
+        if (baseAddress.EndsWith("/"))
+        {
+            baseAddress = baseAddress.Substring(0, baseAddress.Length - 1);
+        }
+
         _baseAddress = baseAddress;
     }
 
@@ -37,7 +41,11 @@ public class GenericHost : IAsyncDisposable
     public string Url(string path = null)
     {
         path = path ?? string.Empty;
-        if (!path.StartsWith("/")) path = "/" + path;
+        if (!path.StartsWith("/"))
+        {
+            path = "/" + path;
+        }
+
         return _baseAddress + path;
     }
 
@@ -99,18 +107,33 @@ public class GenericHost : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        if (Server != null) await CastAndDispose(Server);
-        if (HttpClient != null) await CastAndDispose(HttpClient);
-        if (Logger != null) await CastAndDispose(Logger);
+        if (Server != null)
+        {
+            await CastAndDispose(Server);
+        }
+
+        if (HttpClient != null)
+        {
+            await CastAndDispose(HttpClient);
+        }
+
+        if (Logger != null)
+        {
+            await CastAndDispose(Logger);
+        }
 
         return;
 
         static async ValueTask CastAndDispose(IDisposable resource)
         {
             if (resource is IAsyncDisposable resourceAsyncDisposable)
+            {
                 await resourceAsyncDisposable.DisposeAsync();
+            }
             else
+            {
                 resource?.Dispose();
+            }
         }
     }
 }

@@ -151,8 +151,15 @@ public class Program
             Console.Write(menu);
             var key = Console.ReadKey();
 
-            if (key.Key == ConsoleKey.X) return;
-            if (key.Key == ConsoleKey.C) await CallApi();
+            if (key.Key == ConsoleKey.X)
+            {
+                return;
+            }
+
+            if (key.Key == ConsoleKey.C)
+            {
+                await CallApi();
+            }
         }
     }
 
