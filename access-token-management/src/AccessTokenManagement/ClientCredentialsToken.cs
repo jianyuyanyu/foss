@@ -3,48 +3,12 @@
 
 namespace Duende.AccessTokenManagement;
 
-/// <summary>
-/// Represents a client access token
-/// </summary>
-public class ClientCredentialsToken
+public record ClientCredentialsToken : AccessTokenRequestHandler.IToken
 {
-    /// <summary>
-    /// The access token
-    /// </summary>
-    public string? AccessToken { get; set; }
-
-    /// <summary>
-    /// The access token type
-    /// </summary>
-    public string? AccessTokenType { get; set; }
-
-    /// <summary>
-    /// The string representation of the JSON web key to use for DPoP.
-    /// </summary>
-    public string? DPoPJsonWebKey { get; set; }
-
-    /// <summary>
-    /// The access token expiration
-    /// </summary>
-    public DateTimeOffset Expiration { get; set; }
-
-    /// <summary>
-    /// The scope of the access tokens
-    /// </summary>
-    public string? Scope { get; set; }
-
-    /// <summary>
-    /// Error (if any) during token request
-    /// </summary>
-    public string? Error { get; set; }
-
-    /// <summary>
-    /// Checks for an error
-    /// </summary>
-    public bool IsError => !string.IsNullOrWhiteSpace(Error);
-
-    /// <summary>
-    /// The Client id that this token was originally requested for. 
-    /// </summary>
-    public string? ClientId { get; set; }
+    public required AccessTokenString AccessToken { get; init; }
+    public required AccessTokenType? AccessTokenType { get; init; }
+    public required DPoPJsonWebKey? DPoPJsonWebKey { get; init; }
+    public required DateTimeOffset Expiration { get; init; }
+    public required Scope? Scope { get; init; }
+    public required ClientId ClientId { get; init; }
 }

@@ -7,7 +7,6 @@ using System.Diagnostics.Metrics;
 namespace Duende.AccessTokenManagement.OTel;
 
 
-[Obsolete(Constants.AtmPublicSurfaceInternal, UrlFormat = Constants.AtmPublicSurfaceLink)]
 public sealed class AccessTokenManagementMetrics
 {
     public const string MeterName = "Duende.AccessTokenManagement";
@@ -17,7 +16,6 @@ public sealed class AccessTokenManagementMetrics
     private readonly Counter<int> _tokenRetrieved;
     private readonly Counter<int> _tokenRetrievalFailed;
     private readonly Counter<int> _accessTokenAccessDeniedRetry;
-    private readonly Counter<int> _authenticationFailedCounter;
     private readonly Counter<int> _dpopNonceErrorRetry;
 
     public AccessTokenManagementMetrics(IMeterFactory meterFactory)
@@ -40,10 +38,6 @@ public sealed class AccessTokenManagementMetrics
             unit: "Count",
             description: "The number of times an access token was not accepted but will be retried.");
 
-        _authenticationFailedCounter = _meter.CreateCounter<int>("authentication_failed",
-            unit: "Count",
-            description: "The number of times authentication with an access token has completely failed.");
-
         _dpopNonceErrorRetry = _meter.CreateCounter<int>("dpop_nonce_error_retry",
             unit: "Count",
             description: "The number of times the target system replied with a DPoP Nonce error which will be retried.");
@@ -64,7 +58,7 @@ public sealed class AccessTokenManagementMetrics
     /// </summary>
     /// <param name="clientId"></param>
     /// <param name="type"></param>
-    public void AccessTokenUsed(string? clientId, TokenRequestType type)
+    public void AccessTokenUsed(ClientId? clientId, TokenRequestType type)
     {
         if (!_accessTokenUsed.Enabled)
         {
@@ -115,49 +109,29 @@ public sealed class AccessTokenManagementMetrics
     }
 
     /// <summary>
-    /// Writes a metric when an access token authentication fails
-    /// </summary>
-    /// <param name="clientId"></param>
-    /// <param name="type"></param>
-    public void AccessTokenAuthenticationFailed(string? clientId, TokenRequestType type)
-    {
-        if (!_authenticationFailedCounter.Enabled)
-        {
-            return;
-        }
-        _authenticationFailedCounter.Add(1,
-            new KeyValuePair<string, object?>(OTelParameters.ClientId, clientId),
-            new KeyValuePair<string, object?>(OTelParameters.TokenType, type.ToString())
-        );
-    }
-
-    /// <summary>
     /// Writes a metric when an access token is retried
     /// </summary>
     /// <param name="clientId"></param>
-    /// <param name="type"></param>
-    public void AccessTokenAccessDeniedRetry(string? clientId, TokenRequestType type)
+    public void AccessTokenAccessDeniedRetry(ClientId? clientId)
     {
         if (!_accessTokenAccessDeniedRetry.Enabled)
         {
             return;
         }
         _accessTokenAccessDeniedRetry.Add(1,
-            new KeyValuePair<string, object?>(OTelParameters.ClientId, clientId),
-            new KeyValuePair<string, object?>(OTelParameters.TokenType, type.ToString())
+            new KeyValuePair<string, object?>(OTelParameters.ClientId, clientId?.ToString())
         );
     }
 
-    public void DPoPNonceErrorRetry(string? clientId, TokenRequestType type, string? error)
+    public void DPoPNonceErrorRetry(ClientId? clientId, string? error)
     {
         if (!_dpopNonceErrorRetry.Enabled)
         {
             return;
         }
         _dpopNonceErrorRetry.Add(1,
-            new KeyValuePair<string, object?>(OTelParameters.ClientId, clientId),
-            new KeyValuePair<string, object?>(OTelParameters.Error, error),
-            new KeyValuePair<string, object?>(OTelParameters.TokenType, type.ToString())
+            new KeyValuePair<string, object?>(OTelParameters.ClientId, clientId?.ToString()),
+            new KeyValuePair<string, object?>(OTelParameters.Error, error)
         );
     }
 }

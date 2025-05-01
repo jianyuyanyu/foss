@@ -3,6 +3,7 @@
 
 using System.Security.Claims;
 
+
 namespace Duende.AccessTokenManagement.OpenIdConnect;
 
 /// <summary>
@@ -17,7 +18,7 @@ public interface IUserTokenManagementService
     /// <param name="parameters"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<UserToken> GetAccessTokenAsync(
+    Task<TokenResult<UserToken>> GetAccessTokenAsync(
         ClaimsPrincipal user,
         UserTokenRequestParameters? parameters = null,
         CancellationToken cancellationToken = default);
