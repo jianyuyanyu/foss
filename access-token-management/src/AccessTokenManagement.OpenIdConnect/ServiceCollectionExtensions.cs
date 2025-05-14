@@ -31,7 +31,7 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<IUserTokenManager, UserAccessAccessTokenManager>();
         services.TryAddTransient<IOpenIdConnectConfigurationService, OpenIdConnectConfigurationService>();
         services.TryAddSingleton<IUserTokenRequestConcurrencyControl, UserTokenRequestConcurrencyControl>();
-        services.TryAddTransient<IOpenIdConnectUserTokenClient, OpenIdConnectUserTokenClient>();
+        services.TryAddTransient<IOpenIdConnectUserTokenEndpoint, OpenIdConnectUserTokenEndpoint>();
         services.TryAddSingleton<IStoreTokensInAuthenticationProperties, StoreTokensInAuthenticationProperties>();
         services.ConfigureOptions<ConfigureOpenIdConnectOptions>();
 

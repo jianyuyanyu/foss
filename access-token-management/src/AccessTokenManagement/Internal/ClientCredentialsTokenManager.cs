@@ -15,7 +15,7 @@ internal class ClientCredentialsTokenManager(
     IOptions<ClientCredentialsTokenManagementOptions> options,
     [FromKeyedServices(ServiceProviderKeys.ClientCredentialsTokenCache)] HybridCache cache,
     TimeProvider time,
-    IClientCredentialsTokenClient client,
+    IClientCredentialsTokenEndpoint client,
     IClientCredentialsCacheKeyGenerator cacheKeyGenerator,
     ILogger<ClientCredentialsTokenManager> logger
 ) : IClientCredentialsTokenManager
@@ -48,7 +48,7 @@ internal class ClientCredentialsTokenManager(
         // On force renewal, don't read from the cache, so we always get a new token.
         var disableDistributedCacheRead = parameters.ForceTokenRenewal.Value
             ? HybridCacheEntryFlags.DisableLocalCacheRead | HybridCacheEntryFlags.DisableDistributedCacheRead
-            : HybridCacheEntryFlags.None;
+            : HybridCacheEntryFlags.None; // Even with "none", we still get cache stampede protection :)
 
         var entryOptions = new HybridCacheEntryOptions()
         {
@@ -114,7 +114,7 @@ internal class ClientCredentialsTokenManager(
         TokenResult<ClientCredentialsToken> tokenResult;
         try
         {
-            tokenResult = await client.RequestToken(clientName, parameters, cancellationToken);
+            tokenResult = await client.RequestAccessToken(clientName, parameters, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -147,7 +147,7 @@ internal class ClientCredentialsTokenManager(
             logger.CachingAccessToken(LogLevel.Debug, clientName, token.Expiration);
         }
 
-        return tokenResult;
+        return token;
     }
 
     public async Task DeleteAccessTokenAsync(ClientName clientName, TokenRequestParameters? parameters = null,

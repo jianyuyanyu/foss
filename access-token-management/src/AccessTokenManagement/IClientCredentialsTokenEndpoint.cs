@@ -6,7 +6,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Abstraction for token endpoint operations
 /// </summary>
-public interface IClientCredentialsTokenClient
+public interface IClientCredentialsTokenEndpoint
 {
     /// <summary>
     /// Requests a client credentials access token.
@@ -15,7 +15,7 @@ public interface IClientCredentialsTokenClient
     /// <param name="parameters"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<TokenResult<ClientCredentialsToken>> RequestToken(
+    Task<TokenResult<ClientCredentialsToken>> RequestAccessToken(
         ClientName clientName,
         TokenRequestParameters? parameters = null,
         CancellationToken cancellationToken = default);

@@ -20,7 +20,7 @@ internal class UserAccessAccessTokenManager(
     IUserTokenStore userAccessTokenStore,
     TimeProvider clock,
     IOptions<UserTokenManagementOptions> options,
-    IOpenIdConnectUserTokenClient tokenClient,
+    IOpenIdConnectUserTokenEndpoint tokenClient,
     ILogger<UserAccessAccessTokenManager> logger) : IUserTokenManager
 {
 

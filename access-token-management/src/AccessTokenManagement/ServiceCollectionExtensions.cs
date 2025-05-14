@@ -45,7 +45,7 @@ public static class ServiceCollectionExtensions
         // By default, resolve the default hybridcache for the DefaultClientCredentialsTokenManager
         // without key. If desired, a consumers can register the distributed cache with a key
         services.TryAddKeyedSingleton<HybridCache>(ServiceProviderKeys.ClientCredentialsTokenCache, (sp, _) => sp.GetRequiredService<HybridCache>());
-        services.TryAddTransient<IClientCredentialsTokenClient, ClientCredentialsTokenClient>();
+        services.TryAddTransient<IClientCredentialsTokenEndpoint, ClientCredentialsTokenClient>();
         services.TryAddTransient<IClientAssertionService, NoOpClientAssertionService>();
 
         services.TryAddTransient<IDPopProofRequestHandler, DPopProofRequestHandler>();

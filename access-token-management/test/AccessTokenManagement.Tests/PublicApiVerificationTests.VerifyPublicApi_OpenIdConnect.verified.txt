@@ -10,7 +10,7 @@
     {
         System.Threading.Tasks.Task<Duende.AccessTokenManagement.OpenIdConnect.OpenIdConnectClientConfiguration> GetOpenIdConnectConfigurationAsync(Duende.AccessTokenManagement.Scheme? schemeName = default, System.Threading.CancellationToken ct = default);
     }
-    public interface IOpenIdConnectUserTokenClient
+    public interface IOpenIdConnectUserTokenEndpoint
     {
         System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.UserToken>> RefreshAccessTokenAsync(Duende.AccessTokenManagement.OpenIdConnect.UserRefreshToken userToken, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters parameters, System.Threading.CancellationToken cancellationToken = default);
         System.Threading.Tasks.Task RevokeRefreshTokenAsync(Duende.AccessTokenManagement.OpenIdConnect.UserRefreshToken userToken, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters parameters, System.Threading.CancellationToken cancellationToken = default);

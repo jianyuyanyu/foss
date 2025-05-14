@@ -8,7 +8,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// <summary>
 /// Abstraction for token endpoint operations
 /// </summary>
-public interface IOpenIdConnectUserTokenClient
+public interface IOpenIdConnectUserTokenEndpoint
 {
     /// <summary>
     /// Refreshes a user access token.

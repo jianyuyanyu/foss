@@ -32,7 +32,7 @@ public class PublicApiVerificationTests
             IncludeAssemblyAttributes = false
         };
 #pragma warning disable CS0618 // Type or member is obsolete
-        var publicApi = typeof(IOpenIdConnectUserTokenClient).Assembly.GeneratePublicApi(apiGeneratorOptions);
+        var publicApi = typeof(IOpenIdConnectUserTokenEndpoint).Assembly.GeneratePublicApi(apiGeneratorOptions);
 #pragma warning restore CS0618 // Type or member is obsolete
         var settings = new VerifySettings();
         await Verify(publicApi, settings);
@@ -55,7 +55,7 @@ public class PublicApiVerificationTests
     [Fact]
     public async Task GetAllPublicTypes_OpenIdConnect()
     {
-        var types = typeof(IOpenIdConnectUserTokenClient).Assembly.GetExportedTypes()
+        var types = typeof(IOpenIdConnectUserTokenEndpoint).Assembly.GetExportedTypes()
             .Where(t => t.IsPublic)
             .Select(t => FormatTypeName(t))
             .OrderBy(x => x);

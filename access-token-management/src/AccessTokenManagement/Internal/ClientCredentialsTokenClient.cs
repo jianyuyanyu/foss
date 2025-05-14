@@ -20,10 +20,10 @@ internal class ClientCredentialsTokenClient(
     TimeProvider time,
     IDPoPKeyStore dPoPKeyMaterialService,
     IDPoPProofService dPoPProofService,
-    ILogger<ClientCredentialsTokenClient> logger) : IClientCredentialsTokenClient
+    ILogger<ClientCredentialsTokenClient> logger) : IClientCredentialsTokenEndpoint
 {
     /// <inheritdoc/>
-    public virtual async Task<TokenResult<ClientCredentialsToken>> RequestToken(
+    public virtual async Task<TokenResult<ClientCredentialsToken>> RequestAccessToken(
         ClientName clientName,
         TokenRequestParameters? parameters = null,
         CancellationToken cancellationToken = default)
