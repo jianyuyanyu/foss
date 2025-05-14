@@ -15,13 +15,13 @@ namespace Web.Controllers;
 public class HomeController : Controller
 {
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly IUserTokenManagementService _tokenManagementService;
+    private readonly IUserTokenManager _tokenManager;
     private readonly SampleConfiguration _configuration;
 
-    public HomeController(IHttpClientFactory httpClientFactory, IUserTokenManagementService tokenManagementService, IOptions<SampleConfiguration> options)
+    public HomeController(IHttpClientFactory httpClientFactory, IUserTokenManager tokenManager, IOptions<SampleConfiguration> options)
     {
         _httpClientFactory = httpClientFactory;
-        _tokenManagementService = tokenManagementService;
+        _tokenManager = tokenManager;
         _configuration = options.Value;
     }
 
@@ -34,7 +34,7 @@ public class HomeController : Controller
 
     public async Task<IActionResult> CallApiAsUserManual()
     {
-        UserToken token = await _tokenManagementService.GetAccessTokenAsync(User);
+        UserToken token = await _tokenManager.GetAccessTokenAsync(User);
         var client = _httpClientFactory.CreateClient();
         client.SetToken(token.AccessTokenType?.ToScheme().ToString()!, token.AccessToken.ToString());
 

@@ -14,14 +14,14 @@ namespace Duende.AccessTokenManagement.OpenIdConnect.Internal;
 /// <summary>
 /// Implements basic token management logic
 /// </summary>
-internal class UserAccessAccessTokenManagementService(
+internal class UserAccessAccessTokenManager(
     AccessTokenManagementMetrics metrics,
     IUserTokenRequestConcurrencyControl sync,
     IUserTokenStore userAccessTokenStore,
     TimeProvider clock,
     IOptions<UserTokenManagementOptions> options,
-    IUserTokenEndpointService tokenEndpointService,
-    ILogger<UserAccessAccessTokenManagementService> logger) : IUserTokenManagementService
+    IOpenIdConnectUserTokenClient tokenClient,
+    ILogger<UserAccessAccessTokenManager> logger) : IUserTokenManager
 {
 
     /// <inheritdoc/>
@@ -73,7 +73,7 @@ internal class UserAccessAccessTokenManagementService(
                 key: requestedToken.RefreshToken,
                 tokenRetriever: async () =>
                 {
-                    var getRefreshedToken = await tokenEndpointService.RefreshAccessTokenAsync(
+                    var getRefreshedToken = await tokenClient.RefreshAccessTokenAsync(
                                 requestedToken.RefreshToken,
                                 parameters,
                                 cancellationToken).ConfigureAwait(false);
@@ -122,7 +122,7 @@ internal class UserAccessAccessTokenManagementService(
 
         if (getToken.WasSuccessful(out var userToken) && userToken.RefreshToken != null)
         {
-            await tokenEndpointService.RevokeRefreshTokenAsync(userToken.RefreshToken, parameters, cancellationToken).ConfigureAwait(false);
+            await tokenClient.RevokeRefreshTokenAsync(userToken.RefreshToken, parameters, cancellationToken).ConfigureAwait(false);
             await userAccessTokenStore.ClearTokenAsync(user, parameters, cancellationToken).ConfigureAwait(false);
         }
     }

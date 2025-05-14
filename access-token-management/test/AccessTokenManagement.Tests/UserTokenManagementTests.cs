@@ -4,7 +4,7 @@
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text.Json;
-using Duende.AccessTokenManagement.OpenIdConnect.Internal;
+using Duende.AccessTokenManagement.OpenIdConnect;
 
 using Duende.IdentityModel;
 using Duende.IdentityModel.Client;

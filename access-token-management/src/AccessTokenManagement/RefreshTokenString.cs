@@ -6,7 +6,7 @@ using Duende.AccessTokenManagement.Internal;
 
 namespace Duende.AccessTokenManagement;
 
-public readonly record struct RefreshTokenString : IStringValue<RefreshTokenString>
+public readonly record struct RefreshTokenString : IStonglyTypedString<RefreshTokenString>
 {
     public const int MaxLength = 4 * 1024;
     public override string ToString() => Value;
@@ -23,8 +23,8 @@ public readonly record struct RefreshTokenString : IStringValue<RefreshTokenStri
     public static implicit operator RefreshTokenString(string value) => Parse(value);
 
     public static bool TryParse(string value, [NotNullWhen(true)] out RefreshTokenString? parsed, out string[] errors) =>
-        IStringValue<RefreshTokenString>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStonglyTypedString<RefreshTokenString>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
-    static RefreshTokenString IStringValue<RefreshTokenString>.Load(string result) => new RefreshTokenString(result);
+    static RefreshTokenString IStonglyTypedString<RefreshTokenString>.Create(string result) => new RefreshTokenString(result);
     public static RefreshTokenString Parse(string value) => StringParsers<RefreshTokenString>.Parse(value);
 }

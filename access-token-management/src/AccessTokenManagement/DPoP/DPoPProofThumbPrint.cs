@@ -10,7 +10,7 @@ namespace Duende.AccessTokenManagement.DPoP;
 /// <summary>
 /// Captures a dpop proof thumbprint. 
 /// </summary>
-public readonly record struct DPoPProofThumbPrint : IStringValue<DPoPProofThumbPrint>
+public readonly record struct DPoPProofThumbPrint : IStonglyTypedString<DPoPProofThumbPrint>
 {
     public override string ToString() => Value;
 
@@ -21,12 +21,14 @@ public readonly record struct DPoPProofThumbPrint : IStringValue<DPoPProofThumbP
         ValidationRules.MaxLength(255),
     ];
 
+    public DPoPProofThumbPrint() => throw new InvalidOperationException("Can't create null value");
+
     private DPoPProofThumbPrint(string value) => Value = value;
 
     private string Value { get; }
 
     public static bool TryParse(string value, [NotNullWhen(true)] out DPoPProofThumbPrint? parsed, out string[] errors) =>
-        IStringValue<DPoPProofThumbPrint>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStonglyTypedString<DPoPProofThumbPrint>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
     public static DPoPProofThumbPrint FromJsonWebKey(JsonWebKey jsonWebKey)
     {
@@ -34,7 +36,7 @@ public readonly record struct DPoPProofThumbPrint : IStringValue<DPoPProofThumbP
         return Parse(value);
     }
 
-    static DPoPProofThumbPrint IStringValue<DPoPProofThumbPrint>.Load(string result) => new(result);
+    static DPoPProofThumbPrint IStonglyTypedString<DPoPProofThumbPrint>.Create(string result) => new(result);
 
     public static DPoPProofThumbPrint Parse(string value) => StringParsers<DPoPProofThumbPrint>.Parse(value);
 

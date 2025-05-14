@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using Duende.AccessTokenManagement.DPoP;
 using Duende.IdentityModel.Client;
 
 namespace Duende.AccessTokenManagement.OpenIdConnect;
@@ -9,7 +10,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// <summary>
 /// Options for user access token management
 /// </summary>
-public class UserTokenManagementOptions
+public sealed class UserTokenManagementOptions
 {
     /// <summary>
     /// Name of the authentication scheme to use for deriving token service configuration

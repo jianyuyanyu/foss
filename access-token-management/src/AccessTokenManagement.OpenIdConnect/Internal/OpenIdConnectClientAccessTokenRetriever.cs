@@ -2,13 +2,18 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Duende.AccessTokenManagement.DPoP;
-
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Options;
 
 namespace Duende.AccessTokenManagement.OpenIdConnect.Internal;
 
+/// <summary>
+/// A token retriever that uses the configuration in openid connect to retrieve client credential access tokens
+/// </summary>
 internal class OpenIdConnectClientAccessTokenRetriever(
-    IHttpContextAccessor httpContextAccessor,
+    IClientCredentialsTokenManager tokenManager,
+    IOptions<UserTokenManagementOptions> options,
+    IAuthenticationSchemeProvider schemeProvider,
     UserTokenRequestParameters? parameters = null)
     : AccessTokenRequestHandler.ITokenRetriever
 {
@@ -27,15 +32,23 @@ internal class OpenIdConnectClientAccessTokenRetriever(
             ForceTokenRenewal = request.GetForceRenewal()
         };
 
-        if (httpContextAccessor.HttpContext == null)
+        var schemeName = userTokenRequestParameters?.ChallengeScheme ?? options.Value.ChallengeScheme;
+
+        if (schemeName == null)
         {
-            throw new InvalidOperationException("HttpContext is null");
+            var defaultScheme = await schemeProvider.GetDefaultChallengeSchemeAsync().ConfigureAwait(false);
+            if (defaultScheme == null)
+            {
+                throw new InvalidOperationException("Cannot retrieve client access token. No scheme was provided and default challenge scheme was not set.");
+            }
+
+            schemeName = defaultScheme.Name;
         }
 
-        var getTokenResult = await httpContextAccessor.HttpContext.GetClientAccessTokenAsync(
-                userTokenRequestParameters,
-                cancellationToken)
-            .ConfigureAwait(false);
+        var getTokenResult = await tokenManager.GetAccessTokenAsync(
+            OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + schemeName,
+            userTokenRequestParameters,
+            cancellationToken).ConfigureAwait(false);
 
         if (getTokenResult.WasSuccessful(out var token, out var error))
         {

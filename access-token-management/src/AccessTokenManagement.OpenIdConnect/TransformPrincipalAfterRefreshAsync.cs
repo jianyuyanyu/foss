@@ -3,7 +3,7 @@
 
 using System.Security.Claims;
 
-namespace Duende.AccessTokenManagement.OpenIdConnect.Internal;
+namespace Duende.AccessTokenManagement.OpenIdConnect;
 
 /// <summary>
 /// Allows transforming the principal before re-issuing the authentication session

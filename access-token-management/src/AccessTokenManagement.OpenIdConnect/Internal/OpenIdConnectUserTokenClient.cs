@@ -15,13 +15,13 @@ namespace Duende.AccessTokenManagement.OpenIdConnect.Internal;
 /// <summary>
 /// Implements token endpoint operations using IdentityModel
 /// </summary>
-internal class UserTokenEndpointService(
+internal class OpenIdConnectUserTokenClient(
     AccessTokenManagementMetrics metrics,
     IOpenIdConnectConfigurationService configurationService,
     IOptions<UserTokenManagementOptions> options,
     IClientAssertionService clientAssertionService,
     IDPoPProofService dPoPProofService,
-    ILogger<UserTokenEndpointService> logger) : IUserTokenEndpointService
+    ILogger<OpenIdConnectUserTokenClient> logger) : IOpenIdConnectUserTokenClient
 {
     /// <inheritdoc/>
     public async Task<TokenResult<UserToken>> RefreshAccessTokenAsync(

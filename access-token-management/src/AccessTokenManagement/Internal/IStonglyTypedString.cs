@@ -6,12 +6,13 @@ using System.Diagnostics.CodeAnalysis;
 namespace Duende.AccessTokenManagement.Internal;
 
 /// <summary>
-/// Interface for value objects that wrap a string value.
+/// Interface for strongly typed objects that wrap a string value.
 ///
-/// This makes sure all these objects have similar methods. 
+/// This makes sure all these objects have similar methods. Also, it provides
+/// a generic way to build them. 
 /// </summary>
 /// <typeparam name="TSelf"></typeparam>
-internal interface IStringValue<TSelf> where TSelf : struct, IStringValue<TSelf>
+internal interface IStonglyTypedString<TSelf> where TSelf : struct, IStonglyTypedString<TSelf>
 {
     /// <summary>
     /// Attempt to parse the value object from a string. Return a list of errors if it fails. 
@@ -27,7 +28,7 @@ internal interface IStringValue<TSelf> where TSelf : struct, IStringValue<TSelf>
     /// </summary>
     /// <param name="result"></param>
     /// <returns>The build object</returns>
-    internal static abstract TSelf Load(string result);
+    internal static abstract TSelf Create(string result);
 
     /// <summary>
     /// Parse the value object from a string. This method throws if validation fails and should be done when the
@@ -66,7 +67,7 @@ internal interface IStringValue<TSelf> where TSelf : struct, IStringValue<TSelf>
 
         if (!errors.Any())
         {
-            parsed = TSelf.Load(value);
+            parsed = TSelf.Create(value);
         }
         foundErrors = errors.ToArray();
 

@@ -36,7 +36,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         // Getting the token twice should result in a single call (because it' cached)
         var token = await sut.GetAccessTokenAsync("test");
@@ -66,7 +66,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         // Get the first token (should result in a call)
         var token = await sut.GetAccessTokenAsync("test");
@@ -102,7 +102,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var token = await sut.GetAccessTokenAsync("test");
 
@@ -133,7 +133,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var token = await sut.GetAccessTokenAsync("test");
 
@@ -164,7 +164,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token1 = null!;
         token1 = await sut.GetAccessTokenAsync("test", new TokenRequestParameters()
@@ -212,7 +212,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
         mockHttp.AutoFlush = false;
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token1 = null!;
         var t1 = Task.Run(async () =>
@@ -276,7 +276,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
         mockHttp.AutoFlush = true;
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token1 = null!;
         var t1 = Task.Run(async () =>
@@ -342,7 +342,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
             });
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var token = await sut.GetAccessTokenAsync("test");
 
@@ -376,7 +376,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
 
@@ -410,7 +410,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
 

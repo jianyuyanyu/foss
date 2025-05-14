@@ -30,7 +30,7 @@ public class HybridCacheClientTokenManagementApiTests(ITestOutputHelper output)
 
 public abstract class ClientTokenManagementApiTests(ITestOutputHelper output) : IntegrationTestBase(output), IAsyncLifetime
 {
-    private IClientCredentialsTokenManagementService _tokenService = null!;
+    private IClientCredentialsTokenManager _tokenService = null!;
     private IHttpClientFactory _clientFactory = null!;
     private ClientCredentialsClient _clientOptions = null!;
     protected ServiceProvider Provider = null!;
@@ -60,7 +60,7 @@ public abstract class ClientTokenManagementApiTests(ITestOutputHelper output) : 
             });
 
         Provider = builder.Services.BuildServiceProvider();
-        _tokenService = Provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        _tokenService = Provider.GetRequiredService<IClientCredentialsTokenManager>();
         _clientFactory = Provider.GetRequiredService<IHttpClientFactory>();
         _clientOptions = Provider.GetRequiredService<IOptionsMonitor<ClientCredentialsClient>>().Get("test");
     }

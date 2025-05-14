@@ -14,7 +14,7 @@ namespace Duende.AccessTokenManagement.DPoP;
 /// It helps protect against replay attacks by ensuring that each DPoP
 /// proof is freshly generated and tied to a specific point in the protocol flow.
 /// </summary>
-public readonly record struct DPoPNonce : IStringValue<DPoPNonce>
+public readonly record struct DPoPNonce : IStonglyTypedString<DPoPNonce>
 {
     public override string ToString() => Value;
 
@@ -25,15 +25,17 @@ public readonly record struct DPoPNonce : IStringValue<DPoPNonce>
         ValidationRules.MaxLength(4 * 1024),
     ];
 
+    public DPoPNonce() => throw new InvalidOperationException("Can't create null value");
+
     private DPoPNonce(string value) => Value = value;
 
     private string Value { get; }
 
     public static bool TryParse(string value, [NotNullWhen(true)] out DPoPNonce? parsed, out string[] errors) =>
-        IStringValue<DPoPNonce>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStonglyTypedString<DPoPNonce>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
 
-    static DPoPNonce IStringValue<DPoPNonce>.Load(string result) => new(result);
+    static DPoPNonce IStonglyTypedString<DPoPNonce>.Create(string result) => new(result);
 
     public static DPoPNonce Parse(string value) => StringParsers<DPoPNonce>.Parse(value);
     public static DPoPNonce? ParseOrDefault(string? value) => StringParsers<DPoPNonce>.ParseOrDefault(value);

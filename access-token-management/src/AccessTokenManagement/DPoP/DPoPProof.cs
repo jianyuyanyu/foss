@@ -6,7 +6,7 @@ namespace Duende.AccessTokenManagement.DPoP;
 /// <summary>
 /// Models a DPoP proof token
 /// </summary>
-public record DPoPProof
+public sealed record DPoPProof
 {
     /// <summary>
     /// The proof token

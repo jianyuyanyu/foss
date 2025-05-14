@@ -7,11 +7,11 @@ using System.Text.Json.Serialization;
 using Duende.AccessTokenManagement.Internal;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Duende.AccessTokenManagement;
+namespace Duende.AccessTokenManagement.DPoP;
 
 [TypeConverter(typeof(StringValueConverter<DPoPJsonWebKey>))]
 [JsonConverter(typeof(StringValueJsonConverter<DPoPJsonWebKey>))]
-public readonly record struct DPoPJsonWebKey : IStringValue<DPoPJsonWebKey>
+public readonly record struct DPoPJsonWebKey : IStonglyTypedString<DPoPJsonWebKey>
 {
     public bool Equals(DPoPJsonWebKey other) => Value == other.Value;
 
@@ -56,10 +56,10 @@ public readonly record struct DPoPJsonWebKey : IStringValue<DPoPJsonWebKey>
 
 
     public static bool TryParse(string value, [NotNullWhen(true)] out DPoPJsonWebKey? parsed, out string[] errors) =>
-        IStringValue<DPoPJsonWebKey>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStonglyTypedString<DPoPJsonWebKey>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
 
-    static DPoPJsonWebKey IStringValue<DPoPJsonWebKey>.Load(string result) => new(result);
+    static DPoPJsonWebKey IStonglyTypedString<DPoPJsonWebKey>.Create(string result) => new(result);
 
     public static DPoPJsonWebKey Parse(string value) => StringParsers<DPoPJsonWebKey>.Parse(value);
     public static DPoPJsonWebKey? ParseOrDefault(string? value) => StringParsers<DPoPJsonWebKey>.ParseOrDefault(value);

@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using Duende.AccessTokenManagement.DPoP;
 using Duende.IdentityModel.Client;
 using Microsoft.Extensions.Options;
 
@@ -13,7 +14,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Defines a client credentials client
 /// </summary>
-public class ClientCredentialsClient
+public sealed class ClientCredentialsClient
 {
     /// <summary>
     /// The address of the token endpoint
@@ -74,7 +75,7 @@ public class ClientCredentialsClient
     public DPoPJsonWebKey? DPoPJsonWebKey { get; set; }
 
 
-    public class Validator : IValidateOptions<ClientCredentialsClient>
+    internal sealed class Validator : IValidateOptions<ClientCredentialsClient>
     {
         public ValidateOptionsResult Validate(string? name, ClientCredentialsClient options)
         {

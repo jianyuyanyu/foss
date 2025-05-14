@@ -3,7 +3,7 @@
 
 using System.Security.Cryptography;
 using System.Text.Json;
-using Duende.AccessTokenManagement;
+using Duende.AccessTokenManagement.DPoP;
 using Duende.AccessTokenManagement.OpenIdConnect;
 
 using Microsoft.IdentityModel.Tokens;
@@ -79,7 +79,7 @@ public static class Startup
         builder.Services.AddOpenIdConnectAccessTokenManagement(options =>
         {
             var useDPoP = builder.Configuration.GetValue<bool>("UseDPoP");
-            options.DPoPJsonWebKey = useDPoP ? DPoPJsonWebKey.Parse(jwk) : null;
+            options.DPoPJsonWebKey = useDPoP ? DPoPJsonWebKey.ParseOrDefault(jwk) : null;
         });
 
         // registers HTTP client that uses the managed user access token

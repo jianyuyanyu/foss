@@ -3,7 +3,7 @@
 
 using Microsoft.Extensions.Options;
 
-namespace Duende.AccessTokenManagement.DPoP;
+namespace Duende.AccessTokenManagement.DPoP.Internal;
 
 /// <summary>
 /// Default implementation, which reads the dpop key from the client configuration.

@@ -4,7 +4,7 @@
 using System.Net;
 using System.Text.Json;
 using Duende.AccessTokenManagement.AccessTokenHandlers.Fixtures;
-
+using Duende.AccessTokenManagement.DPoP;
 using Duende.IdentityServer.Configuration;
 using Microsoft.IdentityModel.Tokens;
 

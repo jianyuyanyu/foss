@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Duende.AccessTokenManagement.AccessTokenHandlers.Helpers;
+using Duende.AccessTokenManagement.DPoP;
 using Duende.AccessTokenManagement.OpenIdConnect;
 
 using Microsoft.AspNetCore.Authentication;

@@ -6,7 +6,7 @@ using Duende.AccessTokenManagement.Internal;
 
 namespace Duende.AccessTokenManagement.DPoP;
 
-public readonly record struct DPoPProofToken : IStringValue<DPoPProofToken>
+public readonly record struct DPoPProofToken : IStonglyTypedString<DPoPProofToken>
 {
     public override string ToString() => Value;
 
@@ -16,15 +16,17 @@ public readonly record struct DPoPProofToken : IStringValue<DPoPProofToken>
         ValidationRules.MaxLength(4 * 1024),
     ];
 
+    public DPoPProofToken() => throw new InvalidOperationException("Can't create null value");
+
     private DPoPProofToken(string value) => Value = value;
 
     private string Value { get; }
 
     public static bool TryParse(string value, [NotNullWhen(true)] out DPoPProofToken? parsed, out string[] errors) =>
-        IStringValue<DPoPProofToken>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStonglyTypedString<DPoPProofToken>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
 
-    static DPoPProofToken IStringValue<DPoPProofToken>.Load(string result) => new(result);
+    static DPoPProofToken IStonglyTypedString<DPoPProofToken>.Create(string result) => new(result);
 
     public static DPoPProofToken Parse(string value) => StringParsers<DPoPProofToken>.Parse(value);
 

@@ -3,7 +3,7 @@
 
 namespace Duende.AccessTokenManagement;
 
-public interface IClientCredentialsTokenManagementService
+public interface IClientCredentialsTokenManager
 {
     Task<TokenResult<ClientCredentialsToken>> GetAccessTokenAsync(
         ClientName clientName,

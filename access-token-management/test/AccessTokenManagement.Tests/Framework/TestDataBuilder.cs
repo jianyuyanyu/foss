@@ -4,7 +4,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-
+using Duende.AccessTokenManagement.DPoP;
 using Duende.IdentityModel.Client;
 
 namespace Duende.AccessTokenManagement.Framework;

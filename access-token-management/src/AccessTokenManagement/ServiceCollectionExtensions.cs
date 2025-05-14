@@ -39,13 +39,13 @@ public static class ServiceCollectionExtensions
     /// <returns></returns>
     public static ClientCredentialsTokenManagementBuilder AddClientCredentialsTokenManagement(this IServiceCollection services)
     {
-        services.TryAddTransient<IClientCredentialsTokenManagementService, ClientCredentialsTokenManager>();
+        services.TryAddTransient<IClientCredentialsTokenManager, ClientCredentialsTokenManager>();
         services.AddHybridCache();
 
         // By default, resolve the default hybridcache for the DefaultClientCredentialsTokenManager
         // without key. If desired, a consumers can register the distributed cache with a key
         services.TryAddKeyedSingleton<HybridCache>(ServiceProviderKeys.ClientCredentialsTokenCache, (sp, _) => sp.GetRequiredService<HybridCache>());
-        services.TryAddTransient<IClientCredentialsTokenEndpointService, ClientCredentialsTokenEndpointService>();
+        services.TryAddTransient<IClientCredentialsTokenClient, ClientCredentialsTokenClient>();
         services.TryAddTransient<IClientAssertionService, NoOpClientAssertionService>();
 
         services.TryAddTransient<IDPopProofRequestHandler, DPopProofRequestHandler>();
@@ -131,7 +131,7 @@ public static class ServiceCollectionExtensions
         ClientName tokenClientName) => httpClientBuilder
             .AddHttpMessageHandler(provider =>
                  {
-                     var accessTokenManagementService = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+                     var accessTokenManagementService = provider.GetRequiredService<IClientCredentialsTokenManager>();
                      var retriever = new ClientCredentialsTokenRetriever(accessTokenManagementService, tokenClientName);
                      var accessTokenHandler = provider.BuildAccessTokenRequestHandler(retriever);
 

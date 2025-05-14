@@ -11,9 +11,9 @@ public class WorkerManual : BackgroundService
 {
     private readonly ILogger<WorkerManual> _logger;
     private readonly IHttpClientFactory _clientFactory;
-    private readonly IClientCredentialsTokenManagementService _tokenManagementService;
+    private readonly IClientCredentialsTokenManager _tokenManagementService;
 
-    public WorkerManual(ILogger<WorkerManual> logger, IHttpClientFactory factory, IClientCredentialsTokenManagementService tokenManagementService)
+    public WorkerManual(ILogger<WorkerManual> logger, IHttpClientFactory factory, IClientCredentialsTokenManager tokenManagementService)
     {
         _logger = logger;
         _clientFactory = factory;

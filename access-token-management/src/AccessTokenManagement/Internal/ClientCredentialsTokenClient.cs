@@ -12,7 +12,7 @@ namespace Duende.AccessTokenManagement.Internal;
 /// <summary>
 /// Implements the logic needed to actually fetch an OAuth2.0 Client Credentials token. 
 /// </summary>
-internal class ClientCredentialsTokenEndpointService(
+internal class ClientCredentialsTokenClient(
     AccessTokenManagementMetrics metrics,
     IHttpClientFactory httpClientFactory,
     IOptionsMonitor<ClientCredentialsClient> options,
@@ -20,7 +20,7 @@ internal class ClientCredentialsTokenEndpointService(
     TimeProvider time,
     IDPoPKeyStore dPoPKeyMaterialService,
     IDPoPProofService dPoPProofService,
-    ILogger<ClientCredentialsTokenEndpointService> logger) : IClientCredentialsTokenEndpointService
+    ILogger<ClientCredentialsTokenClient> logger) : IClientCredentialsTokenClient
 {
     /// <inheritdoc/>
     public virtual async Task<TokenResult<ClientCredentialsToken>> RequestToken(

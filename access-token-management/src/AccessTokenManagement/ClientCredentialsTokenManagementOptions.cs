@@ -6,7 +6,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Client access token options
 /// </summary>
-public class ClientCredentialsTokenManagementOptions
+public sealed class ClientCredentialsTokenManagementOptions
 {
     /// <summary>
     /// Used to prefix the cache key

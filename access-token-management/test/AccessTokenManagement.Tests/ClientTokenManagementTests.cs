@@ -35,7 +35,7 @@ public class ClientTokenManagementTests
         services.AddClientCredentialsTokenManagement();
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var action = async () => await sut.GetAccessTokenAsync("unknown");
 
@@ -55,7 +55,7 @@ public class ClientTokenManagementTests
             });
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var action = async () => await sut.GetAccessTokenAsync("test");
 
@@ -76,7 +76,7 @@ public class ClientTokenManagementTests
             });
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var action = async () => await sut.GetAccessTokenAsync("test");
 
@@ -96,7 +96,7 @@ public class ClientTokenManagementTests
             });
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var action = async () => await sut.GetAccessTokenAsync("test");
 
@@ -150,7 +150,7 @@ public class ClientTokenManagementTests
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
         mockHttp.VerifyNoOutstandingExpectation();
@@ -175,7 +175,7 @@ public class ClientTokenManagementTests
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
         mockHttp.VerifyNoOutstandingExpectation();
@@ -203,7 +203,7 @@ public class ClientTokenManagementTests
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
         mockHttp.VerifyNoOutstandingExpectation();
@@ -251,7 +251,7 @@ public class ClientTokenManagementTests
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token = await sut.GetAccessTokenAsync("test", request);
         mockHttp.VerifyNoOutstandingExpectation();
@@ -293,7 +293,7 @@ public class ClientTokenManagementTests
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token = await sut.GetAccessTokenAsync("test", request);
         mockHttp.VerifyNoOutstandingExpectation();
@@ -326,7 +326,7 @@ public class ClientTokenManagementTests
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
         mockHttp.VerifyNoOutstandingExpectation();
@@ -368,7 +368,7 @@ public class ClientTokenManagementTests
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token = await sut.GetAccessTokenAsync("test", request);
         mockHttp.VerifyNoOutstandingExpectation();
@@ -391,7 +391,7 @@ public class ClientTokenManagementTests
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
         mockHttp.VerifyNoOutstandingExpectation();
@@ -425,7 +425,7 @@ public class ClientTokenManagementTests
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
         mockHttp.GetMatchCount(mockedRequest).ShouldBe(1);
@@ -445,7 +445,7 @@ public class ClientTokenManagementTests
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
         mockHttp.VerifyNoOutstandingExpectation();
@@ -485,7 +485,7 @@ public class ClientTokenManagementTests
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
         mockHttp.VerifyNoOutstandingExpectation();
@@ -522,7 +522,7 @@ public class ClientTokenManagementTests
             .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
 
         var provider = services.BuildServiceProvider();
-        var sut = provider.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
         mockHttp.VerifyNoOutstandingExpectation();

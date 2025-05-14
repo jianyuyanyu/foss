@@ -15,10 +15,10 @@ internal class ClientCredentialsTokenManager(
     IOptions<ClientCredentialsTokenManagementOptions> options,
     [FromKeyedServices(ServiceProviderKeys.ClientCredentialsTokenCache)] HybridCache cache,
     TimeProvider time,
-    IClientCredentialsTokenEndpointService endpointService,
+    IClientCredentialsTokenClient client,
     IClientCredentialsCacheKeyGenerator cacheKeyGenerator,
     ILogger<ClientCredentialsTokenManager> logger
-) : IClientCredentialsTokenManagementService
+) : IClientCredentialsTokenManager
 {
     // A flag that's written into the Data property of exceptions to distinguish
     // between exceptions that are thrown inside the cache and those that are thrown
@@ -114,7 +114,7 @@ internal class ClientCredentialsTokenManager(
         TokenResult<ClientCredentialsToken> tokenResult;
         try
         {
-            tokenResult = await endpointService.RequestToken(clientName, parameters, cancellationToken);
+            tokenResult = await client.RequestToken(clientName, parameters, cancellationToken);
         }
         catch (Exception ex)
         {

@@ -9,7 +9,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// <summary>
 /// Abstraction for managing user access tokens
 /// </summary>
-public interface IUserTokenManagementService
+public interface IUserTokenManager
 {
     /// <summary>
     /// Returns the user access token. If the current token is expired, it will try to refresh it.

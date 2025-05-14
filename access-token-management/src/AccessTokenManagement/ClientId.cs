@@ -10,7 +10,7 @@ namespace Duende.AccessTokenManagement;
 
 [TypeConverter(typeof(StringValueConverter<ClientId>))]
 [JsonConverter(typeof(StringValueJsonConverter<ClientId>))]
-public readonly record struct ClientId : IStringValue<ClientId>
+public readonly record struct ClientId : IStonglyTypedString<ClientId>
 {
     public static implicit operator ClientId(string value) => Parse(value);
 
@@ -20,14 +20,15 @@ public readonly record struct ClientId : IStringValue<ClientId>
         ValidationRules.MaxLength(1024)
     ];
 
+    public ClientId() => throw new InvalidOperationException("Can't create null value");
     private ClientId(string value) => Value = value;
 
     private string Value { get; }
 
     public static bool TryParse(string value, [NotNullWhen(true)] out ClientId? parsed, out string[] errors) =>
-        IStringValue<ClientId>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStonglyTypedString<ClientId>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
-    static ClientId IStringValue<ClientId>.Load(string result) => new(result);
+    static ClientId IStonglyTypedString<ClientId>.Create(string result) => new(result);
 
     public static ClientId Parse(string value) => StringParsers<ClientId>.Parse(value);
 

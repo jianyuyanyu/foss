@@ -6,7 +6,7 @@ namespace Duende.AccessTokenManagement.DPoP;
 /// <summary>
 /// Models the request information to create a DPoP proof token
 /// </summary>
-public record DPoPProofRequest
+public sealed record DPoPProofRequest
 {
     /// <summary>
     /// The HTTP URL of the request

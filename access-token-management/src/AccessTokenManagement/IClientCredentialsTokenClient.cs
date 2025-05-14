@@ -6,7 +6,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Abstraction for token endpoint operations
 /// </summary>
-public interface IClientCredentialsTokenEndpointService
+public interface IClientCredentialsTokenClient
 {
     /// <summary>
     /// Requests a client credentials access token.

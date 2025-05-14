@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Duende.AccessTokenManagement.OpenIdConnect.Internal;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -28,10 +28,10 @@ public static class ServiceCollectionExtensions
 
         // TODO: maybe return a builder with a ConfigureScheme that adds IConfigureNamedOptions/IPostConfigureNamedOptions with the naming convention?
         // for example, per-scheme client credentials style, scope, etc settings
-        services.TryAddTransient<IUserTokenManagementService, UserAccessAccessTokenManagementService>();
+        services.TryAddTransient<IUserTokenManager, UserAccessAccessTokenManager>();
         services.TryAddTransient<IOpenIdConnectConfigurationService, OpenIdConnectConfigurationService>();
         services.TryAddSingleton<IUserTokenRequestConcurrencyControl, UserTokenRequestConcurrencyControl>();
-        services.TryAddTransient<IUserTokenEndpointService, UserTokenEndpointService>();
+        services.TryAddTransient<IOpenIdConnectUserTokenClient, OpenIdConnectUserTokenClient>();
         services.TryAddSingleton<IStoreTokensInAuthenticationProperties, StoreTokensInAuthenticationProperties>();
         services.ConfigureOptions<ConfigureOpenIdConnectOptions>();
 
@@ -218,7 +218,7 @@ public static class ServiceCollectionExtensions
         httpClientBuilder.AddHttpMessageHandler(provider =>
         {
             var httpContextAccessor = provider.GetRequiredService<IUserAccessor>();
-            var userTokenManagementService = provider.GetRequiredService<IUserTokenManagementService>();
+            var userTokenManagementService = provider.GetRequiredService<IUserTokenManager>();
 
             var tokenRetriever = new OpenIdConnectUserAccessTokenRetriever(
                 httpContextAccessor,
@@ -242,9 +242,13 @@ public static class ServiceCollectionExtensions
         UserTokenRequestParameters? parameters = null) =>
         httpClientBuilder.AddHttpMessageHandler(provider =>
         {
-            var httpContextAccessor = provider.GetRequiredService<IHttpContextAccessor>();
+            var tokenManager = provider.GetRequiredService<IClientCredentialsTokenManager>();
+            var schemeProvider = provider.GetRequiredService<IAuthenticationSchemeProvider>();
+            var options = provider.GetRequiredService<IOptions<UserTokenManagementOptions>>();
 
-            var tokenRetriever = new OpenIdConnectClientAccessTokenRetriever(httpContextAccessor,
+            var tokenRetriever = new OpenIdConnectClientAccessTokenRetriever(tokenManager,
+                options,
+                schemeProvider,
                 parameters);
 
             return provider.BuildAccessTokenRequestHandler(tokenRetriever);

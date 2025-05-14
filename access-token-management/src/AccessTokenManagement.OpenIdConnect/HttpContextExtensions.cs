@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using Duende.AccessTokenManagement.DPoP;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +27,7 @@ public static class HttpContextExtensions
         UserTokenRequestParameters? parameters = null,
         CancellationToken cancellationToken = default)
     {
-        var service = httpContext.RequestServices.GetRequiredService<IUserTokenManagementService>();
+        var service = httpContext.RequestServices.GetRequiredService<IUserTokenManager>();
 
         return await service.GetAccessTokenAsync(httpContext.User, parameters, cancellationToken).ConfigureAwait(false);
     }
@@ -43,7 +44,7 @@ public static class HttpContextExtensions
         UserTokenRequestParameters? parameters = null,
         CancellationToken cancellationToken = default)
     {
-        var service = httpContext.RequestServices.GetRequiredService<IUserTokenManagementService>();
+        var service = httpContext.RequestServices.GetRequiredService<IUserTokenManager>();
 
         await service.RevokeRefreshTokenAsync(httpContext.User, parameters, cancellationToken).ConfigureAwait(false);
     }
@@ -60,7 +61,7 @@ public static class HttpContextExtensions
         UserTokenRequestParameters? parameters = null,
         CancellationToken cancellationToken = default)
     {
-        var service = httpContext.RequestServices.GetRequiredService<IClientCredentialsTokenManagementService>();
+        var service = httpContext.RequestServices.GetRequiredService<IClientCredentialsTokenManager>();
         var options = httpContext.RequestServices.GetRequiredService<IOptions<UserTokenManagementOptions>>();
         var schemes = httpContext.RequestServices.GetRequiredService<IAuthenticationSchemeProvider>();
 

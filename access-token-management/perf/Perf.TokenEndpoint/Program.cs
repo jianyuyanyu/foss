@@ -89,7 +89,7 @@ app.MapGet("/client", async (HttpContext c, IHttpClientFactory factory, Cancella
 
 app.MapGet("/ok", () => "ok");
 
-app.MapGet("/token", async (IClientCredentialsTokenManagementService svc, CancellationToken ct) =>
+app.MapGet("/token", async (IClientCredentialsTokenManager svc, CancellationToken ct) =>
 {
     return await svc.GetAccessTokenAsync("c1");
 });

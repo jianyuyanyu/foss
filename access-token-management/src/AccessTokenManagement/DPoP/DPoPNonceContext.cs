@@ -6,7 +6,7 @@ namespace Duende.AccessTokenManagement.DPoP;
 /// <summary>
 /// The context for a DPoP nonce.
 /// </summary>
-public record DPoPNonceContext
+public sealed record DPoPNonceContext
 {
     /// <summary>
     /// The HTTP URL of the request

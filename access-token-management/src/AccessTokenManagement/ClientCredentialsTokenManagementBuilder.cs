@@ -8,7 +8,7 @@ namespace Duende.AccessTokenManagement;
 /// <summary>
 /// Builder for client credential clients
 /// </summary>
-public class ClientCredentialsTokenManagementBuilder(IServiceCollection services)
+public sealed class ClientCredentialsTokenManagementBuilder(IServiceCollection services)
 {
     public IServiceCollection Services { get; } = services;
 

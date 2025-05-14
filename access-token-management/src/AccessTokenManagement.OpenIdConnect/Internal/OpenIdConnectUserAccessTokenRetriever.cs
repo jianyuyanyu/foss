@@ -7,7 +7,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect.Internal;
 
 internal class OpenIdConnectUserAccessTokenRetriever(
     IUserAccessor userAccessor,
-    IUserTokenManagementService userTokenManagement,
+    IUserTokenManager userTokenManagement,
     UserTokenRequestParameters? parameters = null
 ) : AccessTokenRequestHandler.ITokenRetriever
 {

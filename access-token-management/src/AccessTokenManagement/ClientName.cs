@@ -11,7 +11,7 @@ namespace Duende.AccessTokenManagement;
 /// The name of a client in an OAuth flow. 
 /// </summary>
 [TypeConverter(typeof(StringValueConverter<ClientName>))]
-public readonly record struct ClientName : IStringValue<ClientName>
+public readonly record struct ClientName : IStonglyTypedString<ClientName>
 {
     public static implicit operator ClientName(string value) => Parse(value);
 
@@ -27,9 +27,9 @@ public readonly record struct ClientName : IStringValue<ClientName>
     private string Value { get; }
 
     public static bool TryParse(string value, [NotNullWhen(true)] out ClientName? parsed, out string[] errors) =>
-        IStringValue<ClientName>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStonglyTypedString<ClientName>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
     public static ClientName Parse(string value) => StringParsers<ClientName>.Parse(value);
 
-    static ClientName IStringValue<ClientName>.Load(string result) => new(result);
+    static ClientName IStonglyTypedString<ClientName>.Create(string result) => new(result);
 }

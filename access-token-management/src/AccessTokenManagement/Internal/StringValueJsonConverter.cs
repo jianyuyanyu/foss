@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace Duende.AccessTokenManagement.Internal;
 
-internal class StringValueJsonConverter<TSelf> : JsonConverter<TSelf> where TSelf : struct, IStringValue<TSelf>
+internal class StringValueJsonConverter<TSelf> : JsonConverter<TSelf> where TSelf : struct, IStonglyTypedString<TSelf>
 {
     public override TSelf Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

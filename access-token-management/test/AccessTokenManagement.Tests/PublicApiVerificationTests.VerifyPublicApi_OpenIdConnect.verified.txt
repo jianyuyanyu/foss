@@ -10,6 +10,11 @@
     {
         System.Threading.Tasks.Task<Duende.AccessTokenManagement.OpenIdConnect.OpenIdConnectClientConfiguration> GetOpenIdConnectConfigurationAsync(Duende.AccessTokenManagement.Scheme? schemeName = default, System.Threading.CancellationToken ct = default);
     }
+    public interface IOpenIdConnectUserTokenClient
+    {
+        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.UserToken>> RefreshAccessTokenAsync(Duende.AccessTokenManagement.OpenIdConnect.UserRefreshToken userToken, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters parameters, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task RevokeRefreshTokenAsync(Duende.AccessTokenManagement.OpenIdConnect.UserRefreshToken userToken, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters parameters, System.Threading.CancellationToken cancellationToken = default);
+    }
     public interface IStoreTokensInAuthenticationProperties
     {
         System.Threading.Tasks.Task<Duende.AccessTokenManagement.Scheme> GetSchemeAsync(Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default);
@@ -21,12 +26,7 @@
     {
         System.Threading.Tasks.Task<System.Security.Claims.ClaimsPrincipal> GetCurrentUserAsync();
     }
-    public interface IUserTokenEndpointService
-    {
-        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.UserToken>> RefreshAccessTokenAsync(Duende.AccessTokenManagement.OpenIdConnect.UserRefreshToken userToken, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters parameters, System.Threading.CancellationToken cancellationToken = default);
-        System.Threading.Tasks.Task RevokeRefreshTokenAsync(Duende.AccessTokenManagement.OpenIdConnect.UserRefreshToken userToken, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters parameters, System.Threading.CancellationToken cancellationToken = default);
-    }
-    public interface IUserTokenManagementService
+    public interface IUserTokenManager
     {
         System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.UserToken>> GetAccessTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default);
         System.Threading.Tasks.Task RevokeRefreshTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default);
@@ -42,7 +42,7 @@
         System.Threading.Tasks.Task StoreTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserToken token, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default);
     }
     [System.Runtime.CompilerServices.RequiredMember]
-    public class OpenIdConnectClientConfiguration
+    public sealed class OpenIdConnectClientConfiguration
     {
         [System.Obsolete(("Constructors of types with required members are not supported in this version of " +
             "your compiler."), true)]
@@ -92,10 +92,11 @@
         public Duende.AccessTokenManagement.OpenIdConnect.UserRefreshToken? RefreshToken { get; }
         public Duende.AccessTokenManagement.OpenIdConnect.UserToken? TokenForSpecifiedParameters { get; }
     }
-    public class UserRefreshToken : System.IEquatable<Duende.AccessTokenManagement.OpenIdConnect.UserRefreshToken>
+    public delegate System.Threading.Tasks.Task<System.Security.Claims.ClaimsPrincipal> TransformPrincipalAfterRefreshAsync(System.Security.Claims.ClaimsPrincipal principal, System.Threading.CancellationToken ct);
+    public sealed class UserRefreshToken : System.IEquatable<Duende.AccessTokenManagement.OpenIdConnect.UserRefreshToken>
     {
-        public UserRefreshToken(Duende.AccessTokenManagement.RefreshTokenString RefreshToken, Duende.AccessTokenManagement.DPoPJsonWebKey? DPoPJsonWebKey) { }
-        public Duende.AccessTokenManagement.DPoPJsonWebKey? DPoPJsonWebKey { get; init; }
+        public UserRefreshToken(Duende.AccessTokenManagement.RefreshTokenString RefreshToken, Duende.AccessTokenManagement.DPoP.DPoPJsonWebKey? DPoPJsonWebKey) { }
+        public Duende.AccessTokenManagement.DPoP.DPoPJsonWebKey? DPoPJsonWebKey { get; init; }
         public Duende.AccessTokenManagement.RefreshTokenString RefreshToken { get; init; }
     }
     [System.Runtime.CompilerServices.RequiredMember]
@@ -111,7 +112,7 @@
         public Duende.AccessTokenManagement.AccessTokenString AccessToken { get; init; }
         [System.Runtime.CompilerServices.RequiredMember]
         public Duende.AccessTokenManagement.ClientId ClientId { get; init; }
-        public Duende.AccessTokenManagement.DPoPJsonWebKey? DPoPJsonWebKey { get; init; }
+        public Duende.AccessTokenManagement.DPoP.DPoPJsonWebKey? DPoPJsonWebKey { get; init; }
         [System.Runtime.CompilerServices.RequiredMember]
         public System.DateTimeOffset Expiration { get; init; }
         [System.Runtime.CompilerServices.RequiredMember]
@@ -120,25 +121,21 @@
         public Duende.AccessTokenManagement.RefreshTokenString? RefreshToken { get; init; }
         public Duende.AccessTokenManagement.Scope? Scope { get; init; }
     }
-    public class UserTokenManagementOptions
+    public sealed class UserTokenManagementOptions
     {
         public UserTokenManagementOptions() { }
         public Duende.AccessTokenManagement.Scheme? ChallengeScheme { get; set; }
         public Duende.IdentityModel.Client.ClientCredentialStyle ClientCredentialStyle { get; set; }
         public Duende.AccessTokenManagement.Resource? ClientCredentialsResource { get; set; }
         public Duende.AccessTokenManagement.Scope? ClientCredentialsScope { get; set; }
-        public Duende.AccessTokenManagement.DPoPJsonWebKey? DPoPJsonWebKey { get; set; }
+        public Duende.AccessTokenManagement.DPoP.DPoPJsonWebKey? DPoPJsonWebKey { get; set; }
         public System.TimeSpan RefreshBeforeExpiration { get; set; }
         public bool UseChallengeSchemeScopedTokens { get; set; }
     }
-    public class UserTokenRequestParameters : Duende.AccessTokenManagement.TokenRequestParameters, System.IEquatable<Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters>
+    public sealed class UserTokenRequestParameters : Duende.AccessTokenManagement.TokenRequestParameters, System.IEquatable<Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters>
     {
         public UserTokenRequestParameters() { }
         public Duende.AccessTokenManagement.Scheme? ChallengeScheme { get; set; }
         public Duende.AccessTokenManagement.Scheme? SignInScheme { get; set; }
     }
-}
-namespace Duende.AccessTokenManagement.OpenIdConnect.Internal
-{
-    public delegate System.Threading.Tasks.Task<System.Security.Claims.ClaimsPrincipal> TransformPrincipalAfterRefreshAsync(System.Security.Claims.ClaimsPrincipal principal, System.Threading.CancellationToken ct);
 }

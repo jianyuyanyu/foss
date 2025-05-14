@@ -11,9 +11,9 @@ public class WorkerManualJwt : BackgroundService
 {
     private readonly ILogger<WorkerManualJwt> _logger;
     private readonly IHttpClientFactory _clientFactory;
-    private readonly IClientCredentialsTokenManagementService _tokenManagementService;
+    private readonly IClientCredentialsTokenManager _tokenManagementService;
 
-    public WorkerManualJwt(ILogger<WorkerManualJwt> logger, IHttpClientFactory factory, IClientCredentialsTokenManagementService tokenManagementService)
+    public WorkerManualJwt(ILogger<WorkerManualJwt> logger, IHttpClientFactory factory, IClientCredentialsTokenManager tokenManagementService)
     {
         _logger = logger;
         _clientFactory = factory;

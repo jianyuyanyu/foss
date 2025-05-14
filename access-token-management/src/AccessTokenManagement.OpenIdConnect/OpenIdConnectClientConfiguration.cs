@@ -8,7 +8,7 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// <summary>
 /// Configuration setting sourced from the OpenID Connect handler
 /// </summary>
-public class OpenIdConnectClientConfiguration
+public sealed class OpenIdConnectClientConfiguration
 {
     ///// <summary>
     ///// The authority
