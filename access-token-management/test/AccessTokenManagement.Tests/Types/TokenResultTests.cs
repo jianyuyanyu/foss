@@ -12,7 +12,7 @@ public class TokenResultTests
         TokenResult<ClientCredentialsToken> tokenResult = result;
 
         tokenResult.Succeeded.ShouldBeFalse();
-        tokenResult.IsError.ShouldBeTrue();
+        (!tokenResult.Succeeded).ShouldBeTrue();
         tokenResult.FailedResult.ShouldNotBeNull();
         tokenResult.FailedResult.ShouldBeEquivalentTo(result);
     }
@@ -32,7 +32,7 @@ public class TokenResultTests
 
         TokenResult<ClientCredentialsToken> tokenResult = result;
         tokenResult.Succeeded.ShouldBeTrue();
-        tokenResult.IsError.ShouldBeFalse();
+        (!tokenResult.Succeeded).ShouldBeFalse();
         tokenResult.Token.ShouldNotBeNull();
         tokenResult.Token.ShouldBe(result);
     }

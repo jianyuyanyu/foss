@@ -27,10 +27,10 @@ internal class OpenIdConnectUserTokenEndpoint(
     public async Task<TokenResult<UserToken>> RefreshAccessTokenAsync(
         UserRefreshToken refreshToken,
         UserTokenRequestParameters parameters,
-        CancellationToken cancellationToken = default)
+        CT ct = default)
     {
         var oidc = await configurationService
-            .GetOpenIdConnectConfigurationAsync(parameters.ChallengeScheme)
+            .GetOpenIdConnectConfigurationAsync(parameters.ChallengeScheme, ct)
             .ConfigureAwait(false);
 
         // Add the ClientID to all subsequent log messages
@@ -74,7 +74,7 @@ internal class OpenIdConnectUserTokenEndpoint(
                 .GetClientAssertionAsync(
                     clientName: OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + oidc.Scheme,
                     parameters,
-                    cancellationToken)
+                    ct)
                 .ConfigureAwait(false);
 
             if (assertion != null)
@@ -92,13 +92,13 @@ internal class OpenIdConnectUserTokenEndpoint(
                 Url = tokenEndpoint,
                 Method = HttpMethod.Post,
                 DPoPJsonWebKey = dPoPJsonWebKey.Value,
-            }, cancellationToken);
+            }, ct);
 
             request.DPoPProofToken = proof?.ProofToken.ToString();
         }
 
         logger.SendingRefreshTokenRequest(LogLevel.Debug, tokenEndpoint);
-        var response = await oidc.HttpClient!.RequestRefreshTokenAsync(request, cancellationToken).ConfigureAwait(false);
+        var response = await oidc.HttpClient!.RequestRefreshTokenAsync(request, ct).ConfigureAwait(false);
 
         // See if there was a dPoP nonce error and if we can retry
         if (response.IsError
@@ -115,14 +115,14 @@ internal class OpenIdConnectUserTokenEndpoint(
                 DPoPJsonWebKey = dPoPJsonWebKey.Value,
                 DPoPNonce = DPoPNonce.ParseOrDefault(response.DPoPNonce)
             };
-            var proof = await dPoPProofService.CreateProofTokenAsync(dPoPProofRequest, cancellationToken);
+            var proof = await dPoPProofService.CreateProofTokenAsync(dPoPProofRequest, ct);
 
             request.DPoPProofToken = proof?.ProofToken.ToString();
 
             if (request.DPoPProofToken != null)
             {
                 metrics.DPoPNonceErrorRetry(request.ClientId, response.Error);
-                response = await oidc.HttpClient!.RequestRefreshTokenAsync(request, cancellationToken).ConfigureAwait(false);
+                response = await oidc.HttpClient!.RequestRefreshTokenAsync(request, ct).ConfigureAwait(false);
             }
         }
 
@@ -159,14 +159,14 @@ internal class OpenIdConnectUserTokenEndpoint(
     public async Task RevokeRefreshTokenAsync(
         UserRefreshToken userToken,
         UserTokenRequestParameters parameters,
-        CancellationToken cancellationToken = default)
+        CT ct = default)
     {
         var refreshToken = userToken.RefreshToken;
 
         logger.RevokingRefreshToken(LogLevel.Trace, refreshToken, hashAlgorithm: Crypto.HashData);
 
         var oidc = await configurationService
-            .GetOpenIdConnectConfigurationAsync(parameters.ChallengeScheme, cancellationToken)
+            .GetOpenIdConnectConfigurationAsync(parameters.ChallengeScheme, ct)
             .ConfigureAwait(false);
 
         var revocationEndpoint = oidc.RevocationEndpoint ??
@@ -193,7 +193,7 @@ internal class OpenIdConnectUserTokenEndpoint(
         }
         else
         {
-            var assertion = await clientAssertionService.GetClientAssertionAsync(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + oidc.Scheme, parameters).ConfigureAwait(false);
+            var assertion = await clientAssertionService.GetClientAssertionAsync(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + oidc.Scheme, parameters, ct).ConfigureAwait(false);
             if (assertion != null)
             {
                 request.ClientAssertion = assertion;
@@ -202,7 +202,7 @@ internal class OpenIdConnectUserTokenEndpoint(
         }
 
         logger.SendingTokenRevocationRequest(LogLevel.Debug, revocationEndpoint);
-        var response = await oidc.HttpClient!.RevokeTokenAsync(request, cancellationToken).ConfigureAwait(false);
+        var response = await oidc.HttpClient!.RevokeTokenAsync(request, ct).ConfigureAwait(false);
 
         if (response.IsError)
         {

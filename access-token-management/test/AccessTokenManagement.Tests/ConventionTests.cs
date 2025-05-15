@@ -7,7 +7,7 @@ using Duende.AccessTokenManagement.OpenIdConnect;
 using Duende.AccessTokenManagement.OTel;
 
 namespace Duende.AccessTokenManagement;
-public class ConventionTests
+public class ConventionTests(ITestOutputHelper output)
 {
     public static readonly Assembly AtmAssembly = typeof(ClientCredentialsToken).Assembly;
     public static readonly Assembly AtmOidcAssembly = typeof(UserToken).Assembly;
@@ -140,6 +140,41 @@ public class ConventionTests
         }
     }
 
+    [Fact]
+    public void All_async_methods_should_end_with_Async_and_have_cancellation_token_as_last_parameter()
+    {
+        var failures = new List<string>();
+
+        foreach (var type in AllTypes.Where(t => t.IsClass && !t.IsAbstract && !typeof(Delegate).IsAssignableFrom(t)))
+        {
+            // Get all public instance and static methods
+            var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public)
+                .Where(m => typeof(System.Threading.Tasks.Task).IsAssignableFrom(m.ReturnType));
+
+            foreach (var method in methods)
+            {
+                // 1. Name should end with 'Async'
+                if (!method.Name.EndsWith("Async"))
+                {
+                    failures.Add($"{type.FullName}.{method.Name}: Async method should be suffixed with 'Async'.");
+                }
+
+                // 2. Last parameter should be a CancellationToken (if there are any parameters)
+                var parameters = method.GetParameters();
+                if (parameters.Length == 0 || parameters.Last().ParameterType != typeof(System.Threading.CancellationToken))
+                {
+                    failures.Add($"{type.FullName}.{method.Name}: Async method should have a CancellationToken as the last parameter.");
+                }
+            }
+        }
+
+        foreach (var failure in failures)
+        {
+            output.WriteLine(failure);
+        }
+
+        failures.ShouldBeEmpty();
+    }
     public static bool IsInternal(Type type)
     {
         if (type.IsNested)
@@ -158,7 +193,7 @@ public class ConventionTests
             AllTypes.Where(t => t.IsValueType && !t.IsAbstract)
             .SelectMany(t =>
                 t.GetInterfaces()
-                    .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IStonglyTypedString<>)
+                    .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IStronglyTypedString<>)
                                                 && i.GenericTypeArguments[0] == t)
                     .Select(_ => t))
             .Distinct()

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace Duende.AccessTokenManagement.Internal;
 
 /// <summary>
-/// Hanldes Dpop proof requests for http requests. 
+/// Handles Dpop proof requests for http requests. 
 /// </summary>
 /// <param name="dPoPNonceStore"></param>
 /// <param name="dPoPProofService"></param>
@@ -18,8 +18,8 @@ internal sealed class DPopProofRequestHandler(
     IDPoPProofService dPoPProofService,
     ILogger<DPopProofRequestHandler> logger) : IDPopProofRequestHandler
 {
-    public async Task<bool> TryAcquireDPopProof(DPopProofRequestParameters parameters,
-        CancellationToken cancellationToken)
+    public async Task<bool> TryAcquireDPopProofAsync(DPopProofRequestParameters parameters,
+        CT ct)
     {
         var request = parameters.Request;
 
@@ -41,7 +41,7 @@ internal sealed class DPopProofRequestHandler(
             DPoPNonce = parameters.DPoPNonce,
             AdditionalPayloadClaims = additionalClaims,
         };
-        var proofToken = await dPoPProofService.CreateProofTokenAsync(dPoPProofRequest, cancellationToken).ConfigureAwait(false);
+        var proofToken = await dPoPProofService.CreateProofTokenAsync(dPoPProofRequest, ct).ConfigureAwait(false);
 
         if (proofToken == null)
         {
@@ -54,7 +54,7 @@ internal sealed class DPopProofRequestHandler(
         return true;
     }
 
-    public async Task HandleDPopResponse(HttpResponseMessage response, CancellationToken cancellationToken)
+    public async Task HandleDPopResponseAsync(HttpResponseMessage response, CT ct)
     {
         var request = response.RequestMessage;
 
@@ -75,6 +75,6 @@ internal sealed class DPopProofRequestHandler(
             Method = request.Method,
         };
         logger.AuthorizationServerSuppliedNewNonce(LogLevel.Debug);
-        await dPoPNonceStore.StoreNonceAsync(dPoPNonceContext, dPoPNonce.Value, cancellationToken);
+        await dPoPNonceStore.StoreNonceAsync(dPoPNonceContext, dPoPNonce.Value, ct);
     }
 }

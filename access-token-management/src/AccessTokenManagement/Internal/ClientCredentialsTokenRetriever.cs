@@ -15,13 +15,13 @@ internal class ClientCredentialsTokenRetriever(
 ) : AccessTokenRequestHandler.ITokenRetriever
 {
     /// <inheritdoc />
-    public async Task<TokenResult<AccessTokenRequestHandler.IToken>> GetToken(HttpRequestMessage request, CancellationToken cancellationToken)
+    public async Task<TokenResult<AccessTokenRequestHandler.IToken>> GetTokenAsync(HttpRequestMessage request, CT ct)
     {
         var parameters = new TokenRequestParameters
         {
             ForceTokenRenewal = request.GetForceRenewal()
         };
-        var getTokenResult = await clientCredentialsTokenManager.GetAccessTokenAsync(tokenClientName, parameters, cancellationToken);
+        var getTokenResult = await clientCredentialsTokenManager.GetAccessTokenAsync(tokenClientName, parameters, ct);
 
         if (getTokenResult.WasSuccessful(out var token, out var error))
         {

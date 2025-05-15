@@ -19,9 +19,9 @@ public interface IStoreTokensInAuthenticationProperties
     /// <summary>
     /// Sets a UserToken in the AuthenticationProperties.
     /// </summary>
-    Task SetUserToken(UserToken token, AuthenticationProperties authenticationProperties,
+    Task SetUserTokenAsync(UserToken token, AuthenticationProperties authenticationProperties,
         UserTokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default);
+        CT ct = default);
 
     /// <summary>
     /// Removes a UserToken from the AuthenticationProperties.
@@ -35,5 +35,5 @@ public interface IStoreTokensInAuthenticationProperties
     /// AuthenticationProperties.
     /// </summary>
     Task<Scheme> GetSchemeAsync(UserTokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default);
+        CT ct = default);
 }

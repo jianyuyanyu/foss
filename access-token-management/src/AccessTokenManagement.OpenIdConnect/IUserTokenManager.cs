@@ -16,22 +16,22 @@ public interface IUserTokenManager
     /// </summary>
     /// <param name="user"></param>
     /// <param name="parameters"></param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="ct"></param>
     /// <returns></returns>
     Task<TokenResult<UserToken>> GetAccessTokenAsync(
         ClaimsPrincipal user,
         UserTokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default);
+        CT ct = default);
 
     /// <summary>
     /// Revokes the current refresh token, and removes the access token from the store.
     /// </summary>
     /// <param name="user"></param>
     /// <param name="parameters"></param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="ct"></param>
     /// <returns></returns>
     Task RevokeRefreshTokenAsync(
         ClaimsPrincipal user,
         UserTokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default);
+        CT ct = default);
 }

@@ -19,7 +19,7 @@ internal class DefaultDPoPProofService(IDPoPNonceStore dPoPNonceStore) : IDPoPPr
     /// <inheritdoc/>
     public async Task<DPoPProof?> CreateProofTokenAsync(
         DPoPProofRequest request,
-        CancellationToken cancellationToken)
+        CT ct)
     {
         var jsonWebKey = request.DPoPJsonWebKey.JsonWebKey;
 
@@ -84,11 +84,11 @@ internal class DefaultDPoPProofService(IDPoPNonceStore dPoPNonceStore) : IDPoPPr
         };
         if (nonce == null)
         {
-            nonce = await dPoPNonceStore.GetNonceAsync(dPoPNonceContext, cancellationToken);
+            nonce = await dPoPNonceStore.GetNonceAsync(dPoPNonceContext, ct);
         }
         else
         {
-            await dPoPNonceStore.StoreNonceAsync(dPoPNonceContext, nonce.Value, cancellationToken);
+            await dPoPNonceStore.StoreNonceAsync(dPoPNonceContext, nonce.Value, ct);
         }
 
         if (nonce != null)

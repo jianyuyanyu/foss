@@ -7,7 +7,7 @@ namespace Duende.AccessTokenManagement.OTel;
 public static class ActivitySources
 {
 
-    public static ActivitySource Main = new ActivitySource(ActivitySourceNames.Main);
+    public static ActivitySource Main = new(ActivitySourceNames.Main);
 }
 
 public static class ActivitySourceNames

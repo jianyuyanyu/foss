@@ -13,7 +13,7 @@ internal class OpenIdConnectUserAccessTokenRetriever(
 {
     private readonly UserTokenRequestParameters _parameters = parameters ?? new UserTokenRequestParameters();
 
-    public async Task<TokenResult<AccessTokenRequestHandler.IToken>> GetToken(HttpRequestMessage request, CancellationToken cancellationToken)
+    public async Task<TokenResult<AccessTokenRequestHandler.IToken>> GetTokenAsync(HttpRequestMessage request, CT ct)
     {
         var parameters = new UserTokenRequestParameters
         {
@@ -23,9 +23,9 @@ internal class OpenIdConnectUserAccessTokenRetriever(
             Context = _parameters.Context,
         };
 
-        var user = await userAccessor.GetCurrentUserAsync().ConfigureAwait(false);
+        var user = await userAccessor.GetCurrentUserAsync(ct).ConfigureAwait(false);
 
-        var getTokenResult = await userTokenManagement.GetAccessTokenAsync(user, parameters, cancellationToken).ConfigureAwait(false);
+        var getTokenResult = await userTokenManagement.GetAccessTokenAsync(user, parameters, ct).ConfigureAwait(false);
         if (getTokenResult.WasSuccessful(out var token, out var error))
         {
             return token;

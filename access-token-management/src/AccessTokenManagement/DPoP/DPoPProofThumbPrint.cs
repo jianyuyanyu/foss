@@ -10,7 +10,7 @@ namespace Duende.AccessTokenManagement.DPoP;
 /// <summary>
 /// Captures a dpop proof thumbprint. 
 /// </summary>
-public readonly record struct DPoPProofThumbPrint : IStonglyTypedString<DPoPProofThumbPrint>
+public readonly record struct DPoPProofThumbPrint : IStronglyTypedString<DPoPProofThumbPrint>
 {
     public override string ToString() => Value;
 
@@ -28,7 +28,7 @@ public readonly record struct DPoPProofThumbPrint : IStonglyTypedString<DPoPProo
     private string Value { get; }
 
     public static bool TryParse(string value, [NotNullWhen(true)] out DPoPProofThumbPrint? parsed, out string[] errors) =>
-        IStonglyTypedString<DPoPProofThumbPrint>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStronglyTypedString<DPoPProofThumbPrint>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
     public static DPoPProofThumbPrint FromJsonWebKey(JsonWebKey jsonWebKey)
     {
@@ -36,7 +36,7 @@ public readonly record struct DPoPProofThumbPrint : IStonglyTypedString<DPoPProo
         return Parse(value);
     }
 
-    static DPoPProofThumbPrint IStonglyTypedString<DPoPProofThumbPrint>.Create(string result) => new(result);
+    static DPoPProofThumbPrint IStronglyTypedString<DPoPProofThumbPrint>.Create(string result) => new(result);
 
     public static DPoPProofThumbPrint Parse(string value) => StringParsers<DPoPProofThumbPrint>.Parse(value);
 

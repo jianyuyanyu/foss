@@ -12,7 +12,7 @@ namespace Duende.AccessTokenManagement.Internal;
 /// a generic way to build them. 
 /// </summary>
 /// <typeparam name="TSelf"></typeparam>
-internal interface IStonglyTypedString<TSelf> where TSelf : struct, IStonglyTypedString<TSelf>
+internal interface IStronglyTypedString<TSelf> where TSelf : struct, IStronglyTypedString<TSelf>
 {
     /// <summary>
     /// Attempt to parse the value object from a string. Return a list of errors if it fails. 
@@ -48,7 +48,7 @@ internal interface IStonglyTypedString<TSelf> where TSelf : struct, IStonglyType
     /// <returns>True if validation succeeded</returns>
     internal static bool TryBuildValidatedObject(string value, ValidationRule<string>[] validationRules, [NotNullWhen(true)] out TSelf? parsed, out string[] foundErrors)
     {
-        parsed = default;
+        parsed = null;
 
         if (string.IsNullOrWhiteSpace(value))
         {
@@ -56,7 +56,7 @@ internal interface IStonglyTypedString<TSelf> where TSelf : struct, IStonglyType
             return false;
         }
 
-        List<string> errors = new();
+        List<string> errors = [];
         foreach (var validator in validationRules)
         {
             if (!validator(value, out var message))

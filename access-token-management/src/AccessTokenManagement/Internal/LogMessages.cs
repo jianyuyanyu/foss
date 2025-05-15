@@ -46,7 +46,7 @@ internal static partial class LogMessages
 
 
     [LoggerMessage(
-        Message = $"While sending a request, received UnAuthorized after acquiring a new access token. This means the access token is somehow wrong and is not accepted.")]
+        Message = "While sending a request, received UnAuthorized after acquiring a new access token. This means the access token is somehow wrong and is not accepted.")]
     public static partial void AccessTokenHandlerAuthenticationFailed(this ILogger logger, LogLevel logLevel);
 
 
@@ -55,7 +55,7 @@ internal static partial class LogMessages
     public static partial void RequestFailedWithDPoPErrorWillRetry(this ILogger logger, LogLevel logLevel, string? error);
 
     [LoggerMessage(
-        Message = $"Token not accepted while sending request. Retrying with new access token. ")]
+        Message = "Token not accepted while sending request. Retrying with new access token. ")]
     public static partial void TokenNotAcceptedWhenSendingRequest(this ILogger logger, LogLevel logLevel);
 
     /// <summary>
@@ -237,20 +237,4 @@ internal static partial class LogMessages
     [LoggerMessage(
         Message = "Failed to create thumbprint from JSON web key.")]
     public static partial void FailedToCreateThumbprintFromJsonWebKey(this ILogger logger, LogLevel logLevel, Exception ex);
-
-    public static IDisposable BeginScopeKvp(this ILogger logger, LogLevel logLevel, params (string Key, string? Value)[] parameters)
-    {
-        var logParameters = parameters
-            .Where(x => x.Value != null)
-            .ToDictionary(x => x.Key, x => (object)(x.Value!));
-
-        return logger.BeginScope(logParameters)
-               ?? new EmptyDisposable();
-    }
-    private struct EmptyDisposable : IDisposable
-    {
-        public void Dispose()
-        {
-        }
-    }
 }

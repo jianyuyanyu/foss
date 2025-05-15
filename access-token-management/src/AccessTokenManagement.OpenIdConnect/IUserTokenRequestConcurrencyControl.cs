@@ -13,5 +13,5 @@ public interface IUserTokenRequestConcurrencyControl
     /// <summary>
     /// Method to perform synchronization of work.
     /// </summary>
-    public Task<TokenResult<UserToken>> ExecuteWithConcurrencyControl(UserRefreshToken key, Func<Task<TokenResult<UserToken>>> tokenRetriever, CancellationToken cancellationToken = default);
+    public Task<TokenResult<UserToken>> ExecuteWithConcurrencyControlAsync(UserRefreshToken key, Func<Task<TokenResult<UserToken>>> tokenRetriever, CT ct = default);
 }

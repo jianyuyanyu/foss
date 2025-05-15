@@ -28,7 +28,7 @@ internal class UserAccessAccessTokenManager(
     public async Task<TokenResult<UserToken>> GetAccessTokenAsync(
         ClaimsPrincipal user,
         UserTokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default)
+        CT ct = default)
     {
         logger.StartingUserTokenAcquisition(LogLevel.Debug);
 
@@ -42,7 +42,7 @@ internal class UserAccessAccessTokenManager(
 
         var userName = user.FindFirst(JwtClaimTypes.Name)?.Value ??
                        user.FindFirst(JwtClaimTypes.Subject)?.Value ?? "unknown";
-        var getTokenForSpecificParameters = await userAccessTokenStore.GetTokenAsync(user, parameters, cancellationToken).ConfigureAwait(false);
+        var getTokenForSpecificParameters = await userAccessTokenStore.GetTokenAsync(user, parameters, ct).ConfigureAwait(false);
 
         if (!getTokenForSpecificParameters.WasSuccessful(out var requestedToken, out var failure))
         {
@@ -69,26 +69,26 @@ internal class UserAccessAccessTokenManager(
 
             // Synchronize access to the token request, meaning multiple concurrent requests
             // for the same token will be grouped together. 
-            result = await sync.ExecuteWithConcurrencyControl(
+            result = await sync.ExecuteWithConcurrencyControlAsync(
                 key: requestedToken.RefreshToken,
                 tokenRetriever: async () =>
                 {
                     var getRefreshedToken = await tokenClient.RefreshAccessTokenAsync(
                                 requestedToken.RefreshToken,
                                 parameters,
-                                cancellationToken).ConfigureAwait(false);
+                                ct).ConfigureAwait(false);
 
                     if (!getRefreshedToken.WasSuccessful(out var token, out var refreshError))
                     {
                         return refreshError;
                     }
 
-                    await userAccessTokenStore.StoreTokenAsync(user, token, parameters, cancellationToken).ConfigureAwait(false);
+                    await userAccessTokenStore.StoreTokenAsync(user, token, parameters, ct).ConfigureAwait(false);
                     logger.ReturningRefreshedToken(LogLevel.Trace, userName);
 
                     return getRefreshedToken;
                 },
-                cancellationToken: cancellationToken).ConfigureAwait(false);
+                ct: ct).ConfigureAwait(false);
         }
         else
         {
@@ -115,15 +115,15 @@ internal class UserAccessAccessTokenManager(
     public async Task RevokeRefreshTokenAsync(
         ClaimsPrincipal user,
         UserTokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default)
+        CT ct = default)
     {
         parameters ??= new UserTokenRequestParameters();
-        var getToken = await userAccessTokenStore.GetTokenAsync(user, parameters, cancellationToken).ConfigureAwait(false);
+        var getToken = await userAccessTokenStore.GetTokenAsync(user, parameters, ct).ConfigureAwait(false);
 
         if (getToken.WasSuccessful(out var userToken) && userToken.RefreshToken != null)
         {
-            await tokenClient.RevokeRefreshTokenAsync(userToken.RefreshToken, parameters, cancellationToken).ConfigureAwait(false);
-            await userAccessTokenStore.ClearTokenAsync(user, parameters, cancellationToken).ConfigureAwait(false);
+            await tokenClient.RevokeRefreshTokenAsync(userToken.RefreshToken, parameters, ct).ConfigureAwait(false);
+            await userAccessTokenStore.ClearTokenAsync(user, parameters, ct).ConfigureAwait(false);
         }
     }
 }

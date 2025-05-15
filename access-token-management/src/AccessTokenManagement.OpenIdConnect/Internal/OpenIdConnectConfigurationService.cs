@@ -19,7 +19,7 @@ internal class OpenIdConnectConfigurationService(
     /// <inheritdoc />
     public async Task<OpenIdConnectClientConfiguration> GetOpenIdConnectConfigurationAsync(
         Scheme? schemeName = null,
-        CancellationToken ct = default)
+        CT ct = default)
     {
         var configScheme = schemeName ?? userAccessTokenManagementOptions.Value.ChallengeScheme;
 

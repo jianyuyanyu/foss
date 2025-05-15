@@ -23,10 +23,10 @@ internal class ClientCredentialsTokenClient(
     ILogger<ClientCredentialsTokenClient> logger) : IClientCredentialsTokenEndpoint
 {
     /// <inheritdoc/>
-    public virtual async Task<TokenResult<ClientCredentialsToken>> RequestAccessToken(
+    public virtual async Task<TokenResult<ClientCredentialsToken>> RequestAccessTokenAsync(
         ClientName clientName,
         TokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default)
+        CT ct = default)
     {
 
         var client = options.Get(clientName.ToString());
@@ -90,7 +90,7 @@ internal class ClientCredentialsTokenClient(
         }
         else
         {
-            var assertion = await clientAssertionService.GetClientAssertionAsync(clientName, parameters, cancellationToken: cancellationToken)
+            var assertion = await clientAssertionService.GetClientAssertionAsync(clientName, parameters, ct: ct)
                 .ConfigureAwait(false);
 
             if (assertion != null)
@@ -103,17 +103,17 @@ internal class ClientCredentialsTokenClient(
         request.Options.TryAdd(
             ClientCredentialsTokenManagementDefaults.TokenRequestParametersOptionsName, parameters);
 
-        var dpopJsonWebKey = await dPoPKeyMaterialService.GetKeyAsync(clientName, cancellationToken);
+        var dpopJsonWebKey = await dPoPKeyMaterialService.GetKeyAsync(clientName, ct);
 
         if (dpopJsonWebKey != null)
         {
-            request.DPoPProofToken = await CreateDPoPProofToken(client.TokenEndpoint, dpopJsonWebKey.Value, cancellationToken: cancellationToken);
+            request.DPoPProofToken = await CreateDPoPProofToken(client.TokenEndpoint, dpopJsonWebKey.Value, ct: ct);
         }
 
         var httpClient = GetHttpClient(client);
 
         logger.RequestingClientCredentialsAccessToken(LogLevel.Debug, client.TokenEndpoint);
-        var response = await httpClient.RequestClientCredentialsTokenAsync(request, cancellationToken).ConfigureAwait(false);
+        var response = await httpClient.RequestClientCredentialsTokenAsync(request, ct).ConfigureAwait(false);
 
         // Retry policy: if we get a DPoP nonce error, retry with the server nonce
         // Note, it's not possible to implement this using Polly, because you can inject
@@ -130,11 +130,11 @@ internal class ClientCredentialsTokenClient(
                 tokenEndpoint: client.TokenEndpoint,
                 dpopJsonWebKey: dpopJsonWebKey.Value,
                 dPoPNonce: DPoPNonce.Parse(response.DPoPNonce),
-                cancellationToken: cancellationToken);
+                ct: ct);
 
             if (request.DPoPProofToken != null)
             {
-                response = await httpClient.RequestClientCredentialsTokenAsync(request, cancellationToken).ConfigureAwait(false);
+                response = await httpClient.RequestClientCredentialsTokenAsync(request, ct).ConfigureAwait(false);
             }
         }
 
@@ -169,7 +169,7 @@ internal class ClientCredentialsTokenClient(
         Uri tokenEndpoint,
         DPoPJsonWebKey dpopJsonWebKey,
         DPoPNonce? dPoPNonce = null,
-        CancellationToken cancellationToken = default)
+        CT ct = default)
     {
         logger.CreatingDPoPProofToken(LogLevel.Debug);
 
@@ -179,7 +179,7 @@ internal class ClientCredentialsTokenClient(
             Method = HttpMethod.Post,
             DPoPJsonWebKey = dpopJsonWebKey,
             DPoPNonce = dPoPNonce
-        }, cancellationToken);
+        }, ct);
 
         return proof?.ProofToken.ToString();
     }

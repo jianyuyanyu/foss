@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace Duende.AccessTokenManagement.Internal;
 
-internal class StringValueConverter<T> : TypeConverter where T : struct, IStonglyTypedString<T>
+internal class StringValueConverter<T> : TypeConverter where T : struct, IStronglyTypedString<T>
 {
     public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
         => sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);

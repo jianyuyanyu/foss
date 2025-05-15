@@ -145,7 +145,7 @@ public class AppHost : GenericHost
 
             endpoints.MapGet("/user_token", async context =>
             {
-                UserToken token = await context.GetUserAccessTokenAsync();
+                var token = await context.GetUserAccessTokenAsync().GetToken();
                 await context.Response.WriteAsJsonAsync(UserTokenModel.BuildFrom(token));
             });
             endpoints.MapGet("/user", async context =>
@@ -176,13 +176,13 @@ public class AppHost : GenericHost
                 var token = await context.GetUserAccessTokenAsync(new UserTokenRequestParameters
                 {
                     Resource = resource
-                });
+                }).GetToken();
                 await context.Response.WriteAsJsonAsync(UserTokenModel.BuildFrom(token));
             });
 
             endpoints.MapGet("/client_token", async context =>
             {
-                ClientCredentialsToken token = await context.GetClientAccessTokenAsync();
+                var token = await context.GetClientAccessTokenAsync().GetToken();
                 await context.Response.WriteAsJsonAsync(ClientCredentialsTokenModel.BuildFrom(token));
             });
 

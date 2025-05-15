@@ -26,25 +26,9 @@ public sealed record TokenResult<T> : TokenResult
     [MemberNotNullWhen(false, nameof(FailedResult))]
     public bool Succeeded => FailedResult == null;
 
-    [MemberNotNullWhen(false, nameof(Token))]
-    [MemberNotNullWhen(true, nameof(FailedResult))]
-    public bool IsError => FailedResult != null;
-
     public FailedResult? FailedResult { get; }
 
     public T? Token { get; }
-
-    public static implicit operator T(TokenResult<T> input)
-    {
-        ArgumentNullException.ThrowIfNull(input, nameof(input));
-
-        if (!input.Succeeded)
-        {
-            throw new InvalidOperationException("Failed to get token: " + input.FailedResult);
-        }
-
-        return input.Token;
-    }
 
     public static implicit operator TokenResult<T>(T input) => new(input);
 
@@ -58,7 +42,7 @@ public sealed record TokenResult<T> : TokenResult
             return true;
         }
 
-        result = default(T)!;
+        result = null!;
         return false;
     }
 
@@ -72,7 +56,7 @@ public sealed record TokenResult<T> : TokenResult
         }
 
         failure = FailedResult;
-        result = default(T);
+        result = null;
         return false;
     }
 

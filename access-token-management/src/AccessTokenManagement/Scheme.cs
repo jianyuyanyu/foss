@@ -9,7 +9,7 @@ using Duende.IdentityModel;
 namespace Duende.AccessTokenManagement;
 
 [TypeConverter(typeof(StringValueConverter<Scheme>))]
-public readonly record struct Scheme : IStonglyTypedString<Scheme>
+public readonly record struct Scheme : IStronglyTypedString<Scheme>
 {
     public const int MaxLength = 50;
     public static implicit operator Scheme(string value) => Parse(value);
@@ -28,11 +28,11 @@ public readonly record struct Scheme : IStonglyTypedString<Scheme>
     private Scheme(string value)
     {
 
-        // Some target systems are case sensitive in their scheme handling. This code normalizes
+        // Some target systems are case-sensitive in their scheme handling. This code normalizes
         // the casing. 
 
-        // since AccessTokenType above in the token endpoint response (the token_type value) could be case insensitive, but
-        // when we send it as an Authorization header in the API request it must be case sensitive, we 
+        // since AccessTokenType above in the token endpoint response (the token_type value) could be case-insensitive, but
+        // when we send it as an Authorization header in the API request it must be case-sensitive, we 
         // are checking for that here and forcing it to the exact casing required.
 
         //IE: if Scheme == BeAReR => "Bearer"
@@ -55,10 +55,10 @@ public readonly record struct Scheme : IStonglyTypedString<Scheme>
     /// </summary>
     internal static Scheme Empty = new(string.Empty);
 
-    public static bool TryParse(string value, [NotNullWhen(true)] out Scheme? parsed, out string[] errors) => IStonglyTypedString<Scheme>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+    public static bool TryParse(string value, [NotNullWhen(true)] out Scheme? parsed, out string[] errors) => IStronglyTypedString<Scheme>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
 
-    static Scheme IStonglyTypedString<Scheme>.Create(string result) => new(result);
+    static Scheme IStronglyTypedString<Scheme>.Create(string result) => new(result);
 
     public static Scheme Parse(string value) => StringParsers<Scheme>.Parse(value);
 

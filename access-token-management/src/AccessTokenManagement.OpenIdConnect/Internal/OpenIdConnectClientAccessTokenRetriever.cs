@@ -19,7 +19,7 @@ internal class OpenIdConnectClientAccessTokenRetriever(
 {
     private readonly UserTokenRequestParameters _parameters = parameters ?? new UserTokenRequestParameters();
 
-    public async Task<TokenResult<AccessTokenRequestHandler.IToken>> GetToken(HttpRequestMessage request, CancellationToken cancellationToken)
+    public async Task<TokenResult<AccessTokenRequestHandler.IToken>> GetTokenAsync(HttpRequestMessage request, CT ct)
     {
         var userTokenRequestParameters = new UserTokenRequestParameters
         {
@@ -32,7 +32,7 @@ internal class OpenIdConnectClientAccessTokenRetriever(
             ForceTokenRenewal = request.GetForceRenewal()
         };
 
-        var schemeName = userTokenRequestParameters?.ChallengeScheme ?? options.Value.ChallengeScheme;
+        var schemeName = userTokenRequestParameters.ChallengeScheme ?? options.Value.ChallengeScheme;
 
         if (schemeName == null)
         {
@@ -48,7 +48,7 @@ internal class OpenIdConnectClientAccessTokenRetriever(
         var getTokenResult = await tokenManager.GetAccessTokenAsync(
             OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + schemeName,
             userTokenRequestParameters,
-            cancellationToken).ConfigureAwait(false);
+            ct).ConfigureAwait(false);
 
         if (getTokenResult.WasSuccessful(out var token, out var error))
         {

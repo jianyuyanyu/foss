@@ -11,7 +11,6 @@ public sealed class AccessTokenManagementMetrics
 {
     public const string MeterName = "Duende.AccessTokenManagement";
 
-    private readonly Meter _meter;
     private readonly Counter<int> _accessTokenUsed;
     private readonly Counter<int> _tokenRetrieved;
     private readonly Counter<int> _tokenRetrievalFailed;
@@ -20,25 +19,25 @@ public sealed class AccessTokenManagementMetrics
 
     public AccessTokenManagementMetrics(IMeterFactory meterFactory)
     {
-        _meter = meterFactory.Create(MeterName);
+        var meter = meterFactory.Create(MeterName);
 
-        _accessTokenUsed = _meter.CreateCounter<int>("access_token_used",
+        _accessTokenUsed = meter.CreateCounter<int>("access_token_used",
             unit: "Count",
             description: "The number of times an access token was used.");
 
-        _tokenRetrieved = _meter.CreateCounter<int>("token_retrieved",
+        _tokenRetrieved = meter.CreateCounter<int>("token_retrieved",
             unit: "Count",
             description: "The number of times an access token was retrieved from the Token Provider. ");
 
-        _tokenRetrievalFailed = _meter.CreateCounter<int>("token_retrieval_failed",
+        _tokenRetrievalFailed = meter.CreateCounter<int>("token_retrieval_failed",
             unit: "Count",
             description: "Then number of times retrieval of tokens from the Token Provider failed.");
 
-        _accessTokenAccessDeniedRetry = _meter.CreateCounter<int>("token_send_retry",
+        _accessTokenAccessDeniedRetry = meter.CreateCounter<int>("token_send_retry",
             unit: "Count",
             description: "The number of times an access token was not accepted but will be retried.");
 
-        _dpopNonceErrorRetry = _meter.CreateCounter<int>("dpop_nonce_error_retry",
+        _dpopNonceErrorRetry = meter.CreateCounter<int>("dpop_nonce_error_retry",
             unit: "Count",
             description: "The number of times the target system replied with a DPoP Nonce error which will be retried.");
     }

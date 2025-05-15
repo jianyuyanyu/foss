@@ -44,7 +44,7 @@ internal class AuthorizationServerDPoPHandler(
 
     /// <inheritdoc/>
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
-        CancellationToken cancellationToken)
+        CT ct)
     {
         var codeExchangeJwk = httpContextAccessor.HttpContext?.GetCodeExchangeDPoPKey();
         if (codeExchangeJwk != null)
@@ -52,7 +52,7 @@ internal class AuthorizationServerDPoPHandler(
             await SetDPoPProofTokenForCodeExchangeAsync(request, jwk: codeExchangeJwk).ConfigureAwait(false);
         }
 
-        var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        var response = await base.SendAsync(request, ct).ConfigureAwait(false);
 
         // The authorization server might send us a new nonce on either a success or failure
         var dPoPNonce = response.GetDPoPNonce();
@@ -87,7 +87,7 @@ internal class AuthorizationServerDPoPHandler(
                 _logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce(LogLevel.Debug, response.GetDPoPError());
                 response.Dispose();
                 await SetDPoPProofTokenForCodeExchangeAsync(request, dPoPNonce, codeExchangeJwk).ConfigureAwait(false);
-                return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+                return await base.SendAsync(request, ct).ConfigureAwait(false);
             }
         }
 
@@ -103,7 +103,7 @@ internal class AuthorizationServerDPoPHandler(
         {
             Url = request.GetDPoPUrl(),
             Method = request.Method,
-        }, dPoPNonce.Value, cancellationToken);
+        }, dPoPNonce.Value, ct);
 
         return response;
     }

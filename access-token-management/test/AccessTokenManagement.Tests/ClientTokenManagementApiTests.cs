@@ -111,7 +111,7 @@ public abstract class ClientTokenManagementApiTests(ITestOutputHelper output) : 
     [Fact]
     public async Task dpop_clients_GetAccessTokenAsync_should_obtain_token_with_cnf()
     {
-        ClientCredentialsToken token = await _tokenService.GetAccessTokenAsync("test");
+        var token = await _tokenService.GetAccessTokenAsync("test").GetToken();
 
         token.DPoPJsonWebKey.ShouldNotBeNull();
         token.AccessTokenType.ShouldNotBeNull()
@@ -137,7 +137,7 @@ public abstract class ClientTokenManagementApiTests(ITestOutputHelper output) : 
 
         _clientOptions.DPoPJsonWebKey = jwkJson;
 
-        ClientCredentialsToken token = await _tokenService.GetAccessTokenAsync("test");
+        var token = await _tokenService.GetAccessTokenAsync("test").GetToken();
 
         token.DPoPJsonWebKey.ShouldNotBeNull();
         token.AccessTokenType.ShouldNotBeNull().ToString().ShouldBe("DPoP");
@@ -163,7 +163,7 @@ public abstract class ClientTokenManagementApiTests(ITestOutputHelper output) : 
 
         _clientOptions.DPoPJsonWebKey = jwkJson;
 
-        ClientCredentialsToken token = await _tokenService.GetAccessTokenAsync("test");
+        var token = await _tokenService.GetAccessTokenAsync("test").GetToken();
 
         token.DPoPJsonWebKey.ShouldNotBeNull();
         token.AccessTokenType.ShouldNotBeNull().ToString().ShouldBe("DPoP");

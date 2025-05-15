@@ -44,3 +44,4 @@ Duende.AccessTokenManagement.ServiceProviderKeys
 Duende.AccessTokenManagement.TokenRequestParameters
 Duende.AccessTokenManagement.TokenResult
 Duende.AccessTokenManagement.TokenResult`1
+Duende.AccessTokenManagement.TokenResultExtensions

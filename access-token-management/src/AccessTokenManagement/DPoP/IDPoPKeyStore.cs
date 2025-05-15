@@ -12,5 +12,5 @@ public interface IDPoPKeyStore
     /// Gets the DPoP key for the client, or null if none available for the client
     /// </summary>
     Task<DPoPJsonWebKey?> GetKeyAsync(ClientName clientName,
-        CancellationToken cancellationToken = default);
+        CT ct = default);
 }

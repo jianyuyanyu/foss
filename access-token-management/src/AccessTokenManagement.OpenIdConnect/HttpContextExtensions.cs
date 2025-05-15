@@ -20,16 +20,16 @@ public static class HttpContextExtensions
     /// </summary>
     /// <param name="httpContext">The HTTP context</param>
     /// <param name="parameters">Extra optional parameters</param>
-    /// <param name="cancellationToken">A cancellation token to cancel operation.</param>
+    /// <param name="ct">A cancellation token to cancel operation.</param>
     /// <returns></returns>
     public static async Task<TokenResult<UserToken>> GetUserAccessTokenAsync(
         this HttpContext httpContext,
         UserTokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default)
+        CT ct = default)
     {
         var service = httpContext.RequestServices.GetRequiredService<IUserTokenManager>();
 
-        return await service.GetAccessTokenAsync(httpContext.User, parameters, cancellationToken).ConfigureAwait(false);
+        return await service.GetAccessTokenAsync(httpContext.User, parameters, ct).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -37,16 +37,16 @@ public static class HttpContextExtensions
     /// </summary>
     /// <param name="httpContext">The HTTP context</param>
     /// <param name="parameters">Extra optional parameters</param>
-    /// <param name="cancellationToken">A cancellation token to cancel operation.</param>
+    /// <param name="ct">A cancellation token to cancel operation.</param>
     /// <returns></returns>
     public static async Task RevokeRefreshTokenAsync(
         this HttpContext httpContext,
         UserTokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default)
+        CT ct = default)
     {
         var service = httpContext.RequestServices.GetRequiredService<IUserTokenManager>();
 
-        await service.RevokeRefreshTokenAsync(httpContext.User, parameters, cancellationToken).ConfigureAwait(false);
+        await service.RevokeRefreshTokenAsync(httpContext.User, parameters, ct).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -54,12 +54,12 @@ public static class HttpContextExtensions
     /// </summary>
     /// <param name="httpContext">The HTTP context</param>
     /// <param name="parameters">Extra optional parameters</param>
-    /// <param name="cancellationToken">A cancellation token to cancel operation.</param>
+    /// <param name="ct">A cancellation token to cancel operation.</param>
     /// <returns></returns>
     public static async Task<TokenResult<ClientCredentialsToken>> GetClientAccessTokenAsync(
         this HttpContext httpContext,
         UserTokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default)
+        CT ct = default)
     {
         var service = httpContext.RequestServices.GetRequiredService<IClientCredentialsTokenManager>();
         var options = httpContext.RequestServices.GetRequiredService<IOptions<UserTokenManagementOptions>>();
@@ -81,7 +81,7 @@ public static class HttpContextExtensions
         return await service.GetAccessTokenAsync(
             OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + schemeName,
             parameters,
-            cancellationToken).ConfigureAwait(false);
+            ct).ConfigureAwait(false);
     }
 
     const string AuthenticationPropertiesDPoPKey = ".Token.dpop_proof_key";

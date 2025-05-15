@@ -21,7 +21,7 @@ public class FakeAuthenticationService(IStoreTokensInAuthenticationProperties st
         var properties = new AuthenticationProperties();
 
 #pragma warning disable CS0618 // Type or member is obsolete
-        storeTokens.SetUserToken(testTokens.UserToken, properties);
+        storeTokens.SetUserTokenAsync(testTokens.UserToken, properties);
 #pragma warning restore CS0618 // Type or member is obsolete
 
         return properties;

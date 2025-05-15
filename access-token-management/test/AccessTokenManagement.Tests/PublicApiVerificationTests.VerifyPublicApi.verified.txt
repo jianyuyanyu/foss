@@ -3,8 +3,8 @@
     public sealed class AccessTokenRequestHandler : System.Net.Http.DelegatingHandler
     {
         public AccessTokenRequestHandler(Duende.AccessTokenManagement.AccessTokenRequestHandler.ITokenRetriever tokenRetriever, Duende.AccessTokenManagement.DPoP.IDPopProofRequestHandler dPoPProofRequestHandler, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.AccessTokenRequestHandler> logger) { }
-        protected override System.Net.Http.HttpResponseMessage Send(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken) { }
-        protected override System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> SendAsync(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken) { }
+        protected override System.Net.Http.HttpResponseMessage Send(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken ct) { }
+        protected override System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> SendAsync(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken ct) { }
         public interface IToken
         {
             Duende.AccessTokenManagement.AccessTokenString AccessToken { get; }
@@ -14,7 +14,7 @@
         }
         public interface ITokenRetriever
         {
-            System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.AccessTokenRequestHandler.IToken>> GetToken(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken);
+            System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.AccessTokenRequestHandler.IToken>> GetTokenAsync(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken ct);
         }
     }
     [System.Text.Json.Serialization.JsonConverter(typeof(Duende.AccessTokenManagement.Internal.StringValueJsonConverter<Duende.AccessTokenManagement.AccessTokenString>))]
@@ -39,7 +39,7 @@
         public static bool TryParse(string value, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Duende.AccessTokenManagement.AccessTokenType? parsed, out string[] errors) { }
         public static Duende.AccessTokenManagement.AccessTokenType op_Implicit(string value) { }
     }
-    public struct ClientCredentialsCacheKey : System.IEquatable<Duende.AccessTokenManagement.ClientCredentialsCacheKey>
+    public readonly struct ClientCredentialsCacheKey : System.IEquatable<Duende.AccessTokenManagement.ClientCredentialsCacheKey>
     {
         public const int MaxLength = 255;
         public ClientCredentialsCacheKey() { }
@@ -111,7 +111,6 @@
         public ClientId() { }
         public override string ToString() { }
         public static Duende.AccessTokenManagement.ClientId Parse(string value) { }
-        public static Duende.AccessTokenManagement.ClientId? ParseOrDefault(string? value) { }
         public static bool TryParse(string value, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Duende.AccessTokenManagement.ClientId? parsed, out string[] errors) { }
         public static Duende.AccessTokenManagement.ClientId op_Implicit(string value) { }
     }
@@ -130,7 +129,6 @@
         public ClientSecret() { }
         public override string ToString() { }
         public static Duende.AccessTokenManagement.ClientSecret Parse(string value) { }
-        public static Duende.AccessTokenManagement.ClientSecret? ParseOrDefault(string? value) { }
         public static bool TryParse(string value, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Duende.AccessTokenManagement.ClientSecret? parsed, out string[] errors) { }
         public static Duende.AccessTokenManagement.ClientSecret op_Implicit(string value) { }
     }
@@ -149,7 +147,7 @@
     }
     public interface IClientAssertionService
     {
-        System.Threading.Tasks.Task<Duende.IdentityModel.Client.ClientAssertion?> GetClientAssertionAsync(Duende.AccessTokenManagement.ClientName? clientName = default, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<Duende.IdentityModel.Client.ClientAssertion?> GetClientAssertionAsync(Duende.AccessTokenManagement.ClientName? clientName = default, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default);
     }
     public interface IClientCredentialsCacheKeyGenerator
     {
@@ -157,12 +155,12 @@
     }
     public interface IClientCredentialsTokenEndpoint
     {
-        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.ClientCredentialsToken>> RequestAccessToken(Duende.AccessTokenManagement.ClientName clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.ClientCredentialsToken>> RequestAccessTokenAsync(Duende.AccessTokenManagement.ClientName clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default);
     }
     public interface IClientCredentialsTokenManager
     {
-        System.Threading.Tasks.Task DeleteAccessTokenAsync(Duende.AccessTokenManagement.ClientName clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default);
-        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.ClientCredentialsToken>> GetAccessTokenAsync(Duende.AccessTokenManagement.ClientName clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task DeleteAccessTokenAsync(Duende.AccessTokenManagement.ClientName clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default);
+        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.ClientCredentialsToken>> GetAccessTokenAsync(Duende.AccessTokenManagement.ClientName clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default);
     }
     public readonly struct IdentityTokenString : System.IEquatable<Duende.AccessTokenManagement.IdentityTokenString>
     {
@@ -190,7 +188,6 @@
         public Resource() { }
         public override string ToString() { }
         public static Duende.AccessTokenManagement.Resource Parse(string value) { }
-        public static Duende.AccessTokenManagement.Resource? ParseOrDefault(string? value) { }
         public static bool TryParse(string value, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Duende.AccessTokenManagement.Resource? parsed, out string[] errors) { }
         public static Duende.AccessTokenManagement.Resource op_Implicit(string value) { }
     }
@@ -248,15 +245,15 @@
         public static Duende.AccessTokenManagement.TokenResult<T> Success<T>(T token)
             where T :  class { }
     }
+    public static class TokenResultExtensions
+    {
+        public static System.Threading.Tasks.Task<T> GetToken<T>(this System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<T>> task)
+            where T :  class { }
+    }
     public sealed class TokenResult<T> : Duende.AccessTokenManagement.TokenResult, System.IEquatable<Duende.AccessTokenManagement.TokenResult<T>>
         where T :  class
     {
         public Duende.AccessTokenManagement.FailedResult? FailedResult { get; }
-        [System.Diagnostics.CodeAnalysis.MemberNotNullWhen(false, "Token")]
-        [System.Diagnostics.CodeAnalysis.MemberNotNullWhen(true, "FailedResult")]
-        [get: System.Diagnostics.CodeAnalysis.MemberNotNullWhen(false, "Token")]
-        [get: System.Diagnostics.CodeAnalysis.MemberNotNullWhen(true, "FailedResult")]
-        public bool IsError { get; }
         [System.Diagnostics.CodeAnalysis.MemberNotNullWhen(false, "FailedResult")]
         [System.Diagnostics.CodeAnalysis.MemberNotNullWhen(true, "Token")]
         [get: System.Diagnostics.CodeAnalysis.MemberNotNullWhen(false, "FailedResult")]
@@ -266,7 +263,6 @@
         public bool WasSuccessful(out T result) { }
         public bool WasSuccessful([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out T? result, [System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out Duende.AccessTokenManagement.FailedResult? failure) { }
         public static Duende.AccessTokenManagement.TokenResult<T> op_Implicit(Duende.AccessTokenManagement.FailedResult failure) { }
-        public static T op_Implicit(Duende.AccessTokenManagement.TokenResult<T> input) { }
         public static Duende.AccessTokenManagement.TokenResult<T> op_Implicit(T input) { }
     }
 }
@@ -378,12 +374,12 @@ namespace Duende.AccessTokenManagement.DPoP
     }
     public interface IDPoPKeyStore
     {
-        System.Threading.Tasks.Task<Duende.AccessTokenManagement.DPoP.DPoPJsonWebKey?> GetKeyAsync(Duende.AccessTokenManagement.ClientName clientName, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<Duende.AccessTokenManagement.DPoP.DPoPJsonWebKey?> GetKeyAsync(Duende.AccessTokenManagement.ClientName clientName, System.Threading.CancellationToken ct = default);
     }
     public interface IDPoPNonceStore
     {
-        System.Threading.Tasks.Task<Duende.AccessTokenManagement.DPoP.DPoPNonce?> GetNonceAsync(Duende.AccessTokenManagement.DPoP.DPoPNonceContext context, System.Threading.CancellationToken cancellationToken = default);
-        System.Threading.Tasks.Task StoreNonceAsync(Duende.AccessTokenManagement.DPoP.DPoPNonceContext context, Duende.AccessTokenManagement.DPoP.DPoPNonce nonce, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<Duende.AccessTokenManagement.DPoP.DPoPNonce?> GetNonceAsync(Duende.AccessTokenManagement.DPoP.DPoPNonceContext context, System.Threading.CancellationToken ct = default);
+        System.Threading.Tasks.Task StoreNonceAsync(Duende.AccessTokenManagement.DPoP.DPoPNonceContext context, Duende.AccessTokenManagement.DPoP.DPoPNonce nonce, System.Threading.CancellationToken ct = default);
     }
     public interface IDPoPNonceStoreKeyGenerator
     {
@@ -391,13 +387,13 @@ namespace Duende.AccessTokenManagement.DPoP
     }
     public interface IDPoPProofService
     {
-        System.Threading.Tasks.Task<Duende.AccessTokenManagement.DPoP.DPoPProof?> CreateProofTokenAsync(Duende.AccessTokenManagement.DPoP.DPoPProofRequest request, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<Duende.AccessTokenManagement.DPoP.DPoPProof?> CreateProofTokenAsync(Duende.AccessTokenManagement.DPoP.DPoPProofRequest request, System.Threading.CancellationToken ct = default);
         Duende.AccessTokenManagement.DPoP.DPoPProofThumbPrint? GetProofKeyThumbprint(Duende.AccessTokenManagement.DPoP.DPoPJsonWebKey key);
     }
     public interface IDPopProofRequestHandler
     {
-        System.Threading.Tasks.Task HandleDPopResponse(System.Net.Http.HttpResponseMessage response, System.Threading.CancellationToken cancellationToken);
-        System.Threading.Tasks.Task<bool> TryAcquireDPopProof(Duende.AccessTokenManagement.DPoP.DPopProofRequestParameters parameters, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task HandleDPopResponseAsync(System.Net.Http.HttpResponseMessage response, System.Threading.CancellationToken ct);
+        System.Threading.Tasks.Task<bool> TryAcquireDPopProofAsync(Duende.AccessTokenManagement.DPoP.DPopProofRequestParameters parameters, System.Threading.CancellationToken ct);
     }
 }
 namespace Duende.AccessTokenManagement.OTel

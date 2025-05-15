@@ -18,5 +18,5 @@ public interface IOpenIdConnectConfigurationService
     /// <returns></returns>
     public Task<OpenIdConnectClientConfiguration> GetOpenIdConnectConfigurationAsync(
         Scheme? schemeName = null,
-        CancellationToken ct = default);
+        CT ct = default);
 }

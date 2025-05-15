@@ -172,7 +172,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
             ForceTokenRenewal = false,
             Scope = "scope1",
 
-        });
+        }).GetToken();
 
 
         ClientCredentialsToken token2 = null!;
@@ -182,7 +182,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
             ForceTokenRenewal = false,
             Scope = "scope2",
 
-        });
+        }).GetToken();
 
         mockHttp.GetMatchCount(request).ShouldBe(2);
 
@@ -222,7 +222,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
                 ForceTokenRenewal = false,
                 Scope = "scope1",
 
-            });
+            }).GetToken();
         });
         await Task.Delay(100);
 
@@ -235,7 +235,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
                 ForceTokenRenewal = false,
                 Scope = "scope2",
 
-            });
+            }).GetToken();
         });
 
 
@@ -289,7 +289,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
                     { "tenant", "1" }
                 }
 
-            });
+            }).GetToken();
         });
         await Task.Delay(100);
 
@@ -305,7 +305,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
                     { "tenant", "2" }
                 }
 
-            });
+            }).GetToken();
         });
 
 
@@ -378,7 +378,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
+        var token = await sut.GetAccessTokenAsync("test").GetToken();
 
         // Verify we actually used the cache
         replacementCache.GetOrCreateCount.ShouldBe(1);
@@ -412,7 +412,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
+        var token = await sut.GetAccessTokenAsync("test").GetToken();
 
         replacementCache.CacheKey.ShouldBe("always_the_same");
 

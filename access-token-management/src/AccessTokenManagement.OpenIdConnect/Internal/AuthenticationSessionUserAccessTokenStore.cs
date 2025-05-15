@@ -24,7 +24,7 @@ internal class AuthenticationSessionUserAccessTokenStore(
     public async Task<TokenResult<TokenForParameters>> GetTokenAsync(
         ClaimsPrincipal user,
         UserTokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default)
+        CT ct = default)
     {
         parameters ??= new();
         // Resolve the cache here because it needs to have a per-request
@@ -65,7 +65,7 @@ internal class AuthenticationSessionUserAccessTokenStore(
         ClaimsPrincipal user,
         UserToken token,
         UserTokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default)
+        CT ct = default)
     {
         parameters ??= new();
 
@@ -93,12 +93,12 @@ internal class AuthenticationSessionUserAccessTokenStore(
 
         if (principalTransformer != null)
         {
-            principal = await principalTransformer(principal, CancellationToken.None).ConfigureAwait(false);
+            principal = await principalTransformer(principal, CT.None).ConfigureAwait(false);
         }
 
-        await tokensInProps.SetUserToken(token, result.Properties, parameters, cancellationToken);
+        await tokensInProps.SetUserTokenAsync(token, result.Properties, parameters, ct);
 
-        var scheme = await tokensInProps.GetSchemeAsync(parameters, cancellationToken);
+        var scheme = await tokensInProps.GetSchemeAsync(parameters, ct);
 
         await contextAccessor.HttpContext!.SignInAsync(scheme.ToString(), principal, result.Properties)
             .ConfigureAwait(false);
@@ -110,7 +110,7 @@ internal class AuthenticationSessionUserAccessTokenStore(
 
     /// <inheritdoc/>
     // don't bother here, since likely we're in the middle of signing out
-    public Task ClearTokenAsync(ClaimsPrincipal user, UserTokenRequestParameters? parameters = null, CancellationToken cancellationToken = default) =>
+    public Task ClearTokenAsync(ClaimsPrincipal user, UserTokenRequestParameters? parameters = null, CT ct = default) =>
         Task.CompletedTask;
 }
 

@@ -35,7 +35,7 @@ internal class ClientCredentialsTokenManager(
     public async Task<TokenResult<ClientCredentialsToken>> GetAccessTokenAsync(
         ClientName clientName,
         TokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default)
+        CT ct = default)
     {
         var cacheKey = cacheKeyGenerator.GenerateKey(clientName, parameters);
 
@@ -62,9 +62,9 @@ internal class ClientCredentialsTokenManager(
         {
             token = await cache.GetOrCreateAsync(
                 key: cacheKey.ToString(),
-                factory: async (ct) => await RequestToken(cacheKey, clientName, parameters, ct),
+                factory: async (c) => await RequestToken(cacheKey, clientName, parameters, c),
                 options: entryOptions,
-                cancellationToken: cancellationToken);
+                cancellationToken: ct);
         }
         catch (OperationCanceledException)
         {
@@ -81,7 +81,7 @@ internal class ClientCredentialsTokenManager(
         {
             // if there was an exception in the cache, we'll just retry without the cache and hope for the best
             logger.ExceptionWhileReadingFromCache(LogLevel.Warning, ex, clientName);
-            token = await RequestToken(cacheKey, clientName, parameters, cancellationToken);
+            token = await RequestToken(cacheKey, clientName, parameters, ct);
         }
 
         // Check if token has expired. Ideally, the cache lifetime auto-tuning should prevent this, 
@@ -93,7 +93,7 @@ internal class ClientCredentialsTokenManager(
             var tokenResult = await GetAccessTokenAsync(clientName, parameters with
             {
                 ForceTokenRenewal = new ForceTokenRenewal(true)
-            }, cancellationToken);
+            }, ct);
 
             if (!tokenResult.Succeeded)
             {
@@ -109,18 +109,18 @@ internal class ClientCredentialsTokenManager(
     }
 
     private async Task<ClientCredentialsToken> RequestToken(ClientCredentialsCacheKey cacheKey,
-        ClientName clientName, TokenRequestParameters parameters, CancellationToken cancellationToken)
+        ClientName clientName, TokenRequestParameters parameters, CT ct)
     {
         TokenResult<ClientCredentialsToken> tokenResult;
         try
         {
-            tokenResult = await client.RequestAccessToken(clientName, parameters, cancellationToken);
+            tokenResult = await client.RequestAccessTokenAsync(clientName, parameters, ct);
         }
         catch (Exception ex)
         {
             // If there is a problem with retrieving data, then we want to bubble this back to the client. 
             // However, we want to distinguish this from exceptions that happen inside the cache itself. 
-            // So, any exception that happens internally get's a special flag. 
+            // So, any exception that happens internally gets a special flag. 
             ex.Data[ThrownInsideFactoryExceptionKey] = true;
             throw;
         }
@@ -151,11 +151,11 @@ internal class ClientCredentialsTokenManager(
     }
 
     public async Task DeleteAccessTokenAsync(ClientName clientName, TokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default)
+        CT ct = default)
     {
         var cacheKey = cacheKeyGenerator.GenerateKey(clientName, parameters);
 
-        await cache.RemoveAsync(cacheKey.ToString(), cancellationToken);
+        await cache.RemoveAsync(cacheKey.ToString(), ct);
     }
 
     internal class PreventCacheException(FailedResult failure) : Exception

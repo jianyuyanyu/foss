@@ -13,6 +13,6 @@ internal class NoOpClientAssertionService : IClientAssertionService
     /// <inheritdoc />
     public Task<ClientAssertion?> GetClientAssertionAsync(ClientName? clientName = null,
         TokenRequestParameters? parameters = null,
-        CancellationToken ct = default) =>
+        CT ct = default) =>
         Task.FromResult<ClientAssertion?>(null);
 }

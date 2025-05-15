@@ -42,7 +42,7 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<IClientCredentialsTokenManager, ClientCredentialsTokenManager>();
         services.AddHybridCache();
 
-        // By default, resolve the default hybridcache for the DefaultClientCredentialsTokenManager
+        // By default, resolve the default hybrid cache for the DefaultClientCredentialsTokenManager
         // without key. If desired, a consumers can register the distributed cache with a key
         services.TryAddKeyedSingleton<HybridCache>(ServiceProviderKeys.ClientCredentialsTokenCache, (sp, _) => sp.GetRequiredService<HybridCache>());
         services.TryAddTransient<IClientCredentialsTokenEndpoint, ClientCredentialsTokenClient>();
@@ -52,7 +52,7 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<IDPoPProofService, DefaultDPoPProofService>();
         services.TryAddTransient<IDPoPKeyStore, DefaultDPoPKeyStore>();
 
-        // By default, resolve the default hybridcache for the HybridDPoPNonceStore
+        // By default, resolve the default hybrid cache for the HybridDPoPNonceStore
         // without key. If desired, a consumers can register the distributed cache with a key
         services.TryAddKeyedSingleton<HybridCache>(ServiceProviderKeys.DPoPNonceStore, (sp, _) => sp.GetRequiredService<HybridCache>());
         services.AddTransient<IDPoPNonceStore, HybridDPoPNonceStore>();

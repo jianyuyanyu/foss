@@ -8,7 +8,7 @@ using Duende.AccessTokenManagement.Internal;
 namespace Duende.AccessTokenManagement;
 
 [JsonConverter(typeof(StringValueJsonConverter<AccessTokenType>))]
-public readonly record struct AccessTokenType : IStonglyTypedString<AccessTokenType>
+public readonly record struct AccessTokenType : IStronglyTypedString<AccessTokenType>
 {
     public const int MaxLength = 50;
     public override string ToString() => Value;
@@ -25,11 +25,11 @@ public readonly record struct AccessTokenType : IStonglyTypedString<AccessTokenT
     public static implicit operator AccessTokenType(string value) => Parse(value);
 
     public static bool TryParse(string value, [NotNullWhen(true)] out AccessTokenType? parsed, out string[] errors) =>
-        IStonglyTypedString<AccessTokenType>
+        IStronglyTypedString<AccessTokenType>
             .TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
 
-    static AccessTokenType IStonglyTypedString<AccessTokenType>.Create(string result) => new(result);
+    static AccessTokenType IStronglyTypedString<AccessTokenType>.Create(string result) => new(result);
 
     public static AccessTokenType Parse(string value) =>
         StringParsers<AccessTokenType>.Parse(value);

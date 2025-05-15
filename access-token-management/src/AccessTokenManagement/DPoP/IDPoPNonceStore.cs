@@ -11,10 +11,10 @@ public interface IDPoPNonceStore
     /// <summary>
     /// Gets the nonce 
     /// </summary>
-    Task<DPoPNonce?> GetNonceAsync(DPoPNonceContext context, CancellationToken cancellationToken = default);
+    Task<DPoPNonce?> GetNonceAsync(DPoPNonceContext context, CT ct = default);
 
     /// <summary>
     /// Stores the nonce 
     /// </summary>
-    Task StoreNonceAsync(DPoPNonceContext context, DPoPNonce nonce, CancellationToken cancellationToken = default);
+    Task StoreNonceAsync(DPoPNonceContext context, DPoPNonce nonce, CT ct = default);
 }

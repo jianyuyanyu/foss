@@ -26,12 +26,12 @@ internal static class HybridCacheExtensions
     /// <typeparam name="T"></typeparam>
     /// <param name="cache"></param>
     /// <param name="key"></param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="ct"></param>
     /// <returns></returns>
-    internal static async ValueTask<T?> GetOrDefaultAsync<T>(this HybridCache cache, string key, CancellationToken cancellationToken = default) =>
+    internal static async ValueTask<T?> GetOrDefaultAsync<T>(this HybridCache cache, string key, CT ct = default) =>
         await cache.GetOrCreateAsync<T?>(
             key,
             null!, // Don't return a value if it's not in the cache. Also, don't write it to the cache
             GetOnlyEntryOptions,
-            cancellationToken: cancellationToken);
+            cancellationToken: ct);
 }

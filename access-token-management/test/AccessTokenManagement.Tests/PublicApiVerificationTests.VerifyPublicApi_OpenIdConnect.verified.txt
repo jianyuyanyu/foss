@@ -2,9 +2,9 @@
 {
     public static class HttpContextExtensions
     {
-        public static System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.ClientCredentialsToken>> GetClientAccessTokenAsync(this Microsoft.AspNetCore.Http.HttpContext httpContext, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default) { }
-        public static System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.UserToken>> GetUserAccessTokenAsync(this Microsoft.AspNetCore.Http.HttpContext httpContext, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default) { }
-        public static System.Threading.Tasks.Task RevokeRefreshTokenAsync(this Microsoft.AspNetCore.Http.HttpContext httpContext, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default) { }
+        public static System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.ClientCredentialsToken>> GetClientAccessTokenAsync(this Microsoft.AspNetCore.Http.HttpContext httpContext, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default) { }
+        public static System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.UserToken>> GetUserAccessTokenAsync(this Microsoft.AspNetCore.Http.HttpContext httpContext, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default) { }
+        public static System.Threading.Tasks.Task RevokeRefreshTokenAsync(this Microsoft.AspNetCore.Http.HttpContext httpContext, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default) { }
     }
     public interface IOpenIdConnectConfigurationService
     {
@@ -12,34 +12,34 @@
     }
     public interface IOpenIdConnectUserTokenEndpoint
     {
-        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.UserToken>> RefreshAccessTokenAsync(Duende.AccessTokenManagement.OpenIdConnect.UserRefreshToken userToken, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters parameters, System.Threading.CancellationToken cancellationToken = default);
-        System.Threading.Tasks.Task RevokeRefreshTokenAsync(Duende.AccessTokenManagement.OpenIdConnect.UserRefreshToken userToken, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters parameters, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.UserToken>> RefreshAccessTokenAsync(Duende.AccessTokenManagement.OpenIdConnect.UserRefreshToken userToken, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters parameters, System.Threading.CancellationToken ct = default);
+        System.Threading.Tasks.Task RevokeRefreshTokenAsync(Duende.AccessTokenManagement.OpenIdConnect.UserRefreshToken userToken, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters parameters, System.Threading.CancellationToken ct = default);
     }
     public interface IStoreTokensInAuthenticationProperties
     {
-        System.Threading.Tasks.Task<Duende.AccessTokenManagement.Scheme> GetSchemeAsync(Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<Duende.AccessTokenManagement.Scheme> GetSchemeAsync(Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default);
         Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.TokenForParameters> GetUserToken(Microsoft.AspNetCore.Authentication.AuthenticationProperties authenticationProperties, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null);
         void RemoveUserToken(Microsoft.AspNetCore.Authentication.AuthenticationProperties authenticationProperties, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null);
-        System.Threading.Tasks.Task SetUserToken(Duende.AccessTokenManagement.OpenIdConnect.UserToken token, Microsoft.AspNetCore.Authentication.AuthenticationProperties authenticationProperties, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task SetUserTokenAsync(Duende.AccessTokenManagement.OpenIdConnect.UserToken token, Microsoft.AspNetCore.Authentication.AuthenticationProperties authenticationProperties, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default);
     }
     public interface IUserAccessor
     {
-        System.Threading.Tasks.Task<System.Security.Claims.ClaimsPrincipal> GetCurrentUserAsync();
+        System.Threading.Tasks.Task<System.Security.Claims.ClaimsPrincipal> GetCurrentUserAsync(System.Threading.CancellationToken ct = default);
     }
     public interface IUserTokenManager
     {
-        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.UserToken>> GetAccessTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default);
-        System.Threading.Tasks.Task RevokeRefreshTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.UserToken>> GetAccessTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default);
+        System.Threading.Tasks.Task RevokeRefreshTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default);
     }
     public interface IUserTokenRequestConcurrencyControl
     {
-        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.UserToken>> ExecuteWithConcurrencyControl(Duende.AccessTokenManagement.OpenIdConnect.UserRefreshToken key, System.Func<System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.UserToken>>> tokenRetriever, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.UserToken>> ExecuteWithConcurrencyControlAsync(Duende.AccessTokenManagement.OpenIdConnect.UserRefreshToken key, System.Func<System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.UserToken>>> tokenRetriever, System.Threading.CancellationToken ct = default);
     }
     public interface IUserTokenStore
     {
-        System.Threading.Tasks.Task ClearTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default);
-        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.TokenForParameters>> GetTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default);
-        System.Threading.Tasks.Task StoreTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserToken token, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task ClearTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default);
+        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.TokenForParameters>> GetTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default);
+        System.Threading.Tasks.Task StoreTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserToken token, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default);
     }
     [System.Runtime.CompilerServices.RequiredMember]
     public sealed class OpenIdConnectClientConfiguration

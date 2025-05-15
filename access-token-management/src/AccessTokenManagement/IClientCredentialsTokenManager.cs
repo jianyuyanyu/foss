@@ -8,9 +8,9 @@ public interface IClientCredentialsTokenManager
     Task<TokenResult<ClientCredentialsToken>> GetAccessTokenAsync(
         ClientName clientName,
         TokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default);
+        CT ct = default);
 
     Task DeleteAccessTokenAsync(ClientName clientName,
         TokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default);
+        CT ct = default);
 }

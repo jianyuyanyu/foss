@@ -19,19 +19,19 @@ public sealed class AccessTokenRequestHandler(
     ILogger<AccessTokenRequestHandler> logger)
     : DelegatingHandler
 {
-    protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken) =>
+    protected override HttpResponseMessage Send(HttpRequestMessage request, CT ct) =>
         throw new NotSupportedException(
             "The (synchronous) Send() method is not supported. Please use the async SendAsync variant. ");
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
-        CancellationToken cancellationToken)
+        CT ct)
     {
         TokenResult<IToken> tokenResult;
 
         // ReSharper disable once ExplicitCallerInfoArgument
         using (ActivitySources.Main.StartActivity(ActivityNames.AcquiringToken))
         {
-            tokenResult = await tokenRetriever.GetToken(request, cancellationToken);
+            tokenResult = await tokenRetriever.GetTokenAsync(request, ct);
         }
 
         if (!tokenResult.WasSuccessful(out var token, out var failure))
@@ -39,7 +39,7 @@ public sealed class AccessTokenRequestHandler(
             logger.FailedToObtainAccessTokenWhileSendingRequest(LogLevel.Warning, failure.Error, failure.ErrorDescription);
 
             // Cant acquire token, so sending without
-            return await base.SendAsync(request, cancellationToken);
+            return await base.SendAsync(request, ct);
         }
 
         var scheme = token.AccessTokenType?.ToScheme() ?? Scheme.Bearer;
@@ -54,7 +54,7 @@ public sealed class AccessTokenRequestHandler(
             };
 
             // looks like this is a DPoP bound token, so try to generate the proof token
-            if (!await dPoPProofRequestHandler.TryAcquireDPopProof(dpopParameters, cancellationToken))
+            if (!await dPoPProofRequestHandler.TryAcquireDPopProofAsync(dpopParameters, ct))
             {
                 // failed or opted out for this request, to fall back to Bearer 
                 scheme = Scheme.Bearer;
@@ -63,10 +63,10 @@ public sealed class AccessTokenRequestHandler(
         request.SetToken(scheme, token);
 
         // Send the actual request with the access token. 
-        var httpResponseMessage = await base.SendAsync(request, cancellationToken);
+        var httpResponseMessage = await base.SendAsync(request, ct);
 
         // On the response, there may be a DPOP Nonce that we need to store. 
-        await dPoPProofRequestHandler.HandleDPopResponse(httpResponseMessage, cancellationToken);
+        await dPoPProofRequestHandler.HandleDPopResponseAsync(httpResponseMessage, ct);
 
         return httpResponseMessage;
     }
@@ -82,11 +82,11 @@ public sealed class AccessTokenRequestHandler(
         /// Method that retrieves the actual access token
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="ct"></param>
         /// <returns></returns>
-        Task<TokenResult<IToken>> GetToken(
+        Task<TokenResult<IToken>> GetTokenAsync(
             HttpRequestMessage request,
-            CancellationToken cancellationToken);
+            CT ct);
     }
 
     /// <summary>

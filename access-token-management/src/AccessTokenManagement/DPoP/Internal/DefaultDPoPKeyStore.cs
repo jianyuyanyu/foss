@@ -12,7 +12,7 @@ internal class DefaultDPoPKeyStore(IOptionsMonitor<ClientCredentialsClient> opti
 {
     /// <inheritdoc/>
     public virtual Task<DPoPJsonWebKey?> GetKeyAsync(ClientName clientName,
-        CancellationToken cancellationToken = default)
+        CT ct = default)
     {
         var client = options.Get(clientName.ToString());
 
@@ -22,6 +22,6 @@ internal class DefaultDPoPKeyStore(IOptionsMonitor<ClientCredentialsClient> opti
             return Task.FromResult<DPoPJsonWebKey?>(null);
         }
 
-        return Task.FromResult<DPoPJsonWebKey?>(client.DPoPJsonWebKey);
+        return Task.FromResult(client.DPoPJsonWebKey);
     }
 }

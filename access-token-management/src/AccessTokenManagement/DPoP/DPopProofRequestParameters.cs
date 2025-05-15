@@ -9,7 +9,7 @@ namespace Duende.AccessTokenManagement.DPoP;
 public sealed record DPopProofRequestParameters
 {
     /// <summary>
-    /// Exising http request message
+    /// Existing http request message
     /// </summary>
     public required HttpRequestMessage Request { get; init; }
 

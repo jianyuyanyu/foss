@@ -23,7 +23,7 @@ internal class BlazorServerUserAccessor(
 {
 
     /// <inheritdoc/>
-    public async Task<ClaimsPrincipal> GetCurrentUserAsync()
+    public async Task<ClaimsPrincipal> GetCurrentUserAsync(CT ct = default)
     {
         var authStateProvider = circuitServicesAccessor.Services?
             .GetService<AuthenticationStateProvider>();

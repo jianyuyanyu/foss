@@ -31,7 +31,7 @@ public class HomeController : Controller
 
     public async Task<IActionResult> CallApiAsUserManual()
     {
-        UserToken token = await _tokenManager.GetAccessTokenAsync(User);
+        var token = await _tokenManager.GetAccessTokenAsync(User).GetToken();
         var client = _httpClientFactory.CreateClient();
         client.SetBearerToken(token.AccessToken.ToString()!);
 
@@ -43,7 +43,7 @@ public class HomeController : Controller
 
     public async Task<IActionResult> CallApiAsUserExtensionMethod()
     {
-        UserToken token = await HttpContext.GetUserAccessTokenAsync();
+        var token = await HttpContext.GetUserAccessTokenAsync().GetToken();
         var client = _httpClientFactory.CreateClient();
         client.SetBearerToken(token.AccessToken.ToString());
 
@@ -74,7 +74,7 @@ public class HomeController : Controller
     [AllowAnonymous]
     public async Task<IActionResult> CallApiAsClientExtensionMethod()
     {
-        ClientCredentialsToken token = await HttpContext.GetClientAccessTokenAsync();
+        var token = await HttpContext.GetClientAccessTokenAsync().GetToken();
         var client = _httpClientFactory.CreateClient();
         client.SetBearerToken(token.AccessToken.ToString());
 

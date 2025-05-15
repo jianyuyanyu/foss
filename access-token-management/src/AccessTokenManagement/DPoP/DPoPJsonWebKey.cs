@@ -11,7 +11,7 @@ namespace Duende.AccessTokenManagement.DPoP;
 
 [TypeConverter(typeof(StringValueConverter<DPoPJsonWebKey>))]
 [JsonConverter(typeof(StringValueJsonConverter<DPoPJsonWebKey>))]
-public readonly record struct DPoPJsonWebKey : IStonglyTypedString<DPoPJsonWebKey>
+public readonly record struct DPoPJsonWebKey : IStronglyTypedString<DPoPJsonWebKey>
 {
     public bool Equals(DPoPJsonWebKey other) => Value == other.Value;
 
@@ -38,7 +38,7 @@ public readonly record struct DPoPJsonWebKey : IStonglyTypedString<DPoPJsonWebKe
             }
             catch (Exception e)
             {
-                message = "String is not a valid json webkey: " + e.Message;
+                message = "String is not a valid json web key: " + e.Message;
                 return false;
             }
         };
@@ -56,10 +56,10 @@ public readonly record struct DPoPJsonWebKey : IStonglyTypedString<DPoPJsonWebKe
 
 
     public static bool TryParse(string value, [NotNullWhen(true)] out DPoPJsonWebKey? parsed, out string[] errors) =>
-        IStonglyTypedString<DPoPJsonWebKey>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStronglyTypedString<DPoPJsonWebKey>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
 
-    static DPoPJsonWebKey IStonglyTypedString<DPoPJsonWebKey>.Create(string result) => new(result);
+    static DPoPJsonWebKey IStronglyTypedString<DPoPJsonWebKey>.Create(string result) => new(result);
 
     public static DPoPJsonWebKey Parse(string value) => StringParsers<DPoPJsonWebKey>.Parse(value);
     public static DPoPJsonWebKey? ParseOrDefault(string? value) => StringParsers<DPoPJsonWebKey>.ParseOrDefault(value);

@@ -6,7 +6,7 @@ using Duende.AccessTokenManagement.Internal;
 
 namespace Duende.AccessTokenManagement;
 
-public record struct ClientCredentialsCacheKey : IStonglyTypedString<ClientCredentialsCacheKey>
+public readonly record struct ClientCredentialsCacheKey : IStronglyTypedString<ClientCredentialsCacheKey>
 {
     public override string ToString() => Value;
 
@@ -24,7 +24,7 @@ public record struct ClientCredentialsCacheKey : IStonglyTypedString<ClientCrede
     public static ClientCredentialsCacheKey Parse(string value) => StringParsers<ClientCredentialsCacheKey>.Parse(value);
 
     public static bool TryParse(string value, [NotNullWhen(true)] out ClientCredentialsCacheKey? parsed, out string[] errors) =>
-        IStonglyTypedString<ClientCredentialsCacheKey>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStronglyTypedString<ClientCredentialsCacheKey>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
-    static ClientCredentialsCacheKey IStonglyTypedString<ClientCredentialsCacheKey>.Create(string result) => new(result);
+    static ClientCredentialsCacheKey IStronglyTypedString<ClientCredentialsCacheKey>.Create(string result) => new(result);
 }

@@ -17,7 +17,7 @@ internal class UserTokenRequestConcurrencyControl : IUserTokenRequestConcurrency
     ConcurrentDictionary<string, Lazy<Task<TokenResult<UserToken>>>> Dictionary { get; } = new();
 
     /// <inheritdoc/>
-    public async Task<TokenResult<UserToken>> ExecuteWithConcurrencyControl(UserRefreshToken key, Func<Task<TokenResult<UserToken>>> tokenRetriever, CancellationToken cancellationToken = default)
+    public async Task<TokenResult<UserToken>> ExecuteWithConcurrencyControlAsync(UserRefreshToken key, Func<Task<TokenResult<UserToken>>> tokenRetriever, CT ct = default)
     {
         try
         {

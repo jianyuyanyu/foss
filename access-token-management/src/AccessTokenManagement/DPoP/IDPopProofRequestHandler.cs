@@ -12,17 +12,17 @@ public interface IDPopProofRequestHandler
     /// Try to acquire dpop proof for the given request parameters
     /// </summary>
     /// <param name="parameters">The request parameters</param>
-    /// <param name="cancellationToken">cancellation token</param>
+    /// <param name="ct">cancellation token</param>
     /// <returns>True if dpop proof was acquired.</returns>
-    Task<bool> TryAcquireDPopProof(DPopProofRequestParameters parameters, CancellationToken cancellationToken);
+    Task<bool> TryAcquireDPopProofAsync(DPopProofRequestParameters parameters, CT ct);
 
     /// <summary>
     /// When a request is sent, the dpop response should be handled. This typically means
     /// storing the dpop nonce in a store. 
     /// </summary>
     /// <param name="response">The response message that likely contains the dpop nonce.</param>
-    /// <param name="cancellationToken">cancellationtoken</param>
+    /// <param name="ct">cancellation token</param>
     /// <returns></returns>
-    Task HandleDPopResponse(HttpResponseMessage response, CancellationToken cancellationToken);
+    Task HandleDPopResponseAsync(HttpResponseMessage response, CT ct);
 
 }

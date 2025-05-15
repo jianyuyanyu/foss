@@ -85,7 +85,7 @@ public static class DPoPExtensions
             .Select(x =>
             {
                 var parts = x.Split('=', StringSplitOptions.RemoveEmptyEntries);
-                if (parts.Length == 2 && parts[0] == OidcConstants.TokenResponse.Error)
+                if (parts is [OidcConstants.TokenResponse.Error, _])
                 {
                     return parts[1].Trim('"');
                 }
@@ -110,15 +110,19 @@ public static class DPoPExtensions
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    public static Uri GetDPoPUrl(this HttpRequestMessage request) => new Uri(request.RequestUri!.Scheme + "://" + request.RequestUri!.Authority + request.RequestUri!.LocalPath);
+    public static Uri GetDPoPUrl(this HttpRequestMessage request) =>
+        new(request.RequestUri!.Scheme + "://" + request.RequestUri!.Authority + request.RequestUri!.LocalPath);
 
     /// <summary>
     /// Additional claims that will be added to the DPoP proof payload on generation
     /// </summary>
     /// <param name="request"></param>
     /// <param name="customClaims"></param>
-    public static void AddDPoPProofAdditionalPayloadClaims(this HttpRequestMessage request, IDictionary<string, string> customClaims) =>
-        request.Options.TryAdd(ClientCredentialsTokenManagementDefaults.DPoPProofAdditionalPayloadClaims, customClaims.AsReadOnly());
+    public static void AddDPoPProofAdditionalPayloadClaims(
+        this HttpRequestMessage request,
+        IDictionary<string, string> customClaims) => request.Options.TryAdd(
+            ClientCredentialsTokenManagementDefaults.DPoPProofAdditionalPayloadClaims,
+            customClaims.AsReadOnly());
 
     /// <summary>
     /// Additional claims that will be added to the DPoP proof payload on generation

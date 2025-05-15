@@ -23,7 +23,7 @@ internal static partial class ValidationRules
         (string s, out string message) =>
         {
             var isValid = AlphaNumericRegex().IsMatch(s);
-            message = !isValid ? $"The string must be alphanumeric." : string.Empty;
+            message = !isValid ? "The string must be alphanumeric." : string.Empty;
 
             return isValid;
         };

@@ -103,11 +103,11 @@ internal class StoreTokensInAuthenticationProperties(
     }
 
     /// <inheritdoc/>
-    public async Task SetUserToken(
+    public async Task SetUserTokenAsync(
         UserToken token,
         AuthenticationProperties authenticationProperties,
         UserTokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default)
+        CT ct = default)
     {
         var tokenNames = GetTokenNamesWithScheme(parameters);
 
@@ -126,7 +126,7 @@ internal class StoreTokensInAuthenticationProperties(
             authenticationProperties.Items[tokenNames.RefreshToken] = token.RefreshToken.ToString();
         }
 
-        var authenticationScheme = await GetSchemeAsync(parameters, cancellationToken);
+        var authenticationScheme = await GetSchemeAsync(parameters, ct);
         var cookieOptions = cookieOptionsMonitor.Get(authenticationScheme.ToString());
 
         if (authenticationProperties.AllowRefresh == true ||
@@ -178,7 +178,7 @@ internal class StoreTokensInAuthenticationProperties(
     /// <inheritdoc/>
     public async Task<Scheme> GetSchemeAsync(
         UserTokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default)
+        CT ct = default)
     {
         if (parameters?.SignInScheme != null)
         {
@@ -225,8 +225,7 @@ internal class StoreTokensInAuthenticationProperties(
         }
     }
 
-    private TokenNames GetTokenNamesWithoutScheme(UserTokenRequestParameters? parameters = null) => new TokenNames
-    (
+    private TokenNames GetTokenNamesWithoutScheme(UserTokenRequestParameters? parameters = null) => new(
         Token: NamePrefixAndResourceSuffix(OpenIdConnectParameterNames.AccessToken, parameters),
         TokenType: NamePrefixAndResourceSuffix(OpenIdConnectParameterNames.TokenType, parameters),
         Expires: NamePrefixAndResourceSuffix("expires_at", parameters),

@@ -6,7 +6,7 @@ using Duende.AccessTokenManagement.Internal;
 
 namespace Duende.AccessTokenManagement.DPoP;
 
-public readonly record struct DPoPProofToken : IStonglyTypedString<DPoPProofToken>
+public readonly record struct DPoPProofToken : IStronglyTypedString<DPoPProofToken>
 {
     public override string ToString() => Value;
 
@@ -23,10 +23,10 @@ public readonly record struct DPoPProofToken : IStonglyTypedString<DPoPProofToke
     private string Value { get; }
 
     public static bool TryParse(string value, [NotNullWhen(true)] out DPoPProofToken? parsed, out string[] errors) =>
-        IStonglyTypedString<DPoPProofToken>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStronglyTypedString<DPoPProofToken>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
 
-    static DPoPProofToken IStonglyTypedString<DPoPProofToken>.Create(string result) => new(result);
+    static DPoPProofToken IStronglyTypedString<DPoPProofToken>.Create(string result) => new(result);
 
     public static DPoPProofToken Parse(string value) => StringParsers<DPoPProofToken>.Parse(value);
 

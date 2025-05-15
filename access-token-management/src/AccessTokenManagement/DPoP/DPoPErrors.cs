@@ -7,11 +7,11 @@ namespace Duende.AccessTokenManagement.DPoP;
 
 internal static class DPoPErrors
 {
-    private static readonly string[] _dpopErrors =
-    {
+    private static readonly string[] DpopErrors =
+    [
         OidcConstants.TokenErrors.UseDPoPNonce,
         OidcConstants.TokenErrors.InvalidDPoPProof
-    };
+    ];
 
     public static bool IsDPoPError(string? message)
     {
@@ -20,6 +20,6 @@ internal static class DPoPErrors
             return false;
         }
 
-        return _dpopErrors.Contains(message);
+        return DpopErrors.Contains(message);
     }
 }

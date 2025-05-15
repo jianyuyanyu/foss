@@ -32,7 +32,7 @@ public sealed class ClientCredentialsTokenManagementOptions
     public TimeSpan DefaultCacheLifetime { get; set; } = TimeSpan.FromMinutes(5);
 
     /// <summary>
-    /// Whether to use the cache auto tuning feature.
+    /// Whether to use the cache auto-tuning feature.
     /// This feature tries to use the actual expiration time of the token to set the cache entry lifetime.
     /// The first time we request an access token, we don't yet know the actual expiration time, so we'll use the
     /// <see cref="DefaultCacheLifetime"/>. 

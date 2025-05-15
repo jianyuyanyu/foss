@@ -12,4 +12,4 @@ namespace Duende.AccessTokenManagement.OpenIdConnect;
 /// <param name="ct"></param>
 /// <returns></returns>
 
-public delegate Task<ClaimsPrincipal> TransformPrincipalAfterRefreshAsync(ClaimsPrincipal principal, CancellationToken ct);
+public delegate Task<ClaimsPrincipal> TransformPrincipalAfterRefreshAsync(ClaimsPrincipal principal, CT ct);

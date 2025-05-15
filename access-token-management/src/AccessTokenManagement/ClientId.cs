@@ -10,7 +10,7 @@ namespace Duende.AccessTokenManagement;
 
 [TypeConverter(typeof(StringValueConverter<ClientId>))]
 [JsonConverter(typeof(StringValueJsonConverter<ClientId>))]
-public readonly record struct ClientId : IStonglyTypedString<ClientId>
+public readonly record struct ClientId : IStronglyTypedString<ClientId>
 {
     public static implicit operator ClientId(string value) => Parse(value);
 
@@ -26,11 +26,9 @@ public readonly record struct ClientId : IStonglyTypedString<ClientId>
     private string Value { get; }
 
     public static bool TryParse(string value, [NotNullWhen(true)] out ClientId? parsed, out string[] errors) =>
-        IStonglyTypedString<ClientId>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStronglyTypedString<ClientId>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
-    static ClientId IStonglyTypedString<ClientId>.Create(string result) => new(result);
+    static ClientId IStronglyTypedString<ClientId>.Create(string result) => new(result);
 
     public static ClientId Parse(string value) => StringParsers<ClientId>.Parse(value);
-
-    public static ClientId? ParseOrDefault(string? value) => StringParsers<ClientId>.ParseOrDefault(value);
 }

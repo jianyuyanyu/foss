@@ -17,12 +17,12 @@ internal class HybridDPoPNonceStore(
     ILogger<HybridDPoPNonceStore> logger) : IDPoPNonceStore
 {
     /// <inheritdoc/>
-    public async Task<DPoPNonce?> GetNonceAsync(DPoPNonceContext context, CancellationToken cancellationToken = default)
+    public async Task<DPoPNonce?> GetNonceAsync(DPoPNonceContext context, CT ct = default)
     {
         ArgumentNullException.ThrowIfNull(context);
 
         var cacheKey = dPoPNonceStoreKeyGenerator.GenerateKey(context);
-        var entry = await cache.GetOrDefaultAsync<string>(cacheKey, cancellationToken: cancellationToken).ConfigureAwait(false);
+        var entry = await cache.GetOrDefaultAsync<string>(cacheKey, ct: ct).ConfigureAwait(false);
 
         if (entry == null)
         {
@@ -41,7 +41,7 @@ internal class HybridDPoPNonceStore(
     }
 
     /// <inheritdoc/>
-    public async Task StoreNonceAsync(DPoPNonceContext context, DPoPNonce nonce, CancellationToken cancellationToken = default)
+    public async Task StoreNonceAsync(DPoPNonceContext context, DPoPNonce nonce, CT ct = default)
     {
         ArgumentNullException.ThrowIfNull(context);
         var cacheExpiration = TimeSpan.FromHours(1);
@@ -55,6 +55,6 @@ internal class HybridDPoPNonceStore(
         logger.WritingNonceToCache(LogLevel.Debug, context.Url, context.Method, cacheExpiration);
 
         var cacheKey = dPoPNonceStoreKeyGenerator.GenerateKey(context);
-        await cache.SetAsync(cacheKey, data, entryOptions, cancellationToken: cancellationToken).ConfigureAwait(false);
+        await cache.SetAsync(cacheKey, data, entryOptions, cancellationToken: ct).ConfigureAwait(false);
     }
 }

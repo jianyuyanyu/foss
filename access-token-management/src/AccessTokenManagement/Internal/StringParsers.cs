@@ -3,7 +3,7 @@
 
 namespace Duende.AccessTokenManagement.Internal;
 
-internal static class StringParsers<TSelf> where TSelf : struct, IStonglyTypedString<TSelf>
+internal static class StringParsers<TSelf> where TSelf : struct, IStronglyTypedString<TSelf>
 {
     internal static TSelf Parse(string value)
     {
@@ -20,7 +20,7 @@ internal static class StringParsers<TSelf> where TSelf : struct, IStonglyTypedSt
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            return default;
+            return null;
         }
 
         if (TSelf.TryParse(value, out var parseResult, out var errors))

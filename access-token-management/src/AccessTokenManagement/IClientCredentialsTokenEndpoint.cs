@@ -13,10 +13,10 @@ public interface IClientCredentialsTokenEndpoint
     /// </summary>
     /// <param name="clientName"></param>
     /// <param name="parameters"></param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="ct"></param>
     /// <returns></returns>
-    Task<TokenResult<ClientCredentialsToken>> RequestAccessToken(
+    Task<TokenResult<ClientCredentialsToken>> RequestAccessTokenAsync(
         ClientName clientName,
         TokenRequestParameters? parameters = null,
-        CancellationToken cancellationToken = default);
+        CT ct = default);
 }

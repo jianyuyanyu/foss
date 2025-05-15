@@ -15,22 +15,22 @@ public interface IOpenIdConnectUserTokenEndpoint
     /// </summary>
     /// <param name="userToken"></param>
     /// <param name="parameters"></param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="ct"></param>
     /// <returns></returns>
     Task<TokenResult<UserToken>> RefreshAccessTokenAsync(
         UserRefreshToken userToken,
         UserTokenRequestParameters parameters,
-        CancellationToken cancellationToken = default);
+        CT ct = default);
 
     /// <summary>
     /// Revokes a refresh token.
     /// </summary>
     /// <param name="userToken"></param>
     /// <param name="parameters"></param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="ct"></param>
     /// <returns></returns>
     Task RevokeRefreshTokenAsync(UserRefreshToken userToken,
         UserTokenRequestParameters parameters,
-        CancellationToken cancellationToken = default);
+        CT ct = default);
 }
 

@@ -12,7 +12,7 @@ public interface IDPoPProofService
     /// Creates DPoP proof token
     /// </summary>
     Task<DPoPProof?> CreateProofTokenAsync(DPoPProofRequest request,
-        CancellationToken cancellationToken = default);
+        CT ct = default);
 
     /// <summary>
     /// Gets the thumbprint from the JSON web key

@@ -152,7 +152,7 @@ public class ClientTokenManagementTests
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
+        var token = await sut.GetAccessTokenAsync("test").GetToken();
         mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken());
@@ -177,7 +177,7 @@ public class ClientTokenManagementTests
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
+        var token = await sut.GetAccessTokenAsync("test").GetToken();
         mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken() with
@@ -205,7 +205,7 @@ public class ClientTokenManagementTests
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
+        var token = await sut.GetAccessTokenAsync("test").GetToken();
         mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken());
@@ -253,7 +253,7 @@ public class ClientTokenManagementTests
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token = await sut.GetAccessTokenAsync("test", request);
+        var token = await sut.GetAccessTokenAsync("test", request).GetToken();
         mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken() with
@@ -295,7 +295,7 @@ public class ClientTokenManagementTests
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token = await sut.GetAccessTokenAsync("test", request);
+        var token = await sut.GetAccessTokenAsync("test", request).GetToken();
         mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken());
@@ -328,7 +328,7 @@ public class ClientTokenManagementTests
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
+        var token = await sut.GetAccessTokenAsync("test").GetToken();
         mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken());
@@ -370,7 +370,7 @@ public class ClientTokenManagementTests
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token = await sut.GetAccessTokenAsync("test", request);
+        var token = await sut.GetAccessTokenAsync("test", request).GetToken();
         mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken());
@@ -393,13 +393,13 @@ public class ClientTokenManagementTests
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
+        var token = await sut.GetAccessTokenAsync("test").GetToken();
         mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken());
 
         // 2nd request
-        token = await sut.GetAccessTokenAsync("test");
+        token = await sut.GetAccessTokenAsync("test").GetToken();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken());
         mockHttp.GetMatchCount(mockedRequest).ShouldBe(1);
@@ -427,7 +427,7 @@ public class ClientTokenManagementTests
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
+        var token = await sut.GetAccessTokenAsync("test").GetToken();
         mockHttp.GetMatchCount(mockedRequest).ShouldBe(1);
     }
 
@@ -447,7 +447,7 @@ public class ClientTokenManagementTests
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
+        var token = await sut.GetAccessTokenAsync("test").GetToken();
         mockHttp.VerifyNoOutstandingExpectation();
 
         token.AccessToken.ShouldBe(The.AccessToken);
@@ -457,7 +457,7 @@ public class ClientTokenManagementTests
         mockHttp.Expect("/connect/token")
             .Respond(_ => Some.TokenHttpResponse());
 
-        token = await sut.GetAccessTokenAsync("test", new TokenRequestParameters { ForceTokenRenewal = true });
+        token = await sut.GetAccessTokenAsync("test", new TokenRequestParameters { ForceTokenRenewal = true }).GetToken();
 
         token.AccessToken.ShouldBe(The.AccessToken);
         token.AccessTokenType.ShouldNotBeNull().ShouldBe(The.TokenType);
@@ -487,7 +487,7 @@ public class ClientTokenManagementTests
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
+        var token = await sut.GetAccessTokenAsync("test").GetToken();
         mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken() with
@@ -524,7 +524,7 @@ public class ClientTokenManagementTests
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token = await sut.GetAccessTokenAsync("test");
+        var token = await sut.GetAccessTokenAsync("test").GetToken();
         mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken() with

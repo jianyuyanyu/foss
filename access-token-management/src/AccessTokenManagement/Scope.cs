@@ -11,7 +11,7 @@ namespace Duende.AccessTokenManagement;
 
 [TypeConverter(typeof(StringValueConverter<Scope>))]
 [JsonConverter(typeof(StringValueJsonConverter<Scope>))]
-public readonly partial record struct Scope : IStonglyTypedString<Scope>
+public readonly partial record struct Scope : IStronglyTypedString<Scope>
 {
     public const int MaxLength = 1024;
     public static implicit operator Scope(string value) => Parse(value);
@@ -34,10 +34,10 @@ public readonly partial record struct Scope : IStonglyTypedString<Scope>
     private string Value { get; }
 
     public static bool TryParse(string value, [NotNullWhen(true)] out Scope? parsed, out string[] errors) =>
-        IStonglyTypedString<Scope>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStronglyTypedString<Scope>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
 
-    static Scope IStonglyTypedString<Scope>.Create(string result) => new(result);
+    static Scope IStronglyTypedString<Scope>.Create(string result) => new(result);
 
     public static Scope Parse(string value) => StringParsers<Scope>.Parse(value);
 
