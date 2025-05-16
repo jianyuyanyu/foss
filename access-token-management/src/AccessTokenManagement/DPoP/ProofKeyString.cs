@@ -45,10 +45,7 @@ public readonly record struct ProofKeyString : IStronglyTypedString<ProofKeyStri
         };
 
     public ProofKeyString() => throw new InvalidOperationException("Can't create null value");
-    private ProofKeyString(string value)
-    {
-        Value = value;
-    }
+    private ProofKeyString(string value) => Value = value;
 
     private string Value { get; }
 
