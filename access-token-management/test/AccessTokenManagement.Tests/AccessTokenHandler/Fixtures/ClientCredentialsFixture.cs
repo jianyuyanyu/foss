@@ -9,7 +9,7 @@ namespace Duende.AccessTokenManagement.AccessTokenHandlers.Fixtures;
 
 internal class ClientCredentialsFixture : AccessTokenHandlingBaseFixture
 {
-    public override ValueTask InitializeAsync(DPoPJsonWebKey? dPoPJsonWebKey)
+    public override ValueTask InitializeAsync(ProofKeyString? dPoPJsonWebKey)
     {
         Services.AddClientCredentialsTokenManagement()
             .AddClient("tokenClient", opt =>

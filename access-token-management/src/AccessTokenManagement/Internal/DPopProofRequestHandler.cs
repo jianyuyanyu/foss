@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace Duende.AccessTokenManagement.Internal;
 
 /// <summary>
-/// Handles Dpop proof requests for http requests. 
+/// Handles Dpop proof requests for http requests.
 /// </summary>
 /// <param name="dPoPNonceStore"></param>
 /// <param name="dPoPProofService"></param>
@@ -32,12 +32,12 @@ internal sealed class DPopProofRequestHandler(
         }
         request.TryGetDPopProofAdditionalPayloadClaims(out var additionalClaims);
 
-        var dPoPProofRequest = new DPoPProofRequest
+        var dPoPProofRequest = new DPoPProof
         {
             AccessToken = token.AccessToken,
             Url = request.GetDPoPUrl(),
             Method = request.Method,
-            DPoPJsonWebKey = token.DPoPJsonWebKey.Value,
+            ProofKey = token.DPoPJsonWebKey.Value,
             DPoPNonce = parameters.DPoPNonce,
             AdditionalPayloadClaims = additionalClaims,
         };
@@ -50,7 +50,7 @@ internal sealed class DPopProofRequestHandler(
         }
 
         logger.SendingDPoPProofToken(LogLevel.Debug, request.RequestUri);
-        request.SetDPoPProofToken(proofToken.ProofToken);
+        request.SetDPoPProofToken(proofToken.Value);
         return true;
     }
 

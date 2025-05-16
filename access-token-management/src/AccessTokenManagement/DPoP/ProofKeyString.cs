@@ -9,15 +9,16 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Duende.AccessTokenManagement.DPoP;
 
-[TypeConverter(typeof(StringValueConverter<DPoPJsonWebKey>))]
-[JsonConverter(typeof(StringValueJsonConverter<DPoPJsonWebKey>))]
-public readonly record struct DPoPJsonWebKey : IStronglyTypedString<DPoPJsonWebKey>
+[TypeConverter(typeof(StringValueConverter<ProofKeyString>))]
+[JsonConverter(typeof(StringValueJsonConverter<ProofKeyString>))]
+public readonly record struct ProofKeyString : IStronglyTypedString<ProofKeyString>
 {
-    public bool Equals(DPoPJsonWebKey other) => Value == other.Value;
+    public bool Equals(ProofKeyString other) => Value == other.Value;
 
     public override int GetHashCode() => Value.GetHashCode();
 
-    public static implicit operator DPoPJsonWebKey(string value) => Parse(value);
+    public static implicit operator ProofKeyString(string value) => Parse(value);
+    public static implicit operator string(ProofKeyString value) => value.ToString();
 
     public override string ToString() => Value;
 
@@ -43,25 +44,21 @@ public readonly record struct DPoPJsonWebKey : IStronglyTypedString<DPoPJsonWebK
             }
         };
 
-    public DPoPJsonWebKey() => throw new InvalidOperationException("Can't create null value");
-    private DPoPJsonWebKey(string value)
+    public ProofKeyString() => throw new InvalidOperationException("Can't create null value");
+    private ProofKeyString(string value)
     {
         Value = value;
-        JsonWebKey = new JsonWebKey(value);
     }
 
     private string Value { get; }
 
-    public JsonWebKey JsonWebKey { get; }
+    public static bool TryParse(string value, [NotNullWhen(true)] out ProofKeyString? parsed, out string[] errors) =>
+        IStronglyTypedString<ProofKeyString>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
 
-    public static bool TryParse(string value, [NotNullWhen(true)] out DPoPJsonWebKey? parsed, out string[] errors) =>
-        IStronglyTypedString<DPoPJsonWebKey>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+    static ProofKeyString IStronglyTypedString<ProofKeyString>.Create(string result) => new(result);
 
-
-    static DPoPJsonWebKey IStronglyTypedString<DPoPJsonWebKey>.Create(string result) => new(result);
-
-    public static DPoPJsonWebKey Parse(string value) => StringParsers<DPoPJsonWebKey>.Parse(value);
-    public static DPoPJsonWebKey? ParseOrDefault(string? value) => StringParsers<DPoPJsonWebKey>.ParseOrDefault(value);
+    public static ProofKeyString Parse(string value) => StringParsers<ProofKeyString>.Parse(value);
+    public static ProofKeyString? ParseOrDefault(string? value) => StringParsers<ProofKeyString>.ParseOrDefault(value);
 
 }

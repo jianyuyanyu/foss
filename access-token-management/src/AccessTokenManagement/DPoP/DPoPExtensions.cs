@@ -43,11 +43,11 @@ public static class DPoPExtensions
         request.Headers.Remove(OidcConstants.HttpHeaders.DPoP);
 
     /// <summary>
-    /// Sets the DPoP nonce request header if nonce is not null. 
+    /// Sets the DPoP nonce request header if nonce is not null.
     /// </summary>
-    public static void SetDPoPProofToken(this HttpRequestMessage request, DPoPProofToken proofToken) =>
+    public static void SetDPoPProofToken(this HttpRequestMessage request, DPoPProofString proofString) =>
         // set new header
-        request.Headers.Add(OidcConstants.HttpHeaders.DPoP, proofToken.ToString());
+        request.Headers.Add(OidcConstants.HttpHeaders.DPoP, proofString.ToString());
 
     /// <summary>
     /// Reads the DPoP nonce header from the response

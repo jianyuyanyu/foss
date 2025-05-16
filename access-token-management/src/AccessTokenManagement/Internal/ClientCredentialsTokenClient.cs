@@ -10,7 +10,7 @@ using Microsoft.Extensions.Options;
 namespace Duende.AccessTokenManagement.Internal;
 
 /// <summary>
-/// Implements the logic needed to actually fetch an OAuth2.0 Client Credentials token. 
+/// Implements the logic needed to actually fetch an OAuth2.0 Client Credentials token.
 /// </summary>
 internal class ClientCredentialsTokenClient(
     AccessTokenManagementMetrics metrics,
@@ -124,11 +124,11 @@ internal class ClientCredentialsTokenClient(
             && response.DPoPNonce != null)
         {
             logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce(LogLevel.Debug, response.Error);
-            metrics.DPoPNonceErrorRetry(request.ClientId, response.Error);
+            metrics.DPoPNonceErrorRetry(ClientId.Parse(request.ClientId), response.Error);
 
             request.DPoPProofToken = await CreateDPoPProofToken(
                 tokenEndpoint: client.TokenEndpoint,
-                dpopJsonWebKey: dpopJsonWebKey.Value,
+                dpopJsonWebKeyString: dpopJsonWebKey.Value,
                 dPoPNonce: DPoPNonce.Parse(response.DPoPNonce),
                 ct: ct);
 
@@ -140,8 +140,8 @@ internal class ClientCredentialsTokenClient(
 
         if (response.IsError)
         {
-            // Turns out token retrieval (even after possible retry) has failed. 
-            // Return it as a failure. 
+            // Turns out token retrieval (even after possible retry) has failed.
+            // Return it as a failure.
             metrics.TokenRetrievalFailed(request.ClientId, AccessTokenManagementMetrics.TokenRequestType.ClientCredentials, response.Error);
             logger.FailedToRequestAccessTokenForClient(LogLevel.Error, clientName, response.Error, response.ErrorDescription);
 
@@ -167,21 +167,21 @@ internal class ClientCredentialsTokenClient(
 
     private async Task<string?> CreateDPoPProofToken(
         Uri tokenEndpoint,
-        DPoPJsonWebKey dpopJsonWebKey,
+        ProofKeyString dpopJsonWebKeyString,
         DPoPNonce? dPoPNonce = null,
         CT ct = default)
     {
         logger.CreatingDPoPProofToken(LogLevel.Debug);
 
-        var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
+        var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProof
         {
             Url = tokenEndpoint,
             Method = HttpMethod.Post,
-            DPoPJsonWebKey = dpopJsonWebKey,
+            ProofKey = dpopJsonWebKeyString,
             DPoPNonce = dPoPNonce
         }, ct);
 
-        return proof?.ProofToken.ToString();
+        return proof?.ToString();
     }
 
     private HttpClient GetHttpClient(ClientCredentialsClient client)

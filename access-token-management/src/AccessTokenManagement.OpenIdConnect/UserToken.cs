@@ -10,7 +10,7 @@ public sealed record UserToken : AccessTokenRequestHandler.IToken
 {
     public required AccessTokenString AccessToken { get; init; }
 
-    public DPoPJsonWebKey? DPoPJsonWebKey { get; init; }
+    public ProofKeyString? DPoPJsonWebKey { get; init; }
 
     public required DateTimeOffset Expiration { get; init; }
 

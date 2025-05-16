@@ -17,11 +17,11 @@ namespace Duende.AccessTokenManagement.DPoP.Internal;
 internal class DefaultDPoPProofService(IDPoPNonceStore dPoPNonceStore) : IDPoPProofService
 {
     /// <inheritdoc/>
-    public async Task<DPoPProof?> CreateProofTokenAsync(
-        DPoPProofRequest request,
+    public async Task<DPoPProofString?> CreateProofTokenAsync(
+        DPoPProof request,
         CT ct)
     {
-        var jsonWebKey = request.DPoPJsonWebKey.JsonWebKey;
+        var jsonWebKey = new JsonWebKey(request.ProofKey);
 
         // jwk: representing the public key chosen by the client, in JSON Web Key (JWK) [RFC7517] format,
         // as defined in Section 4.1.3 of [RFC7515]. MUST NOT contain a private key.
@@ -67,7 +67,7 @@ internal class DefaultDPoPProofService(IDPoPNonceStore dPoPNonceStore) : IDPoPPr
 
         if (request.AccessToken != null)
         {
-            // ath: hash of the access token. The value MUST be the result of a base64url encoding 
+            // ath: hash of the access token. The value MUST be the result of a base64url encoding
             // the SHA-256 hash of the ASCII encoding of the associated access token's value.
             using var sha256 = SHA256.Create();
             var hash = sha256.ComputeHash(Encoding.ASCII.GetBytes(request.AccessToken.Value.ToString()));
@@ -108,10 +108,10 @@ internal class DefaultDPoPProofService(IDPoPNonceStore dPoPNonceStore) : IDPoPPr
         var key = new SigningCredentials(jsonWebKey, jsonWebKey.Alg);
         var proofToken = handler.CreateToken(JsonSerializer.Serialize(payload, DuendeAccessTokenSerializationContext.Default.DictionaryStringObject), key, header);
 
-        return new DPoPProof { ProofToken = DPoPProofToken.Parse(proofToken) };
+        return DPoPProofString.Parse(proofToken);
     }
 
     /// <inheritdoc/>
-    public DPoPProofThumbPrint? GetProofKeyThumbprint(DPoPJsonWebKey key) =>
-        DPoPProofThumbPrint.FromJsonWebKey(key.JsonWebKey);
+    public DPoPProofThumbprint? GetProofKeyThumbprint(ProofKeyString keyString) =>
+        DPoPProofThumbprint.FromJsonWebKey(new JsonWebKey(keyString));
 }

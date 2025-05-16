@@ -9,13 +9,13 @@ namespace Duende.AccessTokenManagement.DPoP;
 public interface IDPoPProofService
 {
     /// <summary>
-    /// Creates DPoP proof token
+    /// Serializes a requested <see cref="DPoPProof"/> model into a <see cref="DPoPProofString"/>.
     /// </summary>
-    Task<DPoPProof?> CreateProofTokenAsync(DPoPProofRequest request,
+    Task<DPoPProofString?> CreateProofTokenAsync(DPoPProof request,
         CT ct = default);
 
     /// <summary>
-    /// Gets the thumbprint from the JSON web key
+    /// Computes the thumbprint of the JSON web key.
     /// </summary>
-    DPoPProofThumbPrint? GetProofKeyThumbprint(DPoPJsonWebKey key);
+    DPoPProofThumbprint? GetProofKeyThumbprint(ProofKeyString keyString);
 }

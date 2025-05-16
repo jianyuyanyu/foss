@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 namespace Duende.AccessTokenManagement.DPoP.Internal;
 
 /// <summary>
-/// The logic to generate a key to store a DPoP nonce in the Cache. Defaults to
+/// The logic to generate a key to store a DPoP nonce in the cache. Defaults to
 /// <see cref="ClientCredentialsTokenManagementOptions.NonceStoreKeyPrefix"/> + URL + Method.
 /// </summary>
 /// <param name="options"></param>

@@ -6,4 +6,4 @@ using Duende.AccessTokenManagement.DPoP;
 
 namespace Duende.AccessTokenManagement.OpenIdConnect;
 
-public sealed record UserRefreshToken(RefreshTokenString RefreshToken, DPoPJsonWebKey? DPoPJsonWebKey);
+public sealed record UserRefreshToken(RefreshTokenString RefreshToken, ProofKeyString? DPoPJsonWebKey);

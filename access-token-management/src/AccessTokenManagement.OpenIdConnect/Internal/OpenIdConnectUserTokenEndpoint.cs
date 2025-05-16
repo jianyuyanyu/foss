@@ -87,14 +87,14 @@ internal class OpenIdConnectUserTokenEndpoint(
         var dPoPJsonWebKey = refreshToken.DPoPJsonWebKey;
         if (dPoPJsonWebKey != null)
         {
-            var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
+            var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProof
             {
                 Url = tokenEndpoint,
                 Method = HttpMethod.Post,
-                DPoPJsonWebKey = dPoPJsonWebKey.Value,
+                ProofKey = dPoPJsonWebKey.Value,
             }, ct);
 
-            request.DPoPProofToken = proof?.ProofToken.ToString();
+            request.DPoPProofToken = proof;
         }
 
         logger.SendingRefreshTokenRequest(LogLevel.Debug, tokenEndpoint);
@@ -108,16 +108,16 @@ internal class OpenIdConnectUserTokenEndpoint(
         {
             logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce(LogLevel.Debug, response.ErrorDescription);
 
-            var dPoPProofRequest = new DPoPProofRequest
+            var dPoPProofRequest = new DPoPProof
             {
                 Url = tokenEndpoint,
                 Method = HttpMethod.Post,
-                DPoPJsonWebKey = dPoPJsonWebKey.Value,
+                ProofKey = dPoPJsonWebKey.Value,
                 DPoPNonce = DPoPNonce.ParseOrDefault(response.DPoPNonce)
             };
             var proof = await dPoPProofService.CreateProofTokenAsync(dPoPProofRequest, ct);
 
-            request.DPoPProofToken = proof?.ProofToken.ToString();
+            request.DPoPProofToken = proof;
 
             if (request.DPoPProofToken != null)
             {

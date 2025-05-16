@@ -13,7 +13,7 @@ namespace Duende.AccessTokenManagement.AccessTokenHandlers.Fixtures;
 
 internal class OidcUserFixture : AccessTokenHandlingBaseFixture
 {
-    public override async ValueTask InitializeAsync(DPoPJsonWebKey? dPoPJsonWebKey)
+    public override async ValueTask InitializeAsync(ProofKeyString? dPoPJsonWebKey)
     {
         ApiEndpoint.DefaultRespondOkWithToken();
         TokenEndpoint.DefaultRespondWithAccessToken();

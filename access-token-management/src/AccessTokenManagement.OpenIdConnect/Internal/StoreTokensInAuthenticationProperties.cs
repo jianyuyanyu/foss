@@ -82,7 +82,7 @@ internal class StoreTokensInAuthenticationProperties(
             ? null
             : new UserRefreshToken(
                 RefreshTokenString.Parse(refreshTokenValue),
-                DPoPJsonWebKey.ParseOrDefault(dpopKey));
+                ProofKeyString.ParseOrDefault(dpopKey));
 
         if (accessTokenValue == null && refreshToken != null)
         {
@@ -93,7 +93,7 @@ internal class StoreTokensInAuthenticationProperties(
         {
             AccessToken = AccessTokenString.Parse(accessTokenValue ?? throw new NullReferenceException("access_token should not be null here.")),
             AccessTokenType = AccessTokenType.ParseOrDefault(accessTokenType),
-            DPoPJsonWebKey = DPoPJsonWebKey.ParseOrDefault(dpopKey),
+            DPoPJsonWebKey = ProofKeyString.ParseOrDefault(dpopKey),
             RefreshToken = refreshToken?.RefreshToken,
             Expiration = dtExpires,
             ClientId = ClientId.Parse(clientId ?? "unknown"),
@@ -154,7 +154,7 @@ internal class StoreTokensInAuthenticationProperties(
         if (appendChallengeScheme)
         {
             var scheme = parameters?.ChallengeScheme ?? throw new InvalidOperationException("Attempt to append challenge scheme to token names, but no challenge scheme specified in UserTokenRequestParameters");
-            token = tokens.SingleOrDefault(t => t.Key == ChallengeSuffix(key, scheme.ToString())).Value;
+            token = tokens.SingleOrDefault(t => t.Key == ChallengeSuffix(key, scheme)).Value;
         }
 
         if (token.IsMissing())

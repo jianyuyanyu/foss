@@ -9,7 +9,7 @@ public sealed record ClientCredentialsToken : AccessTokenRequestHandler.IToken
 {
     public required AccessTokenString AccessToken { get; init; }
     public required AccessTokenType? AccessTokenType { get; init; }
-    public required DPoPJsonWebKey? DPoPJsonWebKey { get; init; }
+    public required ProofKeyString? DPoPJsonWebKey { get; init; }
     public required DateTimeOffset Expiration { get; init; }
     public required Scope? Scope { get; init; }
     public required ClientId ClientId { get; init; }

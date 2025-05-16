@@ -11,7 +11,7 @@ namespace Duende.AccessTokenManagement.DPoP.Internal;
 internal class DefaultDPoPKeyStore(IOptionsMonitor<ClientCredentialsClient> options) : IDPoPKeyStore
 {
     /// <inheritdoc/>
-    public virtual Task<DPoPJsonWebKey?> GetKeyAsync(ClientName clientName,
+    public virtual Task<ProofKeyString?> GetKeyAsync(ClientName clientName,
         CT ct = default)
     {
         var client = options.Get(clientName.ToString());
@@ -19,7 +19,7 @@ internal class DefaultDPoPKeyStore(IOptionsMonitor<ClientCredentialsClient> opti
 
         if (client.DPoPJsonWebKey == null)
         {
-            return Task.FromResult<DPoPJsonWebKey?>(null);
+            return Task.FromResult<ProofKeyString?>(null);
         }
 
         return Task.FromResult(client.DPoPJsonWebKey);

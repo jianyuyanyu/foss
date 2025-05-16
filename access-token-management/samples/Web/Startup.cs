@@ -79,7 +79,7 @@ public static class Startup
         builder.Services.AddOpenIdConnectAccessTokenManagement(options =>
         {
             var useDPoP = builder.Configuration.GetValue<bool>("UseDPoP");
-            options.DPoPJsonWebKey = useDPoP ? DPoPJsonWebKey.ParseOrDefault(jwk) : null;
+            options.DPoPJsonWebKey = useDPoP ? ProofKeyString.ParseOrDefault(jwk) : null;
         });
 
         // registers HTTP client that uses the managed user access token

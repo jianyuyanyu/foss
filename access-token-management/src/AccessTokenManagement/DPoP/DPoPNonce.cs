@@ -7,12 +7,11 @@ using Duende.AccessTokenManagement.Internal;
 namespace Duende.AccessTokenManagement.DPoP;
 
 /// <summary>
-/// Represents a dpop nonce.
-/// In OAuth 2.0 with Demonstration of Proof-of-Possession(DPoP), a
-/// DPoP nonce is a random, server-generated value sent to the client
-/// that must be included in the next DPoP proof the client creates.
-/// It helps protect against replay attacks by ensuring that each DPoP
-/// proof is freshly generated and tied to a specific point in the protocol flow.
+/// Represents a DPoP nonce.
+/// A DPoP nonce is an opaque server-generated value sent to the client
+/// that must be included in subsequent DPoP proofs the client creates.
+/// It helps protect against replay and pre-generation attacks by ensuring that each DPoP
+/// proof is freshly generated.
 /// </summary>
 public readonly record struct DPoPNonce : IStronglyTypedString<DPoPNonce>
 {
@@ -21,7 +20,7 @@ public readonly record struct DPoPNonce : IStronglyTypedString<DPoPNonce>
     private static readonly ValidationRule<string>[] Validators =
     [
         // There is no strict limit for nonces, but given that headers can't typically be greater than 4k, this
-        // seems reasonable. 
+        // seems reasonable.
         ValidationRules.MaxLength(4 * 1024),
     ];
 

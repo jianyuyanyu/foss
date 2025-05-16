@@ -20,12 +20,12 @@ public class TestData
     public ClientSecret ClientSecret { get; set; } = SameNameAsProperty();
     public Uri Authority { get; set; } = new Uri("https://authority");
     public Uri TokenEndpoint { get; set; } = new Uri("https://authority/connect/token");
-    public DPoPJsonWebKey JsonWebKey { get; set; } = BuildDPoPJsonWebKey();
+    public ProofKeyString JsonWebKey { get; set; } = BuildDPoPJsonWebKey();
     public DateTimeOffset CurrentDate { get; set; } = new DateTimeOffset(2000, 1, 2, 3, 4, 5, TimeSpan.FromHours(6));
     public int ExpiresInSeconds { get; set; } = 60;
     public Resource Resource { get; set; } = SameNameAsProperty();
 
-    public static DPoPJsonWebKey BuildDPoPJsonWebKey()
+    public static ProofKeyString BuildDPoPJsonWebKey()
     {
         var key = CryptoHelper.CreateRsaSecurityKey();
         var jwk = JsonWebKeyConverter.ConvertFromRSASecurityKey(key);

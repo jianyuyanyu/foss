@@ -99,7 +99,7 @@ public sealed class AccessTokenRequestHandler(
         /// <summary>
         /// The string representation of the JSON web key to use for DPoP.
         /// </summary>
-        DPoPJsonWebKey? DPoPJsonWebKey { get; }
+        ProofKeyString? DPoPJsonWebKey { get; }
 
         /// <summary>
         /// The Client id that this token was originally requested for. 

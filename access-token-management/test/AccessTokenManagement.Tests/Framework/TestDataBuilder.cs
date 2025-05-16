@@ -30,7 +30,7 @@ public class TestDataBuilder(TestData The)
 
     public void ClientCredentialsClient(
         ClientCredentialsClient toConfigure,
-        DPoPJsonWebKey? jsonWebKey = null,
+        ProofKeyString? jsonWebKey = null,
         Resource? resource = null,
         ClientCredentialStyle? style = null,
         Dictionary<string, string>? parameters = null)

@@ -18,13 +18,13 @@ namespace Duende.AccessTokenManagement.OpenIdConnect.Internal;
 ///
 /// 1. Store new nonces from successful responses from the authorization server.
 ///
-/// 2. Attach proof tokens to token requests in the code flow. 
+/// 2. Attach proof tokens to token requests in the code flow.
 ///
 ///    On the authorize request, we will have sent a dpop_jkt parameter with a
 ///    key thumbprint. The AS expects that we will use the corresponding key to
 ///    create our proof, and we track that key in the http context. This handler
 ///    retrieves that key and uses it to create proof tokens for use in the code
-///    flow. 
+///    flow.
 ///
 ///    Additionally, the token endpoint might respond to a token exchange
 ///    request with a request to retry with a nonce that it supplies via http
@@ -71,14 +71,14 @@ internal class AuthorizationServerDPoPHandler(
         if (codeExchangeJwk != null)
         {
             // If the http response code indicates a bad request, we can infer
-            // that we should retry with the new nonce. 
+            // that we should retry with the new nonce.
             //
             // The server should have also set the error: use_dpop_nonce, but
             // there's no need to incur the cost of parsing the json and
             // checking for that, as we would only receive the nonce http header
             // when that error was set. Authorization servers might preemptively
             // send a new nonce, but the spec specifically says to do that on a
-            // success (and we handle that case in the else block). 
+            // success (and we handle that case in the else block).
             //
             // TL;DR - presence of nonce and 400 response code is enough to
             // trigger a retry during code exchange
@@ -111,7 +111,7 @@ internal class AuthorizationServerDPoPHandler(
     /// <summary>
     /// Creates a DPoP proof token and attaches it to a request.
     /// </summary>
-    internal async Task SetDPoPProofTokenForCodeExchangeAsync(HttpRequestMessage request, DPoPNonce? dpopNonce = null, DPoPJsonWebKey? jwk = null)
+    internal async Task SetDPoPProofTokenForCodeExchangeAsync(HttpRequestMessage request, DPoPNonce? dpopNonce = null, ProofKeyString? jwk = null)
     {
         if (jwk == null)
         {
@@ -120,18 +120,18 @@ internal class AuthorizationServerDPoPHandler(
 
         request.ClearDPoPProofToken();
 
-        var proofToken = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
+        var proofToken = await dPoPProofService.CreateProofTokenAsync(new DPoPProof
         {
             Url = request.GetDPoPUrl(),
             Method = request.Method,
-            DPoPJsonWebKey = jwk.Value,
+            ProofKey = jwk.Value,
             DPoPNonce = dpopNonce,
         });
 
         if (proofToken != null)
         {
             _logger.SendingDPoPProofToken(LogLevel.Debug, request.RequestUri);
-            request.SetDPoPProofToken(proofToken.ProofToken);
+            request.SetDPoPProofToken(proofToken.Value);
         }
         else
         {
