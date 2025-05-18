@@ -835,6 +835,7 @@ namespace Duende.IdentityModel.Client
         public System.Collections.Generic.IEnumerable<string> SubjectTypesSupported { get; }
         public string? TokenEndpoint { get; }
         public System.Collections.Generic.IEnumerable<string> TokenEndpointAuthenticationMethodsSupported { get; }
+        public System.Collections.Generic.IEnumerable<string> TokenEndpointAuthenticationSigningAlgorithmsSupported { get; }
         public string? UserInfoEndpoint { get; }
         protected override System.Threading.Tasks.Task InitializeAsync(object? initializationData = null) { }
         public bool? TryGetBoolean(string name) { }
