@@ -12,7 +12,6 @@
   "device_authorization_endpoint": "https://demo.identityserver.io/connect/deviceauthorization",
   "backchannel_authentication_endpoint": "https://demo.identityserver.io/connect/ciba",
   "pushed_authorization_request_endpoint": "https://demo.identityserver.io/connect/par",
-  "end_session_endpoint": "https://demo.identityserver.io/connect/endsession",
   "frontchannel_logout_supported": true,
   "frontchannel_logout_session_supported": true,
   "scopes_supported": [
