@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Duende.AccessTokenManagement.Internal;
 
-internal static partial class LogMessages
+internal static partial class Log
 {
     [LoggerMessage(
         Message = $"Cannot authenticate scheme: {{{OTelParameters.Scheme}}} to acquire user access token.")]
