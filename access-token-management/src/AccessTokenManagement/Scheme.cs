@@ -9,10 +9,11 @@ using Duende.IdentityModel;
 namespace Duende.AccessTokenManagement;
 
 [TypeConverter(typeof(StringValueConverter<Scheme>))]
-public readonly record struct Scheme : IStronglyTypedString<Scheme>
+public readonly record struct Scheme : IStronglyTypedValue<Scheme>
 {
     public const int MaxLength = 50;
     public static implicit operator Scheme(string value) => Parse(value);
+    public static implicit operator string(Scheme value) => value.ToString();
 
     public override string ToString() => Value;
 
@@ -56,10 +57,10 @@ public readonly record struct Scheme : IStronglyTypedString<Scheme>
     internal static Scheme Empty = new(string.Empty);
 
     public static bool TryParse(string value, [NotNullWhen(true)] out Scheme? parsed, out string[] errors) =>
-        IStronglyTypedString<Scheme>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStronglyTypedValue<Scheme>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
 
-    static Scheme IStronglyTypedString<Scheme>.Create(string result) => new(result);
+    static Scheme IStronglyTypedValue<Scheme>.Create(string result) => new(result);
 
     public static Scheme Parse(string value) => StringParsers<Scheme>.Parse(value);
 

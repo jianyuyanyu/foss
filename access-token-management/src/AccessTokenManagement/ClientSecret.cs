@@ -8,10 +8,11 @@ using Duende.AccessTokenManagement.Internal;
 namespace Duende.AccessTokenManagement;
 
 [TypeConverter(typeof(StringValueConverter<ClientSecret>))]
-public readonly record struct ClientSecret : IStronglyTypedString<ClientSecret>
+public readonly record struct ClientSecret : IStronglyTypedValue<ClientSecret>
 {
 
     public static implicit operator ClientSecret(string value) => Parse(value);
+    public static implicit operator string(ClientSecret value) => value.ToString();
 
     public override string ToString() => Value;
 
@@ -25,10 +26,10 @@ public readonly record struct ClientSecret : IStronglyTypedString<ClientSecret>
     private string Value { get; }
 
     public static bool TryParse(string value, [NotNullWhen(true)] out ClientSecret? parsed, out string[] errors) =>
-        IStronglyTypedString<ClientSecret>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStronglyTypedValue<ClientSecret>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
 
-    static ClientSecret IStronglyTypedString<ClientSecret>.Create(string result) => new(result);
+    static ClientSecret IStronglyTypedValue<ClientSecret>.Create(string result) => new(result);
 
     public static ClientSecret Parse(string value) => StringParsers<ClientSecret>.Parse(value);
 }

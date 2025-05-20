@@ -21,7 +21,7 @@ public sealed record DPoPProof
     /// <summary>
     /// The JSON web key used to sign the DPoP proof.
     /// </summary>
-    public required ProofKeyString ProofKey { get; init; }
+    public required DPoPProofKey DPoPProofKey { get; init; }
 
     /// <summary>
     /// The nonce value for the DPoP proof token.
@@ -31,7 +31,7 @@ public sealed record DPoPProof
     /// <summary>
     /// The access token
     /// </summary>
-    public AccessTokenString? AccessToken { get; init; }
+    public AccessToken? AccessToken { get; init; }
 
     /// <summary>
     /// Additional claims to add to the DPoP proof payload.

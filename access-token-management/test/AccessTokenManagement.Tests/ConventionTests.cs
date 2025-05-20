@@ -193,7 +193,7 @@ public class ConventionTests(ITestOutputHelper output)
             AllTypes.Where(t => t.IsValueType && !t.IsAbstract)
             .SelectMany(t =>
                 t.GetInterfaces()
-                    .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IStronglyTypedString<>)
+                    .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IStronglyTypedValue<>)
                                                 && i.GenericTypeArguments[0] == t)
                     .Select(_ => t))
             .Distinct()

@@ -3,7 +3,7 @@
 
 namespace Duende.AccessTokenManagement.Internal;
 
-internal static class StringParsers<TSelf> where TSelf : struct, IStronglyTypedString<TSelf>
+internal static class StringParsers<TSelf> where TSelf : struct, IStronglyTypedValue<TSelf>
 {
     internal static TSelf Parse(string value)
     {

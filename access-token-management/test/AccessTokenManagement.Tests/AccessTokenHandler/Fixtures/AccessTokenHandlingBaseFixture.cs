@@ -24,9 +24,9 @@ internal abstract class AccessTokenHandlingBaseFixture : IAsyncDisposable
 
     public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 
-    public abstract ValueTask InitializeAsync(ProofKeyString? dPoPJsonWebKey);
+    public abstract ValueTask InitializeAsync(DPoPProofKey? dPoPJsonWebKey);
 
-    public async ValueTask InitializeAsync(ITestOutputHelper output, ProofKeyString? dPoPJsonWebKey)
+    public async ValueTask InitializeAsync(ITestOutputHelper output, DPoPProofKey? dPoPJsonWebKey)
     {
         ApiEndpoint.DefaultRespondOkWithToken();
         TokenEndpoint.DefaultRespondWithAccessToken();

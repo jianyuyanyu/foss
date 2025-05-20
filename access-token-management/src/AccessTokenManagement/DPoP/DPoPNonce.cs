@@ -13,7 +13,7 @@ namespace Duende.AccessTokenManagement.DPoP;
 /// It helps protect against replay and pre-generation attacks by ensuring that each DPoP
 /// proof is freshly generated.
 /// </summary>
-public readonly record struct DPoPNonce : IStronglyTypedString<DPoPNonce>
+public readonly record struct DPoPNonce : IStronglyTypedValue<DPoPNonce>
 {
     public override string ToString() => Value;
 
@@ -31,10 +31,10 @@ public readonly record struct DPoPNonce : IStronglyTypedString<DPoPNonce>
     private string Value { get; }
 
     public static bool TryParse(string value, [NotNullWhen(true)] out DPoPNonce? parsed, out string[] errors) =>
-        IStronglyTypedString<DPoPNonce>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStronglyTypedValue<DPoPNonce>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
 
-    static DPoPNonce IStronglyTypedString<DPoPNonce>.Create(string result) => new(result);
+    static DPoPNonce IStronglyTypedValue<DPoPNonce>.Create(string result) => new(result);
 
     public static DPoPNonce Parse(string value) => StringParsers<DPoPNonce>.Parse(value);
     public static DPoPNonce? ParseOrDefault(string? value) => StringParsers<DPoPNonce>.ParseOrDefault(value);

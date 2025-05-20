@@ -8,11 +8,15 @@ using Duende.AccessTokenManagement.Internal;
 
 namespace Duende.AccessTokenManagement;
 
+/// <summary>
+/// Represents an OIDC Client ID. This is a strongly typed value object that validates the string value.
+/// </summary>
 [TypeConverter(typeof(StringValueConverter<ClientId>))]
 [JsonConverter(typeof(StringValueJsonConverter<ClientId>))]
-public readonly record struct ClientId : IStronglyTypedString<ClientId>
+public readonly record struct ClientId : IStronglyTypedValue<ClientId>
 {
     public static implicit operator ClientId(string value) => Parse(value);
+    public static implicit operator string(ClientId value) => value.ToString();
 
     public override string ToString() => Value;
 
@@ -26,9 +30,9 @@ public readonly record struct ClientId : IStronglyTypedString<ClientId>
     private string Value { get; }
 
     public static bool TryParse(string value, [NotNullWhen(true)] out ClientId? parsed, out string[] errors) =>
-        IStronglyTypedString<ClientId>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStronglyTypedValue<ClientId>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
-    static ClientId IStronglyTypedString<ClientId>.Create(string result) => new(result);
+    static ClientId IStronglyTypedValue<ClientId>.Create(string result) => new(result);
 
     public static ClientId Parse(string value) => StringParsers<ClientId>.Parse(value);
 }

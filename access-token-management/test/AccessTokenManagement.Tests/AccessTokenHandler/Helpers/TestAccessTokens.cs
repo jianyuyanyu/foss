@@ -7,7 +7,7 @@ using Duende.AccessTokenManagement.OpenIdConnect;
 
 namespace Duende.AccessTokenManagement.AccessTokenHandlers.Helpers;
 
-public class TestAccessTokens(ProofKeyString? dPoPJsonWebKey)
+public class TestAccessTokens(DPoPProofKey? dPoPJsonWebKey)
 {
     public UserToken UserToken =
         new UserToken()

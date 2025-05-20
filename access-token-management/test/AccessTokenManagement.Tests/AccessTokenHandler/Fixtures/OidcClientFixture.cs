@@ -13,7 +13,7 @@ namespace Duende.AccessTokenManagement.AccessTokenHandlers.Fixtures;
 
 internal class OidcClientFixture : AccessTokenHandlingBaseFixture
 {
-    public override async ValueTask InitializeAsync(ProofKeyString? dPoPJsonWebKey)
+    public override async ValueTask InitializeAsync(DPoPProofKey? dPoPJsonWebKey)
     {
         Services.AddSingleton(new TestAccessTokens(dPoPJsonWebKey));
         Services.AddSingleton<FakeAuthenticationService>();

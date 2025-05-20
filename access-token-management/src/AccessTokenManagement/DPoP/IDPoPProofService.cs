@@ -17,5 +17,5 @@ public interface IDPoPProofService
     /// <summary>
     /// Computes the thumbprint of the JSON web key.
     /// </summary>
-    DPoPProofThumbprint? GetProofKeyThumbprint(ProofKeyString keyString);
+    DPoPProofThumbprint? GetProofKeyThumbprint(DPoPProofKey dpopProofKey);
 }

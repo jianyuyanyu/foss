@@ -7,8 +7,11 @@ using Duende.AccessTokenManagement.Internal;
 
 namespace Duende.AccessTokenManagement;
 
+/// <summary>
+/// The type of an access token. Typically maps to Bearer or DPoP.
+/// </summary>
 [JsonConverter(typeof(StringValueJsonConverter<AccessTokenType>))]
-public readonly record struct AccessTokenType : IStronglyTypedString<AccessTokenType>
+public readonly record struct AccessTokenType : IStronglyTypedValue<AccessTokenType>
 {
     public const int MaxLength = 50;
     public override string ToString() => Value;
@@ -23,13 +26,14 @@ public readonly record struct AccessTokenType : IStronglyTypedString<AccessToken
     private string Value { get; }
 
     public static implicit operator AccessTokenType(string value) => Parse(value);
+    public static implicit operator string(AccessTokenType value) => value.ToString();
 
     public static bool TryParse(string value, [NotNullWhen(true)] out AccessTokenType? parsed, out string[] errors) =>
-        IStronglyTypedString<AccessTokenType>
+        IStronglyTypedValue<AccessTokenType>
             .TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
 
-    static AccessTokenType IStronglyTypedString<AccessTokenType>.Create(string result) => new(result);
+    static AccessTokenType IStronglyTypedValue<AccessTokenType>.Create(string result) => new(result);
 
     public static AccessTokenType Parse(string value) =>
         StringParsers<AccessTokenType>.Parse(value);

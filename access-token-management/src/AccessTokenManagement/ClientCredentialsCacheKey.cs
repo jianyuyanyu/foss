@@ -6,7 +6,10 @@ using Duende.AccessTokenManagement.Internal;
 
 namespace Duende.AccessTokenManagement;
 
-public readonly record struct ClientCredentialsCacheKey : IStronglyTypedString<ClientCredentialsCacheKey>
+/// <summary>
+/// Cache key when caching client credential access tokens. 
+/// </summary>
+public readonly record struct ClientCredentialsCacheKey : IStronglyTypedValue<ClientCredentialsCacheKey>
 {
     public override string ToString() => Value;
 
@@ -23,8 +26,11 @@ public readonly record struct ClientCredentialsCacheKey : IStronglyTypedString<C
 
     public static ClientCredentialsCacheKey Parse(string value) => StringParsers<ClientCredentialsCacheKey>.Parse(value);
 
-    public static bool TryParse(string value, [NotNullWhen(true)] out ClientCredentialsCacheKey? parsed, out string[] errors) =>
-        IStronglyTypedString<ClientCredentialsCacheKey>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+    public static implicit operator ClientCredentialsCacheKey(string value) => Parse(value);
+    public static implicit operator string(ClientCredentialsCacheKey key) => key.Value;
 
-    static ClientCredentialsCacheKey IStronglyTypedString<ClientCredentialsCacheKey>.Create(string result) => new(result);
+    public static bool TryParse(string value, [NotNullWhen(true)] out ClientCredentialsCacheKey? parsed, out string[] errors) =>
+        IStronglyTypedValue<ClientCredentialsCacheKey>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+
+    static ClientCredentialsCacheKey IStronglyTypedValue<ClientCredentialsCacheKey>.Create(string result) => new(result);
 }

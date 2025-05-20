@@ -107,7 +107,7 @@ public class AccessTokenHandlerTests(ITestOutputHelper output)
         return JsonSerializer.Serialize(jwk);
     }
 
-    private async Task<AccessTokenHandlingBaseFixture> GetInitializedFixture(FixtureType type, ProofKeyString? dPoPJsonWebKey = null)
+    private async Task<AccessTokenHandlingBaseFixture> GetInitializedFixture(FixtureType type, DPoPProofKey? dPoPJsonWebKey = null)
     {
         AccessTokenHandlingBaseFixture item = type switch
         {

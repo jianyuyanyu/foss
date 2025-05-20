@@ -11,7 +11,7 @@ namespace Duende.AccessTokenManagement.Internal;
 internal class NoOpClientAssertionService : IClientAssertionService
 {
     /// <inheritdoc />
-    public Task<ClientAssertion?> GetClientAssertionAsync(ClientName? clientName = null,
+    public Task<ClientAssertion?> GetClientAssertionAsync(TokenClientName? clientName = null,
         TokenRequestParameters? parameters = null,
         CT ct = default) =>
         Task.FromResult<ClientAssertion?>(null);

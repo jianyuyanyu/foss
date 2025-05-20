@@ -420,7 +420,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
 
     public class AlwaysSameKeyCacheKeyGenerator(string cacheKey) : IClientCredentialsCacheKeyGenerator
     {
-        public ClientCredentialsCacheKey GenerateKey(ClientName clientName, TokenRequestParameters? parameters = null)
+        public ClientCredentialsCacheKey GenerateKey(TokenClientName clientName, TokenRequestParameters? parameters = null)
             => ClientCredentialsCacheKey.Parse(cacheKey);
     }
 }

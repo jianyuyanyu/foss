@@ -14,6 +14,13 @@ public abstract record TokenResult
         => token;
 }
 
+/// <summary>
+/// Represents the result of a token request. It can either be a token or a failure.
+/// Note, only protocol failures are expressed as failures. Not all possible exceptions
+/// are caught and translated to a failure. For example, if the token endpoint is not reachable,
+/// or if you've misconfigured the library, you may still get an exception. 
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public sealed record TokenResult<T> : TokenResult
     where T : class
 {

@@ -11,10 +11,11 @@ namespace Duende.AccessTokenManagement;
 
 [TypeConverter(typeof(StringValueConverter<Scope>))]
 [JsonConverter(typeof(StringValueJsonConverter<Scope>))]
-public readonly partial record struct Scope : IStronglyTypedString<Scope>
+public readonly partial record struct Scope : IStronglyTypedValue<Scope>
 {
     public const int MaxLength = 1024;
     public static implicit operator Scope(string value) => Parse(value);
+    public static implicit operator string(Scope value) => value.ToString();
     public override string ToString() => Value;
 
     // According to RFC 6749, the scope is a space-separated list of strings.
@@ -34,10 +35,10 @@ public readonly partial record struct Scope : IStronglyTypedString<Scope>
     private string Value { get; }
 
     public static bool TryParse(string value, [NotNullWhen(true)] out Scope? parsed, out string[] errors) =>
-        IStronglyTypedString<Scope>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStronglyTypedValue<Scope>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
 
-    static Scope IStronglyTypedString<Scope>.Create(string result) => new(result);
+    static Scope IStronglyTypedValue<Scope>.Create(string result) => new(result);
 
     public static Scope Parse(string value) => StringParsers<Scope>.Parse(value);
 

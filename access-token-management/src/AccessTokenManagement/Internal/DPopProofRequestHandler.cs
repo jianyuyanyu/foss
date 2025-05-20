@@ -37,7 +37,7 @@ internal sealed class DPopProofRequestHandler(
             AccessToken = token.AccessToken,
             Url = request.GetDPoPUrl(),
             Method = request.Method,
-            ProofKey = token.DPoPJsonWebKey.Value,
+            DPoPProofKey = token.DPoPJsonWebKey.Value,
             DPoPNonce = parameters.DPoPNonce,
             AdditionalPayloadClaims = additionalClaims,
         };

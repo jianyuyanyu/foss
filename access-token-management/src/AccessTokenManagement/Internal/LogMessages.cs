@@ -67,7 +67,7 @@ internal static partial class LogMessages
     /// <param name="logLevel"></param>
     /// <param name="refreshToken"></param>
     /// <param name="hashAlgorithm"></param>
-    public static void RefreshingAccessTokenUsingRefreshToken(this ILogger logger, LogLevel logLevel, RefreshTokenString refreshToken, Func<string, string> hashAlgorithm)
+    public static void RefreshingAccessTokenUsingRefreshToken(this ILogger logger, LogLevel logLevel, RefreshToken refreshToken, Func<string, string> hashAlgorithm)
     {
         if (logger.IsEnabled(logLevel))
         {
@@ -100,7 +100,7 @@ internal static partial class LogMessages
     /// <param name="logLevel"></param>
     /// <param name="refreshToken"></param>
     /// <param name="hashAlgorithm"></param>
-    public static void RevokingRefreshToken(this ILogger logger, LogLevel logLevel, RefreshTokenString refreshToken, Func<string, string> hashAlgorithm)
+    public static void RevokingRefreshToken(this ILogger logger, LogLevel logLevel, RefreshToken refreshToken, Func<string, string> hashAlgorithm)
     {
         if (logger.IsEnabled(LogLevel.Trace))
         {
@@ -162,29 +162,29 @@ internal static partial class LogMessages
 
     [LoggerMessage(
         Message = $"Caching access token for client: {{{OTelParameters.ClientName}}}. Expiration: {{{OTelParameters.Expiration}}}")]
-    public static partial void CachingAccessToken(this ILogger logger, LogLevel logLevel, ClientName clientName, DateTimeOffset expiration);
+    public static partial void CachingAccessToken(this ILogger logger, LogLevel logLevel, TokenClientName clientName, DateTimeOffset expiration);
 
     [LoggerMessage(
         Message = $"Will not cache token result with error for {{{OTelParameters.ClientName}}}. Error = {{{OTelParameters.Error}}}, Description: {{{OTelParameters.ErrorDescription}}}")]
-    public static partial void WillNotCacheTokenResultWithError(this ILogger logger, LogLevel logLevel, ClientName clientName,
+    public static partial void WillNotCacheTokenResultWithError(this ILogger logger, LogLevel logLevel, TokenClientName clientName,
         string error, string? errorDescription);
 
     [LoggerMessage(
         Message = $"An exception has occurred while reading ClientCredentialsToken value from the cache for client {{{OTelParameters.ClientName}}}. The call will be executed without the cache.")]
-    public static partial void ExceptionWhileReadingFromCache(this ILogger logger, LogLevel logLevel, Exception ex, ClientName clientName);
+    public static partial void ExceptionWhileReadingFromCache(this ILogger logger, LogLevel logLevel, Exception ex, TokenClientName clientName);
 
 
     [LoggerMessage(
         Message = $"Error requesting access token for client {{{OTelParameters.ClientName}}}. Error = {{{OTelParameters.Error}}}, Description: {{{OTelParameters.ErrorDescription}}}")]
-    public static partial void FailedToRequestAccessTokenForClient(this ILogger logger, LogLevel logLevel, ClientName clientName, string? error, string? errorDescription);
+    public static partial void FailedToRequestAccessTokenForClient(this ILogger logger, LogLevel logLevel, TokenClientName clientName, string? error, string? errorDescription);
 
     [LoggerMessage(
         Message = $"Error trying to set token in cache for client {{{OTelParameters.ClientName}}}")]
-    public static partial void ErrorSettingTokenInCache(this ILogger logger, LogLevel logLevel, Exception ex, ClientName clientName);
+    public static partial void ErrorSettingTokenInCache(this ILogger logger, LogLevel logLevel, Exception ex, TokenClientName clientName);
 
     [LoggerMessage(
         Message = $"Cache hit for obtaining access token for client: {{{OTelParameters.ClientName}}}")]
-    public static partial void CacheHitForObtainingAccessToken(this ILogger logger, LogLevel logLevel, ClientName clientName);
+    public static partial void CacheHitForObtainingAccessToken(this ILogger logger, LogLevel logLevel, TokenClientName clientName);
 
     [LoggerMessage(
         Message = $"Cache hit for DPoP nonce for URL: {{{OTelParameters.Url}}}, method: {{{OTelParameters.Method}}}")]
@@ -208,11 +208,11 @@ internal static partial class LogMessages
 
     [LoggerMessage(
         Message = $"Error parsing cached access token for client {{{OTelParameters.ClientName}}}")]
-    public static partial void FailedToCacheAccessToken(this ILogger logger, LogLevel logLevel, Exception ex, ClientName clientName);
+    public static partial void FailedToCacheAccessToken(this ILogger logger, LogLevel logLevel, Exception ex, TokenClientName clientName);
 
     [LoggerMessage(
         Message = $"Cache miss while retrieving access token for client: {{{OTelParameters.ClientName}}}")]
-    public static partial void CacheMissWhileRetrievingAccessToken(this ILogger logger, LogLevel logLevel, ClientName clientName);
+    public static partial void CacheMissWhileRetrievingAccessToken(this ILogger logger, LogLevel logLevel, TokenClientName clientName);
 
     [LoggerMessage(
         Message = "Creating DPoP proof token for token request.")]
@@ -224,11 +224,11 @@ internal static partial class LogMessages
 
     [LoggerMessage(
         Message = $"Client Credentials token of type '{{{OTelParameters.TokenType}}}' for Client: {{{OTelParameters.ClientName}}} retrieved with expiration {{{OTelParameters.Expiration}}} ")]
-    public static partial void ClientCredentialsTokenForClientRetrieved(this ILogger logger, LogLevel logLevel, ClientName clientName, AccessTokenType? tokenType, DateTimeOffset expiration);
+    public static partial void ClientCredentialsTokenForClientRetrieved(this ILogger logger, LogLevel logLevel, TokenClientName clientName, AccessTokenType? tokenType, DateTimeOffset expiration);
 
     [LoggerMessage(
         Message = $"Failed to obtain token from cache for client {{{OTelParameters.ClientName}}} using cacheKey {{{OTelParameters.CacheKey}}}. Will obtain new token.")]
-    public static partial void FailedToObtainTokenFromCache(this ILogger logger, LogLevel logLevel, Exception ex, ClientName clientName, ClientCredentialsCacheKey cacheKey);
+    public static partial void FailedToObtainTokenFromCache(this ILogger logger, LogLevel logLevel, Exception ex, TokenClientName clientName, ClientCredentialsCacheKey cacheKey);
 
     [LoggerMessage(
         Message = "Failed to parse JsonWebKey")]

@@ -6,4 +6,9 @@ using Duende.AccessTokenManagement.DPoP;
 
 namespace Duende.AccessTokenManagement.OpenIdConnect;
 
-public sealed record UserRefreshToken(RefreshTokenString RefreshToken, ProofKeyString? DPoPJsonWebKey);
+/// <summary>
+/// A record that captures the information to refresh an access token for a user.
+///
+/// Minimally, you need a refresh token. If you use dpop, you'll also need the dpop proof key
+/// </summary>
+public sealed record UserRefreshToken(RefreshToken RefreshToken, DPoPProofKey? DPoPProofKey);

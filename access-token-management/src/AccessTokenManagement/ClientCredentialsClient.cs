@@ -72,7 +72,7 @@ public sealed class ClientCredentialsClient
     /// <summary>
     /// The string representation of the JSON web key to use for DPoP.
     /// </summary>
-    public ProofKeyString? DPoPJsonWebKey { get; set; }
+    public DPoPProofKey? DPoPJsonWebKey { get; set; }
 
 
     internal sealed class Validator : IValidateOptions<ClientCredentialsClient>

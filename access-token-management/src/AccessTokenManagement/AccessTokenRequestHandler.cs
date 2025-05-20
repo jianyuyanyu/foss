@@ -94,12 +94,12 @@ public sealed class AccessTokenRequestHandler(
     /// </summary>
     public interface IToken
     {
-        AccessTokenString AccessToken { get; }
+        AccessToken AccessToken { get; }
 
         /// <summary>
         /// The string representation of the JSON web key to use for DPoP.
         /// </summary>
-        ProofKeyString? DPoPJsonWebKey { get; }
+        DPoPProofKey? DPoPJsonWebKey { get; }
 
         /// <summary>
         /// The Client id that this token was originally requested for. 

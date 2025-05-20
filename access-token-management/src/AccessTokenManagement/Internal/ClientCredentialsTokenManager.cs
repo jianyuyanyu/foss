@@ -33,7 +33,7 @@ internal class ClientCredentialsTokenManager(
     private readonly ClientCredentialsTokenManagementOptions _options = options.Value;
 
     public async Task<TokenResult<ClientCredentialsToken>> GetAccessTokenAsync(
-        ClientName clientName,
+        TokenClientName clientName,
         TokenRequestParameters? parameters = null,
         CT ct = default)
     {
@@ -109,7 +109,7 @@ internal class ClientCredentialsTokenManager(
     }
 
     private async Task<ClientCredentialsToken> RequestToken(ClientCredentialsCacheKey cacheKey,
-        ClientName clientName, TokenRequestParameters parameters, CT ct)
+        TokenClientName clientName, TokenRequestParameters parameters, CT ct)
     {
         TokenResult<ClientCredentialsToken> tokenResult;
         try
@@ -150,7 +150,7 @@ internal class ClientCredentialsTokenManager(
         return token;
     }
 
-    public async Task DeleteAccessTokenAsync(ClientName clientName, TokenRequestParameters? parameters = null,
+    public async Task DeleteAccessTokenAsync(TokenClientName clientName, TokenRequestParameters? parameters = null,
         CT ct = default)
     {
         var cacheKey = cacheKeyGenerator.GenerateKey(clientName, parameters);

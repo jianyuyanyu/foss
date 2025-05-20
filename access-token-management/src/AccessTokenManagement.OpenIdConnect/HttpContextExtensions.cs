@@ -85,8 +85,8 @@ public static class HttpContextExtensions
     }
 
     const string AuthenticationPropertiesDPoPKey = ".Token.dpop_proof_key";
-    internal static void SetProofKey(this AuthenticationProperties properties, ProofKeyString keyString) => properties.Items[AuthenticationPropertiesDPoPKey] = keyString.ToString();
-    internal static ProofKeyString? GetProofKey(this AuthenticationProperties properties)
+    internal static void SetProofKey(this AuthenticationProperties properties, DPoPProofKey dpopProofKey) => properties.Items[AuthenticationPropertiesDPoPKey] = dpopProofKey.ToString();
+    internal static DPoPProofKey? GetProofKey(this AuthenticationProperties properties)
     {
         if (properties.Items.TryGetValue(AuthenticationPropertiesDPoPKey, out var key))
         {
@@ -95,18 +95,18 @@ public static class HttpContextExtensions
                 return null;
             }
 
-            return ProofKeyString.Parse(key);
+            return DPoPProofKey.Parse(key);
         }
         return null;
     }
 
     const string HttpContextDPoPKey = "dpop_proof_key";
-    internal static void SetCodeExchangeDPoPKey(this HttpContext context, ProofKeyString keyString) => context.Items[HttpContextDPoPKey] = keyString;
-    internal static ProofKeyString? GetCodeExchangeDPoPKey(this HttpContext context)
+    internal static void SetCodeExchangeDPoPKey(this HttpContext context, DPoPProofKey dpopProofKey) => context.Items[HttpContextDPoPKey] = dpopProofKey;
+    internal static DPoPProofKey? GetCodeExchangeDPoPKey(this HttpContext context)
     {
         if (context.Items.TryGetValue(HttpContextDPoPKey, out var item))
         {
-            return item as ProofKeyString?;
+            return item as DPoPProofKey?;
         }
         return null;
     }

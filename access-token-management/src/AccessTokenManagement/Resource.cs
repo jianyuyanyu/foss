@@ -8,10 +8,11 @@ using Duende.AccessTokenManagement.Internal;
 namespace Duende.AccessTokenManagement;
 
 [TypeConverter(typeof(StringValueConverter<Resource>))]
-public readonly record struct Resource : IStronglyTypedString<Resource>
+public readonly record struct Resource : IStronglyTypedValue<Resource>
 {
     public const int MaxLength = 1024;
     public static implicit operator Resource(string value) => Parse(value);
+    public static implicit operator string(Resource value) => value.ToString();
     public override string ToString() => Value;
 
     private static readonly ValidationRule<string>[] Validators = [
@@ -25,9 +26,9 @@ public readonly record struct Resource : IStronglyTypedString<Resource>
     private string Value { get; }
 
     public static bool TryParse(string value, [NotNullWhen(true)] out Resource? parsed, out string[] errors) =>
-        IStronglyTypedString<Resource>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStronglyTypedValue<Resource>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
-    static Resource IStronglyTypedString<Resource>.Create(string result) => new(result);
+    static Resource IStronglyTypedValue<Resource>.Create(string result) => new(result);
 
     public static Resource Parse(string value) => StringParsers<Resource>.Parse(value);
 }

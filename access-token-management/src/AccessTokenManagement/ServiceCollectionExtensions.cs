@@ -81,7 +81,7 @@ public static class ServiceCollectionExtensions
     public static IHttpClientBuilder AddClientCredentialsHttpClient(
     this IServiceCollection services,
     string httpClientName,
-    ClientName tokenClientName,
+    TokenClientName tokenClientName,
     Action<HttpClient>? configureClient = null)
     {
         if (configureClient != null)
@@ -107,7 +107,7 @@ public static class ServiceCollectionExtensions
     public static IHttpClientBuilder AddClientCredentialsHttpClient(
         this IServiceCollection services,
         string httpClientName,
-        ClientName tokenClientName,
+        TokenClientName tokenClientName,
         Action<IServiceProvider, HttpClient> configureClient) =>
             services.AddHttpClient(httpClientName, configureClient)
                 .AddDefaultAccessTokenResiliency()
@@ -128,7 +128,7 @@ public static class ServiceCollectionExtensions
     /// <returns></returns>
     public static IHttpClientBuilder AddClientCredentialsTokenHandler(
         this IHttpClientBuilder httpClientBuilder,
-        ClientName tokenClientName) => httpClientBuilder
+        TokenClientName tokenClientName) => httpClientBuilder
             .AddHttpMessageHandler(provider =>
                  {
                      var accessTokenManagementService = provider.GetRequiredService<IClientCredentialsTokenManager>();

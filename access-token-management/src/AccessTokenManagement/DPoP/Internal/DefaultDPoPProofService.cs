@@ -21,7 +21,7 @@ internal class DefaultDPoPProofService(IDPoPNonceStore dPoPNonceStore) : IDPoPPr
         DPoPProof request,
         CT ct)
     {
-        var jsonWebKey = new JsonWebKey(request.ProofKey);
+        var jsonWebKey = request.DPoPProofKey.ToJsonWebKey();
 
         // jwk: representing the public key chosen by the client, in JSON Web Key (JWK) [RFC7517] format,
         // as defined in Section 4.1.3 of [RFC7515]. MUST NOT contain a private key.
@@ -112,6 +112,6 @@ internal class DefaultDPoPProofService(IDPoPNonceStore dPoPNonceStore) : IDPoPPr
     }
 
     /// <inheritdoc/>
-    public DPoPProofThumbprint? GetProofKeyThumbprint(ProofKeyString keyString) =>
-        DPoPProofThumbprint.FromJsonWebKey(new JsonWebKey(keyString));
+    public DPoPProofThumbprint? GetProofKeyThumbprint(DPoPProofKey dpopProofKey) =>
+        DPoPProofThumbprint.FromJsonWebKey(dpopProofKey.ToJsonWebKey());
 }

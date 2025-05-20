@@ -12,7 +12,7 @@ namespace Duende.AccessTokenManagement.Internal;
 /// a generic way to build them. 
 /// </summary>
 /// <typeparam name="TSelf"></typeparam>
-internal interface IStronglyTypedString<TSelf> where TSelf : struct, IStronglyTypedString<TSelf>
+internal interface IStronglyTypedValue<TSelf> where TSelf : struct, IStronglyTypedValue<TSelf>
 {
     /// <summary>
     /// Attempt to parse the value object from a string. Return a list of errors if it fails. 

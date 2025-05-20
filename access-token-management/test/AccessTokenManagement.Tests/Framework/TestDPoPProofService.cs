@@ -24,5 +24,5 @@ public class TestDPoPProofService : IDPoPProofService
         return Task.FromResult<DPoPProofString?>(DPoPProofString.Parse(ProofToken + Nonce));
     }
 
-    public DPoPProofThumbprint? GetProofKeyThumbprint(ProofKeyString request) => null;
+    public DPoPProofThumbprint? GetProofKeyThumbprint(DPoPProofKey request) => null;
 }

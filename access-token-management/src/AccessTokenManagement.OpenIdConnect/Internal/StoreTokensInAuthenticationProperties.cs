@@ -81,8 +81,8 @@ internal class StoreTokensInAuthenticationProperties(
         var refreshToken = refreshTokenValue == null
             ? null
             : new UserRefreshToken(
-                RefreshTokenString.Parse(refreshTokenValue),
-                ProofKeyString.ParseOrDefault(dpopKey));
+                RefreshToken.Parse(refreshTokenValue),
+                DPoPProofKey.ParseOrDefault(dpopKey));
 
         if (accessTokenValue == null && refreshToken != null)
         {
@@ -91,13 +91,13 @@ internal class StoreTokensInAuthenticationProperties(
 
         var userToken = new UserToken
         {
-            AccessToken = AccessTokenString.Parse(accessTokenValue ?? throw new NullReferenceException("access_token should not be null here.")),
+            AccessToken = AccessToken.Parse(accessTokenValue ?? throw new NullReferenceException("access_token should not be null here.")),
             AccessTokenType = AccessTokenType.ParseOrDefault(accessTokenType),
-            DPoPJsonWebKey = ProofKeyString.ParseOrDefault(dpopKey),
+            DPoPJsonWebKey = DPoPProofKey.ParseOrDefault(dpopKey),
             RefreshToken = refreshToken?.RefreshToken,
             Expiration = dtExpires,
             ClientId = ClientId.Parse(clientId ?? "unknown"),
-            IdentityToken = IdentityTokenString.ParseOrDefault(identityTokenValue),
+            IdentityToken = IdentityToken.ParseOrDefault(identityTokenValue),
         };
         return new TokenForParameters(userToken, refreshToken);
     }

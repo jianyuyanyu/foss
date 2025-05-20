@@ -11,7 +11,7 @@ namespace Duende.AccessTokenManagement.Internal;
 /// </summary>
 internal class ClientCredentialsTokenRetriever(
     IClientCredentialsTokenManager clientCredentialsTokenManager,
-    ClientName tokenClientName
+    TokenClientName tokenClientName
 ) : AccessTokenRequestHandler.ITokenRetriever
 {
     /// <inheritdoc />
