@@ -26,8 +26,7 @@ internal class ConfigureOpenIdConnectOptions(
 {
     private readonly Scheme _configScheme = GetConfigScheme(userAccessTokenManagementOptions.Value, schemeProvider);
 
-    private ClientCredentialsClientName clientName =>
-        ClientCredentialsClientName.Parse(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + _configScheme);
+    private ClientCredentialsClientName ClientName => _configScheme.ToClientName();
 
     private static Scheme GetConfigScheme(UserTokenManagementOptions options, IAuthenticationSchemeProvider schemeProvider)
     {
@@ -75,7 +74,7 @@ internal class ConfigureOpenIdConnectOptions(
 
             var dPoPKeyStore = context.HttpContext.RequestServices.GetRequiredService<IDPoPKeyStore>();
 
-            var key = await dPoPKeyStore.GetKeyAsync(clientName);
+            var key = await dPoPKeyStore.GetKeyAsync(ClientName);
             if (key == null)
             {
                 return;

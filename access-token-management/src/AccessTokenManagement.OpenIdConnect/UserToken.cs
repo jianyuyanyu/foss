@@ -43,12 +43,12 @@ public sealed record UserToken : AccessTokenRequestHandler.IToken
     /// <summary>
     /// The refresh token that the user may have if offline access was requested. 
     /// </summary>
-    public required RefreshToken? RefreshToken { get; init; }
+    public RefreshToken? RefreshToken { get; init; }
 
     /// <summary>
     /// The identity token that may be populated by the OP when refreshing the access token. This
     /// value is not stored, but available should some OP's require to send this value, for example
     /// during logout.
     /// </summary>
-    public required IdentityToken? IdentityToken { get; init; }
+    public IdentityToken? IdentityToken { get; init; }
 }

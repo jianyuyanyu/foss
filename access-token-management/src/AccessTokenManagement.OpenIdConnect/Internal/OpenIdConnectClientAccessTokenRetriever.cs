@@ -46,7 +46,7 @@ internal class OpenIdConnectClientAccessTokenRetriever(
         }
 
         var getTokenResult = await tokenManager.GetAccessTokenAsync(
-            ClientCredentialsClientName.Parse(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + schemeName),
+            schemeName.Value.ToClientName(),
             userTokenRequestParameters,
             ct).ConfigureAwait(false);
 

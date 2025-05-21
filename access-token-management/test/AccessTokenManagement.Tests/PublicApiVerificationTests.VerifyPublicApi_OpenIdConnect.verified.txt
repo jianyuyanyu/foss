@@ -54,13 +54,14 @@
         public Duende.AccessTokenManagement.ClientSecret ClientSecret { get; set; }
         public System.Net.Http.HttpClient? HttpClient { get; set; }
         public System.Uri? RevocationEndpoint { get; set; }
-        public Duende.AccessTokenManagement.Scheme? Scheme { get; set; }
+        public Duende.AccessTokenManagement.Scheme Scheme { get; set; }
         [System.Runtime.CompilerServices.RequiredMember]
         public System.Uri TokenEndpoint { get; set; }
     }
     public static class OpenIdConnectTokenManagementDefaults
     {
         public const string ClientCredentialsClientNamePrefix = "Duende.TokenManagement.SchemeBasedClient:";
+        public static Duende.AccessTokenManagement.ClientCredentialsClientName ToClientName(this Duende.AccessTokenManagement.Scheme scheme) { }
     }
     public static class ServiceCollectionExtensions
     {
@@ -115,9 +116,7 @@
         public Duende.AccessTokenManagement.DPoP.DPoPProofKey? DPoPJsonWebKey { get; init; }
         [System.Runtime.CompilerServices.RequiredMember]
         public System.DateTimeOffset Expiration { get; init; }
-        [System.Runtime.CompilerServices.RequiredMember]
         public Duende.AccessTokenManagement.IdentityToken? IdentityToken { get; init; }
-        [System.Runtime.CompilerServices.RequiredMember]
         public Duende.AccessTokenManagement.RefreshToken? RefreshToken { get; init; }
         public Duende.AccessTokenManagement.Scope? Scope { get; init; }
     }

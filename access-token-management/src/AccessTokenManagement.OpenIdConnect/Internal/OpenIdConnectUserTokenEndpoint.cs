@@ -72,7 +72,7 @@ internal class OpenIdConnectUserTokenEndpoint(
         {
             var assertion = await clientAssertionService
                 .GetClientAssertionAsync(
-                    clientName: ClientCredentialsClientName.Parse(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + oidc.Scheme),
+                    clientName: oidc.Scheme.ToClientName(),
                     parameters,
                     ct)
                 .ConfigureAwait(false);
@@ -194,7 +194,7 @@ internal class OpenIdConnectUserTokenEndpoint(
         else
         {
             var assertion = await clientAssertionService.GetClientAssertionAsync(
-                ClientCredentialsClientName.Parse(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + oidc.Scheme), parameters, ct).ConfigureAwait(false);
+                oidc.Scheme.ToClientName(), parameters, ct).ConfigureAwait(false);
             if (assertion != null)
             {
                 request.ClientAssertion = assertion;

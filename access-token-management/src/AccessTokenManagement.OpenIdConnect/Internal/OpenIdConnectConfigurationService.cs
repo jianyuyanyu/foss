@@ -56,7 +56,7 @@ internal class OpenIdConnectConfigurationService(
 
         return new OpenIdConnectClientConfiguration
         {
-            Scheme = configScheme,
+            Scheme = configScheme.Value,
             TokenEndpoint = new Uri(configuration.TokenEndpoint),
             RevocationEndpoint = configuration.RevocationEndpoint == null ? null : new Uri(configuration.RevocationEndpoint),
             ClientId = ClientId.Parse(options.ClientId ?? throw new InvalidOperationException("ClientId is null")),

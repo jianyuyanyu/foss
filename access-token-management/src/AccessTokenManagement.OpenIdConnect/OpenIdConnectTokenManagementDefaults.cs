@@ -12,4 +12,7 @@ public static class OpenIdConnectTokenManagementDefaults
     /// Prefix to use for registering scheme based client credentials client in options system on the fly
     /// </summary>
     public const string ClientCredentialsClientNamePrefix = "Duende.TokenManagement.SchemeBasedClient:";
+
+    public static ClientCredentialsClientName ToClientName(this Scheme scheme) =>
+        ClientCredentialsClientName.Parse(ClientCredentialsClientNamePrefix + scheme);
 }

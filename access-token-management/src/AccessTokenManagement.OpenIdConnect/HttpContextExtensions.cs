@@ -79,7 +79,7 @@ public static class HttpContextExtensions
         }
 
         return await service.GetAccessTokenAsync(
-            ClientCredentialsClientName.Parse(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + schemeName),
+            schemeName.Value.ToClientName(),
             parameters,
             ct).ConfigureAwait(false);
     }

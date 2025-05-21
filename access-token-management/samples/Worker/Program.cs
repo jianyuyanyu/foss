@@ -45,10 +45,8 @@ public class Program
                     .AddClient("demo.dpop", client =>
                     {
                         client.TokenEndpoint = new Uri("https://demo.duendesoftware.com/connect/token");
-                        //client.TokenEndpoint = "https://localhost:5001/connect/token";
 
                         client.ClientId = ClientId.Parse("m2m.dpop");
-                        //client.ClientId = ClientIdPparse("m2m.dpop.nonce");
                         client.ClientSecret = ClientSecret.Parse("secret");
 
                         client.Scope = Scope.Parse("api");
@@ -69,7 +67,6 @@ public class Program
 
                 services.AddClientCredentialsHttpClient("client.dpop", ClientCredentialsClientName.Parse("demo.dpop"), client =>
                 {
-                    //client.BaseAddress = new Uri("https://localhost:5001/api/dpop/");
                     client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/dpop/");
                 });
 
