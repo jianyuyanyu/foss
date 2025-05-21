@@ -48,7 +48,6 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<IClientCredentialsTokenEndpoint, ClientCredentialsTokenClient>();
         services.TryAddTransient<IClientAssertionService, NoOpClientAssertionService>();
 
-        services.TryAddTransient<IDPopProofRequestHandler, DPopProofRequestHandler>();
         services.TryAddTransient<IDPoPProofService, DefaultDPoPProofService>();
         services.TryAddTransient<IDPoPKeyStore, DefaultDPoPKeyStore>();
 
@@ -144,10 +143,12 @@ public static class ServiceCollectionExtensions
         AccessTokenRequestHandler.ITokenRetriever retriever)
     {
         var logger = provider.GetRequiredService<ILogger<AccessTokenRequestHandler>>();
-        var dpopHandler = provider.GetRequiredService<IDPopProofRequestHandler>();
+        var dPoPProofService = provider.GetRequiredService<IDPoPProofService>();
+        var dPoPNonceStore = provider.GetRequiredService<IDPoPNonceStore>();
         var accessTokenHandler = new AccessTokenRequestHandler(
             tokenRetriever: retriever,
-            dPoPProofRequestHandler: dpopHandler,
+            dPoPNonceStore: dPoPNonceStore,
+            dPoPProofService: dPoPProofService,
             logger: logger);
 
         return accessTokenHandler;

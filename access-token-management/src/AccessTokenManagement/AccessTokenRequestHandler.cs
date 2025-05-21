@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Net;
 using Duende.AccessTokenManagement.DPoP;
 using Duende.AccessTokenManagement.Internal;
 using Duende.AccessTokenManagement.OTel;
@@ -14,8 +15,9 @@ namespace Duende.AccessTokenManagement;
 /// can be customized. 
 /// </summary>
 public sealed class AccessTokenRequestHandler(
+    IDPoPNonceStore dPoPNonceStore,
+    IDPoPProofService dPoPProofService,
     AccessTokenRequestHandler.ITokenRetriever tokenRetriever,
-    IDPopProofRequestHandler dPoPProofRequestHandler,
     ILogger<AccessTokenRequestHandler> logger)
     : DelegatingHandler
 {
@@ -46,15 +48,8 @@ public sealed class AccessTokenRequestHandler(
 
         if (token.DPoPJsonWebKey != null)
         {
-            var dpopParameters = new DPopProofRequestParameters()
-            {
-                AccessToken = token,
-                DPoPNonce = request.GetDPoPNonce(),
-                Request = request
-            };
-
             // looks like this is a DPoP bound token, so try to generate the proof token
-            if (!await dPoPProofRequestHandler.TryAcquireDPopProofAsync(dpopParameters, ct))
+            if (!await TryAcquireDPopProofAsync(request, token, ct))
             {
                 // failed or opted out for this request, to fall back to Bearer 
                 scheme = Scheme.Bearer;
@@ -66,12 +61,67 @@ public sealed class AccessTokenRequestHandler(
         var httpResponseMessage = await base.SendAsync(request, ct);
 
         // On the response, there may be a DPOP Nonce that we need to store. 
-        await dPoPProofRequestHandler.HandleDPopResponseAsync(httpResponseMessage, ct);
+        await HandleDPopResponseAsync(httpResponseMessage, ct);
 
         return httpResponseMessage;
     }
 
 
+    private async Task<bool> TryAcquireDPopProofAsync(HttpRequestMessage request, IToken token, CT ct)
+    {
+        request.ClearDPoPProofToken();
+
+        if (token.DPoPJsonWebKey == null)
+        {
+            return false;
+        }
+        request.TryGetDPopProofAdditionalPayloadClaims(out var additionalClaims);
+
+        var dPoPProofRequest = new DPoPProofRequest
+        {
+            AccessToken = token.AccessToken,
+            Url = request.GetDPoPUrl(),
+            Method = request.Method,
+            DPoPProofKey = token.DPoPJsonWebKey.Value,
+            DPoPNonce = request.GetDPoPNonce(),
+            AdditionalPayloadClaims = additionalClaims,
+        };
+        var proofToken = await dPoPProofService.CreateProofTokenAsync(dPoPProofRequest, ct).ConfigureAwait(false);
+
+        if (proofToken == null)
+        {
+            logger.FailedToCreateDPopProofToken(LogLevel.Debug, request.RequestUri);
+            return false;
+        }
+
+        logger.SendingDPoPProofToken(LogLevel.Debug, request.RequestUri);
+        request.SetDPoPProofToken(proofToken.Value);
+        return true;
+    }
+
+    private async Task HandleDPopResponseAsync(HttpResponseMessage response, CT ct)
+    {
+        var request = response.RequestMessage;
+
+        if (request == null || response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            return;
+        }
+        var dPoPNonce = response.GetDPoPNonce();
+
+        if (dPoPNonce == null)
+        {
+            return;
+        }
+
+        var dPoPNonceContext = new DPoPNonceContext
+        {
+            Url = request.GetDPoPUrl(),
+            Method = request.Method,
+        };
+        logger.AuthorizationServerSuppliedNewNonce(LogLevel.Debug);
+        await dPoPNonceStore.StoreNonceAsync(dPoPNonceContext, dPoPNonce.Value, ct);
+    }
     /// <summary>
     /// Interface for retrieving access tokens, on behalf of <see cref="AccessTokenRequestHandler"/>
     /// </summary>

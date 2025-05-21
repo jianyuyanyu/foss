@@ -13,7 +13,7 @@
     }
     public sealed class AccessTokenRequestHandler : System.Net.Http.DelegatingHandler
     {
-        public AccessTokenRequestHandler(Duende.AccessTokenManagement.AccessTokenRequestHandler.ITokenRetriever tokenRetriever, Duende.AccessTokenManagement.DPoP.IDPopProofRequestHandler dPoPProofRequestHandler, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.AccessTokenRequestHandler> logger) { }
+        public AccessTokenRequestHandler(Duende.AccessTokenManagement.DPoP.IDPoPNonceStore dPoPNonceStore, Duende.AccessTokenManagement.DPoP.IDPoPProofService dPoPProofService, Duende.AccessTokenManagement.AccessTokenRequestHandler.ITokenRetriever tokenRetriever, Microsoft.Extensions.Logging.ILogger<Duende.AccessTokenManagement.AccessTokenRequestHandler> logger) { }
         protected override System.Net.Http.HttpResponseMessage Send(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken ct) { }
         protected override System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> SendAsync(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken ct) { }
         public interface IToken
@@ -364,19 +364,6 @@ namespace Duende.AccessTokenManagement.DPoP
         public static Duende.AccessTokenManagement.DPoP.DPoPProofThumbprint Parse(string value) { }
         public static bool TryParse(string value, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Duende.AccessTokenManagement.DPoP.DPoPProofThumbprint? parsed, out string[] errors) { }
     }
-    [System.Runtime.CompilerServices.RequiredMember]
-    public sealed class DPopProofRequestParameters : System.IEquatable<Duende.AccessTokenManagement.DPoP.DPopProofRequestParameters>
-    {
-        [System.Obsolete(("Constructors of types with required members are not supported in this version of " +
-            "your compiler."), true)]
-        [System.Runtime.CompilerServices.CompilerFeatureRequired("RequiredMembers")]
-        public DPopProofRequestParameters() { }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public Duende.AccessTokenManagement.AccessTokenRequestHandler.IToken AccessToken { get; init; }
-        public Duende.AccessTokenManagement.DPoP.DPoPNonce? DPoPNonce { get; init; }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public System.Net.Http.HttpRequestMessage Request { get; init; }
-    }
     public interface IDPoPKeyStore
     {
         System.Threading.Tasks.Task<Duende.AccessTokenManagement.DPoP.DPoPProofKey?> GetKeyAsync(Duende.AccessTokenManagement.TokenClientName clientName, System.Threading.CancellationToken ct = default);
@@ -394,11 +381,6 @@ namespace Duende.AccessTokenManagement.DPoP
     {
         System.Threading.Tasks.Task<Duende.AccessTokenManagement.DPoP.DPoPProof?> CreateProofTokenAsync(Duende.AccessTokenManagement.DPoP.DPoPProofRequest request, System.Threading.CancellationToken ct = default);
         Duende.AccessTokenManagement.DPoP.DPoPProofThumbprint? GetProofKeyThumbprint(Duende.AccessTokenManagement.DPoP.DPoPProofKey dpopProofKey);
-    }
-    public interface IDPopProofRequestHandler
-    {
-        System.Threading.Tasks.Task HandleDPopResponseAsync(System.Net.Http.HttpResponseMessage response, System.Threading.CancellationToken ct);
-        System.Threading.Tasks.Task<bool> TryAcquireDPopProofAsync(Duende.AccessTokenManagement.DPoP.DPopProofRequestParameters parameters, System.Threading.CancellationToken ct);
     }
 }
 namespace Duende.AccessTokenManagement.OTel

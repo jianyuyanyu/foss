@@ -15,12 +15,10 @@ Duende.AccessTokenManagement.DPoP.DPoPNonceContext
 Duende.AccessTokenManagement.DPoP.DPoPProof
 Duende.AccessTokenManagement.DPoP.DPoPProofKey
 Duende.AccessTokenManagement.DPoP.DPoPProofRequest
-Duende.AccessTokenManagement.DPoP.DPopProofRequestParameters
 Duende.AccessTokenManagement.DPoP.DPoPProofThumbprint
 Duende.AccessTokenManagement.DPoP.IDPoPKeyStore
 Duende.AccessTokenManagement.DPoP.IDPoPNonceStore
 Duende.AccessTokenManagement.DPoP.IDPoPNonceStoreKeyGenerator
-Duende.AccessTokenManagement.DPoP.IDPopProofRequestHandler
 Duende.AccessTokenManagement.DPoP.IDPoPProofService
 Duende.AccessTokenManagement.FailedResult
 Duende.AccessTokenManagement.ForceTokenRenewal

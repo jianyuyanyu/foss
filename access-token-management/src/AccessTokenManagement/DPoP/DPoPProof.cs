@@ -9,7 +9,7 @@ namespace Duende.AccessTokenManagement.DPoP;
 /// <summary>
 /// Represents a strongly-typed DPoP proof value.
 /// </summary>
-    public readonly record struct DPoPProof : IStronglyTypedValue<DPoPProof>
+public readonly record struct DPoPProof : IStronglyTypedValue<DPoPProof>
 {
     /// <summary>
     /// Returns the string representation of the DPoP proof value.
