@@ -47,13 +47,13 @@ public abstract class ClientTokenManagementApiTests(ITestOutputHelper output) : 
             .AddClient("test", client =>
             {
                 client.TokenEndpoint = new Uri("https://identityserver/connect/token");
-                client.ClientId = "client_credentials_client";
-                client.ClientSecret = "secret";
-                client.Scope = "scope1";
+                client.ClientId = ClientId.Parse("client_credentials_client");
+                client.ClientSecret = ClientSecret.Parse("secret");
+                client.Scope = Scope.Parse("scope1");
                 client.HttpClient = IdentityServerHost.HttpClient;
                 client.DPoPJsonWebKey = The.JsonWebKey;
             });
-        builder.Services.AddClientCredentialsHttpClient("test", "test")
+        builder.Services.AddClientCredentialsHttpClient("test", ClientCredentialsClientName.Parse("test"))
             .AddHttpMessageHandler(() =>
             {
                 return new ApiHandler(ApiHost.Server.CreateHandler());
@@ -111,7 +111,7 @@ public abstract class ClientTokenManagementApiTests(ITestOutputHelper output) : 
     [Fact]
     public async Task dpop_clients_GetAccessTokenAsync_should_obtain_token_with_cnf()
     {
-        var token = await _tokenService.GetAccessTokenAsync("test").GetToken();
+        var token = await _tokenService.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
 
         token.DPoPJsonWebKey.ShouldNotBeNull();
         token.AccessTokenType.ShouldNotBeNull()
@@ -135,9 +135,9 @@ public abstract class ClientTokenManagementApiTests(ITestOutputHelper output) : 
         jwk.Alg = alg;
         var jwkJson = JsonSerializer.Serialize(jwk);
 
-        _clientOptions.DPoPJsonWebKey = jwkJson;
+        _clientOptions.DPoPJsonWebKey = DPoPProofKey.Parse(jwkJson);
 
-        var token = await _tokenService.GetAccessTokenAsync("test").GetToken();
+        var token = await _tokenService.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
 
         token.DPoPJsonWebKey.ShouldNotBeNull();
         token.AccessTokenType.ShouldNotBeNull().ToString().ShouldBe("DPoP");
@@ -161,9 +161,9 @@ public abstract class ClientTokenManagementApiTests(ITestOutputHelper output) : 
         jwk.Alg = alg;
         var jwkJson = JsonSerializer.Serialize(jwk);
 
-        _clientOptions.DPoPJsonWebKey = jwkJson;
+        _clientOptions.DPoPJsonWebKey = DPoPProofKey.Parse(jwkJson);
 
-        var token = await _tokenService.GetAccessTokenAsync("test").GetToken();
+        var token = await _tokenService.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
 
         token.DPoPJsonWebKey.ShouldNotBeNull();
         token.AccessTokenType.ShouldNotBeNull().ToString().ShouldBe("DPoP");
@@ -188,7 +188,7 @@ public abstract class ClientTokenManagementApiTests(ITestOutputHelper output) : 
             proofToken = ctx.Request.Headers["DPoP"].FirstOrDefault()?.ToString();
         };
         var client = _clientFactory.CreateClient("test");
-        var apiResult = await client.GetAsync(ApiHost.Url("/test"));
+        await client.GetAsync(ApiHost.Url("/test"));
 
         scheme.ShouldBe("DPoP");
         proofToken.ShouldNotBeNull();
@@ -211,7 +211,7 @@ public abstract class ClientTokenManagementApiTests(ITestOutputHelper output) : 
             { "claim_two", "two" },
         });
 
-        var apiResult = await client.SendAsync(requestMessage);
+        await client.SendAsync(requestMessage);
 
         proofToken.ShouldNotBeNull();
         var payload = Base64UrlEncoder.Decode(proofToken!.Split('.')[1]);
@@ -230,7 +230,7 @@ public abstract class ClientTokenManagementApiTests(ITestOutputHelper output) : 
 
         ApiHost.ApiInvoked += ctx =>
         {
-            var at = ctx.Request.Headers.Authorization.FirstOrDefault()?.Split(' ', StringSplitOptions.RemoveEmptyEntries)?[1].Trim();
+            var at = ctx.Request.Headers.Authorization.FirstOrDefault()?.Split(' ', StringSplitOptions.RemoveEmptyEntries)[1].Trim();
             if (count == 0)
             {
                 ApiHost.ApiStatusCodeToReturn = 401;
@@ -246,7 +246,7 @@ public abstract class ClientTokenManagementApiTests(ITestOutputHelper output) : 
             count++;
         };
         var client = _clientFactory.CreateClient("test");
-        var apiResult = await client.GetAsync(ApiHost.Url("/test"));
+        await client.GetAsync(ApiHost.Url("/test"));
 
         count.ShouldBe(2);
         var payload = Base64UrlEncoder.Decode(proofToken!.Split('.')[1]);

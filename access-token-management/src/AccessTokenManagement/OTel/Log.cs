@@ -130,7 +130,7 @@ internal static partial class Log
 
     [LoggerMessage(
         Message = $"No refresh token found in user token store for user {{{OTelParameters.User}}} / resource {{{OTelParameters.Resource}}}. Returning current access token.")]
-    public static partial void NoRefreshTokenAvailableWillNotRefresh(this ILogger logger, LogLevel logLevel, string user, Resource resource);
+    public static partial void NoRefreshTokenAvailableWillNotRefresh(this ILogger logger, LogLevel logLevel, string user, Resource? resource);
 
     [LoggerMessage(
         Message = $"No access token found in user token store for user {{{OTelParameters.User}}} / resource {{{OTelParameters.Resource}}}. Trying to refresh.")]
@@ -162,29 +162,29 @@ internal static partial class Log
 
     [LoggerMessage(
         Message = $"Caching access token for client: {{{OTelParameters.ClientName}}}. Expiration: {{{OTelParameters.Expiration}}}")]
-    public static partial void CachingAccessToken(this ILogger logger, LogLevel logLevel, TokenClientName clientName, DateTimeOffset expiration);
+    public static partial void CachingAccessToken(this ILogger logger, LogLevel logLevel, ClientCredentialsClientName clientName, DateTimeOffset expiration);
 
     [LoggerMessage(
         Message = $"Will not cache token result with error for {{{OTelParameters.ClientName}}}. Error = {{{OTelParameters.Error}}}, Description: {{{OTelParameters.ErrorDescription}}}")]
-    public static partial void WillNotCacheTokenResultWithError(this ILogger logger, LogLevel logLevel, TokenClientName clientName,
+    public static partial void WillNotCacheTokenResultWithError(this ILogger logger, LogLevel logLevel, ClientCredentialsClientName clientName,
         string error, string? errorDescription);
 
     [LoggerMessage(
         Message = $"An exception has occurred while reading ClientCredentialsToken value from the cache for client {{{OTelParameters.ClientName}}}. The call will be executed without the cache.")]
-    public static partial void ExceptionWhileReadingFromCache(this ILogger logger, LogLevel logLevel, Exception ex, TokenClientName clientName);
+    public static partial void ExceptionWhileReadingFromCache(this ILogger logger, LogLevel logLevel, Exception ex, ClientCredentialsClientName clientName);
 
 
     [LoggerMessage(
         Message = $"Error requesting access token for client {{{OTelParameters.ClientName}}}. Error = {{{OTelParameters.Error}}}, Description: {{{OTelParameters.ErrorDescription}}}")]
-    public static partial void FailedToRequestAccessTokenForClient(this ILogger logger, LogLevel logLevel, TokenClientName clientName, string? error, string? errorDescription);
+    public static partial void FailedToRequestAccessTokenForClient(this ILogger logger, LogLevel logLevel, ClientCredentialsClientName clientName, string? error, string? errorDescription);
 
     [LoggerMessage(
         Message = $"Error trying to set token in cache for client {{{OTelParameters.ClientName}}}")]
-    public static partial void ErrorSettingTokenInCache(this ILogger logger, LogLevel logLevel, Exception ex, TokenClientName clientName);
+    public static partial void ErrorSettingTokenInCache(this ILogger logger, LogLevel logLevel, Exception ex, ClientCredentialsClientName clientName);
 
     [LoggerMessage(
         Message = $"Cache hit for obtaining access token for client: {{{OTelParameters.ClientName}}}")]
-    public static partial void CacheHitForObtainingAccessToken(this ILogger logger, LogLevel logLevel, TokenClientName clientName);
+    public static partial void CacheHitForObtainingAccessToken(this ILogger logger, LogLevel logLevel, ClientCredentialsClientName clientName);
 
     [LoggerMessage(
         Message = $"Cache hit for DPoP nonce for URL: {{{OTelParameters.Url}}}, method: {{{OTelParameters.Method}}}")]
@@ -208,11 +208,11 @@ internal static partial class Log
 
     [LoggerMessage(
         Message = $"Error parsing cached access token for client {{{OTelParameters.ClientName}}}")]
-    public static partial void FailedToCacheAccessToken(this ILogger logger, LogLevel logLevel, Exception ex, TokenClientName clientName);
+    public static partial void FailedToCacheAccessToken(this ILogger logger, LogLevel logLevel, Exception ex, ClientCredentialsClientName clientName);
 
     [LoggerMessage(
         Message = $"Cache miss while retrieving access token for client: {{{OTelParameters.ClientName}}}")]
-    public static partial void CacheMissWhileRetrievingAccessToken(this ILogger logger, LogLevel logLevel, TokenClientName clientName);
+    public static partial void CacheMissWhileRetrievingAccessToken(this ILogger logger, LogLevel logLevel, ClientCredentialsClientName clientName);
 
     [LoggerMessage(
         Message = "Creating DPoP proof token for token request.")]
@@ -224,11 +224,11 @@ internal static partial class Log
 
     [LoggerMessage(
         Message = $"Client Credentials token of type '{{{OTelParameters.TokenType}}}' for Client: {{{OTelParameters.ClientName}}} retrieved with expiration {{{OTelParameters.Expiration}}} ")]
-    public static partial void ClientCredentialsTokenForClientRetrieved(this ILogger logger, LogLevel logLevel, TokenClientName clientName, AccessTokenType? tokenType, DateTimeOffset expiration);
+    public static partial void ClientCredentialsTokenForClientRetrieved(this ILogger logger, LogLevel logLevel, ClientCredentialsClientName clientName, AccessTokenType? tokenType, DateTimeOffset expiration);
 
     [LoggerMessage(
         Message = $"Failed to obtain token from cache for client {{{OTelParameters.ClientName}}} using cacheKey {{{OTelParameters.CacheKey}}}. Will obtain new token.")]
-    public static partial void FailedToObtainTokenFromCache(this ILogger logger, LogLevel logLevel, Exception ex, TokenClientName clientName, ClientCredentialsCacheKey cacheKey);
+    public static partial void FailedToObtainTokenFromCache(this ILogger logger, LogLevel logLevel, Exception ex, ClientCredentialsClientName clientName, ClientCredentialsCacheKey cacheKey);
 
     [LoggerMessage(
         Message = "Failed to parse JsonWebKey")]

@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using Duende.AccessTokenManagement;
 using Duende.AccessTokenManagement.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
@@ -18,13 +19,13 @@ public class OidcEvents : OpenIdConnectEvents
 
         await _store.StoreTokenAsync(context.Principal!, new UserToken
         {
-            AccessToken = context.TokenEndpointResponse.AccessToken,
-            AccessTokenType = context.TokenEndpointResponse.TokenType,
+            AccessToken = AccessToken.Parse(context.TokenEndpointResponse.AccessToken),
+            AccessTokenType = AccessTokenType.Parse(context.TokenEndpointResponse.TokenType),
+            RefreshToken = RefreshToken.Parse(context.TokenEndpointResponse.RefreshToken),
+            Scope = Scope.Parse(context.TokenEndpointResponse.Scope),
+            ClientId = ClientId.Parse(context.ProtocolMessage.ClientId),
+            IdentityToken = IdentityToken.Parse(context.TokenEndpointResponse.IdToken),
             Expiration = exp,
-            RefreshToken = context.TokenEndpointResponse.RefreshToken,
-            Scope = context.TokenEndpointResponse.Scope,
-            ClientId = context.ProtocolMessage.ClientId,
-            IdentityToken = context.TokenEndpointResponse.IdToken
         });
 
         await base.TokenValidated(context);

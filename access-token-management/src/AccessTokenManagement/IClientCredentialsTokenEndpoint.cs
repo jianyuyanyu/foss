@@ -16,7 +16,7 @@ public interface IClientCredentialsTokenEndpoint
     /// <param name="ct"></param>
     /// <returns></returns>
     Task<TokenResult<ClientCredentialsToken>> RequestAccessTokenAsync(
-        TokenClientName clientName,
+        ClientCredentialsClientName clientName,
         TokenRequestParameters? parameters = null,
         CT ct = default);
 }

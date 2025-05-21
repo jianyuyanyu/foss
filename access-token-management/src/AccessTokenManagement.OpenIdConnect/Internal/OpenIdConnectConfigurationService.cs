@@ -33,7 +33,7 @@ internal class OpenIdConnectConfigurationService(
                     "No OpenID Connect authentication scheme configured for getting client configuration. Either set the scheme name explicitly or set the default challenge scheme");
             }
 
-            configScheme = defaultScheme.Name;
+            configScheme = Scheme.Parse(defaultScheme.Name);
         }
 
         var options = oidcOptionsMonitor.Get(configScheme.ToString());

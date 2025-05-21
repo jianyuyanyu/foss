@@ -34,14 +34,6 @@ public readonly record struct IdentityToken : IStronglyTypedValue<IdentityToken>
         IStronglyTypedValue<IdentityToken>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
 
     /// <summary>
-    /// Convenience method to parse a string into a <see cref="IdentityToken"/>.
-    /// This will throw an exception if the string is not valid. If you wish more control
-    /// over the conversion process, please use <see cref="TryParse"/> or <see cref="Parse"/>.
-    /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    public static implicit operator IdentityToken(string value) => Parse(value);
-
-    /// <summary>
     /// Convenience method for converting a <see cref="IdentityToken"/> into a string.
     /// </summary>
     /// <param name="value"></param>

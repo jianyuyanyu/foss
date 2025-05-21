@@ -72,7 +72,7 @@ internal class OpenIdConnectUserTokenEndpoint(
         {
             var assertion = await clientAssertionService
                 .GetClientAssertionAsync(
-                    clientName: OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + oidc.Scheme,
+                    clientName: ClientCredentialsClientName.Parse(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + oidc.Scheme),
                     parameters,
                     ct)
                 .ConfigureAwait(false);
@@ -121,7 +121,7 @@ internal class OpenIdConnectUserTokenEndpoint(
 
             if (request.DPoPProofToken != null)
             {
-                metrics.DPoPNonceErrorRetry(request.ClientId, response.Error);
+                metrics.DPoPNonceErrorRetry(ClientId.Parse(request.ClientId), response.Error);
                 response = await oidc.HttpClient!.RequestRefreshTokenAsync(request, ct).ConfigureAwait(false);
             }
         }
@@ -193,7 +193,8 @@ internal class OpenIdConnectUserTokenEndpoint(
         }
         else
         {
-            var assertion = await clientAssertionService.GetClientAssertionAsync(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + oidc.Scheme, parameters, ct).ConfigureAwait(false);
+            var assertion = await clientAssertionService.GetClientAssertionAsync(
+                ClientCredentialsClientName.Parse(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + oidc.Scheme), parameters, ct).ConfigureAwait(false);
             if (assertion != null)
             {
                 request.ClientAssertion = assertion;

@@ -39,9 +39,9 @@ public class BackChannelClientTests(ITestOutputHelper output)
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         // Getting the token twice should result in a single call (because it' cached)
-        var token = await sut.GetAccessTokenAsync("test");
+        var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"));
         token.Succeeded.ShouldBeTrue();
-        token = await sut.GetAccessTokenAsync("test");
+        token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"));
         token.Succeeded.ShouldBeTrue();
 
         mockHttp.GetMatchCount(request).ShouldBe(1);
@@ -69,14 +69,14 @@ public class BackChannelClientTests(ITestOutputHelper output)
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         // Get the first token (should result in a call)
-        var token = await sut.GetAccessTokenAsync("test");
+        var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"));
         token.Succeeded.ShouldBeTrue();
 
         // then delete the token
-        await sut.DeleteAccessTokenAsync("test");
+        await sut.DeleteAccessTokenAsync(ClientCredentialsClientName.Parse("test"));
 
         // Now get another token. This should result in another call
-        token = await sut.GetAccessTokenAsync("test");
+        token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"));
         token.Succeeded.ShouldBeTrue();
         mockHttp.GetMatchCount(request).ShouldBe(2);
     }
@@ -90,8 +90,8 @@ public class BackChannelClientTests(ITestOutputHelper output)
             .AddClient("test", client =>
             {
                 client.TokenEndpoint = new Uri("https://as");
-                client.ClientId = "id";
-                client.ClientSecret = "required";
+                client.ClientId = ClientId.Parse("id");
+                client.ClientSecret = ClientSecret.Parse("required");
             });
 
         var mockHttp = new MockHttpMessageHandler();
@@ -104,7 +104,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        var token = await sut.GetAccessTokenAsync("test");
+        var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"));
 
         token.Succeeded.ShouldBeFalse();
         token.FailedResult!.Error.ShouldBe("Not Found");
@@ -120,8 +120,8 @@ public class BackChannelClientTests(ITestOutputHelper output)
             .AddClient("test", client =>
             {
                 client.TokenEndpoint = new Uri("https://as");
-                client.ClientId = "id";
-                client.ClientSecret = "required";
+                client.ClientId = ClientId.Parse("id");
+                client.ClientSecret = ClientSecret.Parse("required");
                 client.HttpClientName = "custom";
             });
 
@@ -135,7 +135,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        var token = await sut.GetAccessTokenAsync("test");
+        var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"));
 
         token.Succeeded.ShouldBeFalse();
         token.FailedResult!.Error.ShouldBe("Not Found");
@@ -151,8 +151,8 @@ public class BackChannelClientTests(ITestOutputHelper output)
             .AddClient("test", client =>
             {
                 client.TokenEndpoint = new Uri("https://as");
-                client.ClientId = "id";
-                client.ClientSecret = "required";
+                client.ClientId = ClientId.Parse("id");
+                client.ClientSecret = ClientSecret.Parse("required");
                 client.HttpClientName = "custom";
             });
 
@@ -166,21 +166,18 @@ public class BackChannelClientTests(ITestOutputHelper output)
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token1 = null!;
-        token1 = await sut.GetAccessTokenAsync("test", new TokenRequestParameters()
+        await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), new TokenRequestParameters()
         {
-            ForceTokenRenewal = false,
-            Scope = "scope1",
+            ForceTokenRenewal = new ForceTokenRenewal(false),
+            Scope = Scope.Parse("scope1"),
 
         }).GetToken();
 
 
-        ClientCredentialsToken token2 = null!;
-
-        token2 = await sut.GetAccessTokenAsync("test", new TokenRequestParameters()
+        await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), new TokenRequestParameters()
         {
-            ForceTokenRenewal = false,
-            Scope = "scope2",
+            ForceTokenRenewal = new ForceTokenRenewal(false),
+            Scope = Scope.Parse("scope2"),
 
         }).GetToken();
 
@@ -197,8 +194,8 @@ public class BackChannelClientTests(ITestOutputHelper output)
             .AddClient("test", client =>
             {
                 client.TokenEndpoint = new Uri("https://as");
-                client.ClientId = "id";
-                client.ClientSecret = "required";
+                client.ClientId = ClientId.Parse("id");
+                client.ClientSecret = ClientSecret.Parse("required");
                 client.HttpClientName = "custom";
             });
 
@@ -214,26 +211,24 @@ public class BackChannelClientTests(ITestOutputHelper output)
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token1 = null!;
         var t1 = Task.Run(async () =>
         {
-            token1 = await sut.GetAccessTokenAsync("test", new TokenRequestParameters()
+            await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), new TokenRequestParameters()
             {
-                ForceTokenRenewal = false,
-                Scope = "scope1",
+                ForceTokenRenewal = new ForceTokenRenewal(false),
+                Scope = Scope.Parse("scope1"),
 
             }).GetToken();
         });
         await Task.Delay(100);
 
 
-        ClientCredentialsToken token2 = null!;
         var t2 = Task.Run(async () =>
         {
-            token2 = await sut.GetAccessTokenAsync("test", new TokenRequestParameters()
+            await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), new TokenRequestParameters()
             {
-                ForceTokenRenewal = false,
-                Scope = "scope2",
+                ForceTokenRenewal = new ForceTokenRenewal(false),
+                Scope = Scope.Parse("scope2"),
 
             }).GetToken();
         });
@@ -261,8 +256,8 @@ public class BackChannelClientTests(ITestOutputHelper output)
             .AddClient("test", client =>
             {
                 client.TokenEndpoint = new Uri("https://as");
-                client.ClientId = "id";
-                client.ClientSecret = "required";
+                client.ClientId = ClientId.Parse("id");
+                client.ClientSecret = ClientSecret.Parse("required");
                 client.HttpClientName = "custom";
             });
 
@@ -278,12 +273,11 @@ public class BackChannelClientTests(ITestOutputHelper output)
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        ClientCredentialsToken token1 = null!;
         var t1 = Task.Run(async () =>
         {
-            token1 = await sut.GetAccessTokenAsync("test", new TokenRequestParameters()
+            await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), new TokenRequestParameters()
             {
-                ForceTokenRenewal = false,
+                ForceTokenRenewal = new ForceTokenRenewal(false),
                 Parameters = new Parameters()
                 {
                     { "tenant", "1" }
@@ -294,12 +288,11 @@ public class BackChannelClientTests(ITestOutputHelper output)
         await Task.Delay(100);
 
 
-        ClientCredentialsToken token2 = null!;
         var t2 = Task.Run(async () =>
         {
-            token2 = await sut.GetAccessTokenAsync("test", new TokenRequestParameters()
+            await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), new TokenRequestParameters()
             {
-                ForceTokenRenewal = false,
+                ForceTokenRenewal = new ForceTokenRenewal(false),
                 Parameters = new Parameters()
                 {
                     { "tenant", "2" }
@@ -316,7 +309,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
         mockHttp.Flush();
         output.WriteLine("flushed");
         await t1.ThrowOnTimeout();
-        await t1.ThrowOnTimeout();
+        await t2.ThrowOnTimeout();
 
         mockHttp.GetMatchCount(request).ShouldBe(1);
 
@@ -336,15 +329,15 @@ public class BackChannelClientTests(ITestOutputHelper output)
             .AddClient("test", client =>
             {
                 client.TokenEndpoint = new Uri("https://as");
-                client.ClientId = "id";
-                client.ClientSecret = "required";
+                client.ClientId = ClientId.Parse("id");
+                client.ClientSecret = ClientSecret.Parse("required");
                 client.HttpClient = mockClient;
             });
 
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        var token = await sut.GetAccessTokenAsync("test");
+        var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"));
 
         token.Succeeded.ShouldBeFalse();
         token.FailedResult!.Error.ShouldBe("Not Found");
@@ -363,8 +356,8 @@ public class BackChannelClientTests(ITestOutputHelper output)
             .AddClient("test", client =>
             {
                 client.TokenEndpoint = new Uri("https://as");
-                client.ClientId = "id";
-                client.ClientSecret = "required";
+                client.ClientId = ClientId.Parse("id");
+                client.ClientSecret = ClientSecret.Parse("required");
                 client.HttpClientName = "custom";
             });
 
@@ -378,7 +371,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        var token = await sut.GetAccessTokenAsync("test").GetToken();
+        await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
 
         // Verify we actually used the cache
         replacementCache.GetOrCreateCount.ShouldBe(1);
@@ -397,8 +390,8 @@ public class BackChannelClientTests(ITestOutputHelper output)
             .AddClient("test", client =>
             {
                 client.TokenEndpoint = new Uri("https://as");
-                client.ClientId = "id";
-                client.ClientSecret = "required";
+                client.ClientId = ClientId.Parse("id");
+                client.ClientSecret = ClientSecret.Parse("required");
                 client.HttpClientName = "custom";
             });
 
@@ -412,7 +405,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
         var provider = services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
-        var token = await sut.GetAccessTokenAsync("test").GetToken();
+        await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
 
         replacementCache.CacheKey.ShouldBe("always_the_same");
 
@@ -420,7 +413,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
 
     public class AlwaysSameKeyCacheKeyGenerator(string cacheKey) : IClientCredentialsCacheKeyGenerator
     {
-        public ClientCredentialsCacheKey GenerateKey(TokenClientName clientName, TokenRequestParameters? parameters = null)
+        public ClientCredentialsCacheKey GenerateKey(ClientCredentialsClientName clientName, TokenRequestParameters? parameters = null)
             => ClientCredentialsCacheKey.Parse(cacheKey);
     }
 }

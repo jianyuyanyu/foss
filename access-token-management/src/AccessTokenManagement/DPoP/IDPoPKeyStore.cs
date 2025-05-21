@@ -11,6 +11,6 @@ public interface IDPoPKeyStore
     /// <summary>
     /// Gets the DPoP key for the client, or null if none available for the client
     /// </summary>
-    Task<DPoPProofKey?> GetKeyAsync(TokenClientName clientName,
+    Task<DPoPProofKey?> GetKeyAsync(ClientCredentialsClientName clientName,
         CT ct = default);
 }

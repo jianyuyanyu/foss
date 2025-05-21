@@ -6,11 +6,11 @@ namespace Duende.AccessTokenManagement;
 public interface IClientCredentialsTokenManager
 {
     Task<TokenResult<ClientCredentialsToken>> GetAccessTokenAsync(
-        TokenClientName clientName,
+        ClientCredentialsClientName clientName,
         TokenRequestParameters? parameters = null,
         CT ct = default);
 
-    Task DeleteAccessTokenAsync(TokenClientName clientName,
+    Task DeleteAccessTokenAsync(ClientCredentialsClientName clientName,
         TokenRequestParameters? parameters = null,
         CT ct = default);
 }

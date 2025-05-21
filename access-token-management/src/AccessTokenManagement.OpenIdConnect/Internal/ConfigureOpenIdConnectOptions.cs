@@ -26,8 +26,8 @@ internal class ConfigureOpenIdConnectOptions(
 {
     private readonly Scheme _configScheme = GetConfigScheme(userAccessTokenManagementOptions.Value, schemeProvider);
 
-    private string ClientName =>
-        OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + _configScheme;
+    private ClientCredentialsClientName clientName =>
+        ClientCredentialsClientName.Parse(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + _configScheme);
 
     private static Scheme GetConfigScheme(UserTokenManagementOptions options, IAuthenticationSchemeProvider schemeProvider)
     {
@@ -39,8 +39,10 @@ internal class ConfigureOpenIdConnectOptions(
 
         var defaultScheme = schemeProvider.GetDefaultChallengeSchemeAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 
-        return defaultScheme?.Name ?? throw new InvalidOperationException(
+        var schemeName = defaultScheme?.Name ?? throw new InvalidOperationException(
             "No OpenID Connect authentication scheme configured for getting client configuration. Either set the scheme name explicitly or set the default challenge scheme");
+
+        return Scheme.Parse(schemeName);
     }
 
     /// <inheritdoc/>
@@ -73,7 +75,7 @@ internal class ConfigureOpenIdConnectOptions(
 
             var dPoPKeyStore = context.HttpContext.RequestServices.GetRequiredService<IDPoPKeyStore>();
 
-            var key = await dPoPKeyStore.GetKeyAsync(ClientName);
+            var key = await dPoPKeyStore.GetKeyAsync(clientName);
             if (key == null)
             {
                 return;

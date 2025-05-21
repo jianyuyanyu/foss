@@ -23,14 +23,6 @@ public readonly record struct AccessToken : IStronglyTypedValue<AccessToken>
     ];
 
     /// <summary>
-    /// Convenience method to parse a string into a <see cref="AccessToken"/>.
-    /// This will throw an exception if the string is not valid. If you wish more control
-    /// over the conversion process, please use <see cref="TryParse"/> or <see cref="Parse"/>.
-    /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    public static implicit operator AccessToken(string value) => Parse(value);
-
-    /// <summary>
     /// Convenience method for converting a <see cref="AccessToken"/> into a string.
     /// </summary>
     /// <param name="value"></param>

@@ -5,7 +5,7 @@ using Duende.AccessTokenManagement;
 using Duende.IdentityModel.Client;
 using Microsoft.Extensions.Options;
 
-namespace WorkerService;
+namespace WorkerDI;
 
 public class ClientCredentialsClientConfigureOptions : IConfigureNamedOptions<ClientCredentialsClient>
 {
@@ -13,7 +13,7 @@ public class ClientCredentialsClientConfigureOptions : IConfigureNamedOptions<Cl
 
     public ClientCredentialsClientConfigureOptions(DiscoveryCache cache) => _cache = cache;
 
-    public void Configure(ClientCredentialsClient options) => throw new System.NotImplementedException();
+    public void Configure(ClientCredentialsClient options) => throw new NotImplementedException();
 
     public void Configure(string? name, ClientCredentialsClient options)
     {
@@ -22,8 +22,8 @@ public class ClientCredentialsClientConfigureOptions : IConfigureNamedOptions<Cl
             var disco = _cache.GetAsync().GetAwaiter().GetResult();
 
             options.TokenEndpoint = new Uri(disco.TokenEndpoint ?? throw new InvalidOperationException("tokenendpoint is null"));
-            options.ClientId = "m2m.short.jwt";
-            options.Scope = "api";
+            options.ClientId = ClientId.Parse("m2m.short.jwt");
+            options.Scope = Scope.Parse("api");
         }
     }
 }

@@ -3,6 +3,7 @@
 
 using System.Security.Cryptography;
 using System.Text.Json;
+using Duende.AccessTokenManagement;
 using Duende.AccessTokenManagement.DPoP;
 using Duende.AccessTokenManagement.OpenIdConnect;
 
@@ -94,7 +95,7 @@ public static class Startup
         builder.Services.AddUserAccessTokenHttpClient("user-resource",
             new UserTokenRequestParameters
             {
-                Resource = "urn:resource1"
+                Resource = Resource.Parse("urn:resource1")
             },
             configureClient: client =>
             {
@@ -110,7 +111,7 @@ public static class Startup
         builder.Services.AddClientAccessTokenHttpClient("client-resource",
             new UserTokenRequestParameters
             {
-                Resource = "urn:resource1"
+                Resource = Resource.Parse("urn:resource1")
             },
             configureClient: client => { client.BaseAddress = new Uri(config.ApiBaseUrl); });
 

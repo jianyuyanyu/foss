@@ -79,11 +79,11 @@ public class StoreTokensInAuthenticationPropertiesTests
 
         var scheme1RequestParameters = new UserTokenRequestParameters
         {
-            ChallengeScheme = "scheme1"
+            ChallengeScheme = Scheme.Parse("scheme1")
         };
         var scheme2RequestParameters = new UserTokenRequestParameters
         {
-            ChallengeScheme = "scheme2"
+            ChallengeScheme = Scheme.Parse("scheme2")
         };
 
         await sut.SetUserTokenAsync(tokenForScheme1, authenticationProperties, scheme1RequestParameters);
@@ -115,11 +115,11 @@ public class StoreTokensInAuthenticationPropertiesTests
 
         var resource1RequestParameters = new UserTokenRequestParameters
         {
-            Resource = "resource1",
+            Resource = Resource.Parse("resource1"),
         };
         var resource2RequestParameters = new UserTokenRequestParameters
         {
-            Resource = "resource2",
+            Resource = Resource.Parse("resource2"),
         };
 
         await sut.SetUserTokenAsync(tokenForResource1, authenticationProperties, resource1RequestParameters);
@@ -156,26 +156,26 @@ public class StoreTokensInAuthenticationPropertiesTests
 
         var resource1Scheme1 = new UserTokenRequestParameters
         {
-            Resource = "resource1",
-            ChallengeScheme = "scheme1"
+            Resource = Resource.Parse("resource1"),
+            ChallengeScheme = Scheme.Parse("scheme1")
         };
 
         var resource1Scheme2 = new UserTokenRequestParameters
         {
-            Resource = "resource1",
-            ChallengeScheme = "scheme2"
+            Resource = Resource.Parse("resource1"),
+            ChallengeScheme = Scheme.Parse("scheme2")
         };
 
         var resource2Scheme1 = new UserTokenRequestParameters
         {
-            Resource = "resource2",
-            ChallengeScheme = "scheme1"
+            Resource = Resource.Parse("resource2"),
+            ChallengeScheme = Scheme.Parse("scheme1")
         };
 
         var resource2Scheme2 = new UserTokenRequestParameters
         {
-            Resource = "resource2",
-            ChallengeScheme = "scheme2"
+            Resource = Resource.Parse("resource2"),
+            ChallengeScheme = Scheme.Parse("scheme2")
         };
 
         await sut.SetUserTokenAsync(tokenForResource1Scheme1, authenticationProperties, resource1Scheme1);
@@ -247,26 +247,26 @@ public class StoreTokensInAuthenticationPropertiesTests
 
         var resource1Scheme1 = new UserTokenRequestParameters
         {
-            Resource = "resource1",
-            ChallengeScheme = "scheme1"
+            Resource = Resource.Parse("resource1"),
+            ChallengeScheme = Scheme.Parse("scheme1")
         };
 
         var resource1Scheme2 = new UserTokenRequestParameters
         {
-            Resource = "resource1",
-            ChallengeScheme = "scheme2"
+            Resource = Resource.Parse("resource1"),
+            ChallengeScheme = Scheme.Parse("scheme2")
         };
 
         var resource2Scheme1 = new UserTokenRequestParameters
         {
-            Resource = "resource2",
-            ChallengeScheme = "scheme1"
+            Resource = Resource.Parse("resource2"),
+            ChallengeScheme = Scheme.Parse("scheme1")
         };
 
         var resource2Scheme2 = new UserTokenRequestParameters
         {
-            Resource = "resource2",
-            ChallengeScheme = "scheme2"
+            Resource = Resource.Parse("resource2"),
+            ChallengeScheme = Scheme.Parse("scheme2")
         };
 
         await sut.SetUserTokenAsync(tokenForResource1Scheme1, authenticationProperties, resource1Scheme1);
@@ -313,26 +313,26 @@ public class StoreTokensInAuthenticationPropertiesTests
 
         var resource1Scheme1 = new UserTokenRequestParameters
         {
-            Resource = "resource1",
-            ChallengeScheme = "scheme1"
+            Resource = Resource.Parse("resource1"),
+            ChallengeScheme = Scheme.Parse("scheme1")
         };
 
         var resource1Scheme2 = new UserTokenRequestParameters
         {
-            Resource = "resource1",
-            ChallengeScheme = "scheme2"
+            Resource = Resource.Parse("resource1"),
+            ChallengeScheme = Scheme.Parse("scheme2")
         };
 
         var resource2Scheme1 = new UserTokenRequestParameters
         {
-            Resource = "resource2",
-            ChallengeScheme = "scheme1"
+            Resource = Resource.Parse("resource2"),
+            ChallengeScheme = Scheme.Parse("scheme1")
         };
 
         var resource2Scheme2 = new UserTokenRequestParameters
         {
-            Resource = "resource2",
-            ChallengeScheme = "scheme2"
+            Resource = Resource.Parse("resource2"),
+            ChallengeScheme = Scheme.Parse("scheme2")
         };
 
         await sut.SetUserTokenAsync(tokenForResource1Scheme1, authenticationProperties, resource1Scheme1);
@@ -354,28 +354,28 @@ public class StoreTokensInAuthenticationPropertiesTests
 
     private UserToken GenerateRandomUserToken() => new UserToken
     {
-        AccessToken = Guid.NewGuid().ToString(),
-        AccessTokenType = r.NextInt64().ToString(),
-        RefreshToken = Guid.NewGuid().ToString(),
+        AccessToken = AccessToken.Parse(Guid.NewGuid().ToString()),
+        AccessTokenType = AccessTokenType.Parse(r.NextInt64().ToString()),
+        RefreshToken = RefreshToken.Parse(Guid.NewGuid().ToString()),
+        ClientId = ClientId.Parse("some_client-id"),
+        IdentityToken = IdentityToken.Parse(Guid.NewGuid().ToString()),
+        Scope = Scope.Parse("some_scope"),
         Expiration = new DateTimeOffset(new DateTime(DateTime.Now.Ticks + Random.Shared.Next())),
         DPoPJsonWebKey = The.JsonWebKey,
-        ClientId = "some_client-id",
-        IdentityToken = Guid.NewGuid().ToString(),
-        Scope = "some_scope"
     };
 
     private UserToken GenerateAnotherTokenForADifferentResource(UserToken previousToken) => new UserToken
     {
-        AccessToken = Guid.NewGuid().ToString(),
-        AccessTokenType = r.NextInt64().ToString(),
+        AccessToken = AccessToken.Parse(Guid.NewGuid().ToString()),
+        AccessTokenType = AccessTokenType.Parse(r.NextInt64().ToString()),
         Expiration = new DateTimeOffset(new DateTime(DateTime.Now.Ticks + Random.Shared.Next())),
 
         // These two values don't change when we switch resources
         RefreshToken = previousToken.RefreshToken,
         DPoPJsonWebKey = previousToken.DPoPJsonWebKey,
-        ClientId = "some_client-id",
-        IdentityToken = Guid.NewGuid().ToString(),
-        Scope = "some_scope"
+        ClientId = ClientId.Parse("some_client-id"),
+        IdentityToken = IdentityToken.Parse(Guid.NewGuid().ToString()),
+        Scope = Scope.Parse("some_scope"),
 
     };
 }

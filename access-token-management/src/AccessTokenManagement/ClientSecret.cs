@@ -11,14 +11,6 @@ namespace Duende.AccessTokenManagement;
 public readonly record struct ClientSecret : IStronglyTypedValue<ClientSecret>
 {
     /// <summary>
-    /// Convenience method to parse a string into a <see cref="ClientSecret"/>.
-    /// This will throw an exception if the string is not valid. If you wish more control
-    /// over the conversion process, please use <see cref="TryParse"/> or <see cref="Parse"/>.
-    /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    public static implicit operator ClientSecret(string value) => Parse(value);
-
-    /// <summary>
     /// Convenience method for converting a <see cref="ClientSecret"/> into a string.
     /// </summary>
     /// <param name="value"></param>

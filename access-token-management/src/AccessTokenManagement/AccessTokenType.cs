@@ -47,12 +47,6 @@ public readonly record struct AccessTokenType : IStronglyTypedValue<AccessTokenT
     private string Value { get; }
 
     /// <summary>
-    /// Implicitly converts a string to an <see cref="AccessTokenType"/>.
-    /// </summary>
-    /// <param name="value">The string value to convert.</param>
-    public static implicit operator AccessTokenType(string value) => Parse(value);
-
-    /// <summary>
     /// Implicitly converts an <see cref="AccessTokenType"/> to a string.
     /// </summary>
     /// <param name="value">The <see cref="AccessTokenType"/> to convert.</param>

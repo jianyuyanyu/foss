@@ -73,7 +73,7 @@ internal static class Resiliency
                     // We received a 401 Unauthorized, but not a DPoP error.
                     // this indicates that likely the access token is either invalid
                     // or expired. To compensate for expired tokens, we retry once. 
-                    response.RequestMessage?.SetForceRenewal(true);
+                    response.RequestMessage?.SetForceRenewal(new ForceTokenRenewal(true));
                     return ValueTask.FromResult(true);
                 }
             });

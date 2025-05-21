@@ -34,14 +34,6 @@ public readonly record struct ClientCredentialsCacheKey : IStronglyTypedValue<Cl
     public static ClientCredentialsCacheKey Parse(string value) => StringParsers<ClientCredentialsCacheKey>.Parse(value);
 
     /// <summary>
-    /// Convenience method to parse a string into a <see cref="ClientCredentialsCacheKey"/>.
-    /// This will throw an exception if the string is not valid. If you wish more control
-    /// over the conversion process, please use <see cref="TryParse"/> or <see cref="Parse"/>.
-    /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    public static implicit operator ClientCredentialsCacheKey(string value) => Parse(value);
-
-    /// <summary>
     /// Convenience method for converting a <see cref="ClientCredentialsCacheKey"/> into a string.
     /// </summary>
     /// <param name="key"></param>

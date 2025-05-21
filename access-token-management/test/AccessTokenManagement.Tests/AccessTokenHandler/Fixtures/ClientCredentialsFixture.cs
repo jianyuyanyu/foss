@@ -15,12 +15,12 @@ internal class ClientCredentialsFixture : AccessTokenHandlingBaseFixture
             .AddClient("tokenClient", opt =>
             {
                 opt.TokenEndpoint = TokenEndpoint.TokenEndpoint;
-                opt.ClientId = "clientId";
-                opt.ClientSecret = "clientSecret";
+                opt.ClientId = ClientId.Parse("clientId");
+                opt.ClientSecret = ClientSecret.Parse("clientSecret");
                 opt.HttpClientName = "tokenHttpClient";
                 opt.DPoPJsonWebKey = dPoPJsonWebKey;
             });
-        Services.AddClientCredentialsHttpClient("httpClient", "tokenClient")
+        Services.AddClientCredentialsHttpClient("httpClient", ClientCredentialsClientName.Parse("tokenClient"))
             .ConfigureHttpClient(c =>
             {
                 c.BaseAddress = ApiEndpoint.Uri;

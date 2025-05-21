@@ -185,8 +185,10 @@ internal class StoreTokensInAuthenticationProperties(
             return parameters.SignInScheme.Value;
         }
 
-        return (await schemeProvider.GetDefaultSignInSchemeAsync().ConfigureAwait(false))?.Name ??
+        var scheme = (await schemeProvider.GetDefaultSignInSchemeAsync().ConfigureAwait(false))?.Name ??
                throw new InvalidOperationException("No sign in scheme configured");
+
+        return Scheme.Parse(scheme);
     }
 
     /// <inheritdoc/>

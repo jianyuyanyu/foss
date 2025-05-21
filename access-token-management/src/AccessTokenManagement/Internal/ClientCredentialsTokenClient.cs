@@ -24,7 +24,7 @@ internal class ClientCredentialsTokenClient(
 {
     /// <inheritdoc/>
     public virtual async Task<TokenResult<ClientCredentialsToken>> RequestAccessTokenAsync(
-        TokenClientName clientName,
+        ClientCredentialsClientName clientName,
         TokenRequestParameters? parameters = null,
         CT ct = default)
     {

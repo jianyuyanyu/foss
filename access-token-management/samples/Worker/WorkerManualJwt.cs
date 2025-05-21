@@ -32,7 +32,7 @@ public class WorkerManualJwt : BackgroundService
             var client = _clientFactory.CreateClient();
             client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");
 
-            var token = await _tokenManagementService.GetAccessTokenAsync("demo.jwt", ct: stoppingToken).GetToken();
+            var token = await _tokenManagementService.GetAccessTokenAsync(ClientCredentialsClientName.Parse("demo.jwt"), ct: stoppingToken).GetToken();
             client.SetBearerToken(token.AccessToken.ToString());
 
             var response = await client.GetAsync("test", stoppingToken);

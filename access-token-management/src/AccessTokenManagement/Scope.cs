@@ -16,14 +16,6 @@ public readonly partial record struct Scope : IStronglyTypedValue<Scope>
     public const int MaxLength = 1024;
 
     /// <summary>
-    /// Convenience method to parse a string into a <see cref="Scope"/>.
-    /// This will throw an exception if the string is not valid. If you wish more control
-    /// over the conversion process, please use <see cref="TryParse"/> or <see cref="Parse"/>.
-    /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    public static implicit operator Scope(string value) => Parse(value);
-
-    /// <summary>
     /// Convenience method for converting a <see cref="Scope"/> into a string.
     /// </summary>
     /// <param name="value"></param>

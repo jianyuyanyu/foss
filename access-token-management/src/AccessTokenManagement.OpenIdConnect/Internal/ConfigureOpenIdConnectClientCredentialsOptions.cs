@@ -41,7 +41,11 @@ internal class ConfigureOpenIdConnectClientCredentialsOptions(
             throw new ArgumentException("Missing scheme when used with OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix");
         }
 
-        var oidc = configurationService.GetOpenIdConnectConfigurationAsync(scheme).GetAwaiter().GetResult();
+        // Don't like calling getawaiter.getresults here.
+        // But this is a named options and we can't use async/await in the constructor.
+        var oidc = configurationService
+            .GetOpenIdConnectConfigurationAsync(Scheme.Parse(scheme))
+            .GetAwaiter().GetResult();
 
         options.TokenEndpoint = oidc.TokenEndpoint;
         options.ClientId = oidc.ClientId;

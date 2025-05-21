@@ -75,11 +75,11 @@ public static class HttpContextExtensions
                 throw new InvalidOperationException("Cannot retrieve client access token. No scheme was provided and default challenge scheme was not set.");
             }
 
-            schemeName = defaultScheme.Name;
+            schemeName = Scheme.Parse(defaultScheme.Name);
         }
 
         return await service.GetAccessTokenAsync(
-            OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + schemeName,
+            ClientCredentialsClientName.Parse(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + schemeName),
             parameters,
             ct).ConfigureAwait(false);
     }

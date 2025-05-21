@@ -3,6 +3,7 @@ Duende.AccessTokenManagement.AccessTokenRequestHandler
 Duende.AccessTokenManagement.AccessTokenType
 Duende.AccessTokenManagement.ClientCredentialsCacheKey
 Duende.AccessTokenManagement.ClientCredentialsClient
+Duende.AccessTokenManagement.ClientCredentialsClientName
 Duende.AccessTokenManagement.ClientCredentialsToken
 Duende.AccessTokenManagement.ClientCredentialsTokenManagementBuilder
 Duende.AccessTokenManagement.ClientCredentialsTokenManagementDefaults
@@ -37,7 +38,6 @@ Duende.AccessTokenManagement.Scheme
 Duende.AccessTokenManagement.Scope
 Duende.AccessTokenManagement.ServiceCollectionExtensions
 Duende.AccessTokenManagement.ServiceProviderKeys
-Duende.AccessTokenManagement.TokenClientName
 Duende.AccessTokenManagement.TokenRequestParameters
 Duende.AccessTokenManagement.TokenResult
 Duende.AccessTokenManagement.TokenResult`1

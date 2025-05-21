@@ -15,7 +15,7 @@ internal class DefaultClientCredentialsCacheKeyGenerator(
     IOptions<ClientCredentialsTokenManagementOptions> options) : IClientCredentialsCacheKeyGenerator
 {
     public ClientCredentialsCacheKey GenerateKey(
-        TokenClientName clientName,
+        ClientCredentialsClientName clientName,
         TokenRequestParameters? parameters = null)
     {
         var scopePart = "s_" + parameters?.Scope;

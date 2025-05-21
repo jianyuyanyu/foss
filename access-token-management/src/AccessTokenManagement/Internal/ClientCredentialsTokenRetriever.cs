@@ -11,7 +11,7 @@ namespace Duende.AccessTokenManagement.Internal;
 /// </summary>
 internal class ClientCredentialsTokenRetriever(
     IClientCredentialsTokenManager clientCredentialsTokenManager,
-    TokenClientName tokenClientName
+    ClientCredentialsClientName clientName
 ) : AccessTokenRequestHandler.ITokenRetriever
 {
     /// <inheritdoc />
@@ -21,7 +21,7 @@ internal class ClientCredentialsTokenRetriever(
         {
             ForceTokenRenewal = request.GetForceRenewal()
         };
-        var getTokenResult = await clientCredentialsTokenManager.GetAccessTokenAsync(tokenClientName, parameters, ct);
+        var getTokenResult = await clientCredentialsTokenManager.GetAccessTokenAsync(clientName, parameters, ct);
 
         if (getTokenResult.WasSuccessful(out var token, out var error))
         {
