@@ -120,7 +120,7 @@ internal class AuthorizationServerDPoPHandler(
 
         request.ClearDPoPProofToken();
 
-        var proofToken = await dPoPProofService.CreateProofTokenAsync(new DPoPProof
+        var proofToken = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
         {
             Url = request.GetDPoPUrl(),
             Method = request.Method,

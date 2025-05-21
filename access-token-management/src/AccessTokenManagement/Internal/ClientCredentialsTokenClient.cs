@@ -173,7 +173,7 @@ internal class ClientCredentialsTokenClient(
     {
         logger.CreatingDPoPProofToken(LogLevel.Debug);
 
-        var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProof
+        var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
         {
             Url = tokenEndpoint,
             Method = HttpMethod.Post,

@@ -17,8 +17,8 @@ namespace Duende.AccessTokenManagement.DPoP.Internal;
 internal class DefaultDPoPProofService(IDPoPNonceStore dPoPNonceStore) : IDPoPProofService
 {
     /// <inheritdoc/>
-    public async Task<DPoPProofString?> CreateProofTokenAsync(
-        DPoPProof request,
+    public async Task<DPoPProof?> CreateProofTokenAsync(
+        DPoPProofRequest request,
         CT ct)
     {
         var jsonWebKey = request.DPoPProofKey.ToJsonWebKey();
@@ -108,7 +108,7 @@ internal class DefaultDPoPProofService(IDPoPNonceStore dPoPNonceStore) : IDPoPPr
         var key = new SigningCredentials(jsonWebKey, jsonWebKey.Alg);
         var proofToken = handler.CreateToken(JsonSerializer.Serialize(payload, DuendeAccessTokenSerializationContext.Default.DictionaryStringObject), key, header);
 
-        return DPoPProofString.Parse(proofToken);
+        return DPoPProof.Parse(proofToken);
     }
 
     /// <inheritdoc/>

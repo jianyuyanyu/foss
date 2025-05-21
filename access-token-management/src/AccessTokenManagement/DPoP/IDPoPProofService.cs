@@ -9,9 +9,9 @@ namespace Duende.AccessTokenManagement.DPoP;
 public interface IDPoPProofService
 {
     /// <summary>
-    /// Serializes a requested <see cref="DPoPProof"/> model into a <see cref="DPoPProofString"/>.
+    /// Serializes a requested <see cref="DPoPProofRequest"/> model into a <see cref="DPoPProof"/>.
     /// </summary>
-    Task<DPoPProofString?> CreateProofTokenAsync(DPoPProof request,
+    Task<DPoPProof?> CreateProofTokenAsync(DPoPProofRequest request,
         CT ct = default);
 
     /// <summary>

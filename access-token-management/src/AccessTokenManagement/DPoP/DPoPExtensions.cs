@@ -45,9 +45,9 @@ public static class DPoPExtensions
     /// <summary>
     /// Sets the DPoP nonce request header if nonce is not null.
     /// </summary>
-    public static void SetDPoPProofToken(this HttpRequestMessage request, DPoPProofString proofString) =>
+    public static void SetDPoPProofToken(this HttpRequestMessage request, DPoPProof proof) =>
         // set new header
-        request.Headers.Add(OidcConstants.HttpHeaders.DPoP, proofString.ToString());
+        request.Headers.Add(OidcConstants.HttpHeaders.DPoP, proof.ToString());
 
     /// <summary>
     /// Reads the DPoP nonce header from the response

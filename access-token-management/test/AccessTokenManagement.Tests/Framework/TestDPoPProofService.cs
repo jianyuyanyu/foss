@@ -12,16 +12,16 @@ public class TestDPoPProofService : IDPoPProofService
     public string? Nonce { get; set; }
     public bool AppendNonce { get; set; }
 
-    public Task<DPoPProofString?> CreateProofTokenAsync(DPoPProof request,
+    public Task<DPoPProof?> CreateProofTokenAsync(DPoPProofRequest request,
         CancellationToken cancellationToken = default)
     {
         if (ProofToken == null)
         {
-            return Task.FromResult<DPoPProofString?>(null);
+            return Task.FromResult<DPoPProof?>(null);
         }
 
         Nonce = request.DPoPNonce?.ToString();
-        return Task.FromResult<DPoPProofString?>(DPoPProofString.Parse(ProofToken + Nonce));
+        return Task.FromResult<DPoPProof?>(DPoPProof.Parse(ProofToken + Nonce));
     }
 
     public DPoPProofThumbprint? GetProofKeyThumbprint(DPoPProofKey request) => null;

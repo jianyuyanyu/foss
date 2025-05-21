@@ -14,8 +14,8 @@ Duende.AccessTokenManagement.DPoP.DPoPNonce
 Duende.AccessTokenManagement.DPoP.DPoPNonceContext
 Duende.AccessTokenManagement.DPoP.DPoPProof
 Duende.AccessTokenManagement.DPoP.DPoPProofKey
+Duende.AccessTokenManagement.DPoP.DPoPProofRequest
 Duende.AccessTokenManagement.DPoP.DPopProofRequestParameters
-Duende.AccessTokenManagement.DPoP.DPoPProofString
 Duende.AccessTokenManagement.DPoP.DPoPProofThumbprint
 Duende.AccessTokenManagement.DPoP.IDPoPKeyStore
 Duende.AccessTokenManagement.DPoP.IDPoPNonceStore

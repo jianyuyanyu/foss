@@ -18,7 +18,8 @@ internal sealed class DPopProofRequestHandler(
     IDPoPProofService dPoPProofService,
     ILogger<DPopProofRequestHandler> logger) : IDPopProofRequestHandler
 {
-    public async Task<bool> TryAcquireDPopProofAsync(DPopProofRequestParameters parameters,
+    public async Task<bool> TryAcquireDPopProofAsync(
+        DPopProofRequestParameters parameters,
         CT ct)
     {
         var request = parameters.Request;
@@ -32,7 +33,7 @@ internal sealed class DPopProofRequestHandler(
         }
         request.TryGetDPopProofAdditionalPayloadClaims(out var additionalClaims);
 
-        var dPoPProofRequest = new DPoPProof
+        var dPoPProofRequest = new DPoPProofRequest
         {
             AccessToken = token.AccessToken,
             Url = request.GetDPoPUrl(),
