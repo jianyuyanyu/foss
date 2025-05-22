@@ -4,6 +4,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Duende.AccessTokenManagement.DPoP;
 using Duende.IdentityModel;
 using Microsoft.IdentityModel.Tokens;
 using RichardSzalay.MockHttp;
@@ -13,7 +14,7 @@ namespace Duende.AccessTokenManagement.Tests;
 public class UserTokenManagementWithDPoPTests(ITestOutputHelper output)
     : IntegrationTestBase(output, "dpop", opt =>
     {
-        opt.DPoPJsonWebKey = _privateJWK;
+        opt.DPoPJsonWebKey = DPoPProofKey.Parse(_privateJWK);
     })
 {
     // (An example jwk from RFC7517)

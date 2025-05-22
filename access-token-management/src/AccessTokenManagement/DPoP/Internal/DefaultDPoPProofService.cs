@@ -17,11 +17,11 @@ namespace Duende.AccessTokenManagement.DPoP.Internal;
 internal class DefaultDPoPProofService(IDPoPNonceStore dPoPNonceStore) : IDPoPProofService
 {
     /// <inheritdoc/>
-    public async Task<DPoPProofString?> CreateProofTokenAsync(
-        DPoPProof request,
+    public async Task<DPoPProof?> CreateProofTokenAsync(
+        DPoPProofRequest request,
         CT ct)
     {
-        var jsonWebKey = new JsonWebKey(request.ProofKey);
+        var jsonWebKey = request.DPoPProofKey.ToJsonWebKey();
 
         // jwk: representing the public key chosen by the client, in JSON Web Key (JWK) [RFC7517] format,
         // as defined in Section 4.1.3 of [RFC7515]. MUST NOT contain a private key.
@@ -108,10 +108,10 @@ internal class DefaultDPoPProofService(IDPoPNonceStore dPoPNonceStore) : IDPoPPr
         var key = new SigningCredentials(jsonWebKey, jsonWebKey.Alg);
         var proofToken = handler.CreateToken(JsonSerializer.Serialize(payload, DuendeAccessTokenSerializationContext.Default.DictionaryStringObject), key, header);
 
-        return DPoPProofString.Parse(proofToken);
+        return DPoPProof.Parse(proofToken);
     }
 
     /// <inheritdoc/>
-    public DPoPProofThumbprint? GetProofKeyThumbprint(ProofKeyString keyString) =>
-        DPoPProofThumbprint.FromJsonWebKey(new JsonWebKey(keyString));
+    public DPoPProofThumbprint? GetProofKeyThumbprint(DPoPProofKey dpopProofKey) =>
+        DPoPProofThumbprint.FromJsonWebKey(dpopProofKey.ToJsonWebKey());
 }

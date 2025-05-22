@@ -37,7 +37,7 @@ public class ClientAssertionService : IClientAssertionService
     public ClientAssertionService(
         IOpenIdConnectConfigurationService configurationService) => _configurationService = configurationService;
 
-    public async Task<ClientAssertion?> GetClientAssertionAsync(ClientName? clientName = null,
+    public async Task<ClientAssertion?> GetClientAssertionAsync(ClientCredentialsClientName? clientName = null,
         TokenRequestParameters? parameters = null,
         CancellationToken ct = default)
     {

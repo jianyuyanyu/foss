@@ -33,13 +33,13 @@ var services = builder.Services;
 services.AddTransient<ChaosMonkeyHandler>();
 services.AddDistributedMemoryCache();
 services.AddHttpClient().AddHttpClient("c1").AddHttpMessageHandler<ChaosMonkeyHandler>();
-services.AddClientCredentialsHttpClient("t2", "c1");
+services.AddClientCredentialsHttpClient("t2", ClientCredentialsClientName.Parse("c1"));
 services.AddClientCredentialsTokenManagement(opt => opt.CacheLifetimeBuffer = 0)
     .AddClient("c1", opt =>
     {
         opt.TokenEndpoint = new Uri(Services.IdentityServer.ActualUri(), "/connect/token");
-        opt.ClientId = "tokenendpoint";
-        opt.ClientSecret = "secret";
+        opt.ClientId = ClientId.Parse("tokenendpoint");
+        opt.ClientSecret = ClientSecret.Parse("secret");
         opt.HttpClientName = "c1";
     });
 
@@ -83,16 +83,14 @@ app.MapGet("/weatherforecast", () =>
 app.MapGet("/client", async (HttpContext c, IHttpClientFactory factory, CancellationToken ct) =>
 {
     var client = factory.CreateClient("t2");
-    var response = await client.GetAsync($"https://{c.Request.Host}/ok");
-    return await response.Content.ReadAsStringAsync();
+    var response = await client.GetAsync($"https://{c.Request.Host}/ok", ct);
+    return await response.Content.ReadAsStringAsync(ct);
 });
 
 app.MapGet("/ok", () => "ok");
 
 app.MapGet("/token", async (IClientCredentialsTokenManager svc, CancellationToken ct) =>
-{
-    return await svc.GetAccessTokenAsync("c1");
-});
+    await svc.GetAccessTokenAsync(ClientCredentialsClientName.Parse("c1"), ct: ct));
 
 app.Run();
 
@@ -103,12 +101,12 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 
 public class ChaosMonkeyHandler : DelegatingHandler
 {
-    private static readonly Random _random = new Random();
+    private static readonly Random Random = new Random();
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         // 10% chance to return unauthorized
-        if (_random.Next(0, 10) == 0)
+        if (Random.Next(0, 10) == 0)
         {
             return new HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
         }

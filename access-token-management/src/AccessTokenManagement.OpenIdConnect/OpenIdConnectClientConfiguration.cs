@@ -43,6 +43,6 @@ public sealed class OpenIdConnectClientConfiguration
     /// <summary>
     /// The scheme name of the OIDC handler
     /// </summary>
-    public Scheme? Scheme { get; set; }
+    public Scheme Scheme { get; set; }
 
 }

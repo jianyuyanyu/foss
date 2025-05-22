@@ -4,6 +4,7 @@
 using System.Security.Cryptography;
 using System.Text.Json;
 using Duende.AccessTokenManagement;
+using Duende.AccessTokenManagement.DPoP;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -36,39 +37,36 @@ public class Program
                     {
                         client.TokenEndpoint = new Uri("https://demo.duendesoftware.com/connect/token");
 
-                        client.ClientId = "m2m.short";
-                        client.ClientSecret = "secret";
+                        client.ClientId = ClientId.Parse("m2m.short");
+                        client.ClientSecret = ClientSecret.Parse("secret");
 
-                        client.Scope = "api";
+                        client.Scope = Scope.Parse("api");
                     })
                     .AddClient("demo.dpop", client =>
                     {
                         client.TokenEndpoint = new Uri("https://demo.duendesoftware.com/connect/token");
-                        //client.TokenEndpoint = "https://localhost:5001/connect/token";
 
-                        client.ClientId = "m2m.dpop";
-                        //client.ClientId = "m2m.dpop.nonce";
-                        client.ClientSecret = "secret";
+                        client.ClientId = ClientId.Parse("m2m.dpop");
+                        client.ClientSecret = ClientSecret.Parse("secret");
 
-                        client.Scope = "api";
+                        client.Scope = Scope.Parse("api");
                         client.DPoPJsonWebKey = CreateDPoPKey();
                     })
                     .AddClient("demo.jwt", client =>
                     {
                         client.TokenEndpoint = new Uri("https://demo.duendesoftware.com/connect/token");
-                        client.ClientId = "m2m.short.jwt";
+                        client.ClientId = ClientId.Parse("m2m.short.jwt");
 
-                        client.Scope = "api";
+                        client.Scope = Scope.Parse("api");
                     });
 
-                services.AddClientCredentialsHttpClient("client", "demo", client =>
+                services.AddClientCredentialsHttpClient("client", ClientCredentialsClientName.Parse("demo"), client =>
                 {
                     client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");
                 });
 
-                services.AddClientCredentialsHttpClient("client.dpop", "demo.dpop", client =>
+                services.AddClientCredentialsHttpClient("client.dpop", ClientCredentialsClientName.Parse("demo.dpop"), client =>
                 {
-                    //client.BaseAddress = new Uri("https://localhost:5001/api/dpop/");
                     client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/dpop/");
                 });
 
@@ -76,7 +74,7 @@ public class Program
                     {
                         client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");
                     })
-                    .AddClientCredentialsTokenHandler("demo");
+                    .AddClientCredentialsTokenHandler(ClientCredentialsClientName.Parse("demo"));
 
                 services.AddTransient<IClientAssertionService, ClientAssertionService>();
 
@@ -90,13 +88,13 @@ public class Program
         return host;
     }
 
-    private static string CreateDPoPKey()
+    private static DPoPProofKey CreateDPoPKey()
     {
         var key = new RsaSecurityKey(RSA.Create(2048));
         var jwk = JsonWebKeyConverter.ConvertFromRSASecurityKey(key);
         jwk.Alg = "PS256";
         var jwkJson = JsonSerializer.Serialize(jwk);
-        return jwkJson;
+        return DPoPProofKey.Parse(jwkJson);
     }
 
 }

@@ -51,7 +51,7 @@ internal class UserAccessAccessTokenManager(
 
         if (requestedToken.NoRefreshToken)
         {
-            logger.NoRefreshTokenAvailableWillNotRefresh(LogLevel.Debug, userName, parameters.Resource ?? "default");
+            logger.NoRefreshTokenAvailableWillNotRefresh(LogLevel.Debug, userName, parameters.Resource);
             return requestedToken.TokenForSpecifiedParameters;
         }
 

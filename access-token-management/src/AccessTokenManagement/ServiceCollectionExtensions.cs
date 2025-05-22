@@ -48,7 +48,6 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<IClientCredentialsTokenEndpoint, ClientCredentialsTokenClient>();
         services.TryAddTransient<IClientAssertionService, NoOpClientAssertionService>();
 
-        services.TryAddTransient<IDPopProofRequestHandler, DPopProofRequestHandler>();
         services.TryAddTransient<IDPoPProofService, DefaultDPoPProofService>();
         services.TryAddTransient<IDPoPKeyStore, DefaultDPoPKeyStore>();
 
@@ -75,25 +74,25 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/>.</param>
     /// <param name="httpClientName">The name of the client.</param>
-    /// <param name="tokenClientName">The name of the token client.</param>
+    /// <param name="clientName">The name of the token client.</param>
     /// <param name="configureClient">A delegate that is used to configure a <see cref="HttpClient"/>.</param>
     /// <returns></returns>
     public static IHttpClientBuilder AddClientCredentialsHttpClient(
     this IServiceCollection services,
     string httpClientName,
-    ClientName tokenClientName,
+    ClientCredentialsClientName clientName,
     Action<HttpClient>? configureClient = null)
     {
         if (configureClient != null)
         {
             return services.AddHttpClient(httpClientName, configureClient)
                 .AddDefaultAccessTokenResiliency()
-                .AddClientCredentialsTokenHandler(tokenClientName);
+                .AddClientCredentialsTokenHandler(clientName);
         }
 
         return services.AddHttpClient(httpClientName)
             .AddDefaultAccessTokenResiliency()
-            .AddClientCredentialsTokenHandler(tokenClientName);
+            .AddClientCredentialsTokenHandler(clientName);
     }
 
     /// <summary>
@@ -101,17 +100,17 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/>.</param>
     /// <param name="httpClientName">The name of the client.</param>
-    /// <param name="tokenClientName">The name of the token client.</param>
+    /// <param name="clientName">The name of the token client.</param>
     /// <param name="configureClient">Additional configuration with service provider instance.</param>
     /// <returns></returns>
     public static IHttpClientBuilder AddClientCredentialsHttpClient(
         this IServiceCollection services,
         string httpClientName,
-        ClientName tokenClientName,
+        ClientCredentialsClientName clientName,
         Action<IServiceProvider, HttpClient> configureClient) =>
             services.AddHttpClient(httpClientName, configureClient)
                 .AddDefaultAccessTokenResiliency()
-                .AddClientCredentialsTokenHandler(tokenClientName);
+                .AddClientCredentialsTokenHandler(clientName);
 
     public static IHttpClientBuilder AddDefaultAccessTokenResiliency(this IHttpClientBuilder httpClientBuilder)
     {
@@ -124,15 +123,15 @@ public static class ServiceCollectionExtensions
     /// Adds the client access token handler to an HttpClient
     /// </summary>
     /// <param name="httpClientBuilder"></param>
-    /// <param name="tokenClientName"></param>
+    /// <param name="clientName"></param>
     /// <returns></returns>
     public static IHttpClientBuilder AddClientCredentialsTokenHandler(
         this IHttpClientBuilder httpClientBuilder,
-        ClientName tokenClientName) => httpClientBuilder
+        ClientCredentialsClientName clientName) => httpClientBuilder
             .AddHttpMessageHandler(provider =>
                  {
                      var accessTokenManagementService = provider.GetRequiredService<IClientCredentialsTokenManager>();
-                     var retriever = new ClientCredentialsTokenRetriever(accessTokenManagementService, tokenClientName);
+                     var retriever = new ClientCredentialsTokenRetriever(accessTokenManagementService, clientName);
                      var accessTokenHandler = provider.BuildAccessTokenRequestHandler(retriever);
 
                      return accessTokenHandler;
@@ -144,10 +143,12 @@ public static class ServiceCollectionExtensions
         AccessTokenRequestHandler.ITokenRetriever retriever)
     {
         var logger = provider.GetRequiredService<ILogger<AccessTokenRequestHandler>>();
-        var dpopHandler = provider.GetRequiredService<IDPopProofRequestHandler>();
+        var dPoPProofService = provider.GetRequiredService<IDPoPProofService>();
+        var dPoPNonceStore = provider.GetRequiredService<IDPoPNonceStore>();
         var accessTokenHandler = new AccessTokenRequestHandler(
             tokenRetriever: retriever,
-            dPoPProofRequestHandler: dpopHandler,
+            dPoPNonceStore: dPoPNonceStore,
+            dPoPProofService: dPoPProofService,
             logger: logger);
 
         return accessTokenHandler;

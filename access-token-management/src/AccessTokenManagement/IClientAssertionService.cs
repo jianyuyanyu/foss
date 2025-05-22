@@ -18,7 +18,7 @@ public interface IClientAssertionService
     /// <param name="ct"></param>
     /// <returns></returns>
     Task<ClientAssertion?> GetClientAssertionAsync(
-        ClientName? clientName = null,
+        ClientCredentialsClientName? clientName = null,
         TokenRequestParameters? parameters = null,
         CT ct = default);
 }

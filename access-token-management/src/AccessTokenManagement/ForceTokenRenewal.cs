@@ -3,7 +3,4 @@
 
 namespace Duende.AccessTokenManagement;
 
-public readonly record struct ForceTokenRenewal(bool Value)
-{
-    public static implicit operator ForceTokenRenewal(bool value) => new(value);
-}
+public readonly record struct ForceTokenRenewal(bool Value);

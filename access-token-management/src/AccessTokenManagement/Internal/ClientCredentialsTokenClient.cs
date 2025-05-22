@@ -24,7 +24,7 @@ internal class ClientCredentialsTokenClient(
 {
     /// <inheritdoc/>
     public virtual async Task<TokenResult<ClientCredentialsToken>> RequestAccessTokenAsync(
-        ClientName clientName,
+        ClientCredentialsClientName clientName,
         TokenRequestParameters? parameters = null,
         CT ct = default)
     {
@@ -128,7 +128,7 @@ internal class ClientCredentialsTokenClient(
 
             request.DPoPProofToken = await CreateDPoPProofToken(
                 tokenEndpoint: client.TokenEndpoint,
-                dpopJsonWebKeyString: dpopJsonWebKey.Value,
+                dpopProofKey: dpopJsonWebKey.Value,
                 dPoPNonce: DPoPNonce.Parse(response.DPoPNonce),
                 ct: ct);
 
@@ -150,7 +150,7 @@ internal class ClientCredentialsTokenClient(
 
         var token = new ClientCredentialsToken
         {
-            AccessToken = AccessTokenString.Parse(response.AccessToken ?? throw new InvalidOperationException("Access token should not be null")),
+            AccessToken = AccessToken.Parse(response.AccessToken ?? throw new InvalidOperationException("Access token should not be null")),
             AccessTokenType = AccessTokenType.ParseOrDefault(response.TokenType),
             DPoPJsonWebKey = dpopJsonWebKey,
             Expiration = response.ExpiresIn == 0
@@ -167,17 +167,17 @@ internal class ClientCredentialsTokenClient(
 
     private async Task<string?> CreateDPoPProofToken(
         Uri tokenEndpoint,
-        ProofKeyString dpopJsonWebKeyString,
+        DPoPProofKey dpopProofKey,
         DPoPNonce? dPoPNonce = null,
         CT ct = default)
     {
         logger.CreatingDPoPProofToken(LogLevel.Debug);
 
-        var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProof
+        var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
         {
             Url = tokenEndpoint,
             Method = HttpMethod.Post,
-            ProofKey = dpopJsonWebKeyString,
+            DPoPProofKey = dpopProofKey,
             DPoPNonce = dPoPNonce
         }, ct);
 

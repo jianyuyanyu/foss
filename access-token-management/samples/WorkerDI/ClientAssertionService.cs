@@ -31,7 +31,7 @@ public class ClientAssertionService(IOptionsMonitor<ClientCredentialsClient> opt
 
     private static SigningCredentials Credential = new(new JsonWebKey(RsaKey), "RS256");
 
-    public Task<ClientAssertion?> GetClientAssertionAsync(ClientName? clientName = null, TokenRequestParameters? parameters = null, CancellationToken ct = default)
+    public Task<ClientAssertion?> GetClientAssertionAsync(ClientCredentialsClientName? clientName = null, TokenRequestParameters? parameters = null, CancellationToken ct = default)
     {
         if (clientName == "demo.jwt")
         {

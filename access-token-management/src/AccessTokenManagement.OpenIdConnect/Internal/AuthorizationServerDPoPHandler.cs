@@ -111,7 +111,7 @@ internal class AuthorizationServerDPoPHandler(
     /// <summary>
     /// Creates a DPoP proof token and attaches it to a request.
     /// </summary>
-    internal async Task SetDPoPProofTokenForCodeExchangeAsync(HttpRequestMessage request, DPoPNonce? dpopNonce = null, ProofKeyString? jwk = null)
+    internal async Task SetDPoPProofTokenForCodeExchangeAsync(HttpRequestMessage request, DPoPNonce? dpopNonce = null, DPoPProofKey? jwk = null)
     {
         if (jwk == null)
         {
@@ -120,11 +120,11 @@ internal class AuthorizationServerDPoPHandler(
 
         request.ClearDPoPProofToken();
 
-        var proofToken = await dPoPProofService.CreateProofTokenAsync(new DPoPProof
+        var proofToken = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
         {
             Url = request.GetDPoPUrl(),
             Method = request.Method,
-            ProofKey = jwk.Value,
+            DPoPProofKey = jwk.Value,
             DPoPNonce = dpopNonce,
         });
 

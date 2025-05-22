@@ -23,7 +23,7 @@ public class TokenResultTests
         var result = new ClientCredentialsToken()
         {
             ClientId = ClientId.Parse("client_id"),
-            AccessToken = AccessTokenString.Parse("access_token"),
+            AccessToken = AccessToken.Parse("access_token"),
             AccessTokenType = AccessTokenType.Parse("type"),
             DPoPJsonWebKey = null,
             Expiration = DateTimeOffset.UtcNow.AddHours(1),

@@ -175,7 +175,7 @@ public class AppHost : GenericHost
             {
                 var token = await context.GetUserAccessTokenAsync(new UserTokenRequestParameters
                 {
-                    Resource = resource
+                    Resource = Resource.Parse(resource)
                 }).GetToken();
                 await context.Response.WriteAsJsonAsync(UserTokenModel.BuildFrom(token));
             });

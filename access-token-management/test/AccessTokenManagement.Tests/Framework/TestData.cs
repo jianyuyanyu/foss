@@ -12,26 +12,26 @@ namespace Duende.AccessTokenManagement.Framework;
 
 public class TestData
 {
-    public AccessTokenString AccessToken { get; set; } = AccessTokenString.Parse(SameNameAsProperty());
+    public AccessToken AccessToken { get; set; } = AccessToken.Parse(SameNameAsProperty());
     public AccessTokenType TokenType { get; set; } = AccessTokenType.Parse("tokentype");
     public Scope Scope { get; set; } = Scope.Parse("scope");
 
-    public ClientId ClientId { get; set; } = SameNameAsProperty();
-    public ClientSecret ClientSecret { get; set; } = SameNameAsProperty();
+    public ClientId ClientId { get; set; } = ClientId.Parse(SameNameAsProperty());
+    public ClientSecret ClientSecret { get; set; } = ClientSecret.Parse(SameNameAsProperty());
     public Uri Authority { get; set; } = new Uri("https://authority");
     public Uri TokenEndpoint { get; set; } = new Uri("https://authority/connect/token");
-    public ProofKeyString JsonWebKey { get; set; } = BuildDPoPJsonWebKey();
+    public DPoPProofKey JsonWebKey { get; set; } = BuildDPoPJsonWebKey();
     public DateTimeOffset CurrentDate { get; set; } = new DateTimeOffset(2000, 1, 2, 3, 4, 5, TimeSpan.FromHours(6));
     public int ExpiresInSeconds { get; set; } = 60;
-    public Resource Resource { get; set; } = SameNameAsProperty();
+    public Resource Resource { get; set; } = Resource.Parse(SameNameAsProperty());
 
-    public static ProofKeyString BuildDPoPJsonWebKey()
+    public static DPoPProofKey BuildDPoPJsonWebKey()
     {
         var key = CryptoHelper.CreateRsaSecurityKey();
         var jwk = JsonWebKeyConverter.ConvertFromRSASecurityKey(key);
         jwk.Alg = "RS256";
         var jwkJson = JsonSerializer.Serialize(jwk);
-        return jwkJson;
+        return DPoPProofKey.Parse(jwkJson);
     }
 
     private static string SameNameAsProperty([CallerMemberName] string? name = null)

@@ -110,7 +110,7 @@ public static class ServiceCollectionExtensions
     /// Adds a named HTTP client for the factory that automatically sends the current user access token
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/>.</param>
-    /// <param name="name">The name of the client.</param>
+    /// <param name="name">The name of the http client.</param>
     /// <param name="parameters"></param>
     /// <param name="configureClient">Additional configuration with service provider instance.</param>
     /// <returns></returns>

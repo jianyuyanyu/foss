@@ -6,6 +6,7 @@ using Duende.IdentityModel.Client;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
+using WorkerDI;
 
 namespace WorkerService;
 
@@ -39,13 +40,13 @@ public class Program
                 {
                     client.TokenEndpoint = new Uri("https://demo.duendesoftware.com/connect/token");
 
-                    client.ClientId = "m2m.short";
-                    client.ClientSecret = "secret";
+                    client.ClientId = ClientId.Parse("m2m.short");
+                    client.ClientSecret = ClientSecret.Parse("secret");
 
-                    client.Scope = "api";
+                    client.Scope = Scope.Parse("api");
                 });
 
-                services.AddClientCredentialsHttpClient("client", "demo", client =>
+                services.AddClientCredentialsHttpClient("client", ClientCredentialsClientName.Parse("demo"), client =>
                 {
                     client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");
                 });
@@ -54,7 +55,7 @@ public class Program
                     {
                         client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");
                     })
-                    .AddClientCredentialsTokenHandler("demo");
+                    .AddClientCredentialsTokenHandler(ClientCredentialsClientName.Parse("demo"));
 
                 services.AddTransient<IClientAssertionService, ClientAssertionService>();
 

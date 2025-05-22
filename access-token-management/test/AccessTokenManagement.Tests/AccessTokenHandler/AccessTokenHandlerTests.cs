@@ -99,15 +99,15 @@ public class AccessTokenHandlerTests(ITestOutputHelper output)
         await fixture.HttpClient.GetAsync("/").CheckHttpStatusCode();
     }
 
-    private string BuildDPoPProofKey(string alg = "ES256")
+    private DPoPProofKey BuildDPoPProofKey(string alg = "ES256")
     {
         var key = CryptoHelper.CreateECDsaSecurityKey();
         var jwk = JsonWebKeyConverter.ConvertFromECDsaSecurityKey(key);
         jwk.Alg = alg;
-        return JsonSerializer.Serialize(jwk);
+        return DPoPProofKey.Parse(JsonSerializer.Serialize(jwk));
     }
 
-    private async Task<AccessTokenHandlingBaseFixture> GetInitializedFixture(FixtureType type, ProofKeyString? dPoPJsonWebKey = null)
+    private async Task<AccessTokenHandlingBaseFixture> GetInitializedFixture(FixtureType type, DPoPProofKey? dPoPJsonWebKey = null)
     {
         AccessTokenHandlingBaseFixture item = type switch
         {

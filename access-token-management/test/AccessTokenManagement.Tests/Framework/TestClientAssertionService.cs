@@ -9,7 +9,7 @@ namespace Duende.AccessTokenManagement.Tests;
 public class TestClientAssertionService(string name, string assertionType, string assertionValue)
     : IClientAssertionService
 {
-    public Task<ClientAssertion?> GetClientAssertionAsync(ClientName? clientName = null, TokenRequestParameters? parameters = null, CancellationToken ct = default)
+    public Task<ClientAssertion?> GetClientAssertionAsync(ClientCredentialsClientName? clientName = null, TokenRequestParameters? parameters = null, CancellationToken ct = default)
     {
         if (clientName == name)
         {

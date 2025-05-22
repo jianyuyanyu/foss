@@ -42,11 +42,11 @@ internal class OpenIdConnectClientAccessTokenRetriever(
                 throw new InvalidOperationException("Cannot retrieve client access token. No scheme was provided and default challenge scheme was not set.");
             }
 
-            schemeName = defaultScheme.Name;
+            schemeName = Scheme.Parse(defaultScheme.Name);
         }
 
         var getTokenResult = await tokenManager.GetAccessTokenAsync(
-            OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + schemeName,
+            schemeName.Value.ToClientName(),
             userTokenRequestParameters,
             ct).ConfigureAwait(false);
 

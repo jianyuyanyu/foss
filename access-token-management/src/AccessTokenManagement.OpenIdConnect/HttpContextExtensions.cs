@@ -75,18 +75,18 @@ public static class HttpContextExtensions
                 throw new InvalidOperationException("Cannot retrieve client access token. No scheme was provided and default challenge scheme was not set.");
             }
 
-            schemeName = defaultScheme.Name;
+            schemeName = Scheme.Parse(defaultScheme.Name);
         }
 
         return await service.GetAccessTokenAsync(
-            OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + schemeName,
+            schemeName.Value.ToClientName(),
             parameters,
             ct).ConfigureAwait(false);
     }
 
     const string AuthenticationPropertiesDPoPKey = ".Token.dpop_proof_key";
-    internal static void SetProofKey(this AuthenticationProperties properties, ProofKeyString keyString) => properties.Items[AuthenticationPropertiesDPoPKey] = keyString.ToString();
-    internal static ProofKeyString? GetProofKey(this AuthenticationProperties properties)
+    internal static void SetProofKey(this AuthenticationProperties properties, DPoPProofKey dpopProofKey) => properties.Items[AuthenticationPropertiesDPoPKey] = dpopProofKey.ToString();
+    internal static DPoPProofKey? GetProofKey(this AuthenticationProperties properties)
     {
         if (properties.Items.TryGetValue(AuthenticationPropertiesDPoPKey, out var key))
         {
@@ -95,18 +95,18 @@ public static class HttpContextExtensions
                 return null;
             }
 
-            return ProofKeyString.Parse(key);
+            return DPoPProofKey.Parse(key);
         }
         return null;
     }
 
     const string HttpContextDPoPKey = "dpop_proof_key";
-    internal static void SetCodeExchangeDPoPKey(this HttpContext context, ProofKeyString keyString) => context.Items[HttpContextDPoPKey] = keyString;
-    internal static ProofKeyString? GetCodeExchangeDPoPKey(this HttpContext context)
+    internal static void SetCodeExchangeDPoPKey(this HttpContext context, DPoPProofKey dpopProofKey) => context.Items[HttpContextDPoPKey] = dpopProofKey;
+    internal static DPoPProofKey? GetCodeExchangeDPoPKey(this HttpContext context)
     {
         if (context.Items.TryGetValue(HttpContextDPoPKey, out var item))
         {
-            return item as ProofKeyString?;
+            return item as DPoPProofKey?;
         }
         return null;
     }

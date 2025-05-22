@@ -33,7 +33,7 @@ internal class OpenIdConnectConfigurationService(
                     "No OpenID Connect authentication scheme configured for getting client configuration. Either set the scheme name explicitly or set the default challenge scheme");
             }
 
-            configScheme = defaultScheme.Name;
+            configScheme = Scheme.Parse(defaultScheme.Name);
         }
 
         var options = oidcOptionsMonitor.Get(configScheme.ToString());
@@ -56,7 +56,7 @@ internal class OpenIdConnectConfigurationService(
 
         return new OpenIdConnectClientConfiguration
         {
-            Scheme = configScheme,
+            Scheme = configScheme.Value,
             TokenEndpoint = new Uri(configuration.TokenEndpoint),
             RevocationEndpoint = configuration.RevocationEndpoint == null ? null : new Uri(configuration.RevocationEndpoint),
             ClientId = ClientId.Parse(options.ClientId ?? throw new InvalidOperationException("ClientId is null")),

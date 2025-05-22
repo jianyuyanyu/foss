@@ -72,7 +72,7 @@ internal class OpenIdConnectUserTokenEndpoint(
         {
             var assertion = await clientAssertionService
                 .GetClientAssertionAsync(
-                    clientName: OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + oidc.Scheme,
+                    clientName: oidc.Scheme.ToClientName(),
                     parameters,
                     ct)
                 .ConfigureAwait(false);
@@ -84,14 +84,14 @@ internal class OpenIdConnectUserTokenEndpoint(
             }
         }
 
-        var dPoPJsonWebKey = refreshToken.DPoPJsonWebKey;
+        var dPoPJsonWebKey = refreshToken.DPoPProofKey;
         if (dPoPJsonWebKey != null)
         {
-            var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProof
+            var proof = await dPoPProofService.CreateProofTokenAsync(new DPoPProofRequest
             {
                 Url = tokenEndpoint,
                 Method = HttpMethod.Post,
-                ProofKey = dPoPJsonWebKey.Value,
+                DPoPProofKey = dPoPJsonWebKey.Value,
             }, ct);
 
             request.DPoPProofToken = proof;
@@ -108,11 +108,11 @@ internal class OpenIdConnectUserTokenEndpoint(
         {
             logger.DPoPErrorDuringTokenRefreshWillRetryWithServerNonce(LogLevel.Debug, response.ErrorDescription);
 
-            var dPoPProofRequest = new DPoPProof
+            var dPoPProofRequest = new DPoPProofRequest
             {
                 Url = tokenEndpoint,
                 Method = HttpMethod.Post,
-                ProofKey = dPoPJsonWebKey.Value,
+                DPoPProofKey = dPoPJsonWebKey.Value,
                 DPoPNonce = DPoPNonce.ParseOrDefault(response.DPoPNonce)
             };
             var proof = await dPoPProofService.CreateProofTokenAsync(dPoPProofRequest, ct);
@@ -121,7 +121,7 @@ internal class OpenIdConnectUserTokenEndpoint(
 
             if (request.DPoPProofToken != null)
             {
-                metrics.DPoPNonceErrorRetry(request.ClientId, response.Error);
+                metrics.DPoPNonceErrorRetry(ClientId.Parse(request.ClientId), response.Error);
                 response = await oidc.HttpClient!.RequestRefreshTokenAsync(request, ct).ConfigureAwait(false);
             }
         }
@@ -136,8 +136,8 @@ internal class OpenIdConnectUserTokenEndpoint(
         metrics.TokenRetrieved(request.ClientId, AccessTokenManagementMetrics.TokenRequestType.User);
         var token = new UserToken()
         {
-            IdentityToken = IdentityTokenString.ParseOrDefault(response.IdentityToken),
-            AccessToken = AccessTokenString.Parse(response.AccessToken ??
+            IdentityToken = IdentityToken.ParseOrDefault(response.IdentityToken),
+            AccessToken = AccessToken.Parse(response.AccessToken ??
                                                   throw new InvalidOperationException("No access token present")),
             AccessTokenType = AccessTokenType.ParseOrDefault(response.TokenType),
             DPoPJsonWebKey = dPoPJsonWebKey,
@@ -146,7 +146,7 @@ internal class OpenIdConnectUserTokenEndpoint(
                 : DateTimeOffset.UtcNow.AddSeconds(response.ExpiresIn),
             RefreshToken = response.RefreshToken == null
                 ? refreshToken.RefreshToken // use input refresh token if none is returned
-                : RefreshTokenString.Parse(response.RefreshToken),
+                : RefreshToken.Parse(response.RefreshToken),
             Scope = Scope.ParseOrDefault(response.Scope),
             ClientId = oidc.ClientId
         };
@@ -193,7 +193,8 @@ internal class OpenIdConnectUserTokenEndpoint(
         }
         else
         {
-            var assertion = await clientAssertionService.GetClientAssertionAsync(OpenIdConnectTokenManagementDefaults.ClientCredentialsClientNamePrefix + oidc.Scheme, parameters, ct).ConfigureAwait(false);
+            var assertion = await clientAssertionService.GetClientAssertionAsync(
+                oidc.Scheme.ToClientName(), parameters, ct).ConfigureAwait(false);
             if (assertion != null)
             {
                 request.ClientAssertion = assertion;

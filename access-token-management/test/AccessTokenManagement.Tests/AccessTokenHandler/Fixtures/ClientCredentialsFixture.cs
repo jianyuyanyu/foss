@@ -9,18 +9,18 @@ namespace Duende.AccessTokenManagement.AccessTokenHandlers.Fixtures;
 
 internal class ClientCredentialsFixture : AccessTokenHandlingBaseFixture
 {
-    public override ValueTask InitializeAsync(ProofKeyString? dPoPJsonWebKey)
+    public override ValueTask InitializeAsync(DPoPProofKey? dPoPJsonWebKey)
     {
         Services.AddClientCredentialsTokenManagement()
             .AddClient("tokenClient", opt =>
             {
                 opt.TokenEndpoint = TokenEndpoint.TokenEndpoint;
-                opt.ClientId = "clientId";
-                opt.ClientSecret = "clientSecret";
+                opt.ClientId = ClientId.Parse("clientId");
+                opt.ClientSecret = ClientSecret.Parse("clientSecret");
                 opt.HttpClientName = "tokenHttpClient";
                 opt.DPoPJsonWebKey = dPoPJsonWebKey;
             });
-        Services.AddClientCredentialsHttpClient("httpClient", "tokenClient")
+        Services.AddClientCredentialsHttpClient("httpClient", ClientCredentialsClientName.Parse("tokenClient"))
             .ConfigureHttpClient(c =>
             {
                 c.BaseAddress = ApiEndpoint.Uri;
