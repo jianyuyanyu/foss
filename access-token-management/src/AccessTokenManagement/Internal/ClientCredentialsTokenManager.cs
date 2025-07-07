@@ -54,7 +54,7 @@ internal class ClientCredentialsTokenManager(
         {
             Expiration = cacheExpiration,
             LocalCacheExpiration = _options.LocalCacheExpiration,
-            Flags = disableDistributedCacheRead
+            Flags = disableDistributedCacheRead,
         };
 
         ClientCredentialsToken token;
@@ -64,6 +64,7 @@ internal class ClientCredentialsTokenManager(
                 key: cacheKey.ToString(),
                 factory: async (c) => await RequestToken(cacheKey, clientName, parameters, c),
                 options: entryOptions,
+                tags: [HybridCacheConstants.CacheTag, clientName.ToString()],
                 cancellationToken: ct);
         }
         catch (OperationCanceledException)

@@ -103,7 +103,7 @@ public class ConventionTests(ITestOutputHelper output)
     {
         // Find all types in the 'Duende.AccessTokenManagement.Internal' namespace
         var internalTypes = AllTypes
-            .Where(t => t.Namespace!.Contains(".Internal"))
+            .Where(t => t.Namespace?.Contains(".Internal") ?? false)
             .ToList();
 
         internalTypes.ShouldNotBeEmpty("No types found in the 'Duende.AccessTokenManagement.Internal' namespace.");

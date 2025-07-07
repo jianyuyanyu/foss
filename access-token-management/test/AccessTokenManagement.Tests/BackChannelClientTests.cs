@@ -1,10 +1,13 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Buffers;
 using System.Net;
+using System.Text.Json;
 using Duende.AccessTokenManagement.Framework;
 
 using Duende.IdentityModel.Client;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.DependencyInjection;
 using RichardSzalay.MockHttp;
@@ -377,6 +380,45 @@ public class BackChannelClientTests(ITestOutputHelper output)
         replacementCache.GetOrCreateCount.ShouldBe(1);
     }
 
+
+    [Fact]
+    public async Task Can_use_custom_encryption()
+    {
+        var services = new ServiceCollection();
+        services.AddDataProtection();
+        services.AddHybridCache()
+            .AddSerializer<ClientCredentialsToken, EncryptedHybridCacheSerializer>();
+
+        services.AddClientCredentialsTokenManagement()
+            .AddClient(ClientCredentialsClientName.Parse("test"), client =>
+            {
+                client.TokenEndpoint = new Uri("https://as");
+                client.ClientId = ClientId.Parse("id");
+                client.ClientSecret = ClientSecret.Parse("required");
+                client.HttpClientName = "custom";
+            });
+
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When("https://as/*")
+            .Respond((_) => Some.TokenHttpResponse());
+
+        services.AddHttpClient("custom")
+            .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
+
+        var provider = services.BuildServiceProvider();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
+
+        var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
+        var token2 = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
+
+        token.AccessToken.ShouldBeEquivalentTo(token2.AccessToken);
+        var encryptedSerializer =
+            ((EncryptedHybridCacheSerializer)
+                provider.GetRequiredService<IHybridCacheSerializer<ClientCredentialsToken>>());
+
+        encryptedSerializer.SerializedToken.ShouldBeEquivalentTo(token);
+    }
+
     [Fact]
     public async Task Can_use_custom_key_generator()
     {
@@ -409,6 +451,85 @@ public class BackChannelClientTests(ITestOutputHelper output)
 
         replacementCache.CacheKey.ShouldBe("always_the_same");
 
+    }
+
+    [Theory]
+    [InlineData(HybridCacheConstants.CacheTag)]
+    [InlineData("some_client_name")]
+    public async Task Can_delete_entries_for_entire_atm(string clientName)
+    {
+        var services = new ServiceCollection();
+
+        services.AddSingleton<IClientCredentialsCacheKeyGenerator>(new AlwaysSameKeyCacheKeyGenerator("always_the_same"));
+
+        services.AddClientCredentialsTokenManagement()
+            .AddClient("some_client_name", client =>
+            {
+                client.TokenEndpoint = new Uri("https://as");
+                client.ClientId = ClientId.Parse("id");
+                client.ClientSecret = ClientSecret.Parse("required");
+                client.HttpClientName = "custom";
+            });
+
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When("https://as/*")
+            .Respond((_) => Some.TokenHttpResponse());
+
+        services.AddHttpClient("custom")
+            .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
+
+        var provider = services.BuildServiceProvider();
+        var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
+
+        var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("some_client_name")).GetToken();
+
+        var cache = provider.GetRequiredService<HybridCache>();
+        var cachedToken = await cache.GetOrCreateAsync<ClientCredentialsToken>("always_the_same",
+            (_) => ValueTask.FromResult((ClientCredentialsToken)null!));
+
+        cachedToken.ShouldNotBeNull();
+
+        await cache.RemoveByTagAsync(clientName);
+
+        cachedToken = await cache.GetOrCreateAsync<ClientCredentialsToken>("always_the_same",
+            (_) => ValueTask.FromResult((ClientCredentialsToken)null!));
+        cachedToken.ShouldBeNull();
+    }
+
+    /// <summary>
+    /// Example on how to implement a serializer that encrypts data using ASP.NET Core Data Protection.
+    /// </summary>
+    public class EncryptedHybridCacheSerializer : IHybridCacheSerializer<ClientCredentialsToken>
+    {
+        private readonly IDataProtector _protector;
+
+        public EncryptedHybridCacheSerializer(IDataProtectionProvider provider) => _protector = provider.CreateProtector("ClientCredentialsToken");
+
+        public ClientCredentialsToken? SerializedToken;
+
+        public ClientCredentialsToken Deserialize(ReadOnlySequence<byte> source)
+        {
+            // Convert the sequence to a byte array
+            var buffer = source.ToArray();
+            // Unprotect (decrypt) the data
+            var unprotected = _protector.Unprotect(buffer);
+            // Deserialize the JSON payload
+            var deserialized = JsonSerializer.Deserialize<ClientCredentialsToken>(unprotected)!;
+
+            SerializedToken.ShouldBeEquivalentTo(deserialized);
+            return deserialized;
+        }
+
+        public void Serialize(ClientCredentialsToken value, IBufferWriter<byte> target)
+        {
+            SerializedToken = value;
+            // Serialize the value to JSON
+            var json = JsonSerializer.SerializeToUtf8Bytes(value);
+            // Protect (encrypt) the data
+            var protectedBytes = _protector.Protect(json);
+            // Write to the buffer
+            target.Write(protectedBytes);
+        }
     }
 
     public class AlwaysSameKeyCacheKeyGenerator(string cacheKey) : IClientCredentialsCacheKeyGenerator
