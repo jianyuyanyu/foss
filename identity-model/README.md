@@ -15,7 +15,7 @@ Duende.IdentityModel targets [.NET Standard 2.0](https://learn.microsoft.com/en-
 making it suitable for .NET and .NET Framework.
 
 For more documentation, please see the  
-[documentation site](https://docs.duendesoftware.com/foss).
+[documentation site](https://docs.duendesoftware.com/identitymodel).
 
 ## Related Packages
 
