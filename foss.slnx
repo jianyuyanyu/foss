@@ -74,7 +74,7 @@
     <File Path="identity-model-introspection/README.md" />
   </Folder>
   <Folder Name="/identity-model-introspection/src/">
-    <Project Path="identity-model-introspection/src/IdentityModel.AspNetCore.OAuth2Introspection.csproj" />
+    <Project Path="identity-model-introspection/src/IdentityModel.OAuth2Introspection/IdentityModel.AspNetCore.OAuth2Introspection.csproj" />
   </Folder>
   <Folder Name="/identity-model-introspection/test/">
     <Project Path="identity-model-introspection/test/Tests/Tests.csproj" />
