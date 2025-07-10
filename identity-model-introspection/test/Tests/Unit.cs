@@ -27,7 +27,7 @@ namespace Tests
             request.Headers.Append("Authorization", new Microsoft.Extensions.Primitives.StringValues(headerValues));
 
             var actual = TokenRetrieval.FromAuthorizationHeader()(request);
-            Assert.Equal(expected, actual);
+            actual.ShouldBe(expected);
         }
 
         [Theory]
@@ -45,7 +45,7 @@ namespace Tests
             };
 
             var actual = TokenRetrieval.FromQueryString()(request);
-            Assert.Equal(expected, actual);
+            actual.ShouldBe(expected);
         }
     }
 }

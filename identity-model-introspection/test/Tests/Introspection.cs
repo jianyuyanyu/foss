@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using FluentAssertions;
 using Duende.IdentityModel;
 using Duende.IdentityModel.Client;
 using IdentityModel.AspNetCore.OAuth2Introspection;
@@ -44,7 +43,7 @@ namespace Tests
             client.SetBearerToken("sometoken");
 
             var result = await client.GetAsync("http://test");
-            result.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -56,11 +55,11 @@ namespace Tests
             client.SetBearerToken("sometoken");
 
             var result = await client.GetAsync("http://test");
-            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var request = handler.LastRequest;
-            request.Should().ContainKey("client_id").WhoseValue.Should().Be(clientId);
-            request.Should().ContainKey("client_secret").WhoseValue.Should().Be(clientSecret);
+            request.ShouldContainKeyAndValue("client_id",clientId);
+            request.ShouldContainKeyAndValue("client_secret",clientSecret);
         }
 
         [Theory]
@@ -113,12 +112,12 @@ namespace Tests
             await Task.WhenAll(request1, request2);
 
             var result1 = await request1;
-            result1.StatusCode.Should().Be(expectedStatusCode);
+            result1.StatusCode.ShouldBe(expectedStatusCode);
 
-            requestCount.Should().Be(1);
+            requestCount.ShouldBe(1);
 
             var result2 = await request2;
-            result2.StatusCode.Should().Be(expectedStatusCode);
+            result2.StatusCode.ShouldBe(expectedStatusCode);
         }
 
         [Fact]
@@ -148,7 +147,7 @@ namespace Tests
             {
                 client1.SetBearerToken(token);
                 var doRequest = () => client1.GetAsync("http://test", cts.Token);
-                await doRequest.Should().ThrowAsync<OperationCanceledException>();
+                await doRequest.ShouldThrowAsync<OperationCanceledException>();
             });
 
             var client2 = new HttpClient(messageHandler);
@@ -163,7 +162,7 @@ namespace Tests
             await Task.WhenAll(request1, request2);
 
             var result2 = await request2;
-            result2.StatusCode.Should().Be(HttpStatusCode.OK);
+            result2.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
 
         [Theory]
@@ -196,20 +195,20 @@ namespace Tests
             client.SetBearerToken("sometoken");
 
             var result = await client.GetAsync("http://test");
-            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var request = handler.LastRequest;
-            request.Should().ContainKey("client_id").WhoseValue.Should().Be(clientId);
-            request.Should().ContainKey("client_assertion_type").WhoseValue.Should().Be("testType");
-            request.Should().ContainKey("client_assertion").WhoseValue.Should().Be(assertion1);
+            request.ShouldContainKeyAndValue("client_id", clientId);
+            request.ShouldContainKeyAndValue("client_assertion_type","testType");
+            request.ShouldContainKeyAndValue("client_assertion",assertion1);
 
             result = await client.GetAsync("http://test");
-            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             request = handler.LastRequest;
-            request.Should().ContainKey("client_id").WhoseValue.Should().Be(clientId);
-            request.Should().ContainKey("client_assertion_type").WhoseValue.Should().Be("testType");
-            request.Should().ContainKey("client_assertion").WhoseValue.Should().Be(assertion2);
+            request.ShouldContainKeyAndValue("client_id",clientId);
+            request.ShouldContainKeyAndValue("client_assertion_type","testType");
+            request.ShouldContainKeyAndValue("client_assertion",assertion2);
         }
 
         [Fact]
@@ -243,9 +242,10 @@ namespace Tests
 
             var result = await client.GetAsync("http://test");
 
-            result.StatusCode.Should().Be(HttpStatusCode.OK);
-            validatedCalled.Should().BeTrue();
-            failureCalled.Should().BeNull();
+            result.StatusCode.ShouldBe(HttpStatusCode.OK);
+            validatedCalled.HasValue.ShouldBeTrue();
+            validatedCalled.Value.ShouldBeTrue();
+            failureCalled.ShouldBeNull();
         }
 
         [Fact]
@@ -264,10 +264,10 @@ namespace Tests
             client.SetBearerToken("sometoken");
 
             var result = await client.GetAsync("http://test");
-            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             result = await client.GetAsync("http://test");
-            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -286,10 +286,10 @@ namespace Tests
             client.SetBearerToken("sometoken");
 
             var result = await client.GetAsync("http://test");
-            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             result = await client.GetAsync("http://test");
-            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -301,7 +301,7 @@ namespace Tests
             client.SetBearerToken("sometoken");
 
             var result = await client.GetAsync("http://test");
-            result.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -335,9 +335,10 @@ namespace Tests
 
             var result = await client.GetAsync("http://test");
 
-            result.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-            validatedCalled.Should().BeNull();
-            failureCalled.Should().BeTrue();
+            result.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+            validatedCalled.ShouldBeNull();
+            failureCalled.HasValue.ShouldBeTrue();
+            failureCalled.Value.ShouldBeTrue();
         }
 
         [Fact]
@@ -356,12 +357,12 @@ namespace Tests
             client.SetBearerToken(expectedToken);
 
             var response = await client.GetAsync("http://test");
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var responseDataStr = await response.Content.ReadAsStringAsync();
             var responseData = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseDataStr);
 
-            responseData.Should().Contain("token", expectedToken);
+            responseData.ShouldContainKeyAndValue("token", expectedToken);
         }
 
         [Fact]
@@ -382,15 +383,15 @@ namespace Tests
             client.SetBearerToken(expectedToken);
 
             var firstResponse = await client.GetAsync("http://test");
-            firstResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            firstResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var secondResponse = await client.GetAsync("http://test");
-            secondResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            secondResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var responseDataStr = await secondResponse.Content.ReadAsStringAsync();
             var responseData = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseDataStr);
 
-            responseData.Should().Contain("token", expectedToken);
+            responseData.ShouldContainKeyAndValue("token", expectedToken);
             AssertCacheItemExists(server, string.Empty, expectedToken);
         }
 
@@ -414,15 +415,15 @@ namespace Tests
             client.SetBearerToken(expectedToken);
 
             var firstResponse = await client.GetAsync("http://test");
-            firstResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            firstResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var secondResponse = await client.GetAsync("http://test");
-            secondResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            secondResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var responseDataStr = await secondResponse.Content.ReadAsStringAsync();
             var responseData = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseDataStr);
 
-            responseData.Should().Contain("token", expectedToken);
+            responseData.ShouldContainKeyAndValue("token", expectedToken);
             AssertCacheItemExists(server, cacheKeyPrefix, expectedToken);
         }
 
@@ -445,12 +446,12 @@ namespace Tests
 
             var firstResponse = await client.GetAsync("http://test");
 
-            firstResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-            handler.SentIntrospectionRequest.Should().BeTrue();
+            firstResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+            handler.SentIntrospectionRequest.ShouldBeTrue();
 
             handler.SentIntrospectionRequest = false;
             var secondResponse = await client.GetAsync("http://test");
-            handler.SentIntrospectionRequest.Should().BeFalse();
+            handler.SentIntrospectionRequest.ShouldBeFalse();
             AssertCacheItemExists(server, string.Empty, expectedToken);
         }
 
@@ -473,13 +474,13 @@ namespace Tests
 
             var firstResponse = await client.GetAsync("http://test");
 
-            firstResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-            handler.SentIntrospectionRequest.Should().BeTrue();
+            firstResponse.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+            handler.SentIntrospectionRequest.ShouldBeTrue();
 
             handler.SentIntrospectionRequest = false;
             var secondResponse = await client.GetAsync("http://test");
-            secondResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-            handler.SentIntrospectionRequest.Should().BeFalse();
+            secondResponse.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+            handler.SentIntrospectionRequest.ShouldBeFalse();
             AssertCacheItemExists(server, string.Empty, expectedToken);
         }
 
@@ -492,11 +493,11 @@ namespace Tests
             client.SetBearerToken("sometoken");
 
             handler.IsDiscoveryFailureTest = true;
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await client.GetAsync("http://test"));
+            await Should.ThrowAsync<InvalidOperationException>(async () => await client.GetAsync("http://test"));
 
             handler.IsDiscoveryFailureTest = false;
             var result = await client.GetAsync("http://test");
-            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -519,9 +520,9 @@ namespace Tests
             client.SetBearerToken("sometoken");
 
             var result = await client.GetAsync("http://test");
-            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-            handler.LastRequest.Should().Contain(new KeyValuePair<string, string>("additionalParameter", "42"));
+            handler.LastRequest.ShouldContain(new KeyValuePair<string, string>("additionalParameter", "42"));
         }
 
         private void AssertCacheItemExists(TestServer testServer, string cacheKeyPrefix, string token)
@@ -529,7 +530,7 @@ namespace Tests
             var cache = testServer.Services.GetService<IDistributedCache>();
             var cacheItem = cache.GetString($"{cacheKeyPrefix}{token.ToSha256()}");
 
-            cacheItem.Should().NotBeNullOrEmpty();
+            cacheItem.ShouldNotBeNullOrEmpty();
         }
     }
 }
