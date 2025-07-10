@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-
     <PackageId>IdentityModel.AspNetCore.OAuth2Introspection</PackageId>
     <Description>ASP.NET Core authentication handler for validating tokens using OAuth 2.0 introspection</Description>
     <Authors>Dominick Baier;Brock Allen</Authors>
@@ -10,8 +9,9 @@
     <PackageProjectUrl>https://github.com/IdentityModel/IdentityModel.AspNetCore.OAuth2Introspection</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <None Include="../icon.jpg" Pack="true" Visible="false" PackagePath="" />
+    <None Remove="Directory.Build.props" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,8 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Duende.IdentityModel" Version="7.1.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-    <PackageReference Include="minver" Version="6.0.0" PrivateAssets="All" />
+    <PackageReference Include="Duende.IdentityModel" />
   </ItemGroup>
 </Project>

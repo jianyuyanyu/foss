@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using FluentAssertions;
 using IdentityModel.AspNetCore.OAuth2Introspection;
 using Duende.IdentityModel.Client;
 using System;
@@ -19,8 +18,7 @@ namespace Tests
             Action act = () => PipelineFactory.CreateClient(options => { })
                 .GetAsync("http://test").GetAwaiter().GetResult();
 
-            act.Should().Throw<InvalidOperationException>()
-                .WithMessage("You must either set Authority or IntrospectionEndpoint");
+            act.ShouldThrow<InvalidOperationException>().Message.ShouldBe("You must either set Authority or IntrospectionEndpoint");
         }
 
         [Fact]
@@ -33,8 +31,8 @@ namespace Tests
                 options.TokenRetriever = null;
             }).GetAsync("http://test").GetAwaiter().GetResult();
 
-            act.Should().Throw<ArgumentException>()
-                .Where(e => e.Message.StartsWith("TokenRetriever must be set"));
+            act.ShouldThrow<ArgumentException>()
+                .Message.ShouldStartWith("TokenRetriever must be set");
         }
 
         [Fact]
@@ -47,7 +45,7 @@ namespace Tests
 
             }).GetAsync("http://test").GetAwaiter().GetResult();
 
-            act.Should().NotThrow();
+            act.ShouldNotThrow();
         }
 
         [Fact]
@@ -61,7 +59,7 @@ namespace Tests
 
             }, addCaching: true).GetAsync("http://test").GetAwaiter().GetResult();
 
-            act.Should().NotThrow();
+            act.ShouldNotThrow();
         }
 
         [Fact]
@@ -75,8 +73,8 @@ namespace Tests
 
             }).GetAsync("http://test").GetAwaiter().GetResult();
 
-            act.Should().Throw<ArgumentException>()
-                .Where(e => e.Message.StartsWith("Caching is enabled, but no IDistributedCache is found in the services collection"));
+            act.ShouldThrow<ArgumentException>()
+                .Message.ShouldStartWith("Caching is enabled, but no IDistributedCache is found in the services collection");
         }
 
         [Fact]
@@ -89,7 +87,7 @@ namespace Tests
                 options.IntrospectionEndpoint = "http://endpoint";
             }, handler).GetAsync("http://test").GetAwaiter().GetResult();
 
-            act.Should().NotThrow();
+            act.ShouldNotThrow();
         }
 
         [Fact]
@@ -101,7 +99,7 @@ namespace Tests
                 options.ClientId = "scope";
             }).GetAsync("http://test").GetAwaiter().GetResult();
 
-            act.Should().NotThrow();
+            act.ShouldNotThrow();
         }
 
         [Fact]
@@ -122,7 +120,7 @@ namespace Tests
             client.SetBearerToken("token");
             await client.GetAsync("http://server/api");
 
-            ops.IntrospectionEndpoint.Should().Be("https://authority.com/introspection_endpoint");
+            ops.IntrospectionEndpoint.ShouldBe("https://authority.com/introspection_endpoint");
         }
     }
 }
