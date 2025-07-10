@@ -12,7 +12,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
-using IdentityModel.AspNetCore.OAuth2Introspection;
+using Duende.AspNetCore.Authentication.OAuth2Introspection;
 
 namespace Tests.Util
 {

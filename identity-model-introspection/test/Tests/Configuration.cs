@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using IdentityModel.AspNetCore.OAuth2Introspection;
 using Duende.IdentityModel.Client;
 using System;
 using System.Threading.Tasks;
+using Duende.AspNetCore.Authentication.OAuth2Introspection;
 using Tests.Util;
 using Xunit;
 

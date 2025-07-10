@@ -3,7 +3,7 @@
 
 #pragma warning disable 1591
 
-namespace IdentityModel.AspNetCore.OAuth2Introspection
+namespace Duende.AspNetCore.Authentication.OAuth2Introspection.Infrastructure
 {
     public class ClaimLite
     {
