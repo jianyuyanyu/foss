@@ -1,27 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-    <PackageId>IdentityModel.AspNetCore.OAuth2Introspection</PackageId>
+    <RootNamespace>Duende.AspNetCore.Authentication.OAuth2Introspection</RootNamespace>
+    <AssemblyName>Duende.AspNetCore.Authentication.OAuth2Introspection</AssemblyName>
+    <PackageId>Duende.AspNetCore.Authentication.OAuth2Introspection</PackageId>
     <Description>ASP.NET Core authentication handler for validating tokens using OAuth 2.0 introspection</Description>
-    <Authors>Dominick Baier;Brock Allen</Authors>
     <PackageTags>OAuth2;OAuth 2.0;Introspection;Security;Identity;IdentityServer</PackageTags>
-    <PackageIcon>icon.jpg</PackageIcon>
-    <PackageProjectUrl>https://github.com/IdentityModel/IdentityModel.AspNetCore.OAuth2Introspection</PackageProjectUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Nullable>disable</Nullable>
   </PropertyGroup>
-
-  <PropertyGroup>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="../icon.jpg" Pack="true" Visible="false" PackagePath="" />
-    <None Remove="Directory.Build.props" />
-  </ItemGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
