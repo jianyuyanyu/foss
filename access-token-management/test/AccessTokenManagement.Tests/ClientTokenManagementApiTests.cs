@@ -14,10 +14,14 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Duende.AccessTokenManagement.Tests;
 
-public class HybridCacheClientTokenManagementApiTests(ITestOutputHelper output)
-    : ClientTokenManagementApiTests(output)
+public class HybridCacheClientTokenManagementApiTests(ITestOutputHelper output) : IntegrationTestBase(output), IAsyncLifetime
 {
-    public override ClientCredentialsTokenManagementBuilder CreateClientCredentialsTokenManagementBuilder()
+    private IClientCredentialsTokenManager _tokenService = null!;
+    private IHttpClientFactory _clientFactory = null!;
+    private ClientCredentialsClient _clientOptions = null!;
+    protected ServiceProvider Provider = null!;
+
+    public ClientCredentialsTokenManagementBuilder CreateClientCredentialsTokenManagementBuilder()
     {
         var services = new ServiceCollection();
         services.AddHybridCache();
@@ -26,16 +30,6 @@ public class HybridCacheClientTokenManagementApiTests(ITestOutputHelper output)
 
     [Fact]
     public void HybridCache_should_be_registered() => Provider.GetRequiredService<IDPoPNonceStore>().ShouldBeOfType<HybridDPoPNonceStore>();
-}
-
-public abstract class ClientTokenManagementApiTests(ITestOutputHelper output) : IntegrationTestBase(output), IAsyncLifetime
-{
-    private IClientCredentialsTokenManager _tokenService = null!;
-    private IHttpClientFactory _clientFactory = null!;
-    private ClientCredentialsClient _clientOptions = null!;
-    protected ServiceProvider Provider = null!;
-
-    public abstract ClientCredentialsTokenManagementBuilder CreateClientCredentialsTokenManagementBuilder();
 
     public override async ValueTask InitializeAsync()
     {

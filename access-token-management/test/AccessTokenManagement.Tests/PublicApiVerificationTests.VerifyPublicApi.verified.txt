@@ -145,6 +145,10 @@
         public ForceTokenRenewal(bool Value) { }
         public bool Value { get; init; }
     }
+    public static class HybridCacheConstants
+    {
+        public const string CacheTag = "Duende.AccessTokenManagement";
+    }
     public interface IClientAssertionService
     {
         System.Threading.Tasks.Task<Duende.IdentityModel.Client.ClientAssertion?> GetClientAssertionAsync(Duende.AccessTokenManagement.ClientCredentialsClientName? clientName = default, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default);
