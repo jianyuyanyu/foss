@@ -3,7 +3,6 @@
 
 using Duende.IdentityModel;
 using Duende.IdentityModel.Client;
-using IdentityModel.AspNetCore.OAuth2Introspection;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +13,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Duende.AspNetCore.Authentication.OAuth2Introspection;
 using Tests.Util;
 using Xunit;
 

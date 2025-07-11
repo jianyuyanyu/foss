@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Text.Json;
-using IdentityModel.AspNetCore.OAuth2Introspection;
-using IdentityModel.AspNetCore.OAuth2Introspection.Infrastructure;
+using Duende.AspNetCore.Authentication.OAuth2Introspection.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Tests.Util;

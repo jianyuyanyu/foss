@@ -3,9 +3,8 @@
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
-using System;
 
-namespace IdentityModel.AspNetCore.OAuth2Introspection
+namespace Duende.AspNetCore.Authentication.OAuth2Introspection.Infrastructure
 {
     /// <summary>
     /// Defines some common token retrieval strategies

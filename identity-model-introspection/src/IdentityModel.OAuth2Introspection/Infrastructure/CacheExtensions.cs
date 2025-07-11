@@ -1,33 +1,28 @@
 ﻿// Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Security.Claims;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Duende.IdentityModel;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace IdentityModel.AspNetCore.OAuth2Introspection
+namespace Duende.AspNetCore.Authentication.OAuth2Introspection.Infrastructure
 {
     internal static class CacheExtensions
     {
         private static readonly JsonSerializerOptions Options;
 
         static CacheExtensions()
-        {    
+        {
             Options = new JsonSerializerOptions
             {
                 IgnoreReadOnlyFields = true,
                 IgnoreReadOnlyProperties = true,
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
             };
-   
+
             Options.Converters.Add(new ClaimConverter());
         }
 

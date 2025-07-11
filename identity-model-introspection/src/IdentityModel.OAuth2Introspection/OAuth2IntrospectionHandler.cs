@@ -1,13 +1,11 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+using Duende.AspNetCore.Authentication.OAuth2Introspection.Context;
+using Duende.AspNetCore.Authentication.OAuth2Introspection.Infrastructure;
 using Duende.IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +13,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace IdentityModel.AspNetCore.OAuth2Introspection
+namespace Duende.AspNetCore.Authentication.OAuth2Introspection
 {
     /// <summary>
     /// Authentication handler for OAuth 2.0 introspection

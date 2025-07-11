@@ -1,7 +1,6 @@
-﻿using System;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
-namespace IdentityModel.AspNetCore.OAuth2Introspection
+namespace Duende.AspNetCore.Authentication.OAuth2Introspection
 {
     internal static class Log
     {

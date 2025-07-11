@@ -1,16 +1,13 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using IdentityModel.AspNetCore.OAuth2Introspection.Infrastructure;
+using Duende.AspNetCore.Authentication.OAuth2Introspection.Infrastructure;
 using Duende.IdentityModel;
 using Duende.IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Net.Http;
-using System.Threading;
 
-namespace IdentityModel.AspNetCore.OAuth2Introspection
+namespace Duende.AspNetCore.Authentication.OAuth2Introspection
 {
     /// <summary>
     /// Options class for the OAuth 2.0 introspection endpoint authentication handler
@@ -135,7 +132,7 @@ namespace IdentityModel.AspNetCore.OAuth2Introspection
         }
 
         internal AsyncLazy<HttpClient> IntrospectionClient { get; set; }
-        
+
         /// <summary>
         /// Check that the options are valid. Should throw an exception if things are not ok.
         /// </summary>
