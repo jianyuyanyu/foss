@@ -68,8 +68,9 @@ jobs:
     - name: Pack IdentityModel.OAuth2Introspection
       run: dotnet pack -c Release src/IdentityModel.OAuth2Introspection -o artifacts
     - name: Sign packages
-      if: github.event_name == 'push'
+      if: "github.event.pull_request.head.repo.full_name == github.repository"
       run: |-
+        ls artifacts
         for file in artifacts/*.nupkg; do
            dotnet NuGetKeyVaultSignTool sign "$file" --file-digest sha256 --timestamp-rfc3161 http://timestamp.digicert.com --azure-key-vault-url https://duendecodesigninghsm.vault.azure.net/ --azure-key-vault-client-id 18e3de68-2556-4345-8076-a46fad79e474 --azure-key-vault-tenant-id ed3089f0-5401-4758-90eb-066124e2d907 --azure-key-vault-client-secret ${{ secrets.SignClientSecret }} --azure-key-vault-certificate NuGetPackageSigning
         done
@@ -80,7 +81,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Upload Artifacts
-      if: github.event_name == 'push'
+      if: "github.event.pull_request.head.repo.full_name == github.repository"
       uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
       with:
         name: artifacts
