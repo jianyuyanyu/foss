@@ -13,11 +13,6 @@ namespace WorkerService;
 public class Program
 {
     public static void Main(string[] args) =>
-        //Log.Logger = new LoggerConfiguration()
-        //    .MinimumLevel.Debug()
-        //    .WriteTo.Console(theme: AnsiConsoleTheme.Code)
-        //    .CreateLogger();
-
         CreateHostBuilder(args).Build().Run();
 
     public static IHostBuilder CreateHostBuilder(string[] args)
