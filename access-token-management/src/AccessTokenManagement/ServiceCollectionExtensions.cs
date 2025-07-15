@@ -42,6 +42,9 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<IClientCredentialsTokenManager, ClientCredentialsTokenManager>();
         services.AddHybridCache();
 
+        // Add a default serializer for ClientCredentialsToken
+        services.TryAddSingleton<IHybridCacheSerializer<ClientCredentialsToken>, AotTrimCompatibleClientCredentialsTokenSerializer>();
+
         // By default, resolve the default hybrid cache for the DefaultClientCredentialsTokenManager
         // without key. If desired, a consumers can register the distributed cache with a key
         services.TryAddKeyedSingleton<HybridCache>(ServiceProviderKeys.ClientCredentialsTokenCache, (sp, _) => sp.GetRequiredService<HybridCache>());
