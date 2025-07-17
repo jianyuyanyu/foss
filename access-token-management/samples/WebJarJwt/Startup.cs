@@ -3,6 +3,7 @@
 
 using Duende.AccessTokenManagement;
 using Duende.AccessTokenManagement.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
@@ -53,6 +54,9 @@ public static class Startup
                     NameClaimType = "name",
                     RoleClaimType = "role"
                 };
+
+                // Disable PAR because it is incompatible with currently wired up OidcEvents
+                options.PushedAuthorizationBehavior = PushedAuthorizationBehavior.Disable;
             });
 
         builder.Services.AddOpenIdConnectAccessTokenManagement();
