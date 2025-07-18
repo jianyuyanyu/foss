@@ -18,6 +18,7 @@ namespace Duende.AccessTokenManagement.Tests;
 public class AppHost : GenericHost
 {
     public string ClientId;
+    public string? ClientSecret;
 
     private readonly IdentityServerHost _identityServerHost;
     private readonly ApiHost _apiHost;
@@ -35,6 +36,7 @@ public class AppHost : GenericHost
         _identityServerHost = identityServerHost;
         _apiHost = apiHost;
         ClientId = clientId;
+        ClientSecret = "secret";
         _configureUserTokenManagementOptions = configureUserTokenManagementOptions;
         OnConfigureServices += ConfigureServices;
         OnConfigure += Configure;
@@ -68,7 +70,7 @@ public class AppHost : GenericHost
                 options.Authority = _identityServerHost.Url();
 
                 options.ClientId = ClientId;
-                options.ClientSecret = "secret";
+                options.ClientSecret = ClientSecret;
                 options.ResponseType = "code";
                 options.ResponseMode = "query";
 

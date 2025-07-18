@@ -60,7 +60,7 @@ internal class OpenIdConnectConfigurationService(
             TokenEndpoint = new Uri(configuration.TokenEndpoint),
             RevocationEndpoint = configuration.RevocationEndpoint == null ? null : new Uri(configuration.RevocationEndpoint),
             ClientId = ClientId.Parse(options.ClientId ?? throw new InvalidOperationException("ClientId is null")),
-            ClientSecret = ClientSecret.Parse(options.ClientSecret ?? throw new InvalidOperationException("ClientSecret is null")),
+            ClientSecret = options.ClientSecret == null ? null : ClientSecret.Parse(options.ClientSecret),
             HttpClient = options.Backchannel,
         };
     }

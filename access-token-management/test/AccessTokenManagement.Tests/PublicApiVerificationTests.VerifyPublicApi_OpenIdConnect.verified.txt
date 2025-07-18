@@ -50,8 +50,7 @@
         public OpenIdConnectClientConfiguration() { }
         [System.Runtime.CompilerServices.RequiredMember]
         public Duende.AccessTokenManagement.ClientId ClientId { get; set; }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public Duende.AccessTokenManagement.ClientSecret ClientSecret { get; set; }
+        public Duende.AccessTokenManagement.ClientSecret? ClientSecret { get; set; }
         public System.Net.Http.HttpClient? HttpClient { get; set; }
         public System.Uri? RevocationEndpoint { get; set; }
         public Duende.AccessTokenManagement.Scheme Scheme { get; set; }
