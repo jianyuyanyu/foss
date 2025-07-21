@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Duende.AspNetCore.Authentication.OAuth2Introspection.Infrastructure;
+using Duende.AspNetCore.Authentication.OAuth2Introspection.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
-using Tests.Util;
 
-namespace Tests;
+namespace Duende.AspNetCore.Authentication.OAuth2Introspection;
 
 public static class Unit
 {

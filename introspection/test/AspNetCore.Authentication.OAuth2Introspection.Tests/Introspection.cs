@@ -2,16 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System.Net;
-using Duende.AspNetCore.Authentication.OAuth2Introspection;
+using System.Text.Json;
+using Duende.AspNetCore.Authentication.OAuth2Introspection.Util;
 using Duende.IdentityModel;
 using Duende.IdentityModel.Client;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Tests.Util;
 
-namespace Tests;
+namespace Duende.AspNetCore.Authentication.OAuth2Introspection;
 
 public class Introspection
 {
@@ -354,7 +353,7 @@ public class Introspection
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
         var responseDataStr = await response.Content.ReadAsStringAsync();
-        var responseData = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseDataStr);
+        var responseData = JsonSerializer.Deserialize<Dictionary<string, string>>(responseDataStr);
 
         responseData.ShouldContainKeyAndValue("token", expectedToken);
     }
@@ -383,7 +382,7 @@ public class Introspection
         secondResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
         var responseDataStr = await secondResponse.Content.ReadAsStringAsync();
-        var responseData = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseDataStr);
+        var responseData = JsonSerializer.Deserialize<Dictionary<string, string>>(responseDataStr);
 
         responseData.ShouldContainKeyAndValue("token", expectedToken);
         AssertCacheItemExists(server, string.Empty, expectedToken);
@@ -415,7 +414,7 @@ public class Introspection
         secondResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
         var responseDataStr = await secondResponse.Content.ReadAsStringAsync();
-        var responseData = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseDataStr);
+        var responseData = JsonSerializer.Deserialize<Dictionary<string, string>>(responseDataStr);
 
         responseData.ShouldContainKeyAndValue("token", expectedToken);
         AssertCacheItemExists(server, cacheKeyPrefix, expectedToken);

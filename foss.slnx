@@ -70,15 +70,15 @@
   <Folder Name="/ignore-this/test/">
     <Project Path="ignore-this/test/IgnoreThis.Tests/IgnoreThis.Tests.csproj" />
   </Folder>
-  <Folder Name="/identity-model-introspection/">
-    <File Path="identity-model-introspection/README.md" />
+  <Folder Name="/introspection/">
+    <File Path="introspection/README.md" />
   </Folder>
-  <Folder Name="/identity-model-introspection/src/">
-    <File Path="identity-model-introspection/src/Directory.Build.props" />
-    <Project Path="identity-model-introspection/src/IdentityModel.OAuth2Introspection/IdentityModel.AspNetCore.OAuth2Introspection.csproj" />
+  <Folder Name="/introspection/src/">
+    <File Path="introspection/src/Directory.Build.props" />
+    <Project Path="introspection/src/AspNetCore.Authentication.OAuth2Introspection/AspNetCore.Authentication.OAuth2Introspection.csproj" />
   </Folder>
-  <Folder Name="/identity-model-introspection/test/">
-    <File Path="identity-model-introspection/test/Directory.Build.props" />
-    <Project Path="identity-model-introspection/test/Tests/Tests.csproj" />
+  <Folder Name="/introspection/test/">
+    <File Path="introspection/test/Directory.Build.props" />
+    <Project Path="introspection/test/AspNetCore.Authentication.OAuth2Introspection.Tests/AspNetCore.Authentication.OAuth2Introspection.Tests.csproj" />
   </Folder>
 </Solution>

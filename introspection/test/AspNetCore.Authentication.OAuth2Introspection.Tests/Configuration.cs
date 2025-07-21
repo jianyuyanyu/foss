@@ -1,18 +1,17 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using Duende.AspNetCore.Authentication.OAuth2Introspection;
+using Duende.AspNetCore.Authentication.OAuth2Introspection.Util;
 using Duende.IdentityModel.Client;
-using Tests.Util;
 
-namespace Tests;
+namespace Duende.AspNetCore.Authentication.OAuth2Introspection;
 
 public class Configuration
 {
     [Fact]
     public void Empty_Options()
     {
-        Action act = () => PipelineFactory.CreateClient(options => { })
+        var act = () => PipelineFactory.CreateClient(options => { })
             .GetAsync("http://test").GetAwaiter().GetResult();
 
         act.ShouldThrow<InvalidOperationException>().Message.ShouldBe("You must either set Authority or IntrospectionEndpoint");
@@ -21,7 +20,7 @@ public class Configuration
     [Fact]
     public void No_Token_Retriever()
     {
-        Action act = () => PipelineFactory.CreateClient(options =>
+        var act = () => PipelineFactory.CreateClient(options =>
         {
             options.Authority = "http://foo";
             options.ClientId = "scope";
@@ -35,7 +34,7 @@ public class Configuration
     [Fact]
     public void Endpoint_But_No_Authority()
     {
-        Action act = () => PipelineFactory.CreateClient(options =>
+        var act = () => PipelineFactory.CreateClient(options =>
         {
             options.IntrospectionEndpoint = "http://endpoint";
             options.ClientId = "scope";
@@ -48,7 +47,7 @@ public class Configuration
     [Fact]
     public void Caching_With_Caching_Service()
     {
-        Action act = () => PipelineFactory.CreateClient(options =>
+        var act = () => PipelineFactory.CreateClient(options =>
         {
             options.IntrospectionEndpoint = "http://endpoint";
             options.ClientId = "scope";
@@ -62,7 +61,7 @@ public class Configuration
     [Fact]
     public void Caching_Without_Caching_Service()
     {
-        Action act = () => PipelineFactory.CreateClient(options =>
+        var act = () => PipelineFactory.CreateClient(options =>
         {
             options.IntrospectionEndpoint = "http://endpoint";
             options.ClientId = "scope";
@@ -79,7 +78,7 @@ public class Configuration
     {
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active);
 
-        Action act = () => PipelineFactory.CreateClient(options =>
+        var act = () => PipelineFactory.CreateClient(options =>
         {
             options.IntrospectionEndpoint = "http://endpoint";
         }, handler).GetAsync("http://test").GetAwaiter().GetResult();
@@ -90,7 +89,7 @@ public class Configuration
     [Fact]
     public void Authority_No_Network_Delay_Load()
     {
-        Action act = () => PipelineFactory.CreateClient(options =>
+        var act = () => PipelineFactory.CreateClient(options =>
         {
             options.Authority = "http://localhost:6666";
             options.ClientId = "scope";

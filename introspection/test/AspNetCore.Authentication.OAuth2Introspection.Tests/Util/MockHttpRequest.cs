@@ -3,7 +3,7 @@
 
 using Microsoft.AspNetCore.Http;
 
-namespace Tests.Util;
+namespace Duende.AspNetCore.Authentication.OAuth2Introspection.Util;
 
 internal class MockHttpRequest : HttpRequest
 {
