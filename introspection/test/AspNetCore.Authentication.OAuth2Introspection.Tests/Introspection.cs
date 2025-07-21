@@ -355,6 +355,7 @@ public class Introspection
         var responseDataStr = await response.Content.ReadAsStringAsync();
         var responseData = JsonSerializer.Deserialize<Dictionary<string, string>>(responseDataStr);
 
+        responseData.ShouldNotBeNull();
         responseData.ShouldContainKeyAndValue("token", expectedToken);
     }
 
@@ -384,6 +385,7 @@ public class Introspection
         var responseDataStr = await secondResponse.Content.ReadAsStringAsync();
         var responseData = JsonSerializer.Deserialize<Dictionary<string, string>>(responseDataStr);
 
+        responseData.ShouldNotBeNull();
         responseData.ShouldContainKeyAndValue("token", expectedToken);
         AssertCacheItemExists(server, string.Empty, expectedToken);
     }
@@ -416,6 +418,7 @@ public class Introspection
         var responseDataStr = await secondResponse.Content.ReadAsStringAsync();
         var responseData = JsonSerializer.Deserialize<Dictionary<string, string>>(responseDataStr);
 
+        responseData.ShouldNotBeNull();
         responseData.ShouldContainKeyAndValue("token", expectedToken);
         AssertCacheItemExists(server, cacheKeyPrefix, expectedToken);
     }
