@@ -138,6 +138,10 @@ void GenerateReleaseWorkflow(Component component)
         .ActionsCheckout();
 
     tagJob.Step()
+        .Name("Validate Version Input")
+        .Run($@"echo '{contexts.Event.Input.Version}' | grep -P '^\d+\.\d+\.\d+(-preview\.\d+|-rc\.\d+)?$'");
+
+    tagJob.Step()
         .Name("Checkout target branch")
         .If("github.event.inputs.branch != 'main'")
         .Run("git checkout ${{ github.event.inputs.branch }}");
