@@ -3,10 +3,11 @@
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <Nullable>disable</Nullable>
-  </PropertyGroup>
+    <RootNamespace>Duende.AspNetCore.Authentication.OAuth2Introspection</RootNamespace>
+ </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\IdentityModel.OAuth2Introspection\IdentityModel.AspNetCore.OAuth2Introspection.csproj" />
+    <ProjectReference Include="..\..\src\AspNetCore.Authentication.OAuth2Introspection\AspNetCore.Authentication.OAuth2Introspection.csproj" />
   </ItemGroup>
 
   <ItemGroup>

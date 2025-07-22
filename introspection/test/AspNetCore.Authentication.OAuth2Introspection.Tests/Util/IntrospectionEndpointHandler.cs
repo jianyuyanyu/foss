@@ -4,7 +4,7 @@
 using System.Net;
 using System.Text;
 
-namespace Tests.Util;
+namespace Duende.AspNetCore.Authentication.OAuth2Introspection.Util;
 
 public class IntrospectionEndpointHandler : DelegatingHandler
 {

@@ -1,6 +1,6 @@
-# IdentityModel.AspNetCore.OAuth2Introspection
+# Duende.AspNetCore.Authentication.OAuth2Introspection
 
-ASP.NET Core authentication handler for OAuth 2.0 token introspection
+ASP.NET Core authentication handler for OAuth 2.0 token introspection.
 
 https://tools.ietf.org/html/rfc7662
 
@@ -22,8 +22,8 @@ services.AddAuthentication(OAuth2IntrospectionDefaults.AuthenticationScheme)
 If configuration, such as using a proxy, is required for the HTTP client calling the Authority then it can be done by registering a named HTTP Client as follows
 
 ```csharp
-services.AddHttpClient(OAuth2IntrospectionDefaults.BackChannelHttpClientName) 
-    .AddHttpMessageHandler(() => 
+services.AddHttpClient(OAuth2IntrospectionDefaults.BackChannelHttpClientName)
+    .AddHttpMessageHandler(() =>
     {
         //Configure client/handler for the back channel HTTP Client here
         return new HttpClientHandler

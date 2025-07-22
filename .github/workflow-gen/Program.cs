@@ -26,10 +26,10 @@ Component[] components = [
         ["IdentityModel.OidcClient.Tests"],
         "imoc"),
 
-    new("identity-model-introspection",
-        ["IdentityModel.OAuth2Introspection"],
-        ["Tests"],
-        "im-introspection"),
+    new("introspection",
+        ["AspNetCore.Authentication.OAuth2Introspection"],
+        ["AspNetCore.Authentication.OAuth2Introspection.Tests"],
+        "intro"),
 ];
 
 foreach (var component in components)

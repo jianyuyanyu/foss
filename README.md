@@ -1,12 +1,14 @@
 # Duende Free and Open Source Software
-This repository contains Duende's Free and Open Source Software. 
+This repository contains Duende's Free and Open Source Software.
 
-- [Duende.AccessTokenManagement](/access-token-management/) .NET libraries that manage
-  OAuth and OpenId Connect access tokens.
-- [Duende.IdentityModel](/identity-model/) IdentityModel is a .NET library for
-  claims-based identity, OAuth 2.0 and OpenID Connect.
-- [Duende.IdentityModel.OidcClient](/identity-model-oidc-client/) Several libraries for
-  building OpenID Connect (OIDC) native clients
+- [Duende.AccessTokenManagement](/access-token-management/) .NET libraries that
+  manage OAuth and OpenId Connect access tokens.
+- [Duende.AspNetCore.Authentication.OAuth2Introspection](/introspection) ASP.NET Authentication
+  handler for OAuth 2.0 introspection.
+- [Duende.IdentityModel](/identity-model/) .NET libraries for claims-based
+  identity, OAuth 2.0 and OpenID Connect.
+- [Duende.IdentityModel.OidcClient](/identity-model-oidc-client/) .NET libraries
+  for building OpenID Connect (OIDC) native clients
 
 ## Relationship to IdentityModel
 Several of the libraries within this repository used to be found in the

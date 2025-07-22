@@ -4,7 +4,7 @@
   <Import Project="../../src.props" />
 
   <PropertyGroup>
-    <MinVerTagPrefix>im-introspection</MinVerTagPrefix>
+    <MinVerTagPrefix>intro</MinVerTagPrefix>
     <MinVerMinimumMajorMinor>7.0</MinVerMinimumMajorMinor>
   </PropertyGroup>
 
