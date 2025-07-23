@@ -33,7 +33,7 @@ public sealed class OpenIdConnectClientConfiguration
     /// <summary>
     /// The client secret
     /// </summary>
-    public required ClientSecret ClientSecret { get; set; }
+    public ClientSecret? ClientSecret { get; set; }
 
     /// <summary>
     /// The HTTP client associated with the OIDC handler (if based on scheme configuration)

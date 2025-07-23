@@ -8,6 +8,7 @@ using Duende.AccessTokenManagement.OpenIdConnect;
 
 using Duende.IdentityModel;
 using Duende.IdentityModel.Client;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.DependencyInjection;
 using RichardSzalay.MockHttp;
 using OidcConstants = Duende.IdentityModel.OidcConstants;
@@ -78,10 +79,10 @@ public class UserTokenManagementTests(ITestOutputHelper output) : IntegrationTes
         // the custom token transform
         await AppHost.BrowserClient!.GetAsync(AppHost.Url("/user_token"));
 
-        // Verify that the transform is used. 
+        // Verify that the transform is used.
         transformed.ShouldBeTrue();
 
-        // The transformed principal should now be used. 
+        // The transformed principal should now be used.
         var claims = await AppHost.BrowserClient!.GetFromJsonAsync<Dictionary<string, string>>(AppHost.Url("/user"));
         claims![JwtClaimTypes.Name].ShouldBe("transformed");
     }
@@ -235,7 +236,7 @@ public class UserTokenManagementTests(ITestOutputHelper output) : IntegrationTes
         // We mock the expiration of the first few token responses to be short
         // enough that we will automatically refresh immediately when attempting
         // to use the tokens, while the final response gets a long refresh time,
-        // allowing us to verify that the token is not refreshed. 
+        // allowing us to verify that the token is not refreshed.
 
         var mockHttp = new MockHttpMessageHandler();
         AppHost.IdentityServerHttpHandler = mockHttp;
@@ -337,7 +338,7 @@ public class UserTokenManagementTests(ITestOutputHelper output) : IntegrationTes
             .WithFormData("grant_type", "authorization_code")
             .Respond("application/json", JsonSerializer.Serialize(initialTokenResponse));
 
-        // resource 1 specified 
+        // resource 1 specified
         var resource1TokenResponse = new
         {
             access_token = "urn:api1_access_token",
@@ -350,7 +351,7 @@ public class UserTokenManagementTests(ITestOutputHelper output) : IntegrationTes
             .WithFormData("resource", "urn:api1")
             .Respond("application/json", JsonSerializer.Serialize(resource1TokenResponse));
 
-        // resource 2 specified 
+        // resource 2 specified
         var resource2TokenResponse = new
         {
             access_token = "urn:api2_access_token",
@@ -499,5 +500,55 @@ public class UserTokenManagementTests(ITestOutputHelper output) : IntegrationTes
         postLogoutIntrospectionResponse.IsError.ShouldBeFalse(introspectionResponse.Error);
         postLogoutIntrospectionResponse.IsActive.ShouldBeFalse();
 
+    }
+
+    [Fact]
+    public async Task Can_request_user_token_using_client_assertions()
+    {
+        var mockHttp = new MockHttpMessageHandler();
+        AppHost.IdentityServerHttpHandler = mockHttp;
+        AppHost.ClientSecret = null;
+        AppHost.OnConfigureServices += services =>
+        {
+            services.AddSingleton<IClientAssertionService>(new TestClientAssertionService("test", "service_type", "service_value"));
+            services.PostConfigure<OpenIdConnectOptions>("oidc", options =>
+            {
+                options.Events.OnAuthorizationCodeReceived = async context =>
+                {
+                    var clientAssertionService =
+                        context.HttpContext.RequestServices.GetRequiredService<IClientAssertionService>();
+                    var assertion = await clientAssertionService.GetClientAssertionAsync(ClientCredentialsClientName.Parse("test")) ?? throw new InvalidOperationException("Client assertion is null");
+
+                    context.TokenEndpointRequest!.ClientAssertionType = assertion.Type;
+                    context.TokenEndpointRequest.ClientAssertion = assertion.Value;
+                };
+            });
+        };
+        var expectedRequestFormData = new Dictionary<string, string>
+        {
+            { OidcConstants.TokenRequest.ClientAssertionType, "service_type" },
+            { OidcConstants.TokenRequest.ClientAssertion, "service_value" },
+        };
+        var initialTokenResponse = new
+        {
+            id_token = IdentityServerHost.CreateIdToken("1", "web"),
+            access_token = "initial_access_token",
+            token_type = "clientAssertionsWork",
+            expires_in = 3600,
+            refresh_token = "initial_refresh_token",
+        };
+
+        // response for re-deeming code
+        mockHttp.When("/connect/token")
+            .WithFormData(expectedRequestFormData)
+            .Respond("application/json", JsonSerializer.Serialize(initialTokenResponse));
+        await InitializeAsync();
+        await AppHost.LoginAsync("alice");
+
+        var response = await AppHost.BrowserClient.GetAsync(AppHost.Url("/user_token"));
+        var token = await response.Content.ReadFromJsonAsync<UserTokenModel>();
+
+        token.ShouldNotBeNull();
+        token.AccessTokenType.ShouldBe("clientAssertionsWork");
     }
 }
