@@ -121,7 +121,7 @@ void GenerateReleaseWorkflow(Component component)
     workflow.On
         .WorkflowDispatch()
         .Inputs(
-            new StringInput("version", "Version in format X.Y.Z or X.Y.Z-preview.", true, "0.0.0"),
+            new StringInput("version", "Version in format X.Y.Z, X.Y.Z-preview.N, or X.Y.Z-rc.N", true, "0.0.0"),
             new StringInput("branch", "(Optional) the name of the branch to release from", false, "main"),
             new BooleanInput("remove-tag-if-exists", "If set, will remove the existing tag. Use this if you have issues with the previous release action", false, false));
 
@@ -139,7 +139,7 @@ void GenerateReleaseWorkflow(Component component)
 
     tagJob.Step()
         .Name("Validate Version Input")
-        .Run($@"echo '{contexts.Event.Input.Version}' | grep -P '^\d+\.\d+\.\d+(-preview\.\d+|-rc\.\d+)?$'");
+        .Run($@"echo '{contexts.Event.Input.Version}' | grep -P '^\d+\.\d+\.\d+(-preview\.\d+|-rc\.\d+)?$' || (echo 'Invalid version format' && exit 1)");
 
     tagJob.Step()
         .Name("Checkout target branch")
