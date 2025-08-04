@@ -4,8 +4,8 @@
   <Import Project="../../src.props" />
 
   <PropertyGroup>
-    <MinVerTagPrefix>intro</MinVerTagPrefix>
-    <MinVerMinimumMajorMinor>7.0</MinVerMinimumMajorMinor>
+    <MinVerTagPrefix>intro-</MinVerTagPrefix>
+    <MinVerMinimumMajorMinor>6.3</MinVerMinimumMajorMinor>
   </PropertyGroup>
 
 </Project>
