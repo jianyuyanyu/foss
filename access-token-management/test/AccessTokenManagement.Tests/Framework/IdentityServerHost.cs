@@ -33,7 +33,7 @@ public class IdentityServerHost : GenericHost
 
     public List<ApiScope> ApiScopes { get; } = [];
 
-    public List<ApiResource> ApiResources { get;} =
+    public List<ApiResource> ApiResources { get; } =
     [
         new("urn:api1"),
         new("urn:api2")

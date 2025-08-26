@@ -45,7 +45,7 @@ internal class OidcClientFixture : AccessTokenHandlingBaseFixture
 
 
         Services.AddClientAccessTokenHttpClient("httpClient", new UserTokenRequestParameters
-            {
+        {
 
         })
             .ConfigureHttpClient(c =>
