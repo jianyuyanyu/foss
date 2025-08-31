@@ -1,17 +1,20 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-
 using Duende.AccessTokenManagement.DPoP;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Duende.AccessTokenManagement.AccessTokenHandler.Fixtures;
 
-internal class ClientCredentialsFixture : AccessTokenHandlingBaseFixture
+internal class ClientCredentialsFixtureWithAutotuning : AccessTokenHandlingBaseFixture
 {
     public override ValueTask InitializeAsync(DPoPProofKey? dPoPJsonWebKey)
     {
-        Services.AddClientCredentialsTokenManagement()
+        Services.AddClientCredentialsTokenManagement(options =>
+            {
+                options.UseCacheAutoTuning = true;
+                options.DefaultCacheLifetime = TimeSpan.FromMilliseconds(200);
+            })
             .AddClient("tokenClient", opt =>
             {
                 opt.TokenEndpoint = TokenEndpoint.TokenEndpoint;
