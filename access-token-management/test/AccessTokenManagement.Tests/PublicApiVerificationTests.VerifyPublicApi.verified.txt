@@ -239,7 +239,7 @@
         public TokenRequestParameters() { }
         public Duende.IdentityModel.Client.ClientAssertion? Assertion { get; init; }
         public Duende.IdentityModel.Client.Parameters Context { get; init; }
-        public Duende.AccessTokenManagement.ForceTokenRenewal ForceTokenRenewal { get; init; }
+        public bool ForceTokenRenewal { get; init; }
         public Duende.IdentityModel.Client.Parameters Parameters { get; init; }
         public Duende.AccessTokenManagement.Resource? Resource { get; init; }
         public Duende.AccessTokenManagement.Scope? Scope { get; init; }
@@ -282,11 +282,11 @@ namespace Duende.AccessTokenManagement.DPoP
         public static Duende.AccessTokenManagement.DPoP.DPoPNonce? GetDPoPNonce(this System.Net.Http.HttpRequestMessage request) { }
         public static Duende.AccessTokenManagement.DPoP.DPoPNonce? GetDPoPNonce(this System.Net.Http.HttpResponseMessage response) { }
         public static System.Uri GetDPoPUrl(this System.Net.Http.HttpRequestMessage request) { }
-        public static Duende.AccessTokenManagement.ForceTokenRenewal GetForceRenewal(this System.Net.Http.HttpRequestMessage request) { }
+        public static bool GetForceRenewal(this System.Net.Http.HttpRequestMessage request) { }
         public static bool IsDPoPError(this System.Net.Http.HttpResponseMessage response) { }
         public static void SetDPoPNonce(this System.Net.Http.HttpRequestMessage request, Duende.AccessTokenManagement.DPoP.DPoPNonce nonce) { }
         public static void SetDPoPProofToken(this System.Net.Http.HttpRequestMessage request, Duende.AccessTokenManagement.DPoP.DPoPProof proof) { }
-        public static void SetForceRenewal(this System.Net.Http.HttpRequestMessage request, Duende.AccessTokenManagement.ForceTokenRenewal forceTokenRenewal) { }
+        public static void SetForceRenewal(this System.Net.Http.HttpRequestMessage request, bool forceTokenRenewal) { }
         public static bool TryGetDPopProofAdditionalPayloadClaims(this System.Net.Http.HttpRequestMessage request, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out System.Collections.Generic.IReadOnlyDictionary<string, string>? additionalClaims) { }
     }
     public readonly struct DPoPNonce : System.IEquatable<Duende.AccessTokenManagement.DPoP.DPoPNonce>
