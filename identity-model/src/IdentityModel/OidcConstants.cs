@@ -468,14 +468,13 @@ public static class OidcConstants
         public const string OpPolicyUri = "op_policy_uri";
         public const string OpTosUri = "op_tos_uri";
         public const string RevocationEndpoint = "revocation_endpoint";
-        // TODO revocation_endpoint_auth_methods_supported
-        // TODO revocation_endpoint_auth_signing_alg_values_supported
+        public const string RevocationEndpointAuthenticationMethodsSupported = "revocation_endpoint_auth_methods_supported";
+        public const string RevocationEndpointAuthSigningAlgorithmsSupported = "revocation_endpoint_auth_signing_alg_values_supported";
         public const string IntrospectionEndpoint = "introspection_endpoint";
-        // TODO introspection_endpoint_auth_methods_supported
-        // TODO introspection_endpoint_auth_signing_alg_values_supported
+        public const string IntrospectionEndpointAuthenticationMethodsSupported = "introspection_endpoint_auth_methods_supported";
+        public const string IntrospectionEndpointAuthSigningAlgorithmsSupported = "introspection_endpoint_auth_signing_alg_values_supported";
         public const string CodeChallengeMethodsSupported = "code_challenge_methods_supported";
-
-        // TODO signed_metadata
+        public const string SignedMetadata = "signed_metadata";
 
         //*****************************************
         //* RFC 8628 (Device Authorization Grant) *
@@ -515,7 +514,7 @@ public static class OidcConstants
         //******************
         //* RFC 9101 (JAR) *
         //******************
-        // TODO require_signed_request_object
+        public const string RequireSignedRequestObject = "require_signed_request_object";
 
         //******************
         //* RFC 9126 (PAR) *
@@ -550,7 +549,7 @@ public static class OidcConstants
         //* OIDC Back-Channel Logout *
         //****************************
         public const string BackChannelLogoutSupported = "backchannel_logout_supported";
-        public const string BackChannelLogoutSessionSupported = "backchannel_logout_supported";
+        public const string BackChannelLogoutSessionSupported = "backchannel_logout_session_supported";
 
         //****************************
         //* OIDC RP-Initiated Logout *
@@ -568,7 +567,7 @@ public static class OidcConstants
         //******************
         //* RFC 9396 (RAR) *
         //******************
-        // TODO authorization_details_types_supported
+        public const string AuthorizationDetailsTypesSupported = "authorization_details_types_supported";
 
         //*******************
         //* RFC 9449 (DPoP) *
