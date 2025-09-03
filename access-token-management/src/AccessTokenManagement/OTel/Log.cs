@@ -138,7 +138,7 @@ internal static partial class Log
 
     [LoggerMessage(
         Message = $"Token for user {{{OTelParameters.User}}} will be refreshed. Expiration: {{{OTelParameters.Expiration}}}, ForceRenewal:{{{OTelParameters.ForceRenewal}}}")]
-    public static partial void TokenNeedsRefreshing(this ILogger logger, LogLevel logLevel, string user, DateTimeOffset? expiration, ForceTokenRenewal forceRenewal);
+    public static partial void TokenNeedsRefreshing(this ILogger logger, LogLevel logLevel, string user, DateTimeOffset? expiration, bool forceRenewal);
 
     [LoggerMessage(
         Message = $"Returning refreshed token for user: {{{OTelParameters.User}}}")]

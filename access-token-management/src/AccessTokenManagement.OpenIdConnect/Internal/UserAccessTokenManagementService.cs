@@ -59,7 +59,7 @@ internal class UserAccessAccessTokenManager(
 
         var refreshAfter = clock.GetUtcNow() + options.Value.RefreshBeforeExpiration;
 
-        var shouldRefresh = parameters.ForceTokenRenewal.Value     // We must refresh the token
+        var shouldRefresh = parameters.ForceTokenRenewal     // We must refresh the token
                             || requestedToken.TokenForSpecifiedParameters == null   // Or there is no token for the current specified set of parameters
                             || requestedToken.TokenForSpecifiedParameters.Expiration < refreshAfter; // Or the existing token is expired
 

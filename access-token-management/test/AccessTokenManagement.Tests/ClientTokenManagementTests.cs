@@ -465,7 +465,7 @@ public class ClientTokenManagementTests
         mockHttp.Expect("/connect/token")
             .Respond(_ => Some.TokenHttpResponse());
 
-        token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), new TokenRequestParameters { ForceTokenRenewal = new ForceTokenRenewal(true) }).GetToken();
+        token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), new TokenRequestParameters { ForceTokenRenewal = true }).GetToken();
 
         token.AccessToken.ShouldBe(The.AccessToken);
         token.AccessTokenType.ShouldNotBeNull().ShouldBe(The.TokenType);

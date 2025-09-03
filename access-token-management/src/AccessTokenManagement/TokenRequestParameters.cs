@@ -13,7 +13,7 @@ public record TokenRequestParameters
     /// <summary>
     /// Force renewal of token.
     /// </summary>
-    public ForceTokenRenewal ForceTokenRenewal { get; init; } = new(false);
+    public bool ForceTokenRenewal { get; init; } = false;
 
     /// <summary>
     /// Override the statically configured scope parameter.

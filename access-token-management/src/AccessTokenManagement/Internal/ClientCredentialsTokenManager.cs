@@ -46,7 +46,7 @@ internal class ClientCredentialsTokenManager(
             : _options.DefaultCacheLifetime;
 
         // On force renewal, don't read from the cache, so we always get a new token.
-        var disableDistributedCacheRead = parameters.ForceTokenRenewal.Value
+        var disableDistributedCacheRead = parameters.ForceTokenRenewal
             ? HybridCacheEntryFlags.DisableLocalCacheRead | HybridCacheEntryFlags.DisableDistributedCacheRead
             : HybridCacheEntryFlags.None; // Even with "none", we still get cache stampede protection :)
 
@@ -87,13 +87,13 @@ internal class ClientCredentialsTokenManager(
 
         // Check if token has expired. Ideally, the cache lifetime auto-tuning should prevent this,
         // but for the first request OR if the token lifetime is changed, we might end up here.
-        if (!parameters.ForceTokenRenewal.Value
+        if (!parameters.ForceTokenRenewal
             && token.Expiration - TimeSpan.FromSeconds(_options.CacheLifetimeBuffer) <= time.GetUtcNow())
         {
             // retry the request, but force a renewal
             var tokenResult = await GetAccessTokenAsync(clientName, parameters with
             {
-                ForceTokenRenewal = new ForceTokenRenewal(true)
+                ForceTokenRenewal = true
             }, ct);
 
             if (!tokenResult.Succeeded)

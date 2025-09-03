@@ -170,7 +170,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
 
         await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), new TokenRequestParameters
         {
-            ForceTokenRenewal = new ForceTokenRenewal(false),
+            ForceTokenRenewal = false,
             Scope = Scope.Parse("scope1"),
 
         }).GetToken();
@@ -178,7 +178,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
 
         await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), new TokenRequestParameters
         {
-            ForceTokenRenewal = new ForceTokenRenewal(false),
+            ForceTokenRenewal = false,
             Scope = Scope.Parse("scope2"),
 
         }).GetToken();
@@ -216,7 +216,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
         {
             await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), new TokenRequestParameters
             {
-                ForceTokenRenewal = new ForceTokenRenewal(false),
+                ForceTokenRenewal = false,
                 Scope = Scope.Parse("scope1"),
 
             }).GetToken();
@@ -228,7 +228,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
         {
             await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), new TokenRequestParameters
             {
-                ForceTokenRenewal = new ForceTokenRenewal(false),
+                ForceTokenRenewal = false,
                 Scope = Scope.Parse("scope2"),
 
             }).GetToken();
@@ -277,7 +277,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
         {
             await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), new TokenRequestParameters
             {
-                ForceTokenRenewal = new ForceTokenRenewal(false),
+                ForceTokenRenewal = false,
                 Parameters = new Parameters
                 {
                     { "tenant", "1" }
@@ -292,7 +292,7 @@ public class BackChannelClientTests(ITestOutputHelper output)
         {
             await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), new TokenRequestParameters
             {
-                ForceTokenRenewal = new ForceTokenRenewal(false),
+                ForceTokenRenewal = false,
                 Parameters = new Parameters
                 {
                     { "tenant", "2" }

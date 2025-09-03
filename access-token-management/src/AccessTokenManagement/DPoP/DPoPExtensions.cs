@@ -11,18 +11,18 @@ namespace Duende.AccessTokenManagement.DPoP;
 /// </summary>
 public static class DPoPExtensions
 {
-    private static readonly HttpRequestOptionsKey<ForceTokenRenewal> ForceRenewalOptionsKey = new("Duende.AccessTokenManagement.ForceRenewal");
+    private static readonly HttpRequestOptionsKey<bool> ForceRenewalOptionsKey = new("Duende.AccessTokenManagement.ForceRenewal");
     private static readonly HttpRequestOptionsKey<DPoPNonce> DPoPNonceOptionsKey = new("Duende.AccessTokenManagement.DPoPNonce");
 
-    public static void SetForceRenewal(this HttpRequestMessage request, ForceTokenRenewal forceTokenRenewal) => request.Options.Set(ForceRenewalOptionsKey, forceTokenRenewal);
+    public static void SetForceRenewal(this HttpRequestMessage request, bool forceTokenRenewal) => request.Options.Set(ForceRenewalOptionsKey, forceTokenRenewal);
 
-    public static ForceTokenRenewal GetForceRenewal(this HttpRequestMessage request)
+    public static bool GetForceRenewal(this HttpRequestMessage request)
     {
         if (request.Options.TryGetValue(ForceRenewalOptionsKey, out var forceRenewal))
         {
             return forceRenewal;
         }
-        return new ForceTokenRenewal(false);
+        return false;
     }
 
     public static DPoPNonce? GetDPoPNonce(this HttpRequestMessage request)
