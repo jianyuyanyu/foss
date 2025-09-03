@@ -350,6 +350,7 @@
         public static class Discovery
         {
             public const string AcrValuesSupported = "acr_values_supported";
+            public const string AuthorizationDetailsTypesSupported = "authorization_details_types_supported";
             public const string AuthorizationEndpoint = "authorization_endpoint";
             public const string AuthorizationResponseIssParameterSupported = "authorization_response_iss_parameter_supported";
             public const string BackChannelLogoutSessionSupported = "backchannel_logout_session_supported";
@@ -378,6 +379,8 @@
             public const string IntrospectionEncryptionAlgorithmsSupported = "introspection_encryption_alg_values_supported";
             public const string IntrospectionEncryptionEncValuesSupported = "introspection_encryption_enc_values_supported";
             public const string IntrospectionEndpoint = "introspection_endpoint";
+            public const string IntrospectionEndpointAuthSigningAlgorithmsSupported = "introspection_endpoint_auth_signing_alg_values_supported";
+            public const string IntrospectionEndpointAuthenticationMethodsSupported = "introspection_endpoint_auth_methods_supported";
             public const string IntrospectionSigningAlgorithmsSupported = "introspection_signing_alg_values_supported";
             public const string Issuer = "issuer";
             public const string JwksUri = "jwks_uri";
@@ -394,11 +397,15 @@
             public const string RequestUriParameterSupported = "request_uri_parameter_supported";
             public const string RequirePushedAuthorizationRequests = "require_pushed_authorization_requests";
             public const string RequireRequestUriRegistration = "require_request_uri_registration";
+            public const string RequireSignedRequestObject = "require_signed_request_object";
             public const string ResponseModesSupported = "response_modes_supported";
             public const string ResponseTypesSupported = "response_types_supported";
             public const string RevocationEndpoint = "revocation_endpoint";
+            public const string RevocationEndpointAuthSigningAlgorithmsSupported = "revocation_endpoint_auth_signing_alg_values_supported";
+            public const string RevocationEndpointAuthenticationMethodsSupported = "revocation_endpoint_auth_methods_supported";
             public const string ScopesSupported = "scopes_supported";
             public const string ServiceDocumentation = "service_documentation";
+            public const string SignedMetadata = "signed_metadata";
             public const string SubjectTypesSupported = "subject_types_supported";
             public const string TlsClientCertificateBoundAccessTokens = "tls_client_certificate_bound_access_tokens";
             public const string TokenEndpoint = "token_endpoint";
@@ -804,39 +811,74 @@ namespace Duende.IdentityModel.Client
     public class DiscoveryDocumentResponse : Duende.IdentityModel.Client.ProtocolResponse
     {
         public DiscoveryDocumentResponse() { }
+        public System.Collections.Generic.IEnumerable<string> AcrValuesSupported { get; }
+        public System.Collections.Generic.IEnumerable<string> AuthorizationDetailsTypesSupported { get; }
+        public bool? AuthorizationResponseIssParameterSupported { get; }
         public string? AuthorizeEndpoint { get; }
+        public bool? BackChannelLogoutSessionSupported { get; }
+        public bool? BackChannelLogoutSupported { get; }
         public string? BackchannelAuthenticationEndpoint { get; }
+        public System.Collections.Generic.IEnumerable<string> BackchannelAuthenticationRequestSigningAlgValuesSupported { get; }
         public System.Collections.Generic.IEnumerable<string> BackchannelTokenDeliveryModesSupported { get; }
         public bool? BackchannelUserCodeParameterSupported { get; }
         public string? CheckSessionIframe { get; }
+        public System.Collections.Generic.IEnumerable<string> ClaimTypesSupported { get; }
+        public System.Collections.Generic.IEnumerable<string> ClaimsLocalesSupported { get; }
+        public bool? ClaimsParameterSupported { get; }
         public System.Collections.Generic.IEnumerable<string> ClaimsSupported { get; }
         public System.Collections.Generic.IEnumerable<string> CodeChallengeMethodsSupported { get; }
+        public System.Collections.Generic.IEnumerable<string> DPoPSigningAlgorithmsSupported { get; }
         public string? DeviceAuthorizationEndpoint { get; }
+        public System.Collections.Generic.IEnumerable<string> DisplayValuesSupported { get; }
         public string? EndSessionEndpoint { get; }
         public bool? FrontChannelLogoutSessionSupported { get; }
         public bool? FrontChannelLogoutSupported { get; }
         public System.Collections.Generic.IEnumerable<string> GrantTypesSupported { get; }
+        public System.Collections.Generic.IEnumerable<string> IdTokenEncryptionAlgorithmsSupported { get; }
+        public System.Collections.Generic.IEnumerable<string> IdTokenEncryptionEncValuesSupported { get; }
+        public System.Collections.Generic.IEnumerable<string> IdTokenSigningAlgorithmsSupported { get; }
         public System.Collections.Generic.IEnumerable<string> IntrospectionEncryptionAlgorithmsSupported { get; }
         public System.Collections.Generic.IEnumerable<string> IntrospectionEncryptionEncValuesSupported { get; }
         public string? IntrospectionEndpoint { get; }
+        public System.Collections.Generic.IEnumerable<string> IntrospectionEndpointAuthenticationMethodsSupported { get; }
+        public System.Collections.Generic.IEnumerable<string> IntrospectionEndpointAuthenticationSigningAlgorithmsSupported { get; }
         public System.Collections.Generic.IEnumerable<string> IntrospectionSigningAlgorithmsSupported { get; }
         public string? Issuer { get; }
         public string? JwksUri { get; }
         public Duende.IdentityModel.Jwk.JsonWebKeySet? KeySet { get; set; }
         public Duende.IdentityModel.Client.MtlsEndpointAliases? MtlsEndpointAliases { get; }
+        public string? OpPolicyUri { get; }
+        public string? OpTosUri { get; }
         public Duende.IdentityModel.Client.DiscoveryPolicy Policy { get; set; }
+        public System.Collections.Generic.IEnumerable<string> PromptValuesSupported { get; }
         public string? PushedAuthorizationRequestEndpoint { get; }
         public string? RegistrationEndpoint { get; }
+        public System.Collections.Generic.IEnumerable<string> RequestObjectEncryptionAlgorithmsSupported { get; }
+        public System.Collections.Generic.IEnumerable<string> RequestObjectEncryptionEncValuesSupported { get; }
+        public System.Collections.Generic.IEnumerable<string> RequestObjectSigningAlgorithmsSupported { get; }
+        public bool? RequestParameterSupported { get; }
+        public bool? RequestUriParameterSupported { get; }
         public bool? RequirePushedAuthorizationRequests { get; }
+        public bool? RequireRequestUriRegistration { get; }
+        public bool? RequireSignedRequestObject { get; }
         public System.Collections.Generic.IEnumerable<string> ResponseModesSupported { get; }
         public System.Collections.Generic.IEnumerable<string> ResponseTypesSupported { get; }
         public string? RevocationEndpoint { get; }
+        public System.Collections.Generic.IEnumerable<string> RevocationEndpointAuthenticationMethodsSupported { get; }
+        public System.Collections.Generic.IEnumerable<string> RevocationEndpointAuthenticationSigningAlgorithmsSupported { get; }
         public System.Collections.Generic.IEnumerable<string> ScopesSupported { get; }
+        public string? ServiceDocumentation { get; }
+        public string? SignedMetadata { get; }
         public System.Collections.Generic.IEnumerable<string> SubjectTypesSupported { get; }
+        public bool? TlsClientCertificateBoundAccessTokens { get; }
         public string? TokenEndpoint { get; }
         public System.Collections.Generic.IEnumerable<string> TokenEndpointAuthenticationMethodsSupported { get; }
         public System.Collections.Generic.IEnumerable<string> TokenEndpointAuthenticationSigningAlgorithmsSupported { get; }
+        public System.Collections.Generic.IEnumerable<string> UILocalesSupported { get; }
+        public System.Collections.Generic.IEnumerable<string> UserInfoEncryptionAlgorithmsSupported { get; }
+        public System.Collections.Generic.IEnumerable<string> UserInfoEncryptionEncValuesSupported { get; }
         public string? UserInfoEndpoint { get; }
+        public System.Collections.Generic.IEnumerable<string> UserInfoSigningAlgorithmsSupported { get; }
         protected override System.Threading.Tasks.Task InitializeAsync(object? initializationData = null) { }
         public bool? TryGetBoolean(string name) { }
         public string? TryGetString(string name) { }

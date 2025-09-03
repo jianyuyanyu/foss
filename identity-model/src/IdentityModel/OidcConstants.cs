@@ -587,7 +587,7 @@ public static class OidcConstants
         //******************************************
         //* Initiating User Registration via OIDC  *
         //******************************************
-        // (Note, this is not currently in the IANA registry)
+        // (Note, this is not currently in the IANA registry, but is documented in the spec)
         public const string PromptValuesSupported = "prompt_values_supported";
 
     }

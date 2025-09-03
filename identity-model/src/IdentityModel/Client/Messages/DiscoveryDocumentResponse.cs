@@ -314,6 +314,309 @@ public class DiscoveryDocumentResponse : ProtocolResponse
         TryGetStringArray(OidcConstants.Discovery.IntrospectionEncryptionEncValuesSupported);
 
     /// <summary>
+    /// Gets the service documentation URL.
+    /// </summary>
+    /// <value>
+    /// The service documentation URL as a string, or <c>null</c> if it is not found in the discovery document.
+    /// </value>
+    public string? ServiceDocumentation => TryGetString(OidcConstants.Discovery.ServiceDocumentation);
+
+    /// <summary>
+    /// Gets the languages and scripts supported for the user interface, represented as BCP47 language tags.
+    /// </summary>
+    /// <value>
+    /// A collection of language tag values from BCP47 representing the supported languages and scripts for the user interface.
+    /// </value>
+    public IEnumerable<string> UILocalesSupported => TryGetStringArray(OidcConstants.Discovery.UILocalesSupported);
+
+    /// <summary>
+    /// Gets the URL that the authorization server provides to the person registering the client to read about the authorization server's
+    /// terms of service.
+    /// </summary>
+    /// <value>
+    /// The op policy URL as a string, or <c>null</c> if it is not found in the discovery document.
+    /// </value>
+    public string? OpPolicyUri => TryGetString(OidcConstants.Discovery.OpPolicyUri);
+
+    /// <summary>
+    /// Gets the URL that the authorization server provides to the person registering the client to read about the
+    /// authorization server's terms of service.
+    /// </summary>
+    /// <value>
+    /// The op terms of service URL as a string, or <c>null</c> if it is not found in the discovery document.
+    /// </value>
+    public string? OpTosUri => TryGetString(OidcConstants.Discovery.OpTosUri);
+
+    /// <summary>
+    /// Gets the authentication methods supported by the revocation endpoint.
+    /// </summary>
+    /// <value>
+    /// A collection of strings representing the supported authentication methods.
+    /// </value>
+    public IEnumerable<string> RevocationEndpointAuthenticationMethodsSupported =>
+        TryGetStringArray(OidcConstants.Discovery.RevocationEndpointAuthenticationMethodsSupported);
+
+    /// <summary>
+    /// Gets the signing algorithms supported by the revocation endpoint for the signature on the JWT used to authenticate
+    /// the client at the token endpoint for the "private_key_jwt" and "client_secret_jwt" authentication methods.
+    /// </summary>
+    /// <value>
+    /// A collection of strings representing the supported signing algorithms.
+    /// </value>
+    public IEnumerable<string> RevocationEndpointAuthenticationSigningAlgorithmsSupported =>
+        TryGetStringArray(OidcConstants.Discovery.RevocationEndpointAuthSigningAlgorithmsSupported);
+
+    /// <summary>
+    /// Gets the authentication methods supported by the introspection endpoint.
+    /// </summary>
+    /// <value>
+    /// A collection of strings representing the supported authentication methods.
+    /// </value>
+    public IEnumerable<string> IntrospectionEndpointAuthenticationMethodsSupported =>
+        TryGetStringArray(OidcConstants.Discovery.IntrospectionEndpointAuthenticationMethodsSupported);
+
+    /// <summary>
+    /// Gets the signing algorithms supported by the introspection endpoint for the signature on the JWT used to authenticate
+    /// the client at the token endpoint for the "private_key_jwt" and "client_secret_jwt" authentication methods.
+    /// </summary>
+    /// <value>
+    /// A collection of strings representing the supported signing algorithms.
+    /// </value>
+    public IEnumerable<string> IntrospectionEndpointAuthenticationSigningAlgorithmsSupported =>
+        TryGetStringArray(OidcConstants.Discovery.IntrospectionEndpointAuthSigningAlgorithmsSupported);
+
+    /// <summary>
+    /// Gets the signed JWT containing the metadata about the authorization server as claims.
+    /// </summary>
+    /// <value>
+    /// The signed metadata as a string, or <c>null</c> if it is not found in the discovery document.
+    /// </value>
+    public string? SignedMetadata => TryGetString(OidcConstants.Discovery.SignedMetadata);
+
+    /// <summary>
+    /// Gets a flag indicating whether the authorization server supports TLS client certificate bound access tokens.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if TLS client certificate bound access tokens are supported, <c>false</c> if it is explicitly not supported, or
+    /// <c>null</c> if it is not found in the discovery document.
+    /// </value>
+    public bool? TlsClientCertificateBoundAccessTokens => TryGetBoolean(OidcConstants.Discovery.TlsClientCertificateBoundAccessTokens);
+
+    /// <summary>
+    /// Gets the Authentication Context Class Reference (ACR) values supported by the OP.
+    /// </summary>
+    /// <value>
+    /// A collection of strings representing the supported ACR values.
+    /// </value>
+    public IEnumerable<string> AcrValuesSupported => TryGetStringArray(OidcConstants.Discovery.AcrValuesSupported);
+
+    /// <summary>
+    /// Gets the JWS "alg" values supported by the OP for the ID token.
+    /// </summary>
+    /// <value>
+    /// A collection of algorithm identifier strings representing the supported signing algorithms for the ID token.
+    /// </value>
+    public IEnumerable<string> IdTokenSigningAlgorithmsSupported => TryGetStringArray(OidcConstants.Discovery.IdTokenSigningAlgorithmsSupported);
+
+    /// <summary>
+    /// Gets the JWE "alg" values supported by the OP for the ID token.
+    /// </summary>
+    /// <value>
+    /// A collection of algorithm identifier strings representing the supported encryption "alg" values for the ID token.
+    /// </value>
+    public IEnumerable<string> IdTokenEncryptionAlgorithmsSupported => TryGetStringArray(OidcConstants.Discovery.IdTokenEncryptionAlgorithmsSupported);
+
+    /// <summary>
+    /// Gets the JWE "enc" values supported by the OP for the ID token.
+    /// </summary>
+    /// <value>
+    /// A collection of algorithm identifier strings representing the supported encryption "enc" values for the ID token.
+    /// </value>
+    public IEnumerable<string> IdTokenEncryptionEncValuesSupported => TryGetStringArray(OidcConstants.Discovery.IdTokenEncryptionEncValuesSupported);
+
+    /// <summary>
+    /// Gets the JWS "alg" values supported by the UserInfo endpoint.
+    /// </summary>
+    /// <value>
+    /// A collection of algorithm identifier strings representing the supported signing algorithms for the UserInfo endpoint.
+    /// </value>
+    public IEnumerable<string> UserInfoSigningAlgorithmsSupported => TryGetStringArray(OidcConstants.Discovery.UserInfoSigningAlgorithmsSupported);
+
+    /// <summary>
+    /// Gets the JWE "alg" values supported by the UserInfo endpoint.
+    /// </summary>
+    /// <value>
+    /// A collection of algorithm identifier strings representing the supported encryption "alg" values for the UserInfo endpoint.
+    /// </value>
+    public IEnumerable<string> UserInfoEncryptionAlgorithmsSupported => TryGetStringArray(OidcConstants.Discovery.UserInfoEncryptionAlgorithmsSupported);
+
+    /// <summary>
+    /// Gets the JWE "enc" values supported by the UserInfo endpoint.
+    /// </summary>
+    /// <value>
+    /// A collection of algorithm identifier strings representing the supported encryption "enc" values for the UserInfo endpoint.
+    /// </value>
+    public IEnumerable<string> UserInfoEncryptionEncValuesSupported => TryGetStringArray(OidcConstants.Discovery.UserInfoEncryptionEncValuesSupported);
+
+    /// <summary>
+    /// Gets the JWS "alg" values supported by the OP for request objects.
+    /// </summary>
+    /// <value>
+    /// A collection of algorithm identifier strings representing the supported signing algorithms for request objects.
+    /// </value>
+    public IEnumerable<string> RequestObjectSigningAlgorithmsSupported => TryGetStringArray(OidcConstants.Discovery.RequestObjectSigningAlgorithmsSupported);
+
+    /// <summary>
+    /// Gets the JWE "alg" values supported by the OP for request objects.
+    /// </summary>
+    /// <value>
+    /// A collection of algorithm identifier strings representing the supported encryption "alg" values for request objects.
+    /// </value>
+    public IEnumerable<string> RequestObjectEncryptionAlgorithmsSupported => TryGetStringArray(OidcConstants.Discovery.RequestObjectEncryptionAlgorithmsSupported);
+
+    /// <summary>
+    /// Gets the JWE "enc" values supported by the OP for request objects.
+    /// </summary>
+    /// <value>
+    /// A collection of algorithm identifier strings representing the supported encryption "enc" values for request objects.
+    /// </value>
+    public IEnumerable<string> RequestObjectEncryptionEncValuesSupported => TryGetStringArray(OidcConstants.Discovery.RequestObjectEncryptionEncValuesSupported);
+
+    /// <summary>
+    /// Gets the display parameter values the OpenID Provider supports.
+    /// </summary>
+    /// <value>
+    /// A collection of strings representing the supported display parameter values.
+    /// </value>
+    public IEnumerable<string> DisplayValuesSupported => TryGetStringArray(OidcConstants.Discovery.DisplayValuesSupported);
+
+    /// <summary>
+    /// Gets the claim types supported by the OpenID Provider.
+    /// </summary>
+    /// <value>
+    /// A collection of strings representing the supported claim types.
+    /// </value>
+    public IEnumerable<string> ClaimTypesSupported => TryGetStringArray(OidcConstants.Discovery.ClaimTypesSupported);
+
+    /// <summary>
+    /// Get the languages and scripts supported for claims, represented as BCP47 language tags.
+    /// </summary>
+    /// <value>
+    /// A collection of language tag values from BCP47 representing the supported languages and scripts for claims.
+    /// </value>
+    public IEnumerable<string> ClaimsLocalesSupported => TryGetStringArray(OidcConstants.Discovery.ClaimsLocalesSupported);
+
+    /// <summary>
+    /// Gets a flag indicating whether the OP supports the use of the "claims" parameter.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if the claims parameter is supported, <c>false</c> if it is explicitly not supported, or
+    /// <c>null</c> if it is not found in the discovery document.
+    /// </value>
+    public bool? ClaimsParameterSupported => TryGetBoolean(OidcConstants.Discovery.ClaimsParameterSupported);
+
+    /// <summary>
+    /// Gets a flag indicating whether the OP supports the use of the "request" parameter.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if the request parameter is supported, <c>false</c> if it is explicitly not supported, or
+    /// <c>null</c> if it is not found in the discovery document.
+    /// </value>
+    public bool? RequestParameterSupported => TryGetBoolean(OidcConstants.Discovery.RequestParameterSupported);
+
+    /// <summary>
+    /// Gets a flag indicating whether the OP supports the use of the "request_uri" parameter.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if the request_uri parameter is supported, <c>false</c> if it is explicitly not supported, or
+    /// <c>null</c> if it is not found in the discovery document.
+    /// </value>
+    public bool? RequestUriParameterSupported => TryGetBoolean(OidcConstants.Discovery.RequestUriParameterSupported);
+
+    /// <summary>
+    /// Gets a flag indicating whether the OP requires any request_uri values used to be pre-registered.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if request_uri values must be pre-registered, <c>false</c> if it is explicitly not required, or
+    /// <c>null</c> if it is not found in the discovery document.
+    /// </value>
+    public bool? RequireRequestUriRegistration => TryGetBoolean(OidcConstants.Discovery.RequireRequestUriRegistration);
+
+    /// <summary>
+    /// Gets a flag indicating whether the authorization server requires authorization requests to be protected as a Request
+    /// Object provided through either the "request" or "request_uri" parameters.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if a signed request object is required, <c>false</c> if it is explicitly not required, or
+    /// <c>null</c> if it is not found in the discovery document.
+    /// </value>
+    public bool? RequireSignedRequestObject => TryGetBoolean(OidcConstants.Discovery.RequireSignedRequestObject);
+
+    /// <summary>
+    /// Gets a flag indicating whether the authorization server provides the "iss" parameter in the authorization response.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if the "iss" parameter is provided in the authorization response, <c>false</c> if it is explicitly not provided, or
+    /// <c>null</c> if it is not found in the discovery document.
+    /// </value>
+    public bool? AuthorizationResponseIssParameterSupported => TryGetBoolean(OidcConstants.Discovery.AuthorizationResponseIssParameterSupported);
+
+    /// <summary>
+    /// Gets a flag indicating if the OP supports back-channel logout.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if back-channel logout is supported, <c>false</c> if it is explicitly not supported, or
+    /// <c>null</c> if it is not found in the discovery document.
+    /// </value>
+    public bool? BackChannelLogoutSupported => TryGetBoolean(OidcConstants.Discovery.BackChannelLogoutSupported);
+
+    /// <summary>
+    /// Gets a flag indicating if the OP supports passing a "sid" (Session ID) claim in the logout token to identify the RP
+    /// session with the OP.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if the "sid" claim is supported in the logout token, <c>false</c> if it is explicitly not supported, or
+    /// <c>null</c> if it is not found in the discovery document.
+    /// </value>
+    public bool? BackChannelLogoutSessionSupported => TryGetBoolean(OidcConstants.Discovery.BackChannelLogoutSessionSupported);
+
+    /// <summary>
+    /// Gets the JWS "alg" values supported for validation of signed CIBA authentication requests.
+    /// </summary>
+    /// <value>
+    /// A collection of strings representing the supported signing algorithms.
+    /// </value>
+    public IEnumerable<string> BackchannelAuthenticationRequestSigningAlgValuesSupported =>
+        TryGetStringArray(OidcConstants.Discovery.BackchannelAuthenticationRequestSigningAlgValuesSupported);
+
+    /// <summary>
+    /// Gets the authorization details types supported by the authorization server.
+    /// </summary>
+    /// <value>
+    /// A collection of strings representing the supported authorization details types.
+    /// </value>
+    public IEnumerable<string> AuthorizationDetailsTypesSupported =>
+        TryGetStringArray(OidcConstants.Discovery.AuthorizationDetailsTypesSupported);
+
+    /// <summary>
+    /// Gets the JWS "alg" values supported for DPoP proof JWTs.
+    /// </summary>
+    /// <value>
+    /// A collection of strings representing the supported signing algorithms for DPoP.
+    /// </value>
+    public IEnumerable<string> DPoPSigningAlgorithmsSupported =>
+        TryGetStringArray(OidcConstants.Discovery.DPoPSigningAlgorithmsSupported);
+
+    /// <summary>
+    /// Gets the prompt values supported by the OP.
+    /// </summary>
+    /// <value>
+    /// A collection of strings representing the supported prompt values.
+    /// </value>
+    public IEnumerable<string> PromptValuesSupported =>
+        TryGetStringArray(OidcConstants.Discovery.PromptValuesSupported);
+
+    /// <summary>
     /// Attempts to retrieve a JSON value for a given property name from the discovery document.
     /// </summary>
     /// <param name="name">The name of the property whose value is to be retrieved.</param>
