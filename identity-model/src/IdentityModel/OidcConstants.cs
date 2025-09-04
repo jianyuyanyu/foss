@@ -574,16 +574,6 @@ public static class OidcConstants
         //*******************
         public const string DPoPSigningAlgorithmsSupported = "dpop_signing_alg_values_supported";
 
-        //*************************
-        //* OpenID Federation 1.0 *
-        //*************************
-        // TODO
-
-        //******************************************
-        //* RFC 9728 (Protected Resource Metadata) *
-        //******************************************
-        // TODO protected_resources
-
         //******************************************
         //* Initiating User Registration via OIDC  *
         //******************************************
