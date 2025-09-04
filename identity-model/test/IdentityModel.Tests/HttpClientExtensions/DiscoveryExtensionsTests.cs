@@ -318,6 +318,11 @@ public class DiscoveryExtensionsTests
         tokenEndpointAuthSigningAlgorithms.Count.ShouldBe(1);
         tokenEndpointAuthSigningAlgorithms.ShouldContain("RS256");
 
+        // ID Token Signing Algorithms
+        var idTokenSigningAlgorithms = disco.IdTokenSigningAlgorithmsSupported.ToList();
+        idTokenSigningAlgorithms.Count.ShouldBe(1);
+        idTokenSigningAlgorithms.ShouldContain("RS256");
+
         // JWKS data
         disco.KeySet.Keys.Count.ShouldBe(1);
         disco.KeySet.Keys.First().Kid.ShouldBe("a3rMUgMFv9tPclLa6yF3zAkfquE");
@@ -325,15 +330,51 @@ public class DiscoveryExtensionsTests
         // mTLS endpoint aliases
         disco.MtlsEndpointAliases.ShouldNotBeNull();
         disco.MtlsEndpointAliases.TokenEndpoint.ShouldBeNull();
+        disco.TlsClientCertificateBoundAccessTokens.ShouldBeNull();
 
         // These collections aren't in the test discovery.json so they should be empty enumerations
         disco.BackchannelTokenDeliveryModesSupported.ShouldBeEmpty();
+        disco.BackchannelAuthenticationRequestSigningAlgValuesSupported.ShouldBeEmpty();
         disco.IntrospectionSigningAlgorithmsSupported.ShouldBeEmpty();
         disco.IntrospectionEncryptionAlgorithmsSupported.ShouldBeEmpty();
         disco.IntrospectionEncryptionEncValuesSupported.ShouldBeEmpty();
+        disco.RevocationEndpointAuthenticationMethodsSupported.ShouldBeEmpty();
+        disco.RevocationEndpointAuthenticationSigningAlgorithmsSupported.ShouldBeEmpty();
+        disco.IntrospectionEndpointAuthenticationMethodsSupported.ShouldBeEmpty();
+        disco.IntrospectionEndpointAuthenticationSigningAlgorithmsSupported.ShouldBeEmpty();
+        disco.IdTokenEncryptionAlgorithmsSupported.ShouldBeEmpty();
+        disco.IdTokenEncryptionEncValuesSupported.ShouldBeEmpty();
+        disco.UserInfoSigningAlgorithmsSupported.ShouldBeEmpty();
+        disco.UserInfoEncryptionAlgorithmsSupported.ShouldBeEmpty();
+        disco.UserInfoEncryptionEncValuesSupported.ShouldBeEmpty();
+        disco.RequestObjectSigningAlgorithmsSupported.ShouldBeEmpty();
+        disco.RequestObjectEncryptionAlgorithmsSupported.ShouldBeEmpty();
+        disco.RequestObjectEncryptionEncValuesSupported.ShouldBeEmpty();
+        disco.UILocalesSupported.ShouldBeEmpty();
+        disco.AuthorizationDetailsTypesSupported.ShouldBeEmpty();
+        disco.DPoPSigningAlgorithmsSupported.ShouldBeEmpty();
+        disco.PromptValuesSupported.ShouldBeEmpty();
+        disco.AcrValuesSupported.ShouldBeEmpty();
+        disco.DisplayValuesSupported.ShouldBeEmpty();
+        disco.ClaimTypesSupported.ShouldBeEmpty();
+        disco.ClaimsLocalesSupported.ShouldBeEmpty();
 
         // These flags aren't in the test discovery.json, so they should be null
         disco.BackchannelUserCodeParameterSupported.ShouldBeNull();
+        disco.ClaimsParameterSupported.ShouldBeNull();
+        disco.RequestParameterSupported.ShouldBeNull();
+        disco.RequestUriParameterSupported.ShouldBeNull();
+        disco.RequireRequestUriRegistration.ShouldBeNull();
+        disco.RequireSignedRequestObject.ShouldBeNull();
+        disco.AuthorizationResponseIssParameterSupported.ShouldBeNull();
+        disco.BackChannelLogoutSupported.ShouldBeNull();
+        disco.BackChannelLogoutSessionSupported.ShouldBeNull();
+
+        // These strings aren't in the test discovery.json, so they should be null
+        disco.ServiceDocumentation.ShouldBeNull();
+        disco.OpPolicyUri.ShouldBeNull();
+        disco.OpTosUri.ShouldBeNull();
+        disco.SignedMetadata.ShouldBeNull();
     }
 
     [Fact]
