@@ -331,7 +331,7 @@ public class DiscoveryDocumentResponse : ProtocolResponse
 
     /// <summary>
     /// Gets the URL that the authorization server provides to the person registering the client to read about the authorization server's
-    /// terms of service.
+    /// requirements on how the client can use the data provided by the authorization server.
     /// </summary>
     /// <value>
     /// The op policy URL as a string, or <c>null</c> if it is not found in the discovery document.
