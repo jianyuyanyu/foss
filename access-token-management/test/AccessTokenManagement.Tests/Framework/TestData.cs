@@ -28,7 +28,7 @@ public partial class TestData
 
     public DPoPProofKey JsonWebKey { get; } = BuildDPoPJsonWebKey();
 
-    public DateTimeOffset CurrentDate { get; } = new(2000, 1, 2, 3, 4, 5, TimeSpan.FromHours(6));
+    public DateTimeOffset CurrentDate { get; set; } = new(2000, 1, 2, 3, 4, 5, TimeSpan.FromHours(6));
 
     public int ExpiresInSeconds { get; set; } = 60;
 
