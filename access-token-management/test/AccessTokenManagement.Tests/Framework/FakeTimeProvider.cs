@@ -4,8 +4,10 @@
 using Microsoft.Extensions.Internal;
 
 namespace Duende.AccessTokenManagement.Framework;
+
 internal class FakeTimeProvider(Func<DateTimeOffset> utcNow) : TimeProvider, ISystemClock
 {
     public override DateTimeOffset GetUtcNow() => utcNow();
+
     public DateTimeOffset UtcNow => utcNow();
 }
