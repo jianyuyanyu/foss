@@ -8,6 +8,7 @@ body:
       description: Select the affected Duende component
       options:
         - Duende.AccessTokenManagement
+        - Duende.AspNetCore.Authentication.OAuth2Introspection
         - Duende.IdentityModel
         - Duende.IdentityModel.OidcClient
         - Other
