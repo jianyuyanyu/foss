@@ -5,6 +5,7 @@ using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 
 namespace Duende.AccessTokenManagement.Framework;
+
 public class TestLoggerProvider(WriteTestOutput writeOutput, string name) : ILoggerProvider
 {
     private readonly Stopwatch _watch = Stopwatch.StartNew();
