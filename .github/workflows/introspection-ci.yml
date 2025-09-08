@@ -50,10 +50,10 @@ jobs:
           6.0.x
           8.0.x
           9.0.203
+    - name: Restore
+      run: dotnet restore ../
     - name: Verify Formatting
-      run: |-
-        dotnet restore ../
-        dotnet format ../ --verify-no-changes --no-restore
+      run: dotnet format ../ --verify-no-changes --no-restore
     - name: Test - AspNetCore.Authentication.OAuth2Introspection.Tests
       run: dotnet test -c Release test/AspNetCore.Authentication.OAuth2Introspection.Tests --logger "console;verbosity=normal" --logger "trx;LogFileName=AspNetCore.Authentication.OAuth2Introspection.Tests.trx" --collect:"XPlat Code Coverage"
     - name: Test report
