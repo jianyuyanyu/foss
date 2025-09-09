@@ -1146,8 +1146,8 @@ namespace Duende.IdentityModel.Client
         public bool ContainsKey(string key) { }
         public System.Collections.Generic.IEnumerable<string> GetValues(string name) { }
         public Duende.IdentityModel.Client.Parameters Merge(Duende.IdentityModel.Client.Parameters? additionalValues = null) { }
-        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(("The FromObject method uses reflection in a way that is incompatible with trimming" +
-            "."))]
+        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("The FromObject method uses reflection in a way that is incompatible with trimming" +
+            ".")]
         public static Duende.IdentityModel.Client.Parameters? FromObject(object values) { }
     }
     public class PasswordTokenRequest : Duende.IdentityModel.Client.TokenRequest
@@ -1180,14 +1180,14 @@ namespace Duende.IdentityModel.Client
         public string? DPoPNonce { get; set; }
         public string? Error { get; }
         protected string? ErrorMessage { get; set; }
-        public Duende.IdentityModel.Client.ResponseErrorType ErrorType { get; set; }
-        public System.Exception? Exception { get; set; }
+        public Duende.IdentityModel.Client.ResponseErrorType ErrorType { get; protected set; }
+        public System.Exception? Exception { get; protected set; }
         public string? HttpErrorReason { get; }
-        public System.Net.Http.HttpResponseMessage? HttpResponse { get; set; }
+        public System.Net.Http.HttpResponseMessage? HttpResponse { get; protected set; }
         public System.Net.HttpStatusCode HttpStatusCode { get; }
         public bool IsError { get; }
-        public System.Text.Json.JsonElement? Json { get; set; }
-        public string? Raw { get; set; }
+        public System.Text.Json.JsonElement? Json { get; protected set; }
+        public string? Raw { get; protected set; }
         protected virtual System.Threading.Tasks.Task InitializeAsync(object? initializationData = null) { }
         public string? TryGet(string name) { }
         public static T FromException<T>(System.Exception ex, string? errorMessage = null)
@@ -1319,7 +1319,7 @@ namespace Duende.IdentityModel.Client
     {
         public TokenIntrospectionResponse() { }
         public string[] Audiences { get; }
-        public System.Collections.Generic.IEnumerable<System.Security.Claims.Claim> Claims { get; set; }
+        public System.Collections.Generic.IEnumerable<System.Security.Claims.Claim> Claims { get; protected set; }
         public string? ClientId { get; }
         public System.DateTimeOffset? Expiration { get; }
         public bool IsActive { get; }

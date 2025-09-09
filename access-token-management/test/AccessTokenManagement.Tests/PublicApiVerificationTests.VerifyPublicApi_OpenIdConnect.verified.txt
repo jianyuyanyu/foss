@@ -41,21 +41,15 @@
         System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.OpenIdConnect.TokenForParameters>> GetTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default);
         System.Threading.Tasks.Task StoreTokenAsync(System.Security.Claims.ClaimsPrincipal user, Duende.AccessTokenManagement.OpenIdConnect.UserToken token, Duende.AccessTokenManagement.OpenIdConnect.UserTokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default);
     }
-    [System.Runtime.CompilerServices.RequiredMember]
     public sealed class OpenIdConnectClientConfiguration
     {
-        [System.Obsolete(("Constructors of types with required members are not supported in this version of " +
-            "your compiler."), true)]
-        [System.Runtime.CompilerServices.CompilerFeatureRequired("RequiredMembers")]
         public OpenIdConnectClientConfiguration() { }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public Duende.AccessTokenManagement.ClientId ClientId { get; set; }
+        public required Duende.AccessTokenManagement.ClientId ClientId { get; set; }
         public Duende.AccessTokenManagement.ClientSecret? ClientSecret { get; set; }
         public System.Net.Http.HttpClient? HttpClient { get; set; }
         public System.Uri? RevocationEndpoint { get; set; }
         public Duende.AccessTokenManagement.Scheme Scheme { get; set; }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public System.Uri TokenEndpoint { get; set; }
+        public required System.Uri TokenEndpoint { get; set; }
     }
     public static class OpenIdConnectTokenManagementDefaults
     {
@@ -99,22 +93,14 @@
         public Duende.AccessTokenManagement.DPoP.DPoPProofKey? DPoPProofKey { get; init; }
         public Duende.AccessTokenManagement.RefreshToken RefreshToken { get; init; }
     }
-    [System.Runtime.CompilerServices.RequiredMember]
     public sealed class UserToken : Duende.AccessTokenManagement.AccessTokenRequestHandler.IToken, System.IEquatable<Duende.AccessTokenManagement.OpenIdConnect.UserToken>
     {
-        [System.Obsolete(("Constructors of types with required members are not supported in this version of " +
-            "your compiler."), true)]
-        [System.Runtime.CompilerServices.CompilerFeatureRequired("RequiredMembers")]
         public UserToken() { }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public Duende.AccessTokenManagement.AccessTokenType? AccessTokenType { get; init; }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public Duende.AccessTokenManagement.AccessToken AccessToken { get; init; }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public Duende.AccessTokenManagement.ClientId ClientId { get; init; }
+        public required Duende.AccessTokenManagement.AccessToken AccessToken { get; init; }
+        public required Duende.AccessTokenManagement.AccessTokenType? AccessTokenType { get; init; }
+        public required Duende.AccessTokenManagement.ClientId ClientId { get; init; }
         public Duende.AccessTokenManagement.DPoP.DPoPProofKey? DPoPJsonWebKey { get; init; }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public System.DateTimeOffset Expiration { get; init; }
+        public required System.DateTimeOffset Expiration { get; init; }
         public Duende.AccessTokenManagement.IdentityToken? IdentityToken { get; init; }
         public Duende.AccessTokenManagement.RefreshToken? RefreshToken { get; init; }
         public Duende.AccessTokenManagement.Scope? Scope { get; init; }
