@@ -3,6 +3,7 @@
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <RootNamespace>Duende.IdentityModel</RootNamespace>
     <Nullable>disable</Nullable>
+    <OutputType>exe</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <TargetFrameworks>net481;$(TargetFrameworks)</TargetFrameworks>
