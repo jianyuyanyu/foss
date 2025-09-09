@@ -72,25 +72,15 @@
         public static bool TryParse(string value, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Duende.AccessTokenManagement.ClientCredentialsClientName? parsed, out string[] errors) { }
         public static string op_Implicit(Duende.AccessTokenManagement.ClientCredentialsClientName value) { }
     }
-    [System.Runtime.CompilerServices.RequiredMember]
     public sealed class ClientCredentialsToken : Duende.AccessTokenManagement.AccessTokenRequestHandler.IToken, System.IEquatable<Duende.AccessTokenManagement.ClientCredentialsToken>
     {
-        [System.Obsolete(("Constructors of types with required members are not supported in this version of " +
-            "your compiler."), true)]
-        [System.Runtime.CompilerServices.CompilerFeatureRequired("RequiredMembers")]
         public ClientCredentialsToken() { }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public Duende.AccessTokenManagement.AccessTokenType? AccessTokenType { get; init; }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public Duende.AccessTokenManagement.AccessToken AccessToken { get; init; }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public Duende.AccessTokenManagement.ClientId ClientId { get; init; }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public Duende.AccessTokenManagement.DPoP.DPoPProofKey? DPoPJsonWebKey { get; init; }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public System.DateTimeOffset Expiration { get; init; }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public Duende.AccessTokenManagement.Scope? Scope { get; init; }
+        public required Duende.AccessTokenManagement.AccessToken AccessToken { get; init; }
+        public required Duende.AccessTokenManagement.AccessTokenType? AccessTokenType { get; init; }
+        public required Duende.AccessTokenManagement.ClientId ClientId { get; init; }
+        public required Duende.AccessTokenManagement.DPoP.DPoPProofKey? DPoPJsonWebKey { get; init; }
+        public required System.DateTimeOffset Expiration { get; init; }
+        public required Duende.AccessTokenManagement.Scope? Scope { get; init; }
     }
     public sealed class ClientCredentialsTokenManagementBuilder
     {
@@ -136,8 +126,8 @@
     public sealed class FailedResult : Duende.AccessTokenManagement.TokenResult, System.IEquatable<Duende.AccessTokenManagement.FailedResult>
     {
         public FailedResult(string Error, string? ErrorDescription = null) { }
-        public string? ErrorDescription { get; init; }
         public string Error { get; init; }
+        public string? ErrorDescription { get; init; }
         public override string ToString() { }
     }
     public readonly struct ForceTokenRenewal : System.IEquatable<Duende.AccessTokenManagement.ForceTokenRenewal>
@@ -297,17 +287,11 @@ namespace Duende.AccessTokenManagement.DPoP
         public static Duende.AccessTokenManagement.DPoP.DPoPNonce? ParseOrDefault(string? value) { }
         public static bool TryParse(string value, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Duende.AccessTokenManagement.DPoP.DPoPNonce? parsed, out string[] errors) { }
     }
-    [System.Runtime.CompilerServices.RequiredMember]
     public sealed class DPoPNonceContext : System.IEquatable<Duende.AccessTokenManagement.DPoP.DPoPNonceContext>
     {
-        [System.Obsolete(("Constructors of types with required members are not supported in this version of " +
-            "your compiler."), true)]
-        [System.Runtime.CompilerServices.CompilerFeatureRequired("RequiredMembers")]
         public DPoPNonceContext() { }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public System.Net.Http.HttpMethod Method { get; set; }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public System.Uri Url { get; set; }
+        public required System.Net.Http.HttpMethod Method { get; set; }
+        public required System.Uri Url { get; set; }
     }
     public readonly struct DPoPProof : System.IEquatable<Duende.AccessTokenManagement.DPoP.DPoPProof>
     {
@@ -331,22 +315,15 @@ namespace Duende.AccessTokenManagement.DPoP
         public static bool TryParse(string value, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Duende.AccessTokenManagement.DPoP.DPoPProofKey? parsed, out string[] errors) { }
         public static string op_Implicit(Duende.AccessTokenManagement.DPoP.DPoPProofKey value) { }
     }
-    [System.Runtime.CompilerServices.RequiredMember]
     public sealed class DPoPProofRequest : System.IEquatable<Duende.AccessTokenManagement.DPoP.DPoPProofRequest>
     {
-        [System.Obsolete(("Constructors of types with required members are not supported in this version of " +
-            "your compiler."), true)]
-        [System.Runtime.CompilerServices.CompilerFeatureRequired("RequiredMembers")]
         public DPoPProofRequest() { }
         public Duende.AccessTokenManagement.AccessToken? AccessToken { get; init; }
         public System.Collections.Generic.IReadOnlyDictionary<string, string>? AdditionalPayloadClaims { get; init; }
         public Duende.AccessTokenManagement.DPoP.DPoPNonce? DPoPNonce { get; init; }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public Duende.AccessTokenManagement.DPoP.DPoPProofKey DPoPProofKey { get; init; }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public System.Net.Http.HttpMethod Method { get; init; }
-        [System.Runtime.CompilerServices.RequiredMember]
-        public System.Uri Url { get; init; }
+        public required Duende.AccessTokenManagement.DPoP.DPoPProofKey DPoPProofKey { get; init; }
+        public required System.Net.Http.HttpMethod Method { get; init; }
+        public required System.Uri Url { get; init; }
     }
     public readonly struct DPoPProofThumbprint : System.IEquatable<Duende.AccessTokenManagement.DPoP.DPoPProofThumbprint>
     {
