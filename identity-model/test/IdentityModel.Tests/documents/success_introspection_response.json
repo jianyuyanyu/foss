@@ -1,4 +1,4 @@
-﻿{
+{
   "aud": [ "https://idsvr4/resources", "api1" ],
   "iss": "https://idsvr4",
   "nbf": 1475824871,
@@ -9,5 +9,6 @@
   "idp": "local",
   "amr": "password",
   "active": true,
-  "scope": "api1 api2"
+  "scope": "api1 api2",
+  "realm_access": { "roles": [ "my_authorization" ] }
 }

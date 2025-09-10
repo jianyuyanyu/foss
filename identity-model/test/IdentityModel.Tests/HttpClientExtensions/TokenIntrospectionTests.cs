@@ -80,8 +80,9 @@ public class TokenIntrospectionTests
             new("active", "true", ClaimValueTypes.String, "https://idsvr4"),
             new("scope", "api1", ClaimValueTypes.String, "https://idsvr4"),
             new("scope", "api2", ClaimValueTypes.String, "https://idsvr4"),
+            new("realm_access", "{ \"roles\": [ \"my_authorization\" ] }", "JSON", "https://idsvr4"),
         };
-        response.Claims.ShouldBe(expected, new ClaimComparer());
+        response.Claims.ShouldBe(expected, new ClaimComparer(), ignoreOrder: true);
         response.Scopes.ShouldBe(["api1", "api2"]);
         response.ClientId.ShouldBe("client");
         response.UserName.ShouldBeNull();
@@ -126,10 +127,11 @@ public class TokenIntrospectionTests
             new("idp", "local", ClaimValueTypes.String, "LOCAL AUTHORITY"),
             new("amr", "password", ClaimValueTypes.String, "LOCAL AUTHORITY"),
             new("active", "true", ClaimValueTypes.String, "LOCAL AUTHORITY"),
+            new("realm_access", "{ \"roles\": [ \"my_authorization\" ] }", JwtClaimTypes.JsonClaimValueTypes.Json, "LOCAL AUTHORITY"),
             new("scope", "api1", ClaimValueTypes.String, "LOCAL AUTHORITY"),
-            new("scope", "api2", ClaimValueTypes.String, "LOCAL AUTHORITY"),
+            new("scope", "api2", ClaimValueTypes.String, "LOCAL AUTHORITY")
         };
-        response.Claims.ShouldBe(expectedClaims, new ClaimComparer());
+        response.Claims.ShouldBe(expectedClaims, new ClaimComparer(), ignoreOrder: true);
         response.Scopes.ShouldBe(["api1", "api2"]);
         response.ClientId.ShouldBe("client");
         response.UserName.ShouldBeNull();
@@ -179,8 +181,9 @@ public class TokenIntrospectionTests
             new("active", "true", ClaimValueTypes.String, "https://idsvr4"),
             new("scope", "api1", ClaimValueTypes.String, "https://idsvr4"),
             new("scope", "api2", ClaimValueTypes.String, "https://idsvr4"),
+            new("realm_access", "{ \"roles\": [ \"my_authorization\" ] }", JwtClaimTypes.JsonClaimValueTypes.Json, "https://idsvr4"),
         };
-        response.Claims.ShouldBe(expectedClaims, new ClaimComparer());
+        response.Claims.ShouldBe(expectedClaims, new ClaimComparer(), ignoreOrder: true);
         response.Scopes.ShouldBe(["api1", "api2"]);
         response.ClientId.ShouldBe("client");
         response.UserName.ShouldBeNull();
@@ -199,7 +202,7 @@ public class TokenIntrospectionTests
         response.ErrorType.ShouldBe(ResponseErrorType.None);
         response.HttpStatusCode.ShouldBe(HttpStatusCode.OK);
         response.IsActive.ShouldBeTrue();
-        response.Claims.ShouldBe(expectedClaims, new ClaimComparer());
+        response.Claims.ShouldBe(expectedClaims, new ClaimComparer(), ignoreOrder: true);
         response.Scopes.ShouldBe(["api1", "api2"]);
         response.ClientId.ShouldBe("client");
         response.UserName.ShouldBeNull();
@@ -314,10 +317,12 @@ public class TokenIntrospectionTests
             new("idp", "local", ClaimValueTypes.String, "https://idsvr4"),
             new("amr", "password", ClaimValueTypes.String, "https://idsvr4"),
             new("active", "true", ClaimValueTypes.String, "https://idsvr4"),
+            new("realm_access", "{ \"roles\": [ \"my_authorization\" ] }", JwtClaimTypes.JsonClaimValueTypes.Json, "https://idsvr4"),
             new("scope", "api1", ClaimValueTypes.String, "https://idsvr4"),
-            new("scope", "api2", ClaimValueTypes.String, "https://idsvr4")
+            new("scope", "api2", ClaimValueTypes.String, "https://idsvr4"),
+
         };
-        response.Claims.ShouldBe(expectedClaims, new ClaimComparer());
+        response.Claims.ShouldBe(expectedClaims, new ClaimComparer(), ignoreOrder: true);
         response.Scopes.ShouldBe(["api1", "api2"]);
         response.ClientId.ShouldBe("client");
         response.UserName.ShouldBeNull();
@@ -535,9 +540,10 @@ public class TokenIntrospectionTests
             new("active", "true", ClaimValueTypes.String, "https://idsvr4"),
             new("scope", "api1", ClaimValueTypes.String, "https://idsvr4"),
             new("scope", "api2", ClaimValueTypes.String, "https://idsvr4"),
+            new("realm_access", "{ \"roles\": [ \"my_authorization\" ] }", JwtClaimTypes.JsonClaimValueTypes.Json, "https://idsvr4"),
         };
 
         introspectionResponse.Claims.ShouldNotBeEmpty();
-        introspectionResponse.Claims.ShouldBe(expected, new ClaimComparer());
+        introspectionResponse.Claims.ShouldBe(expected, new ClaimComparer(), ignoreOrder: true);
     }
 }
