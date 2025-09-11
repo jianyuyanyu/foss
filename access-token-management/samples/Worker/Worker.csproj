@@ -8,10 +8,11 @@
     <TrimmerSingleWarn>true</TrimmerSingleWarn>
   </PropertyGroup>
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-
-    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.1.2" />
-    <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+  	<FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.14.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\AccessTokenManagement\AccessTokenManagement.csproj" />
