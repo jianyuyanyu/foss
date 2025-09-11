@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Duende.AccessTokenManagement.DPoP;
 using Duende.IdentityServer.Configuration;
+using Microsoft.Extensions.Time.Testing;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Duende.AccessTokenManagement.Framework;
@@ -28,7 +29,9 @@ public partial class TestData
 
     public DPoPProofKey JsonWebKey { get; } = BuildDPoPJsonWebKey();
 
-    public DateTimeOffset CurrentDate { get; set; } = new(2000, 1, 2, 3, 4, 5, TimeSpan.FromHours(6));
+    public FakeTimeProvider TimeProvider { get; } = new(new DateTimeOffset(2000, 1, 2, 3, 4, 5, TimeSpan.FromHours(6)));
+
+    public DateTimeOffset CurrentDateTime => TimeProvider.GetUtcNow();
 
     public int ExpiresInSeconds { get; set; } = 60;
 

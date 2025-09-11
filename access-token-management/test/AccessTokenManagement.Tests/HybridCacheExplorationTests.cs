@@ -8,6 +8,7 @@ using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Internal;
+using Microsoft.Extensions.Time.Testing;
 
 namespace Duende.AccessTokenManagement;
 
@@ -47,25 +48,21 @@ public class HybridCacheExplorationTests
         count.ShouldBe(2);
     }
 
-
     // It's not obvious how hybrid cache uses timeprovider. Actually, it doesn't. It relies on memorycache
     // which uses ISystemClock: 
     // https://github.com/dotnet/extensions/issues/6646
     // https://github.com/dotnet/runtime/issues/114011
     [Fact]
-    public async Task Can_mock_timeprovider_in_hybrid_cache()
+    public async Task Can_mock_time_provider_in_hybrid_cache()
     {
-        var now = DateTimeOffset.Now;
-
-        ISystemClock systemClock = new FakeTimeProvider(() => now);
+        var timeProvider = new FakeTimeProvider();
+        ISystemClock systemClock = new MemoryCacheSystemClock(timeProvider);
         var services = new ServiceCollection()
-            // Hybrid cache uses memory cache (added implicilty)
-            .AddMemoryCache()
-
-            // memory cache doesn't use TimeProvider, but the older ISystemClock
-            // It's not passed implicitly. 
+            .AddMemoryCache() // Hybrid cache uses memory cache (added implicitly)
             .Configure<MemoryCacheOptions>(options =>
             {
+                // memory cache doesn't use TimeProvider, but the older ISystemClock
+                // It's not passed implicitly.
                 options.Clock = systemClock;
             })
             .AddHybridCache()
@@ -76,7 +73,7 @@ public class HybridCacheExplorationTests
 
         // write an item into the cache that's cached for 5 min. 
         await cache.GetOrCreateAsync<string>("key",
-            options: new HybridCacheEntryOptions()
+            options: new HybridCacheEntryOptions
             {
                 Expiration = TimeSpan.FromMinutes(5)
             },
@@ -84,7 +81,7 @@ public class HybridCacheExplorationTests
 
         //when the cached item is still valid, it shouldn't invoke the factory
         var found = await cache.GetOrCreateAsync<string>("key",
-            options: new HybridCacheEntryOptions()
+            options: new HybridCacheEntryOptions
             {
                 Expiration = TimeSpan.FromMinutes(5)
             },
@@ -93,12 +90,16 @@ public class HybridCacheExplorationTests
         found.ShouldBe("cached");
 
         // move time forward by 150 min - the item should be expired now
-        now += TimeSpan.FromMinutes(150);
-        found = await cache.GetOrCreateAsync<string>("key", options: new HybridCacheEntryOptions()
+        timeProvider.Advance(TimeSpan.FromMinutes(150));
+        var cacheEntryOptions = new HybridCacheEntryOptions
         {
             Expiration = TimeSpan.FromMinutes(5)
-        },
+        };
+        found = await cache.GetOrCreateAsync<string>(
+            "key",
+            options: cacheEntryOptions,
             factory: _ => ValueTask.FromResult("updated"));
+
         found.ShouldBe("updated");
     }
 
@@ -107,15 +108,13 @@ public class HybridCacheExplorationTests
     [Fact]
     public async Task Mocking_l2_cache()
     {
-        var now = DateTimeOffset.Now;
-
-        var fakeTimeProvider = new FakeTimeProvider(() => now);
+        var timeProvider = new FakeTimeProvider();
         var services = new ServiceCollection()
             .AddMemoryCache()
-            .AddSingleton<IDistributedCache>(new FakeDistributedCache(fakeTimeProvider))
+            .AddSingleton<IDistributedCache>(new FakeDistributedCache(timeProvider))
             .Configure<MemoryCacheOptions>(options =>
             {
-                options.Clock = fakeTimeProvider;
+                options.Clock = new MemoryCacheSystemClock(timeProvider);
             })
             .AddHybridCache()
             .Services;
@@ -125,7 +124,7 @@ public class HybridCacheExplorationTests
 
         // write an item into the cache that's cached for 5 min in l2, and 1 sec in l1
         await cache.GetOrCreateAsync<string>("key",
-            options: new HybridCacheEntryOptions()
+            options: new HybridCacheEntryOptions
             {
                 Expiration = TimeSpan.FromMinutes(5),
                 LocalCacheExpiration = TimeSpan.FromSeconds(1)
@@ -134,7 +133,7 @@ public class HybridCacheExplorationTests
 
         // when the cached item is still valid, it shouldn't invoke the factory
         var found = await cache.GetOrCreateAsync<string>("key",
-            options: new HybridCacheEntryOptions()
+            options: new HybridCacheEntryOptions
             {
                 Expiration = TimeSpan.FromMinutes(5),
                 LocalCacheExpiration = TimeSpan.FromSeconds(1)
@@ -142,12 +141,13 @@ public class HybridCacheExplorationTests
             factory: _ => ValueTask.FromResult("wrong"));
 
         found.ShouldBe("cached");
-        now += TimeSpan.FromMinutes(5);
+
+        timeProvider.Advance(TimeSpan.FromMinutes(5));
 
         // when the cache has expired, it should be removed from the cache and the new factory
         // should be invoked. 
         found = await cache.GetOrCreateAsync<string>("key",
-            options: new HybridCacheEntryOptions()
+            options: new HybridCacheEntryOptions
             {
                 Expiration = TimeSpan.FromMinutes(5),
                 LocalCacheExpiration = TimeSpan.FromSeconds(1)

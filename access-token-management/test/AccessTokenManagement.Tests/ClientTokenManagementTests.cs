@@ -16,13 +16,13 @@ namespace Duende.AccessTokenManagement;
 
 public class ClientTokenManagementTests
 {
-    private ServiceCollection services = [];
-    private MockHttpMessageHandler mockHttp = new();
+    private readonly ServiceCollection _services = [];
+    private readonly MockHttpMessageHandler _mockHttp = new();
 
     public ClientTokenManagementTests()
     {
-        services.AddSingleton<TimeProvider>(new FakeTimeProvider(() => The.CurrentDate));
-        mockHttp.Fallback.Respond(req => throw new InvalidOperationException("no handler for " + req.RequestUri));
+        _services.AddSingleton<TimeProvider>(The.TimeProvider);
+        _mockHttp.Fallback.Respond(req => throw new InvalidOperationException("no handler for " + req.RequestUri));
     }
 
     private TestData The { get; } = new();
@@ -31,9 +31,9 @@ public class ClientTokenManagementTests
     [Fact]
     public async Task Unknown_client_should_throw_exception()
     {
-        services.AddClientCredentialsTokenManagement();
+        _services.AddClientCredentialsTokenManagement();
 
-        var provider = services.BuildServiceProvider();
+        var provider = _services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var action = async () => await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("unknown"));
@@ -45,7 +45,7 @@ public class ClientTokenManagementTests
     [Fact]
     public async Task Missing_client_id_throw_exception()
     {
-        services.AddClientCredentialsTokenManagement()
+        _services.AddClientCredentialsTokenManagement()
             .AddClient("test", client =>
             {
                 client.TokenEndpoint = new Uri("https://as/connect/token");
@@ -53,7 +53,7 @@ public class ClientTokenManagementTests
                 client.ClientSecret = ClientSecret.Parse("notnull");
             });
 
-        var provider = services.BuildServiceProvider();
+        var provider = _services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var action = async () => await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"));
@@ -67,13 +67,13 @@ public class ClientTokenManagementTests
     public async Task Missing_client_secret_throw_exception()
     {
 
-        var mockedRequest = mockHttp.Expect("/connect/token")
+        var mockedRequest = _mockHttp.Expect("/connect/token")
             .Respond(_ => Some.TokenHttpResponse());
 
-        services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
-            .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
+        _services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(() => _mockHttp);
 
-        services.AddClientCredentialsTokenManagement()
+        _services.AddClientCredentialsTokenManagement()
             .AddClient("test", client =>
             {
                 client.TokenEndpoint = new Uri("https://as/connect/token");
@@ -81,11 +81,11 @@ public class ClientTokenManagementTests
                 client.ClientSecret = null;
             });
 
-        var provider = services.BuildServiceProvider();
+        var provider = _services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
-        mockHttp.VerifyNoOutstandingExpectation();
+        _mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken());
 
@@ -94,7 +94,7 @@ public class ClientTokenManagementTests
     [Fact]
     public async Task Missing_tokenEndpoint_throw_exception()
     {
-        services.AddClientCredentialsTokenManagement()
+        _services.AddClientCredentialsTokenManagement()
             .AddClient("test", client =>
             {
                 client.TokenEndpoint = null;
@@ -102,7 +102,7 @@ public class ClientTokenManagementTests
                 client.ClientSecret = ClientSecret.Parse("notnull");
             });
 
-        var provider = services.BuildServiceProvider();
+        var provider = _services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var action = async () => await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"));
@@ -116,7 +116,7 @@ public class ClientTokenManagementTests
     [InlineData(ClientCredentialStyle.PostBody)]
     public async Task Token_request_and_response_should_have_expected_values(ClientCredentialStyle style)
     {
-        services.AddClientCredentialsTokenManagement()
+        _services.AddClientCredentialsTokenManagement()
             .AddClient("test", client => Some.ClientCredentialsClient(client,
                 resource: The.Resource,
                 style: style,
@@ -140,27 +140,27 @@ public class ClientTokenManagementTests
 
         if (style == ClientCredentialStyle.PostBody)
         {
-            mockHttp.Expect("/connect/token")
+            _mockHttp.Expect("/connect/token")
                 .WithFormData(expectedRequestFormData)
                 .Respond(_ => Some.TokenHttpResponse());
         }
         else if (style == ClientCredentialStyle.AuthorizationHeader)
         {
-            mockHttp.Expect("/connect/token")
+            _mockHttp.Expect("/connect/token")
                 .WithFormData(expectedRequestFormData)
                 .WithHeaders("Authorization",
                     "Basic " + IdentityModel.Client.BasicAuthenticationOAuthHeaderValue.EncodeCredential(The.ClientId.ToString(), The.ClientSecret.ToString()))
                 .Respond(_ => Some.TokenHttpResponse(Some.Token()));
         }
 
-        services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
-            .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
+        _services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(() => _mockHttp);
 
-        var provider = services.BuildServiceProvider();
+        var provider = _services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
-        mockHttp.VerifyNoOutstandingExpectation();
+        _mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken());
     }
@@ -169,52 +169,52 @@ public class ClientTokenManagementTests
     public async Task Explicit_expires_in_response_should_create_token_with_expiration()
     {
 
-        services.AddClientCredentialsTokenManagement()
+        _services.AddClientCredentialsTokenManagement()
             .AddClient("test", client => Some.ClientCredentialsClient(client));
 
-        mockHttp.Expect(The.TokenEndpoint.ToString())
+        _mockHttp.Expect(The.TokenEndpoint.ToString())
             .Respond(_ => Some.TokenHttpResponse(Some.Token() with
             {
                 expires_in = 300
             }));
 
-        services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
-            .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
+        _services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(() => _mockHttp);
 
-        var provider = services.BuildServiceProvider();
+        var provider = _services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
-        mockHttp.VerifyNoOutstandingExpectation();
+        _mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken() with
         {
-            Expiration = The.CurrentDate.Add(TimeSpan.FromSeconds(300))
+            Expiration = The.CurrentDateTime.Add(TimeSpan.FromSeconds(300))
         });
     }
 
     [Fact]
     public async Task Missing_expires_in_response_should_create_long_lived_token()
     {
-        services.AddClientCredentialsTokenManagement()
+        _services.AddClientCredentialsTokenManagement()
             .AddClient("test", client => Some.ClientCredentialsClient(client));
 
 
 
-        mockHttp.Expect(The.TokenEndpoint.ToString())
+        _mockHttp.Expect(The.TokenEndpoint.ToString())
             .Respond(_ => Some.TokenHttpResponse(Some.Token() with
             {
                 expires_in = null
             }));
 
-        services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
-            .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
+        _services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(() => _mockHttp);
 
-        var provider = services.BuildServiceProvider();
+        var provider = _services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
-        mockHttp.VerifyNoOutstandingExpectation();
+        _mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken());
     }
@@ -222,7 +222,7 @@ public class ClientTokenManagementTests
     [Fact]
     public async Task Request_parameters_should_take_precedence_over_configuration()
     {
-        services.AddClientCredentialsTokenManagement()
+        _services.AddClientCredentialsTokenManagement()
             .AddClient("test", client => Some.ClientCredentialsClient(client,
                 resource: The.Resource,
                 parameters: new()
@@ -248,21 +248,21 @@ public class ClientTokenManagementTests
 
 
 
-        mockHttp.Expect("/connect/token")
+        _mockHttp.Expect("/connect/token")
             .WithFormData(expectedRequestFormData)
             .Respond(_ => Some.TokenHttpResponse(Some.Token() with
             {
                 scope = "scope_per_request"
             }));
 
-        services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
-            .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
+        _services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(() => _mockHttp);
 
-        var provider = services.BuildServiceProvider();
+        var provider = _services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), request).GetToken();
-        mockHttp.VerifyNoOutstandingExpectation();
+        _mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken() with
         {
@@ -273,7 +273,7 @@ public class ClientTokenManagementTests
     [Fact]
     public async Task Request_assertions_should_be_sent_correctly()
     {
-        services.AddClientCredentialsTokenManagement()
+        _services.AddClientCredentialsTokenManagement()
             .AddClient("test", client => Some.ClientCredentialsClient(client, resource: The.Resource));
 
         var request = new TokenRequestParameters
@@ -293,18 +293,18 @@ public class ClientTokenManagementTests
 
 
 
-        mockHttp.Expect("/connect/token")
+        _mockHttp.Expect("/connect/token")
             .WithFormData(expectedRequestFormData)
             .Respond(_ => Some.TokenHttpResponse());
 
-        services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
-            .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
+        _services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(() => _mockHttp);
 
-        var provider = services.BuildServiceProvider();
+        var provider = _services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), request).GetToken();
-        mockHttp.VerifyNoOutstandingExpectation();
+        _mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken());
     }
@@ -312,10 +312,10 @@ public class ClientTokenManagementTests
     [Fact]
     public async Task Service_assertions_should_be_sent_correctly()
     {
-        services.AddClientCredentialsTokenManagement()
+        _services.AddClientCredentialsTokenManagement()
             .AddClient("test", client => Some.ClientCredentialsClient(client, resource: The.Resource));
 
-        services.AddTransient<IClientAssertionService>(_ =>
+        _services.AddTransient<IClientAssertionService>(_ =>
             new TestClientAssertionService("test", "service_type", "service_value"));
 
         var expectedRequestFormData = new Dictionary<string, string>
@@ -326,18 +326,18 @@ public class ClientTokenManagementTests
 
 
 
-        mockHttp.Expect("/connect/token")
+        _mockHttp.Expect("/connect/token")
             .WithFormData(expectedRequestFormData)
             .Respond(_ => Some.TokenHttpResponse());
 
-        services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
-            .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
+        _services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(() => _mockHttp);
 
-        var provider = services.BuildServiceProvider();
+        var provider = _services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
-        mockHttp.VerifyNoOutstandingExpectation();
+        _mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken());
     }
@@ -345,10 +345,10 @@ public class ClientTokenManagementTests
     [Fact]
     public async Task Request_assertion_should_take_precedence_over_service_assertion()
     {
-        services.AddClientCredentialsTokenManagement()
+        _services.AddClientCredentialsTokenManagement()
             .AddClient("test", client => Some.ClientCredentialsClient(client, resource: The.Resource));
 
-        services.AddTransient<IClientAssertionService>(_ =>
+        _services.AddTransient<IClientAssertionService>(_ =>
             new TestClientAssertionService("test", "service_type", "service_value"));
 
         var request = new TokenRequestParameters
@@ -368,18 +368,18 @@ public class ClientTokenManagementTests
 
 
 
-        mockHttp.Expect("/connect/token")
+        _mockHttp.Expect("/connect/token")
             .WithFormData(expectedRequestFormData)
             .Respond(_ => Some.TokenHttpResponse());
 
-        services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
-            .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
+        _services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(() => _mockHttp);
 
-        var provider = services.BuildServiceProvider();
+        var provider = _services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), request).GetToken();
-        mockHttp.VerifyNoOutstandingExpectation();
+        _mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken());
     }
@@ -387,22 +387,22 @@ public class ClientTokenManagementTests
     [Fact]
     public async Task Service_should_hit_network_only_once_and_then_use_cache()
     {
-        services.AddClientCredentialsTokenManagement()
+        _services.AddClientCredentialsTokenManagement()
             .AddClient("test", client => Some.ClientCredentialsClient(client));
 
 
 
-        var mockedRequest = mockHttp.Expect("/connect/token")
+        var mockedRequest = _mockHttp.Expect("/connect/token")
             .Respond(_ => Some.TokenHttpResponse());
 
-        services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
-            .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
+        _services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(() => _mockHttp);
 
-        var provider = services.BuildServiceProvider();
+        var provider = _services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
-        mockHttp.VerifyNoOutstandingExpectation();
+        _mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken());
 
@@ -410,59 +410,59 @@ public class ClientTokenManagementTests
         token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken());
-        mockHttp.GetMatchCount(mockedRequest).ShouldBe(1);
+        _mockHttp.GetMatchCount(mockedRequest).ShouldBe(1);
     }
 
     [Fact]
     public async Task Service_should_hit_network_when_cache_throws_exception()
     {
-        services.AddClientCredentialsTokenManagement()
+        _services.AddClientCredentialsTokenManagement()
             .AddClient("test", client => Some.ClientCredentialsClient(client));
 
 
 
         // Get the cache to throw exceptions
         var fakeHybridCache = new FakeHybridCache();
-        services.AddSingleton<HybridCache>(fakeHybridCache);
+        _services.AddSingleton<HybridCache>(fakeHybridCache);
         fakeHybridCache.OnGetOrCreate = () => throw new InvalidOperationException("Cache error");
 
-        var mockedRequest = mockHttp.Expect("/connect/token")
+        var mockedRequest = _mockHttp.Expect("/connect/token")
             .Respond(_ => Some.TokenHttpResponse());
 
-        services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
-            .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
+        _services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(() => _mockHttp);
 
-        var provider = services.BuildServiceProvider();
+        var provider = _services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
-        mockHttp.GetMatchCount(mockedRequest).ShouldBe(1);
+        _mockHttp.GetMatchCount(mockedRequest).ShouldBe(1);
     }
 
     [Fact]
     public async Task Service_should_always_hit_network_with_force_renewal()
     {
-        services.AddClientCredentialsTokenManagement()
+        _services.AddClientCredentialsTokenManagement()
             .AddClient("test", client => Some.ClientCredentialsClient(client));
 
 
 
-        mockHttp.Expect("/connect/token")
+        _mockHttp.Expect("/connect/token")
             .Respond(_ => Some.TokenHttpResponse());
-        services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
-            .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
+        _services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(() => _mockHttp);
 
-        var provider = services.BuildServiceProvider();
+        var provider = _services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
-        mockHttp.VerifyNoOutstandingExpectation();
+        _mockHttp.VerifyNoOutstandingExpectation();
 
         token.AccessToken.ShouldBe(The.AccessToken);
         token.AccessTokenType.ShouldNotBeNull().ShouldBe(The.TokenType);
 
         // 2nd request
-        mockHttp.Expect("/connect/token")
+        _mockHttp.Expect("/connect/token")
             .Respond(_ => Some.TokenHttpResponse());
 
         token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test"), new TokenRequestParameters { ForceTokenRenewal = true }).GetToken();
@@ -476,27 +476,27 @@ public class ClientTokenManagementTests
     public async Task client_with_dpop_key_should_send_proof_token()
     {
         var proof = new TestDPoPProofService { ProofToken = "proof_token" };
-        services.AddSingleton<IDPoPProofService>(proof);
+        _services.AddSingleton<IDPoPProofService>(proof);
 
-        services.AddClientCredentialsTokenManagement()
+        _services.AddClientCredentialsTokenManagement()
             .AddClient("test", client => Some.ClientCredentialsClient(
                 toConfigure: client,
                 jsonWebKey: The.JsonWebKey));
 
 
 
-        mockHttp.Expect("/connect/token")
+        _mockHttp.Expect("/connect/token")
             .With(m => m.Headers.Any(h => h.Key == "DPoP" && h.Value.FirstOrDefault() == "proof_token"))
             .Respond(_ => Some.TokenHttpResponse());
 
-        services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
-            .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
+        _services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(() => _mockHttp);
 
-        var provider = services.BuildServiceProvider();
+        var provider = _services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
-        mockHttp.VerifyNoOutstandingExpectation();
+        _mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken() with
         {
@@ -508,32 +508,32 @@ public class ClientTokenManagementTests
     public async Task client_should_use_nonce_when_sending_dpop_proof()
     {
         var proof = new TestDPoPProofService { ProofToken = "proof_token", AppendNonce = true };
-        services.AddSingleton<IDPoPProofService>(proof);
+        _services.AddSingleton<IDPoPProofService>(proof);
 
-        services.AddClientCredentialsTokenManagement()
+        _services.AddClientCredentialsTokenManagement()
             .AddClient("test", client => Some.ClientCredentialsClient(
                 toConfigure: client,
                 jsonWebKey: The.JsonWebKey));
 
-        mockHttp.Expect(The.TokenEndpoint.ToString())
+        _mockHttp.Expect(The.TokenEndpoint.ToString())
             .With(m => m.Headers.Any(h => h.Key == "DPoP" && h.Value.FirstOrDefault() == "proof_token"))
             .Respond(HttpStatusCode.BadRequest,
                 [new KeyValuePair<string, string>("DPoP-Nonce", "some_nonce")],
                 "application/json",
                 JsonSerializer.Serialize(new { error = "use_dpop_nonce" }));
 
-        mockHttp.Expect(The.TokenEndpoint.ToString())
+        _mockHttp.Expect(The.TokenEndpoint.ToString())
             .With(m => m.Headers.Any(h => h.Key == "DPoP" && h.Value.First() == ("proof_tokensome_nonce")))
             .Respond(_ => Some.TokenHttpResponse());
 
-        services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
-            .ConfigurePrimaryHttpMessageHandler(() => mockHttp);
+        _services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(() => _mockHttp);
 
-        var provider = services.BuildServiceProvider();
+        var provider = _services.BuildServiceProvider();
         var sut = provider.GetRequiredService<IClientCredentialsTokenManager>();
 
         var token = await sut.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
-        mockHttp.VerifyNoOutstandingExpectation();
+        _mockHttp.VerifyNoOutstandingExpectation();
 
         token.ShouldBeEquivalentTo(Some.ClientCredentialsToken() with
         {
