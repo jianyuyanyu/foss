@@ -20,7 +20,6 @@ static class DPoPServiceCollectionExtensions
 
         services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>>(new ConfigureJwtBearerOptions(scheme));
 
-
         return services;
     }
 

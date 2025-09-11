@@ -46,13 +46,13 @@ public static class Crypto
         return key;
     }
 
-    public static global::IdentityModel.Jwk.JsonWebKeySet CreateKeySet(RsaSecurityKey key)
+    public static Duende.IdentityModel.Jwk.JsonWebKeySet CreateKeySet(RsaSecurityKey key)
     {
         var parameters = key.Rsa?.ExportParameters(false) ?? key.Parameters;
         var exponent = Base64Url.Encode(parameters.Exponent);
         var modulus = Base64Url.Encode(parameters.Modulus);
 
-        var webKey = new global::IdentityModel.Jwk.JsonWebKey
+        var webKey = new Duende.IdentityModel.Jwk.JsonWebKey
         {
             Kty = "RSA",
             Use = "sig",
@@ -61,7 +61,7 @@ public static class Crypto
             N = modulus,
         };
 
-        var set = new global::IdentityModel.Jwk.JsonWebKeySet();
+        var set = new Duende.IdentityModel.Jwk.JsonWebKeySet();
         set.Keys.Add(webKey);
         return set;
     }
@@ -85,7 +85,6 @@ public static class Crypto
             DateTime.UtcNow.AddHours(1),
             credentials);
 
-
         var handler = new JwtSecurityTokenHandler();
         handler.OutboundClaimTypeMap.Clear();
 
@@ -94,14 +93,12 @@ public static class Crypto
 
     public static string HashData(string data)
     {
-        using (var sha = SHA256.Create())
-        {
-            var hash = sha.ComputeHash(Encoding.ASCII.GetBytes(data));
+        using var sha = SHA256.Create();
+        var hash = sha.ComputeHash(Encoding.ASCII.GetBytes(data));
 
-            var leftPart = new byte[16];
-            Array.Copy(hash, leftPart, 16);
+        var leftPart = new byte[16];
+        Array.Copy(hash, leftPart, 16);
 
-            return Base64Url.Encode(leftPart);
-        }
+        return Base64Url.Encode(leftPart);
     }
 }

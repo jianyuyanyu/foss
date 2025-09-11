@@ -1,4 +1,4 @@
-// Copyright (c) Duende Software. All rights reserved.
+// Copyright(c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Duende.AccessTokenManagement.Framework;
@@ -53,7 +53,7 @@ public static partial class TestLoggers
 {
     [LoggerMessage(
         Level = LogLevel.Information,
-        Message = "Loggin With function result {functionResult}")]
+        Message = "Logging With function result {functionResult}")]
 #pragma warning disable LOGGEN036
     public static partial void LogWithFunction(this ILogger logger, Func<string> functionResult);
 #pragma warning restore LOGGEN036
