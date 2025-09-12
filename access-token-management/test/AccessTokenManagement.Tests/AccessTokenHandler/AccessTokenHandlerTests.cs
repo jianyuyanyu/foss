@@ -16,11 +16,10 @@ public class AccessTokenHandlerTests(ITestOutputHelper output)
     public enum FixtureType
     {
         ClientCredentials,
-        ClientCredentialsWithAutotuning,
+        ClientCredentialsWithAutoTuning,
         OidcUser,
         OidcClient
     }
-
 
     [Theory]
     [MemberData(nameof(AllFixtures))]
@@ -39,7 +38,6 @@ public class AccessTokenHandlerTests(ITestOutputHelper output)
     {
         var fixture = await GetInitializedFixture(type);
 
-
         await fixture.HttpClient.GetAsync("/").CheckHttpStatusCode();
         await fixture.HttpClient.GetAsync("/").CheckHttpStatusCode();
 
@@ -50,13 +48,13 @@ public class AccessTokenHandlerTests(ITestOutputHelper output)
     public async Task Uses_auto_tuning_in_cache_expiration()
     {
         // hybrid cache doesn't allow us to set the cache expiration based on the
-        // lifetime of a token after it's retrieved. To circumvent this, we implemented cache autotuning. 
+        // lifetime of a token after it's retrieved. To circumvent this, we implemented cache auto-tuning. 
         // Cache Auto tuning does the following:
         // the first time a token is retrieved, the cache expiration from the default setting is used
         // however, after that, it will remember the lifetime of the token, and use that to set the cache expiration
 
-        var fixture = (ClientCredentialsFixtureWithAutotuning)
-            await GetInitializedFixture(FixtureType.ClientCredentialsWithAutotuning);
+        var fixture = (ClientCredentialsFixtureWithAutoTuning)
+            await GetInitializedFixture(FixtureType.ClientCredentialsWithAutoTuning);
 
         // We get an access token. The cache interval is not known, so we expect it to be cached for the default cache duration
         await EnsureTokenNumber(fixture, 1);
@@ -75,7 +73,7 @@ public class AccessTokenHandlerTests(ITestOutputHelper output)
         await EnsureTokenNumber(fixture, 2);
 
         // Now increase the time by the cache expiration again. It should NOT be expired now
-        // because the auto tuning has kicked in and has used the token expiration lifetime
+        // because the auto-tuning has kicked in and has used the token expiration lifetime
         // (which is much longer)
         AdvanceTimeBy(fixture, fixture.CacheExpiration);
         await EnsureTokenNumber(fixture, 2);
@@ -86,7 +84,7 @@ public class AccessTokenHandlerTests(ITestOutputHelper output)
     }
 
     private static void AdvanceTimeBy(AccessTokenHandlingBaseFixture fixture, TimeSpan by)
-        => fixture.The.CurrentDate += by;
+        => fixture.The.TimeProvider.Advance(by);
 
     private static async Task EnsureTokenNumber(AccessTokenHandlingBaseFixture fixture, int number)
     {
@@ -135,7 +133,6 @@ public class AccessTokenHandlerTests(ITestOutputHelper output)
         await fixture.HttpClient.GetAsync("/").CheckHttpStatusCode();
         await fixture.HttpClient.GetAsync("/").CheckHttpStatusCode();
         await fixture.HttpClient.GetAsync("/").CheckHttpStatusCode();
-
     }
 
     [Theory]
@@ -163,7 +160,7 @@ public class AccessTokenHandlerTests(ITestOutputHelper output)
         AccessTokenHandlingBaseFixture item = type switch
         {
             FixtureType.ClientCredentials => new ClientCredentialsFixture(),
-            FixtureType.ClientCredentialsWithAutotuning => new ClientCredentialsFixtureWithAutotuning(),
+            FixtureType.ClientCredentialsWithAutoTuning => new ClientCredentialsFixtureWithAutoTuning(),
             FixtureType.OidcClient => new OidcClientFixture(),
             FixtureType.OidcUser => new OidcUserFixture(),
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
@@ -174,14 +171,8 @@ public class AccessTokenHandlerTests(ITestOutputHelper output)
         return item;
     }
 
-
-    public static IEnumerable<object[]> AllFixtures()
-    {
-        foreach (var value in Enum.GetValues<FixtureType>()
-                     .Where(v => v != FixtureType.ClientCredentialsWithAutotuning))
-        {
-            yield return [value];
-        }
-    }
-
+    public static IEnumerable<object[]> AllFixtures() =>
+        Enum.GetValues<FixtureType>()
+            .Where(v => v != FixtureType.ClientCredentialsWithAutoTuning)
+            .Select(value => (object[])[value]);
 }

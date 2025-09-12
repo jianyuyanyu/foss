@@ -1,52 +1,47 @@
 <Project>
   <PropertyGroup>
-    <WilsonVersion>7.1.2</WilsonVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
-    <ExtensionsVersion>8.0.0</ExtensionsVersion>
-    <WilsonVersion>7.1.2</WilsonVersion>
+    <ExtensionsVersion>10.0.0-rc.1.25451.107</ExtensionsVersion>
+	  <WilsonVersion>[8.0.1,9.0.0)</WilsonVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0'">
     <FrameworkVersion>8.0.1</FrameworkVersion>
-    <ExtensionsVersion>9.0.3</ExtensionsVersion>
-    <WilsonVersion>[8.0.1,9.0.0)</WilsonVersion>
-    <IdentityServerVersion>7.0.8</IdentityServerVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net9.0'">
     <FrameworkVersion>9.0.0</FrameworkVersion>
-    <ExtensionsVersion>9.0.3</ExtensionsVersion>
-    <WilsonVersion>[8.0.1,9.0.0)</WilsonVersion>
-    <IdentityServerVersion>7.0.8</IdentityServerVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net10.0'">
+    <FrameworkVersion>10.0.0-rc.1.25451.107</FrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="AngleSharp" Version="1.1.2" />
-    <PackageVersion Include="coverlet.collector" Version="6.0.2" />
-    <PackageVersion Include="Duende.IdentityModel" Version="7.0.0" />
-    <PackageVersion Include="Duende.IdentityServer" Version="$(IdentityServerVersion)" />
-    <PackageVersion Include="MartinCostello.Logging.XUnit.v3" Version="0.5.1" />
+    <PackageVersion Include="AngleSharp" Version="1.3.0" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="Duende.IdentityModel" Version="7.1.0" />
+    <PackageVersion Include="Duende.IdentityServer" Version="7.3.1" />
+    <PackageVersion Include="MartinCostello.Logging.XUnit.v3" Version="0.6.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(FrameworkVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(FrameworkVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="$(FrameworkVersion)" />
-    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-    <PackageVersion Include="Microsoft.Extensions.Caching.Hybrid " Version="9.3.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="$(FrameworkVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Hybrid" Version="9.9.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(ExtensionsVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="$(ExtensionsVersion)" />
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.9.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="$(ExtensionsVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="$(ExtensionsVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Primitives" Version="$(ExtensionsVersion)" />
-    <PackageVersion Include="Microsoft.Extensions.Telemetry.Abstractions" Version="9.1.0" />
+    <PackageVersion Include="Microsoft.Extensions.Telemetry.Abstractions" Version="9.9.0" />
+    <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="9.9.0" />
     <PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="$(WilsonVersion)" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="Microsoft.NETCore.Jit" Version="2.0.8" />
     <PackageVersion Include="MinVer" Version="6.0.0" />
     <PackageVersion Include="PublicApiGenerator" Version="11.4.6" />
     <PackageVersion Include="RichardSzalay.MockHttp" Version="7.0.0" />
-    <PackageVersion Include="Serilog.AspNetCore" Version="8.0.2" />
+    <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="$(WilsonVersion)" />
     <PackageVersion Include="System.Net.Http" Version="4.3.4" />
-    <PackageVersion Include="System.Text.Json" Version="8.0.5" />
+    <PackageVersion Include="System.Text.Json" Version="$(ExtensionsVersion)" />
     <PackageVersion Include="Verify.XunitV3" Version="30.11.0" />
     <PackageVersion Include="xunit.v3.core" Version="3.0.1" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.4" />

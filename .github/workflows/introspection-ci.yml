@@ -44,12 +44,12 @@ jobs:
       with:
         fetch-depth: 0
     - name: Setup Dotnet
-      uses: actions/setup-dotnet@3e891b0cb619bf60e2c25674b222b8940e2c1c25
+      uses: actions/setup-dotnet@d4c94342e560b34958eacfc5d055d21461ed1c5d
       with:
         dotnet-version: |-
-          6.0.x
-          8.0.x
-          9.0.203
+          8.0.414
+          9.0.305
+          10.0.x
     - name: Restore
       run: dotnet restore ../
     - name: Verify Formatting

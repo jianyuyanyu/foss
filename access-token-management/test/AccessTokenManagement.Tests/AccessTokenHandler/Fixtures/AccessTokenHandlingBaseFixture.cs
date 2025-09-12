@@ -39,7 +39,7 @@ internal abstract class AccessTokenHandlingBaseFixture : IAsyncDisposable
         Services = new ServiceCollection();
         Services.Configure<MemoryCacheOptions>(options =>
         {
-            options.Clock = new FakeTimeProvider(() => The.CurrentDate);
+            options.Clock = new MemoryCacheSystemClock(The.TimeProvider);
         });
         Services.AddLogging(log => log.AddProvider(new TestLoggerProvider(output.Write, "test")));
         Services.AddHttpClient("tokenHttpClient")
