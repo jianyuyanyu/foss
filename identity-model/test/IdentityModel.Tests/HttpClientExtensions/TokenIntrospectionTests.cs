@@ -320,7 +320,6 @@ public class TokenIntrospectionTests
             new("realm_access", "{ \"roles\": [ \"my_authorization\" ] }", JwtClaimTypes.JsonClaimValueTypes.Json, "https://idsvr"),
             new("scope", "api1", ClaimValueTypes.String, "https://idsvr"),
             new("scope", "api2", ClaimValueTypes.String, "https://idsvr"),
-
         };
         response.Claims.ShouldBe(expectedClaims, new ClaimComparer(), ignoreOrder: true);
         response.Scopes.ShouldBe(["api1", "api2"]);
