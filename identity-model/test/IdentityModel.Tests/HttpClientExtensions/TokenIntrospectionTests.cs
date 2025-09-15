@@ -67,20 +67,20 @@ public class TokenIntrospectionTests
         response.IsActive.ShouldBeTrue();
         var expected = new Claim[]
         {
-            new("aud", "https://idsvr4/resources", ClaimValueTypes.String, "https://idsvr4"),
-            new("aud", "api1", ClaimValueTypes.String, "https://idsvr4"),
-            new("iss", "https://idsvr4", ClaimValueTypes.String, "https://idsvr4"),
-            new("nbf", "1475824871", ClaimValueTypes.String, "https://idsvr4"),
-            new("exp", "1475828471", ClaimValueTypes.String, "https://idsvr4"),
-            new("client_id", "client", ClaimValueTypes.String, "https://idsvr4"),
-            new("sub", "1", ClaimValueTypes.String, "https://idsvr4"),
-            new("auth_time", "1475824871", ClaimValueTypes.String, "https://idsvr4"),
-            new("idp", "local", ClaimValueTypes.String, "https://idsvr4"),
-            new("amr", "password", ClaimValueTypes.String, "https://idsvr4"),
-            new("active", "true", ClaimValueTypes.String, "https://idsvr4"),
-            new("scope", "api1", ClaimValueTypes.String, "https://idsvr4"),
-            new("scope", "api2", ClaimValueTypes.String, "https://idsvr4"),
-            new("realm_access", "{ \"roles\": [ \"my_authorization\" ] }", "JSON", "https://idsvr4"),
+            new("aud", "https://idsvr/resources", ClaimValueTypes.String, "https://idsvr"),
+            new("aud", "api1", ClaimValueTypes.String, "https://idsvr"),
+            new("iss", "https://idsvr", ClaimValueTypes.String, "https://idsvr"),
+            new("nbf", "1475824871", ClaimValueTypes.String, "https://idsvr"),
+            new("exp", "1475828471", ClaimValueTypes.String, "https://idsvr"),
+            new("client_id", "client", ClaimValueTypes.String, "https://idsvr"),
+            new("sub", "1", ClaimValueTypes.String, "https://idsvr"),
+            new("auth_time", "1475824871", ClaimValueTypes.String, "https://idsvr"),
+            new("idp", "local", ClaimValueTypes.String, "https://idsvr"),
+            new("amr", "password", ClaimValueTypes.String, "https://idsvr"),
+            new("active", "true", ClaimValueTypes.String, "https://idsvr"),
+            new("scope", "api1", ClaimValueTypes.String, "https://idsvr"),
+            new("scope", "api2", ClaimValueTypes.String, "https://idsvr"),
+            new("realm_access", "{ \"roles\": [ \"my_authorization\" ] }", "JSON", "https://idsvr"),
         };
         response.Claims.ShouldBe(expected, new ClaimComparer(), ignoreOrder: true);
         response.Scopes.ShouldBe(["api1", "api2"]);
@@ -90,8 +90,8 @@ public class TokenIntrospectionTests
         response.NotBefore.ShouldBe(NotBeforeDate);
         response.Expiration.ShouldBe(ExpirationDate);
         response.Subject.ShouldBe("1");
-        response.Audiences.ShouldBe(["https://idsvr4/resources", "api1"]);
-        response.Issuer.ShouldBe("https://idsvr4");
+        response.Audiences.ShouldBe(["https://idsvr/resources", "api1"]);
+        response.Issuer.ShouldBe("https://idsvr");
         response.JwtId.ShouldBeNull();
     }
 
@@ -117,7 +117,7 @@ public class TokenIntrospectionTests
         response.IsActive.ShouldBeTrue();
         var expectedClaims = new Claim[]
         {
-            new("aud", "https://idsvr4/resources", ClaimValueTypes.String, "LOCAL AUTHORITY"),
+            new("aud", "https://idsvr/resources", ClaimValueTypes.String, "LOCAL AUTHORITY"),
             new("aud", "api1", ClaimValueTypes.String, "LOCAL AUTHORITY"),
             new("nbf", "1475824871", ClaimValueTypes.String, "LOCAL AUTHORITY"),
             new("exp", "1475828471", ClaimValueTypes.String, "LOCAL AUTHORITY"),
@@ -139,7 +139,7 @@ public class TokenIntrospectionTests
         response.NotBefore.ShouldBe(NotBeforeDate);
         response.Expiration.ShouldBe(ExpirationDate);
         response.Subject.ShouldBe("1");
-        response.Audiences.ShouldBe(["https://idsvr4/resources", "api1"]);
+        response.Audiences.ShouldBe(["https://idsvr/resources", "api1"]);
         response.Issuer.ShouldBeNull();
         response.JwtId.ShouldBeNull();
     }
@@ -168,20 +168,20 @@ public class TokenIntrospectionTests
         response.IsActive.ShouldBeTrue();
         var expectedClaims = new Claim[]
         {
-            new("aud", "https://idsvr4/resources", ClaimValueTypes.String, "https://idsvr4"),
-            new("aud", "api1", ClaimValueTypes.String, "https://idsvr4"),
-            new("iss", "https://idsvr4", ClaimValueTypes.String, "https://idsvr4"),
-            new("nbf", "1475824871", ClaimValueTypes.String, "https://idsvr4"),
-            new("exp", "1475828471", ClaimValueTypes.String, "https://idsvr4"),
-            new("client_id", "client", ClaimValueTypes.String, "https://idsvr4"),
-            new("sub", "1", ClaimValueTypes.String, "https://idsvr4"),
-            new("auth_time", "1475824871", ClaimValueTypes.String, "https://idsvr4"),
-            new("idp", "local", ClaimValueTypes.String, "https://idsvr4"),
-            new("amr", "password", ClaimValueTypes.String, "https://idsvr4"),
-            new("active", "true", ClaimValueTypes.String, "https://idsvr4"),
-            new("scope", "api1", ClaimValueTypes.String, "https://idsvr4"),
-            new("scope", "api2", ClaimValueTypes.String, "https://idsvr4"),
-            new("realm_access", "{ \"roles\": [ \"my_authorization\" ] }", JwtClaimTypes.JsonClaimValueTypes.Json, "https://idsvr4"),
+            new("aud", "https://idsvr/resources", ClaimValueTypes.String, "https://idsvr"),
+            new("aud", "api1", ClaimValueTypes.String, "https://idsvr"),
+            new("iss", "https://idsvr", ClaimValueTypes.String, "https://idsvr"),
+            new("nbf", "1475824871", ClaimValueTypes.String, "https://idsvr"),
+            new("exp", "1475828471", ClaimValueTypes.String, "https://idsvr"),
+            new("client_id", "client", ClaimValueTypes.String, "https://idsvr"),
+            new("sub", "1", ClaimValueTypes.String, "https://idsvr"),
+            new("auth_time", "1475824871", ClaimValueTypes.String, "https://idsvr"),
+            new("idp", "local", ClaimValueTypes.String, "https://idsvr"),
+            new("amr", "password", ClaimValueTypes.String, "https://idsvr"),
+            new("active", "true", ClaimValueTypes.String, "https://idsvr"),
+            new("scope", "api1", ClaimValueTypes.String, "https://idsvr"),
+            new("scope", "api2", ClaimValueTypes.String, "https://idsvr"),
+            new("realm_access", "{ \"roles\": [ \"my_authorization\" ] }", JwtClaimTypes.JsonClaimValueTypes.Json, "https://idsvr"),
         };
         response.Claims.ShouldBe(expectedClaims, new ClaimComparer(), ignoreOrder: true);
         response.Scopes.ShouldBe(["api1", "api2"]);
@@ -191,8 +191,8 @@ public class TokenIntrospectionTests
         response.NotBefore.ShouldBe(NotBeforeDate);
         response.Expiration.ShouldBe(ExpirationDate);
         response.Subject.ShouldBe("1");
-        response.Audiences.ShouldBe(["https://idsvr4/resources", "api1"]);
-        response.Issuer.ShouldBe("https://idsvr4");
+        response.Audiences.ShouldBe(["https://idsvr/resources", "api1"]);
+        response.Issuer.ShouldBe("https://idsvr");
         response.JwtId.ShouldBeNull();
 
         // repeat
@@ -210,8 +210,8 @@ public class TokenIntrospectionTests
         response.NotBefore.ShouldBe(NotBeforeDate);
         response.Expiration.ShouldBe(ExpirationDate);
         response.Subject.ShouldBe("1");
-        response.Audiences.ShouldBe(["https://idsvr4/resources", "api1"]);
-        response.Issuer.ShouldBe("https://idsvr4");
+        response.Audiences.ShouldBe(["https://idsvr/resources", "api1"]);
+        response.Issuer.ShouldBe("https://idsvr");
         response.JwtId.ShouldBeNull();
     }
 
@@ -306,20 +306,20 @@ public class TokenIntrospectionTests
         response.HttpStatusCode.ShouldBe(HttpStatusCode.OK);
         response.IsActive.ShouldBeTrue();
         var expectedClaims = new Claim[] {
-            new("aud", "https://idsvr4/resources", ClaimValueTypes.String, "https://idsvr4"),
-            new("aud", "api1", ClaimValueTypes.String, "https://idsvr4"),
-            new("iss", "https://idsvr4", ClaimValueTypes.String, "https://idsvr4"),
-            new("nbf", "1475824871", ClaimValueTypes.String, "https://idsvr4"),
-            new("exp", "1475828471", ClaimValueTypes.String, "https://idsvr4"),
-            new("client_id", "client", ClaimValueTypes.String, "https://idsvr4"),
-            new("sub", "1", ClaimValueTypes.String, "https://idsvr4"),
-            new("auth_time", "1475824871", ClaimValueTypes.String, "https://idsvr4"),
-            new("idp", "local", ClaimValueTypes.String, "https://idsvr4"),
-            new("amr", "password", ClaimValueTypes.String, "https://idsvr4"),
-            new("active", "true", ClaimValueTypes.String, "https://idsvr4"),
-            new("realm_access", "{ \"roles\": [ \"my_authorization\" ] }", JwtClaimTypes.JsonClaimValueTypes.Json, "https://idsvr4"),
-            new("scope", "api1", ClaimValueTypes.String, "https://idsvr4"),
-            new("scope", "api2", ClaimValueTypes.String, "https://idsvr4"),
+            new("aud", "https://idsvr/resources", ClaimValueTypes.String, "https://idsvr"),
+            new("aud", "api1", ClaimValueTypes.String, "https://idsvr"),
+            new("iss", "https://idsvr", ClaimValueTypes.String, "https://idsvr"),
+            new("nbf", "1475824871", ClaimValueTypes.String, "https://idsvr"),
+            new("exp", "1475828471", ClaimValueTypes.String, "https://idsvr"),
+            new("client_id", "client", ClaimValueTypes.String, "https://idsvr"),
+            new("sub", "1", ClaimValueTypes.String, "https://idsvr"),
+            new("auth_time", "1475824871", ClaimValueTypes.String, "https://idsvr"),
+            new("idp", "local", ClaimValueTypes.String, "https://idsvr"),
+            new("amr", "password", ClaimValueTypes.String, "https://idsvr"),
+            new("active", "true", ClaimValueTypes.String, "https://idsvr"),
+            new("realm_access", "{ \"roles\": [ \"my_authorization\" ] }", JwtClaimTypes.JsonClaimValueTypes.Json, "https://idsvr"),
+            new("scope", "api1", ClaimValueTypes.String, "https://idsvr"),
+            new("scope", "api2", ClaimValueTypes.String, "https://idsvr"),
 
         };
         response.Claims.ShouldBe(expectedClaims, new ClaimComparer(), ignoreOrder: true);
@@ -330,8 +330,8 @@ public class TokenIntrospectionTests
         response.NotBefore.ShouldBe(NotBeforeDate);
         response.Expiration.ShouldBe(ExpirationDate);
         response.Subject.ShouldBe("1");
-        response.Audiences.ShouldBe(["https://idsvr4/resources", "api1"]);
-        response.Issuer.ShouldBe("https://idsvr4");
+        response.Audiences.ShouldBe(["https://idsvr/resources", "api1"]);
+        response.Issuer.ShouldBe("https://idsvr");
         response.JwtId.ShouldBeNull();
     }
 
@@ -527,20 +527,20 @@ public class TokenIntrospectionTests
 
         var expected = new Claim[]
         {
-            new("aud", "https://idsvr4/resources", ClaimValueTypes.String, "https://idsvr4"),
-            new("aud", "api1", ClaimValueTypes.String, "https://idsvr4"),
-            new("iss", "https://idsvr4", ClaimValueTypes.String, "https://idsvr4"),
-            new("nbf", "1475824871", ClaimValueTypes.String, "https://idsvr4"),
-            new("exp", "1475828471", ClaimValueTypes.String, "https://idsvr4"),
-            new("client_id", "client", ClaimValueTypes.String, "https://idsvr4"),
-            new("sub", "1", ClaimValueTypes.String, "https://idsvr4"),
-            new("auth_time", "1475824871", ClaimValueTypes.String, "https://idsvr4"),
-            new("idp", "local", ClaimValueTypes.String, "https://idsvr4"),
-            new("amr", "password", ClaimValueTypes.String, "https://idsvr4"),
-            new("active", "true", ClaimValueTypes.String, "https://idsvr4"),
-            new("scope", "api1", ClaimValueTypes.String, "https://idsvr4"),
-            new("scope", "api2", ClaimValueTypes.String, "https://idsvr4"),
-            new("realm_access", "{ \"roles\": [ \"my_authorization\" ] }", JwtClaimTypes.JsonClaimValueTypes.Json, "https://idsvr4"),
+            new("aud", "https://idsvr/resources", ClaimValueTypes.String, "https://idsvr"),
+            new("aud", "api1", ClaimValueTypes.String, "https://idsvr"),
+            new("iss", "https://idsvr", ClaimValueTypes.String, "https://idsvr"),
+            new("nbf", "1475824871", ClaimValueTypes.String, "https://idsvr"),
+            new("exp", "1475828471", ClaimValueTypes.String, "https://idsvr"),
+            new("client_id", "client", ClaimValueTypes.String, "https://idsvr"),
+            new("sub", "1", ClaimValueTypes.String, "https://idsvr"),
+            new("auth_time", "1475824871", ClaimValueTypes.String, "https://idsvr"),
+            new("idp", "local", ClaimValueTypes.String, "https://idsvr"),
+            new("amr", "password", ClaimValueTypes.String, "https://idsvr"),
+            new("active", "true", ClaimValueTypes.String, "https://idsvr"),
+            new("scope", "api1", ClaimValueTypes.String, "https://idsvr"),
+            new("scope", "api2", ClaimValueTypes.String, "https://idsvr"),
+            new("realm_access", "{ \"roles\": [ \"my_authorization\" ] }", JwtClaimTypes.JsonClaimValueTypes.Json, "https://idsvr"),
         };
 
         introspectionResponse.Claims.ShouldNotBeEmpty();

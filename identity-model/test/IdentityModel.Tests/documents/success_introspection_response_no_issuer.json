@@ -1,5 +1,5 @@
 {
-  "aud": [ "https://idsvr4/resources", "api1" ],
+  "aud": [ "https://idsvr/resources", "api1" ],
   "nbf": 1475824871,
   "exp": 1475828471,
   "client_id": "client",
