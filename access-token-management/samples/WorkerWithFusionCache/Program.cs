@@ -10,10 +10,6 @@ using ZiggyCreatures.Caching.Fusion;
 
 var builder = Host.CreateApplicationBuilder();
 
-
-
-
-
 builder.Services.AddClientCredentialsTokenManagement()
     .AddClient("demo", client =>
     {
@@ -23,11 +19,11 @@ builder.Services.AddClientCredentialsTokenManagement()
         client.ClientSecret = ClientSecret.Parse("secret");
 
         client.Scope = Scope.Parse("api");
-    })
-    ;
-builder.Services.AddFusionCache()
-    .AsHybridCache();
+    });
 
+builder.Services
+    .AddFusionCache()
+    .AsHybridCache();
 // Alternatively, to only replace the HybridCache for ATM:
 //.AsKeyedHybridCache(ServiceProviderKeys.ClientCredentialsTokenCache);
 
