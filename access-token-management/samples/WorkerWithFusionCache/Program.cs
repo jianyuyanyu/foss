@@ -38,19 +38,12 @@ var host = builder.Build();
 
 host.Run();
 
-public class WorkerManual : BackgroundService
+public class WorkerManual(
+    IHttpClientFactory factory,
+    IClientCredentialsTokenManager tokenManagementService,
+    ILogger<WorkerManual> logger)
+    : BackgroundService
 {
-    private readonly ILogger<WorkerManual> _logger;
-    private readonly IHttpClientFactory _clientFactory;
-    private readonly IClientCredentialsTokenManager _tokenManagementService;
-
-    public WorkerManual(ILogger<WorkerManual> logger, IHttpClientFactory factory, IClientCredentialsTokenManager tokenManagementService)
-    {
-        _logger = logger;
-        _clientFactory = factory;
-        _tokenManagementService = tokenManagementService;
-    }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         await Task.Delay(3000, stoppingToken);
@@ -58,12 +51,12 @@ public class WorkerManual : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             Console.WriteLine("\n\n");
-            _logger.LogInformation("WorkerManual running at: {time}", DateTimeOffset.Now);
+            logger.LogInformation("WorkerManual running at: {time}", DateTimeOffset.Now);
 
-            var client = _clientFactory.CreateClient();
+            var client = factory.CreateClient();
             client.BaseAddress = new Uri("https://demo.duendesoftware.com/api/");
 
-            var token = await _tokenManagementService.GetAccessTokenAsync(ClientCredentialsClientName.Parse("demo"), ct: stoppingToken).GetToken();
+            var token = await tokenManagementService.GetAccessTokenAsync(ClientCredentialsClientName.Parse("demo"), ct: stoppingToken).GetToken();
             client.SetBearerToken(token.AccessToken.ToString());
 
             var response = await client.GetAsync("test", stoppingToken);
@@ -71,11 +64,11 @@ public class WorkerManual : BackgroundService
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync(stoppingToken);
-                _logger.LogInformation("API response: {response}", content);
+                logger.LogInformation("API response: {response}", content);
             }
             else
             {
-                _logger.LogError("API returned: {statusCode}", response.StatusCode);
+                logger.LogError("API returned: {statusCode}", response.StatusCode);
             }
 
             await Task.Delay(6000, stoppingToken);
