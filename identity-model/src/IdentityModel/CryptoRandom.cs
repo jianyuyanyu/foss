@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Buffers.Text;
 using System.Security.Cryptography;
 
 namespace Duende.IdentityModel;
@@ -57,7 +58,7 @@ public class CryptoRandom : Random
 
         return format switch
         {
-            OutputFormat.Base64Url => Base64Url.Encode(bytes),
+            OutputFormat.Base64Url => Base64Url.EncodeToString(bytes),
             OutputFormat.Base64 => Convert.ToBase64String(bytes),
             OutputFormat.Hex => BitConverter.ToString(bytes).Replace("-", ""),
             _ => throw new ArgumentException("Invalid output format", nameof(format))

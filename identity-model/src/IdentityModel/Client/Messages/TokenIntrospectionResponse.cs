@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Buffers.Text;
 using System.Globalization;
 using System.Security.Claims;
 using System.Text.Json;
@@ -223,17 +224,12 @@ public class TokenIntrospectionResponse : ProtocolResponse
 
         // Decode and parse the payload.
         var payload = parts[1];
-        var jsonString = Base64Url.Decode(payload);
+        var jsonString = Base64Url.DecodeFromChars(payload);
         using var document = JsonDocument.Parse(jsonString);
 
         // Look for the "token_introspection" property.
-        if (document.RootElement.TryGetProperty("token_introspection", out var introspectionElement))
-        {
-            return introspectionElement.Clone();
-        }
-        else
-        {
-            throw new InvalidOperationException("token_introspection claim not found in JWT payload");
-        }
+        return document.RootElement.TryGetProperty("token_introspection", out var introspectionElement)
+            ? introspectionElement.Clone()
+            : throw new InvalidOperationException("token_introspection claim not found in JWT payload");
     }
 }
