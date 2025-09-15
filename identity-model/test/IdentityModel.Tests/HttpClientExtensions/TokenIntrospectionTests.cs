@@ -80,7 +80,7 @@ public class TokenIntrospectionTests
             new("active", "true", ClaimValueTypes.String, "https://idsvr"),
             new("scope", "api1", ClaimValueTypes.String, "https://idsvr"),
             new("scope", "api2", ClaimValueTypes.String, "https://idsvr"),
-            new("realm_access", "{ \"roles\": [ \"my_authorization\" ] }", "JSON", "https://idsvr"),
+            new("realm_access", "{ \"roles\": [ \"my_authorization\" ] }", JwtClaimTypes.JsonClaimValueTypes.Json, "https://idsvr"),
         };
         response.Claims.ShouldBe(expected, new ClaimComparer(), ignoreOrder: true);
         response.Scopes.ShouldBe(["api1", "api2"]);
