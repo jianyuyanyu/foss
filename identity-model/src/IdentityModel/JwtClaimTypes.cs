@@ -265,4 +265,20 @@ public static class JwtClaimTypes
         /// </summary>
         public const string X509ThumbprintSha256 = "x5t#S256";
     }
+
+    public static class JsonClaimValueTypes
+    {
+        /// <summary>
+        /// A value that indicates the <see cref="P:System.Security.Claims.Claim.Value" /> is a Json object.
+        /// </summary>
+        public const string Json = "JSON";
+        /// <summary>
+        /// A value that indicates the <see cref="P:System.Security.Claims.Claim.Value" /> is a Json array.
+        /// </summary>
+        public const string JsonArray = "JSON_ARRAY";
+        /// <summary>
+        /// A value that indicates the <see cref="P:System.Security.Claims.Claim.Value" /> is a Json null.
+        /// </summary>
+        public const string JsonNull = "JSON_NULL";
+    }
 }

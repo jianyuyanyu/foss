@@ -10,7 +10,7 @@
         public ClaimComparer() { }
         public ClaimComparer(Duende.IdentityModel.ClaimComparer.Options options) { }
         public override bool Equals(System.Security.Claims.Claim? x, System.Security.Claims.Claim? y) { }
-        public override int GetHashCode(System.Security.Claims.Claim claim) { }
+        public override int GetHashCode(System.Security.Claims.Claim? claim) { }
         public class Options
         {
             public Options() { }
@@ -108,6 +108,12 @@
             public const string JsonWebKey = "jwk";
             public const string JwkThumbprint = "jkt";
             public const string X509ThumbprintSha256 = "x5t#S256";
+        }
+        public static class JsonClaimValueTypes
+        {
+            public const string Json = "JSON";
+            public const string JsonArray = "JSON_ARRAY";
+            public const string JsonNull = "JSON_NULL";
         }
         public static class JwtTypes
         {

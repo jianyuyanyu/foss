@@ -18,12 +18,12 @@ public class ClaimComparer : EqualityComparer<Claim>
         /// <summary>
         /// Specifies if the issuer value is being taken into account
         /// </summary>
-        public bool IgnoreIssuer { get; set; } = false;
+        public bool IgnoreIssuer { get; set; }
 
         /// <summary>
         /// Specifies if claim and issuer value comparison should be case-sensitive
         /// </summary>
-        public bool IgnoreValueCase { get; set; } = false;
+        public bool IgnoreValueCase { get; set; }
     }
 
     private readonly Options _options = new();
@@ -69,7 +69,7 @@ public class ClaimComparer : EqualityComparer<Claim>
         }
 
         var valueComparison = StringComparison.Ordinal;
-        if (_options.IgnoreValueCase == true)
+        if (_options.IgnoreValueCase)
         {
             valueComparison = StringComparison.OrdinalIgnoreCase;
         }
@@ -82,14 +82,12 @@ public class ClaimComparer : EqualityComparer<Claim>
         {
             return equal;
         }
-        else
-        {
-            return (equal && string.Equals(x.Issuer, y.Issuer, valueComparison));
-        }
+
+        return equal && string.Equals(x.Issuer, y.Issuer, valueComparison);
     }
 
     /// <inheritdoc/>
-    public override int GetHashCode(Claim claim)
+    public override int GetHashCode(Claim? claim)
     {
         if (claim is null)
         {
@@ -116,9 +114,7 @@ public class ClaimComparer : EqualityComparer<Claim>
             return typeHash ^ valueHash;
 
         }
-        else
-        {
-            return typeHash ^ valueHash ^ issuerHash;
-        }
+
+        return typeHash ^ valueHash ^ issuerHash;
     }
 }
