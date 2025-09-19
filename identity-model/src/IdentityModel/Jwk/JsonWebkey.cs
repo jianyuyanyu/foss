@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Buffers.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -249,15 +250,15 @@ public class JsonWebKey
         {
             if (Kty == JsonWebAlgorithmsKeyTypes.RSA)
             {
-                return Base64Url.Decode(N).Length * 8;
+                return Base64Url.DecodeFromChars(N).Length * 8;
             }
             else if (Kty == JsonWebAlgorithmsKeyTypes.EllipticCurve)
             {
-                return Base64Url.Decode(X).Length * 8;
+                return Base64Url.DecodeFromChars(X).Length * 8;
             }
             else if (Kty == JsonWebAlgorithmsKeyTypes.Octet)
             {
-                return Base64Url.Decode(K).Length * 8;
+                return Base64Url.DecodeFromChars(K).Length * 8;
             }
             else
             {

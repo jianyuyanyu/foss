@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Buffers.Text;
 using System.Text;
 using System.Text.Json;
 
@@ -19,6 +20,6 @@ public static class JsonWebKeyExtensions
     public static string ToJwkString(this JsonWebKey key)
     {
         var json = JsonSerializer.Serialize(key, JwkSourceGenerationContext.Default.JsonWebKey);
-        return Base64Url.Encode(Encoding.UTF8.GetBytes(json));
+        return Base64Url.EncodeToString(Encoding.UTF8.GetBytes(json));
     }
 }

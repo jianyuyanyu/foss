@@ -1,10 +1,5 @@
 ﻿namespace Duende.IdentityModel
 {
-    public static class Base64Url
-    {
-        public static byte[] Decode(string arg) { }
-        public static string Encode(byte[] arg) { }
-    }
     public class ClaimComparer : System.Collections.Generic.EqualityComparer<System.Security.Claims.Claim>
     {
         public ClaimComparer() { }
