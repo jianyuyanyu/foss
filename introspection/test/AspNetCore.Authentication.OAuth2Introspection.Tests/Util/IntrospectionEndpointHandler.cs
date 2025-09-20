@@ -3,6 +3,7 @@
 
 using System.Net;
 using System.Text;
+using System.Text.Json;
 
 namespace Duende.AspNetCore.Authentication.OAuth2Introspection.Util;
 
@@ -64,7 +65,7 @@ public class IntrospectionEndpointHandler : DelegatingHandler
                 { "introspection_endpoint", "https://authority.com/introspection_endpoint" }
             };
 
-            var json = SimpleJson.SimpleJson.SerializeObject(data);
+            var json = JsonSerializer.Serialize(data);
 
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
@@ -103,7 +104,7 @@ public class IntrospectionEndpointHandler : DelegatingHandler
                         responseObject.Add(item.Key, item.Value);
                     }
 
-                    var json = SimpleJson.SimpleJson.SerializeObject(responseObject);
+                    var json = JsonSerializer.Serialize(responseObject);
 
                     var response = new HttpResponseMessage(HttpStatusCode.OK)
                     {
@@ -119,7 +120,7 @@ public class IntrospectionEndpointHandler : DelegatingHandler
                     {"active", false}
                 };
 
-                    var json = SimpleJson.SimpleJson.SerializeObject(responseObject);
+                    var json = JsonSerializer.Serialize(responseObject);
 
                     var response = new HttpResponseMessage(HttpStatusCode.OK)
                     {

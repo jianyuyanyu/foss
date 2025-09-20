@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -46,7 +47,7 @@ internal static class PipelineFactory
                             {"token", await context.GetTokenAsync("access_token") }
                         };
 
-                        var json = SimpleJson.SimpleJson.SerializeObject(responseObject);
+                        var json = JsonSerializer.Serialize(responseObject);
 
                         context.Response.StatusCode = 200;
                         await context.Response.WriteAsync(json, Encoding.UTF8);
