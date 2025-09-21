@@ -171,7 +171,7 @@ public class UserInfoExtensionsTests
     [Fact]
     public async Task Request_without_body_content_should_use_GET()
     {
-        var document = await File.ReadAllTextAsync(FileName.Create("success_userinfo_response.jwt"));
+        var document = File.ReadAllText(FileName.Create("success_userinfo_response.jwt"));
         var handler = new NetworkHandler(document, HttpStatusCode.OK)
         {
             MediaType = "application/jwt"
@@ -194,7 +194,7 @@ public class UserInfoExtensionsTests
     [Fact]
     public async Task Request_with_body_content_should_use_POST()
     {
-        var document = await File.ReadAllTextAsync(FileName.Create("success_userinfo_response.jwt"));
+        var document = File.ReadAllText(FileName.Create("success_userinfo_response.jwt"));
         var handler = new NetworkHandler(document, HttpStatusCode.OK)
         {
             MediaType = "application/jwt"
