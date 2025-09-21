@@ -17,7 +17,7 @@ internal static class StringExtensions
             : input + "/";
 
     [DebuggerStepThrough]
-    public static bool IsMissing([NotNullWhen(false)]this string? value)
+    public static bool IsMissing([NotNullWhen(false)] this string? value)
         => string.IsNullOrWhiteSpace(value);
 
     [DebuggerStepThrough]
