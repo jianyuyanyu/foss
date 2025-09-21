@@ -220,7 +220,7 @@ public class OAuth2IntrospectionHandler : AuthenticationHandler<OAuth2Introspect
             Address = options.IntrospectionEndpoint,
             ClientId = options.ClientId!,
             ClientSecret = options.ClientSecret,
-            ClientAssertion = clientAssertion,
+            ClientAssertion = options.ClientAssertion!,
             ClientCredentialStyle = options.ClientCredentialStyle,
             AuthorizationHeaderStyle = options.AuthorizationHeaderStyle,
         };
