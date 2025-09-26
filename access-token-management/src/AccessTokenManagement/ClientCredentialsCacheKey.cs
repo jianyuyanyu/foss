@@ -7,20 +7,20 @@ using Duende.AccessTokenManagement.Internal;
 namespace Duende.AccessTokenManagement;
 
 /// <summary>
-/// Cache key when caching client credential access tokens. 
+/// Cache key when caching client credential access tokens.
 /// </summary>
 public readonly record struct ClientCredentialsCacheKey : IStronglyTypedValue<ClientCredentialsCacheKey>
 {
     public override string ToString() => Value;
 
-    public const int MaxLength = 255;
+    public const int MaxLength = 1024;
 
     private static readonly ValidationRule<string>[] Validators = [
         ValidationRules.MaxLength(MaxLength)
     ];
 
     /// <summary>
-    /// You can't directly create this type. 
+    /// You can't directly create this type.
     /// </summary>
     /// <exception cref="InvalidOperationException"></exception>
     public ClientCredentialsCacheKey() => throw new InvalidOperationException("Can't create null value");

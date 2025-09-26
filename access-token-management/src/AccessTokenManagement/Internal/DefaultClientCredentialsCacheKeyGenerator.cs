@@ -27,8 +27,12 @@ internal class DefaultClientCredentialsCacheKeyGenerator(
                                                resourcePart);
     }
 
-    private static string GetCacheKey(string value)
+    private static string GetCacheKey(string? value)
     {
+        if (string.IsNullOrEmpty(value))
+        {
+            return string.Empty;
+        }
         using var md5 = MD5.Create();
         var hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(value));
         return Convert.ToHexString(hashBytes);

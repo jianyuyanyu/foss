@@ -41,7 +41,7 @@
     }
     public readonly struct ClientCredentialsCacheKey : System.IEquatable<Duende.AccessTokenManagement.ClientCredentialsCacheKey>
     {
-        public const int MaxLength = 255;
+        public const int MaxLength = 1024;
         public ClientCredentialsCacheKey() { }
         public override string ToString() { }
         public static Duende.AccessTokenManagement.ClientCredentialsCacheKey Parse(string value) { }
