@@ -20,8 +20,8 @@ internal class DefaultClientCredentialsCacheKeyGenerator(
         ClientCredentialsClientName clientName,
         TokenRequestParameters? parameters = null)
     {
-        var scopePart = "s_" + GetCacheKey(parameters?.Scope ?? string.Empty);
-        var resourcePart = "r_" + GetCacheKey(parameters?.Resource ?? string.Empty);
+        var scopePart = "s_" + GetCacheKey(parameters?.Scope);
+        var resourcePart = "r_" + GetCacheKey(parameters?.Resource);
 
         return ClientCredentialsCacheKey.Parse(options.Value.CacheKeyPrefix + clientName + "::" + scopePart + "::" +
                                                resourcePart);
