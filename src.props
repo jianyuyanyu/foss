@@ -20,6 +20,8 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <!--There are 2 package sources defined in your configuration. When using central package management, please map your package sources with package source mapping or specify a single package source.-->
     <NoWarn>$(NoWarn);NU1507</NoWarn>
+    <!-- This warning is triggered when a stable package depends on a prerelease package. -->
+    <NoWarn>$(NoWarn);NU5104</NoWarn>
 
     <!--NuGet-->
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
