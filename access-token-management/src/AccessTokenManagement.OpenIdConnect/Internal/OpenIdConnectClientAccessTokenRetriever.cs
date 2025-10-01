@@ -14,14 +14,15 @@ internal class OpenIdConnectClientAccessTokenRetriever(
     IClientCredentialsTokenManager tokenManager,
     IOptions<UserTokenManagementOptions> options,
     IAuthenticationSchemeProvider schemeProvider,
-    UserTokenRequestParameters? parameters = null)
+    UserTokenRequestParameters? parameters = null,
+    ITokenRequestCustomizer? customizer = null)
     : AccessTokenRequestHandler.ITokenRetriever
 {
     private readonly UserTokenRequestParameters _parameters = parameters ?? new UserTokenRequestParameters();
 
     public async Task<TokenResult<AccessTokenRequestHandler.IToken>> GetTokenAsync(HttpRequestMessage request, CT ct)
     {
-        var userTokenRequestParameters = new UserTokenRequestParameters
+        var baseParameters = new UserTokenRequestParameters
         {
             ChallengeScheme = _parameters.ChallengeScheme,
             Scope = _parameters.Scope,
@@ -32,6 +33,20 @@ internal class OpenIdConnectClientAccessTokenRetriever(
             ForceTokenRenewal = request.GetForceRenewal()
         };
 
+        var customizedParameters = customizer != null
+            ? await customizer.Customize(request, baseParameters, ct)
+            : baseParameters;
+
+        var userTokenRequestParameters = baseParameters with
+        {
+            Scope = customizedParameters.Scope ?? _parameters.Scope,
+            Resource = customizedParameters.Resource ?? _parameters.Resource,
+            Parameters = customizedParameters.Parameters,
+            Assertion = customizedParameters.Assertion,
+            Context = customizedParameters.Context,
+            ForceTokenRenewal = customizedParameters.ForceTokenRenewal
+        };
+
         var schemeName = userTokenRequestParameters.ChallengeScheme ?? options.Value.ChallengeScheme;
 
         if (schemeName == null)
@@ -39,7 +54,8 @@ internal class OpenIdConnectClientAccessTokenRetriever(
             var defaultScheme = await schemeProvider.GetDefaultChallengeSchemeAsync().ConfigureAwait(false);
             if (defaultScheme == null)
             {
-                throw new InvalidOperationException("Cannot retrieve client access token. No scheme was provided and default challenge scheme was not set.");
+                throw new InvalidOperationException(
+                    "Cannot retrieve client access token. No scheme was provided and default challenge scheme was not set.");
             }
 
             schemeName = Scheme.Parse(defaultScheme.Name);

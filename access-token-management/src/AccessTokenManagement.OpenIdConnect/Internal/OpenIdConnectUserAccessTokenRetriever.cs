@@ -1,26 +1,37 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-
-
 namespace Duende.AccessTokenManagement.OpenIdConnect.Internal;
 
 internal class OpenIdConnectUserAccessTokenRetriever(
     IUserAccessor userAccessor,
     IUserTokenManager userTokenManagement,
-    UserTokenRequestParameters? parameters = null
+    UserTokenRequestParameters? parameters = null,
+    ITokenRequestCustomizer? customizer = null
 ) : AccessTokenRequestHandler.ITokenRetriever
 {
     private readonly UserTokenRequestParameters _parameters = parameters ?? new UserTokenRequestParameters();
 
     public async Task<TokenResult<AccessTokenRequestHandler.IToken>> GetTokenAsync(HttpRequestMessage request, CT ct)
     {
-        var parameters = new UserTokenRequestParameters
+        var baseParameters = new UserTokenRequestParameters
         {
             SignInScheme = _parameters.SignInScheme,
             ChallengeScheme = _parameters.ChallengeScheme,
+            Scope = _parameters.Scope,
             Resource = _parameters.Resource,
-            Context = _parameters.Context,
+            Context = _parameters.Context
+        };
+
+        var customizedParameters = customizer != null
+            ? await customizer.Customize(request, baseParameters, ct)
+            : baseParameters;
+
+        var parameters = baseParameters with
+        {
+            Scope = customizedParameters.Scope,
+            Resource = customizedParameters.Resource,
+            Context = customizedParameters.Context
         };
 
         var user = await userAccessor.GetCurrentUserAsync(ct).ConfigureAwait(false);

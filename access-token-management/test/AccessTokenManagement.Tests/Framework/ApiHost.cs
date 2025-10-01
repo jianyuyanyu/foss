@@ -18,14 +18,14 @@ public class ApiHost : GenericHost
     public ApiHost(
         WriteTestOutput writeTestOutput,
         IdentityServerHost identityServerHost,
-        string scope,
+        string[] scopes,
         string baseAddress = "https://api",
-        string resource = "urn:api")
+        string[]? resources = null)
         : base(writeTestOutput, baseAddress)
     {
         _identityServerHost = identityServerHost;
-        _identityServerHost.ApiScopes.Add(new ApiScope(scope));
-        _identityServerHost.ApiResources.Add(new ApiResource(resource));
+        _identityServerHost.ApiScopes.AddRange(scopes.Select(s => new ApiScope(s)));
+        _identityServerHost.ApiResources.AddRange((resources ?? ["urn:api"]).Concat(scopes).Select(r => new ApiResource(r)));
 
         OnConfigureServices += ConfigureServices;
         OnConfigure += Configure;

@@ -37,17 +37,21 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
-    public static ClientCredentialsTokenManagementBuilder AddClientCredentialsTokenManagement(this IServiceCollection services)
+    public static ClientCredentialsTokenManagementBuilder AddClientCredentialsTokenManagement(
+        this IServiceCollection services)
     {
         services.TryAddTransient<IClientCredentialsTokenManager, ClientCredentialsTokenManager>();
         services.AddHybridCache();
 
         // Add a default serializer for ClientCredentialsToken
-        services.TryAddSingleton<IHybridCacheSerializer<ClientCredentialsToken>, AotTrimCompatibleClientCredentialsTokenSerializer>();
+        services
+            .TryAddSingleton<IHybridCacheSerializer<ClientCredentialsToken>,
+                AotTrimCompatibleClientCredentialsTokenSerializer>();
 
         // By default, resolve the default hybrid cache for the DefaultClientCredentialsTokenManager
         // without key. If desired, a consumers can register the distributed cache with a key
-        services.TryAddKeyedSingleton<HybridCache>(ServiceProviderKeys.ClientCredentialsTokenCache, (sp, _) => sp.GetRequiredService<HybridCache>());
+        services.TryAddKeyedSingleton<HybridCache>(ServiceProviderKeys.ClientCredentialsTokenCache,
+            (sp, _) => sp.GetRequiredService<HybridCache>());
         services.TryAddTransient<IClientCredentialsTokenEndpoint, ClientCredentialsTokenClient>();
         services.TryAddTransient<IClientAssertionService, NoOpClientAssertionService>();
 
@@ -56,7 +60,8 @@ public static class ServiceCollectionExtensions
 
         // By default, resolve the default hybrid cache for the HybridDPoPNonceStore
         // without key. If desired, a consumers can register the distributed cache with a key
-        services.TryAddKeyedSingleton<HybridCache>(ServiceProviderKeys.DPoPNonceStore, (sp, _) => sp.GetRequiredService<HybridCache>());
+        services.TryAddKeyedSingleton<HybridCache>(ServiceProviderKeys.DPoPNonceStore,
+            (sp, _) => sp.GetRequiredService<HybridCache>());
         services.AddTransient<IDPoPNonceStore, HybridDPoPNonceStore>();
 
         services.TryAddSingleton(TimeProvider.System);
@@ -81,10 +86,10 @@ public static class ServiceCollectionExtensions
     /// <param name="configureClient">A delegate that is used to configure a <see cref="HttpClient"/>.</param>
     /// <returns></returns>
     public static IHttpClientBuilder AddClientCredentialsHttpClient(
-    this IServiceCollection services,
-    string httpClientName,
-    ClientCredentialsClientName clientName,
-    Action<HttpClient>? configureClient = null)
+        this IServiceCollection services,
+        string httpClientName,
+        ClientCredentialsClientName clientName,
+        Action<HttpClient>? configureClient = null)
     {
         if (configureClient != null)
         {
@@ -111,13 +116,14 @@ public static class ServiceCollectionExtensions
         string httpClientName,
         ClientCredentialsClientName clientName,
         Action<IServiceProvider, HttpClient> configureClient) =>
-            services.AddHttpClient(httpClientName, configureClient)
-                .AddDefaultAccessTokenResiliency()
-                .AddClientCredentialsTokenHandler(clientName);
+        services.AddHttpClient(httpClientName, configureClient)
+            .AddDefaultAccessTokenResiliency()
+            .AddClientCredentialsTokenHandler(clientName);
 
     public static IHttpClientBuilder AddDefaultAccessTokenResiliency(this IHttpClientBuilder httpClientBuilder)
     {
-        httpClientBuilder.AddResilienceHandler("Duende", (builder, context) => builder.AddDefaultAccessTokenHandlingResiliency(context));
+        httpClientBuilder.AddResilienceHandler("Duende",
+            (builder, context) => builder.AddDefaultAccessTokenHandlingResiliency(context));
 
         return httpClientBuilder;
     }
@@ -130,16 +136,31 @@ public static class ServiceCollectionExtensions
     /// <returns></returns>
     public static IHttpClientBuilder AddClientCredentialsTokenHandler(
         this IHttpClientBuilder httpClientBuilder,
+        ClientCredentialsClientName clientName) => AddClientCredentialsTokenHandler(
+        httpClientBuilder,
+        tokenRequestCustomizer: null,
+        clientName);
+
+    /// <summary>
+    /// Adds the client access token handler to an HttpClient
+    /// </summary>
+    /// <param name="httpClientBuilder"></param>
+    /// <param name="tokenRequestCustomizer"></param>
+    /// <param name="clientName"></param>
+    /// <returns></returns>
+    public static IHttpClientBuilder AddClientCredentialsTokenHandler(
+        this IHttpClientBuilder httpClientBuilder,
+        ITokenRequestCustomizer? tokenRequestCustomizer,
         ClientCredentialsClientName clientName) => httpClientBuilder
-            .AddHttpMessageHandler(provider =>
-                 {
-                     var accessTokenManagementService = provider.GetRequiredService<IClientCredentialsTokenManager>();
-                     var retriever = new ClientCredentialsTokenRetriever(accessTokenManagementService, clientName);
-                     var accessTokenHandler = provider.BuildAccessTokenRequestHandler(retriever);
+        .AddHttpMessageHandler(provider =>
+        {
+            var accessTokenManagementService = provider.GetRequiredService<IClientCredentialsTokenManager>();
+            var retriever =
+                new ClientCredentialsTokenRetriever(accessTokenManagementService, clientName, tokenRequestCustomizer);
+            var accessTokenHandler = provider.BuildAccessTokenRequestHandler(retriever);
 
-                     return accessTokenHandler;
-
-                 });
+            return accessTokenHandler;
+        });
 
     internal static AccessTokenRequestHandler BuildAccessTokenRequestHandler(
         this IServiceProvider provider,

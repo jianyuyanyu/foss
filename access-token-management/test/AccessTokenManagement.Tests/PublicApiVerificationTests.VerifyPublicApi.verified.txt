@@ -156,6 +156,10 @@
         System.Threading.Tasks.Task DeleteAccessTokenAsync(Duende.AccessTokenManagement.ClientCredentialsClientName clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default);
         System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenResult<Duende.AccessTokenManagement.ClientCredentialsToken>> GetAccessTokenAsync(Duende.AccessTokenManagement.ClientCredentialsClientName clientName, Duende.AccessTokenManagement.TokenRequestParameters? parameters = null, System.Threading.CancellationToken ct = default);
     }
+    public interface ITokenRequestCustomizer
+    {
+        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenRequestParameters> Customize(System.Net.Http.HttpRequestMessage httpRequest, Duende.AccessTokenManagement.TokenRequestParameters baseParameters, System.Threading.CancellationToken cancellationToken = default);
+    }
     [System.Text.Json.Serialization.JsonConverter(typeof(Duende.AccessTokenManagement.Internal.StringValueJsonConverter<Duende.AccessTokenManagement.IdentityToken>))]
     public readonly struct IdentityToken : System.IEquatable<Duende.AccessTokenManagement.IdentityToken>
     {
@@ -215,6 +219,7 @@
         public static Microsoft.Extensions.DependencyInjection.IHttpClientBuilder AddClientCredentialsHttpClient(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, string httpClientName, Duende.AccessTokenManagement.ClientCredentialsClientName clientName, System.Action<System.Net.Http.HttpClient>? configureClient = null) { }
         public static Microsoft.Extensions.DependencyInjection.IHttpClientBuilder AddClientCredentialsHttpClient(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, string httpClientName, Duende.AccessTokenManagement.ClientCredentialsClientName clientName, System.Action<System.IServiceProvider, System.Net.Http.HttpClient> configureClient) { }
         public static Microsoft.Extensions.DependencyInjection.IHttpClientBuilder AddClientCredentialsTokenHandler(this Microsoft.Extensions.DependencyInjection.IHttpClientBuilder httpClientBuilder, Duende.AccessTokenManagement.ClientCredentialsClientName clientName) { }
+        public static Microsoft.Extensions.DependencyInjection.IHttpClientBuilder AddClientCredentialsTokenHandler(this Microsoft.Extensions.DependencyInjection.IHttpClientBuilder httpClientBuilder, Duende.AccessTokenManagement.ITokenRequestCustomizer? tokenRequestCustomizer, Duende.AccessTokenManagement.ClientCredentialsClientName clientName) { }
         public static Duende.AccessTokenManagement.ClientCredentialsTokenManagementBuilder AddClientCredentialsTokenManagement(this Microsoft.Extensions.DependencyInjection.IServiceCollection services) { }
         public static Duende.AccessTokenManagement.ClientCredentialsTokenManagementBuilder AddClientCredentialsTokenManagement(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<Duende.AccessTokenManagement.ClientCredentialsTokenManagementOptions> options) { }
         public static Microsoft.Extensions.DependencyInjection.IHttpClientBuilder AddDefaultAccessTokenResiliency(this Microsoft.Extensions.DependencyInjection.IHttpClientBuilder httpClientBuilder) { }
