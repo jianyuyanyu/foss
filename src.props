@@ -16,11 +16,13 @@
     <IsPackable>true</IsPackable>
     <IsTrimmable Condition="'$(TargetFramework)' != 'netstandard2.0'">true</IsTrimmable>
 
+    <!--Warning suppressions-->
+    <!--For each warning, the description is copied from the corresponding docs page.-->
     <!--Missing XML comment for publicly visible type or member 'Type_or_Member'-->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <!--There are 2 package sources defined in your configuration. When using central package management, please map your package sources with package source mapping or specify a single package source.-->
     <NoWarn>$(NoWarn);NU1507</NoWarn>
-    <!-- This warning is triggered when a stable package depends on a prerelease package. -->
+    <!--A stable release of a package should not have a prerelease dependency.-->
     <NoWarn>$(NoWarn);NU5104</NoWarn>
 
     <!--NuGet-->
