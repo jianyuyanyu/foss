@@ -51,6 +51,16 @@ jobs:
         reporter: dotnet-trx
         fail-on-error: true
         fail-on-empty: true
+    - name: Test report - identity-model - IdentityModel.Tests-net481
+      if: github.event.workflow.name == 'identity-model/ci'
+      uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
+      with:
+        artifact: test-results-net481
+        name: Test Report - IdentityModel.Tests-net481
+        path: IdentityModel.Tests-net481.trx
+        reporter: dotnet-trx
+        fail-on-error: true
+        fail-on-empty: true
     - name: Test report - identity-model-oidc-client - IdentityModel.OidcClient.Tests
       if: github.event.workflow.name == 'identity-model-oidc-client/ci'
       uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5

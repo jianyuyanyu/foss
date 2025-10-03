@@ -180,7 +180,7 @@ public class DynamicClientRegistrationTests
         response.ShouldNotBeNull();
 
         //ensure the extension made it into the request
-        var requestContent = await handler.Request?.Content?.ReadAsStringAsync()!;
+        var requestContent = handler.Body;
         var requestContentJson = JsonSerializer.Deserialize<JsonElement>(requestContent);
         requestContentJson.GetProperty("custom_field").GetString().ShouldBe("data");
     }
