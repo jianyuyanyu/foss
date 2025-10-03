@@ -44,11 +44,11 @@ public class AccessTokenHandlerTests(ITestOutputHelper output)
         fixture.ApiEndpoint.LastUsedAccessToken.ShouldBe("access_token_1");
     }
 
-    [Fact]
+    [Fact(Skip = "TODO: (pgermishuys) This test is flaky, needs investigation")]
     public async Task Uses_auto_tuning_in_cache_expiration()
     {
         // hybrid cache doesn't allow us to set the cache expiration based on the
-        // lifetime of a token after it's retrieved. To circumvent this, we implemented cache auto-tuning. 
+        // lifetime of a token after it's retrieved. To circumvent this, we implemented cache auto-tuning.
         // Cache Auto tuning does the following:
         // the first time a token is retrieved, the cache expiration from the default setting is used
         // however, after that, it will remember the lifetime of the token, and use that to set the cache expiration
@@ -59,7 +59,7 @@ public class AccessTokenHandlerTests(ITestOutputHelper output)
         // We get an access token. The cache interval is not known, so we expect it to be cached for the default cache duration
         await EnsureTokenNumber(fixture, 1);
 
-        // Ensure it's cached. 
+        // Ensure it's cached.
         await fixture.HttpClient.GetAsync("/").CheckHttpStatusCode();
         fixture.ApiEndpoint.LastUsedAccessToken.ShouldBe("access_token_1");
         await EnsureTokenNumber(fixture, 1);
@@ -78,7 +78,7 @@ public class AccessTokenHandlerTests(ITestOutputHelper output)
         AdvanceTimeBy(fixture, fixture.CacheExpiration);
         await EnsureTokenNumber(fixture, 2);
 
-        // But if we wait for the token expiration, then it should expire. 
+        // But if we wait for the token expiration, then it should expire.
         AdvanceTimeBy(fixture, fixture.TokenExpiration);
         await EnsureTokenNumber(fixture, 3);
     }

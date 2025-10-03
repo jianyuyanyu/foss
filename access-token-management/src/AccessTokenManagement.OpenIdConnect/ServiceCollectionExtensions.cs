@@ -24,7 +24,8 @@ public static class ServiceCollectionExtensions
         services.AddHttpContextAccessor();
 
         services.AddClientCredentialsTokenManagement();
-        services.AddSingleton<IConfigureOptions<ClientCredentialsClient>, ConfigureOpenIdConnectClientCredentialsOptions>();
+        services
+            .AddSingleton<IConfigureOptions<ClientCredentialsClient>, ConfigureOpenIdConnectClientCredentialsOptions>();
 
         // TODO: maybe return a builder with a ConfigureScheme that adds IConfigureNamedOptions/IPostConfigureNamedOptions with the naming convention?
         // for example, per-scheme client credentials style, scope, etc settings
@@ -83,6 +84,7 @@ public static class ServiceCollectionExtensions
 
         return services.AddOpenIdConnectAccessTokenManagement();
     }
+
     /// <summary>
     /// Adds a typed HTTP client for the factory that automatically sends the current user access token
     /// </summary>
@@ -106,6 +108,7 @@ public static class ServiceCollectionExtensions
             .AddDefaultAccessTokenResiliency()
             .AddUserAccessTokenHandler(parameters);
     }
+
     /// <summary>
     /// Adds a named HTTP client for the factory that automatically sends the current user access token
     /// </summary>
@@ -205,7 +208,6 @@ public static class ServiceCollectionExtensions
             .AddClientAccessTokenHandler(parameters);
     }
 
-
     /// <summary>
     /// Adds the user access token handler to an HttpClient
     /// </summary>
@@ -214,6 +216,21 @@ public static class ServiceCollectionExtensions
     /// <returns></returns>
     public static IHttpClientBuilder AddUserAccessTokenHandler(
         this IHttpClientBuilder httpClientBuilder,
+        UserTokenRequestParameters? parameters = null) => AddUserAccessTokenHandler(
+        httpClientBuilder,
+        tokenRequestCustomizer: null,
+        parameters);
+
+    /// <summary>
+    /// Adds the user access token handler to an HttpClient
+    /// </summary>
+    /// <param name="httpClientBuilder"></param>
+    /// <param name="tokenRequestCustomizer"></param>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
+    public static IHttpClientBuilder AddUserAccessTokenHandler(
+        this IHttpClientBuilder httpClientBuilder,
+        ITokenRequestCustomizer? tokenRequestCustomizer,
         UserTokenRequestParameters? parameters = null) =>
         httpClientBuilder.AddHttpMessageHandler(provider =>
         {
@@ -223,12 +240,12 @@ public static class ServiceCollectionExtensions
             var tokenRetriever = new OpenIdConnectUserAccessTokenRetriever(
                 httpContextAccessor,
                 userTokenManagementService,
-                parameters);
+                parameters,
+                tokenRequestCustomizer);
 
             return provider.BuildAccessTokenRequestHandler(tokenRetriever);
 
 #pragma warning restore CS0618 // Type or member is obsolete
-
         });
 
     /// <summary>
@@ -240,6 +257,22 @@ public static class ServiceCollectionExtensions
     public static IHttpClientBuilder AddClientAccessTokenHandler(
         this IHttpClientBuilder httpClientBuilder,
         UserTokenRequestParameters? parameters = null) =>
+        AddClientAccessTokenHandler(
+            httpClientBuilder,
+            tokenRequestCustomizer: null,
+            parameters);
+
+    /// <summary>
+    /// Adds the client access token handler to an HttpClient
+    /// </summary>
+    /// <param name="httpClientBuilder"></param>
+    /// <param name="tokenRequestCustomizer"></param>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
+    public static IHttpClientBuilder AddClientAccessTokenHandler(
+        this IHttpClientBuilder httpClientBuilder,
+        ITokenRequestCustomizer? tokenRequestCustomizer,
+        UserTokenRequestParameters? parameters = null) =>
         httpClientBuilder.AddHttpMessageHandler(provider =>
         {
             var tokenManager = provider.GetRequiredService<IClientCredentialsTokenManager>();
@@ -249,11 +282,10 @@ public static class ServiceCollectionExtensions
             var tokenRetriever = new OpenIdConnectClientAccessTokenRetriever(tokenManager,
                 options,
                 schemeProvider,
-                parameters);
+                parameters,
+                tokenRequestCustomizer);
 
             return provider.BuildAccessTokenRequestHandler(tokenRetriever);
-
         });
 #pragma warning restore CS0618 // Type or member is obsolete
-
 }

@@ -25,7 +25,7 @@ public abstract class IntegrationTestBase : IAsyncDisposable
             ClientId = "client_credentials_client",
             ClientSecrets = { new Secret("secret".Sha256()) },
             AllowedGrantTypes = GrantTypes.ClientCredentials,
-            AllowedScopes = { "scope1" }
+            AllowedScopes = { "scope1", "scope2" }
         });
 
         IdentityServerHost.Clients.Add(new Client
@@ -36,7 +36,7 @@ public abstract class IntegrationTestBase : IAsyncDisposable
             RedirectUris = { "https://app/signin-oidc" },
             PostLogoutRedirectUris = { "https://app/signout-callback-oidc" },
             AllowOfflineAccess = true,
-            AllowedScopes = { "openid", "profile", "scope1" }
+            AllowedScopes = { "openid", "profile", "scope1", "scope2" }
         });
 
         IdentityServerHost.Clients.Add(new Client
@@ -47,7 +47,7 @@ public abstract class IntegrationTestBase : IAsyncDisposable
             RedirectUris = { "https://app/signin-oidc" },
             PostLogoutRedirectUris = { "https://app/signout-callback-oidc" },
             AllowOfflineAccess = true,
-            AllowedScopes = { "openid", "profile", "scope1" },
+            AllowedScopes = { "openid", "profile", "scope1", "scope2" },
 
             AccessTokenLifetime = 10
         });
@@ -60,7 +60,7 @@ public abstract class IntegrationTestBase : IAsyncDisposable
             RedirectUris = { "https://app/signin-oidc" },
             PostLogoutRedirectUris = { "https://app/signout-callback-oidc" },
             AllowOfflineAccess = true,
-            AllowedScopes = { "openid", "profile", "scope1" },
+            AllowedScopes = { "openid", "profile", "scope1", "scope2" },
 
             RequireDPoP = true,
             DPoPValidationMode = DPoPTokenExpirationValidationMode.Nonce,
@@ -69,8 +69,7 @@ public abstract class IntegrationTestBase : IAsyncDisposable
             AccessTokenLifetime = 10
         });
 
-        ApiHost = new ApiHost(output.WriteLine, IdentityServerHost, "scope1");
-
+        ApiHost = new ApiHost(output.WriteLine, IdentityServerHost, ["scope1", "scope2"]);
         AppHost = new AppHost(output.WriteLine, IdentityServerHost, ApiHost, clientId, configureUserTokenManagementOptions: configureUserTokenManagementOptions);
     }
 
