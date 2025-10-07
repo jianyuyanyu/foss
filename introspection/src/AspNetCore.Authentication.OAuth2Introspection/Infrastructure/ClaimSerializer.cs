@@ -8,22 +8,22 @@ using Microsoft.Extensions.Caching.Hybrid;
 
 namespace Duende.AspNetCore.Authentication.OAuth2Introspection.Infrastructure;
 
-internal class ClaimSerializer : IHybridCacheSerializer<List<Claim>>
+internal class ClaimSerializer : IHybridCacheSerializer<IEnumerable<Claim>>
 {
-    public List<Claim> Deserialize(ReadOnlySequence<byte> source)
+    public IEnumerable<Claim> Deserialize(ReadOnlySequence<byte> source)
     {
         var reader = new Utf8JsonReader(source);
 
-        var claimsLight = JsonSerializer.Deserialize(ref reader, DuendeIntrospectionSerializationContext.Default.ListClaimLite)!;
+        var claimsLight = JsonSerializer.Deserialize(ref reader, DuendeIntrospectionSerializationContext.Default.IEnumerableClaimLite)!;
 
-        return claimsLight.Select(claimLite => new Claim(claimLite.Type, claimLite.Value)).ToList();
+        return claimsLight.Select(claimLite => new Claim(claimLite.Type, claimLite.Value));
     }
 
-    public void Serialize(List<Claim> value, IBufferWriter<byte> target)
+    public void Serialize(IEnumerable<Claim> value, IBufferWriter<byte> target)
     {
         using var writer = new Utf8JsonWriter(target);
-        var claimsLite = value.Select(claim => new ClaimLite { Type = claim.Type, Value = claim.Value }).ToList();
+        var claimsLite = value.Select(claim => new ClaimLite { Type = claim.Type, Value = claim.Value });
 
-        JsonSerializer.Serialize(writer, claimsLite, DuendeIntrospectionSerializationContext.Default.ListClaimLite);
+        JsonSerializer.Serialize(writer, claimsLite, DuendeIntrospectionSerializationContext.Default.IEnumerableClaimLite);
     }
 }

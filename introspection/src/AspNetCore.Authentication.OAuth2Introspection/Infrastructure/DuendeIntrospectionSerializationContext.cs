@@ -5,5 +5,5 @@ using System.Text.Json.Serialization;
 
 namespace Duende.AspNetCore.Authentication.OAuth2Introspection.Infrastructure;
 
-[JsonSerializable(typeof(List<ClaimLite>))]
+[JsonSerializable(typeof(IEnumerable<ClaimLite>))]
 internal partial class DuendeIntrospectionSerializationContext : JsonSerializerContext;

@@ -64,7 +64,7 @@ public static class OAuth2IntrospectionExtensions
 
         builder.Services.AddHybridCache();
 
-        builder.Services.TryAddSingleton<IHybridCacheSerializer<List<Claim>>, ClaimSerializer>();
+        builder.Services.TryAddSingleton<IHybridCacheSerializer<IEnumerable<Claim>>, ClaimSerializer>();
 
         builder.Services.TryAddKeyedSingleton<HybridCache>(ServiceProviderKeys.IntrospectionCache, (sp, _) => sp.GetRequiredService<HybridCache>());
 
