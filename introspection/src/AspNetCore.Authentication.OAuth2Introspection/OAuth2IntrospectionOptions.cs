@@ -95,11 +95,6 @@ public class OAuth2IntrospectionOptions : AuthenticationSchemeOptions
     public bool SaveToken { get; set; } = true;
 
     /// <summary>
-    /// Specifies whether the outcome of the token validation should be cached. This reduces the load on the introspection endpoint at the STS
-    /// </summary>
-    public bool EnableCaching { get; set; } = false;
-
-    /// <summary>
     /// Specifies for how long the outcome of the token validation should be cached.
     /// </summary>
     public TimeSpan CacheDuration { get; set; } = TimeSpan.FromMinutes(5);
