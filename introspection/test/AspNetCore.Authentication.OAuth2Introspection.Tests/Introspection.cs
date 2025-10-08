@@ -15,6 +15,12 @@ namespace Duende.AspNetCore.Authentication.OAuth2Introspection;
 
 public class Introspection
 {
+    private static readonly HybridCacheEntryOptions GetOnlyEntryOptions = new()
+    {
+        Flags = HybridCacheEntryFlags.DisableLocalCacheWrite
+                | HybridCacheEntryFlags.DisableDistributedCacheWrite
+                | HybridCacheEntryFlags.DisableUnderlyingData
+    };
 
     private static readonly string clientId = "client";
     private static readonly string clientSecret = "secret";
@@ -558,11 +564,37 @@ public class Introspection
         introspectionRequestsMade.ShouldBe(2);
     }
 
+    [Fact]
+    public async Task ActiveToken_can_override_cache_settings_to_prevent_caching()
+    {
+        var token = "sometoken";
+        var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active, TimeSpan.FromMinutes(5));
+
+        var server = PipelineFactory.CreateServer(o =>
+        {
+            _options(o);
+
+            o.CacheDuration = TimeSpan.FromMinutes(10);
+            o.SetCacheEntryFlags = HybridCacheEntryFlags.DisableLocalCacheWrite |
+                                   HybridCacheEntryFlags.DisableDistributedCacheWrite;
+        }, handler);
+        var client = server.CreateClient();
+
+        client.SetBearerToken(token);
+
+        var result = await client.GetAsync("http://test");
+        result.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+        var cache = server.Services.GetRequiredService<HybridCache>();
+        var cacheItem = await cache.GetOrCreateAsync<IEnumerable<Claim>?>(token.ToSha256(), null!, GetOnlyEntryOptions);
+        cacheItem.ShouldBeNull();
+    }
+
     private async Task AssertCacheItemExists(TestServer testServer, string cacheKeyPrefix, string token)
     {
         var cache = testServer.Services.GetRequiredService<HybridCache>();
 
-        var cacheItem = await cache.GetOrCreateAsync<IEnumerable<Claim>?>($"{cacheKeyPrefix}{token.ToSha256()}", null!);
+        var cacheItem = await cache.GetOrCreateAsync<IEnumerable<Claim>?>($"{cacheKeyPrefix}{token.ToSha256()}", null!, GetOnlyEntryOptions);
 
         cacheItem.ShouldNotBeNull();
         cacheItem!.ShouldNotBeEmpty();

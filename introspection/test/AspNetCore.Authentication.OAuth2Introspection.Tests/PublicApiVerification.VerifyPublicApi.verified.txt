@@ -104,6 +104,7 @@ namespace Duende.AspNetCore.Authentication.OAuth2Introspection
         public string NameClaimType { get; set; }
         public string RoleClaimType { get; set; }
         public bool SaveToken { get; set; }
+        public Microsoft.Extensions.Caching.Hybrid.HybridCacheEntryFlags SetCacheEntryFlags { get; set; }
         public bool SkipTokensWithDots { get; set; }
         public System.Func<Microsoft.AspNetCore.Http.HttpRequest, string?> TokenRetriever { get; set; }
         public string TokenTypeHint { get; set; }

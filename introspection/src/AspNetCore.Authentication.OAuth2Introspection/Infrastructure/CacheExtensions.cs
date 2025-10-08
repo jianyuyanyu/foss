@@ -66,7 +66,12 @@ internal static class CacheExtensions
         Log.SettingToCache(logger, absoluteLifetime, null);
         var cacheKey = options.CacheKeyGenerator(options, token);
         var cacheDuration = absoluteLifetime - now;
-        await cache.SetAsync(cacheKey, claims,
-            new HybridCacheEntryOptions { Expiration = cacheDuration, LocalCacheExpiration = cacheDuration }).ConfigureAwait(false);
+        var cacheEntryOptions = new HybridCacheEntryOptions
+        {
+            Expiration = cacheDuration,
+            LocalCacheExpiration = cacheDuration,
+            Flags = options.SetCacheEntryFlags
+        };
+        await cache.SetAsync(cacheKey, claims, cacheEntryOptions).ConfigureAwait(false);
     }
 }
