@@ -5,9 +5,9 @@
     <Nullable>disable</Nullable>
     <OutputType>exe</OutputType>
   </PropertyGroup>
-  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+  <!--<PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <TargetFrameworks>net481;$(TargetFrameworks)</TargetFrameworks>
-  </PropertyGroup>
+  </PropertyGroup>-->
   <ItemGroup>
     <ProjectReference Include="..\..\src\IdentityModel\IdentityModel.csproj" />
   </ItemGroup>
