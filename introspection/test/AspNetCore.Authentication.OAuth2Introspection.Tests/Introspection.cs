@@ -39,7 +39,7 @@ public class Introspection
     {
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Unauthorized);
 
-        var client = PipelineFactory.CreateClient(o => _options(o), handler);
+        var client = await PipelineFactory.CreateClient(o => _options(o), handler);
         client.SetBearerToken("sometoken");
 
         var result = await client.GetAsync("http://test");
@@ -51,7 +51,7 @@ public class Introspection
     {
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active);
 
-        var client = PipelineFactory.CreateClient(_options, handler);
+        var client = await PipelineFactory.CreateClient(_options, handler);
         client.SetBearerToken("sometoken");
 
         var result = await client.GetAsync("http://test");
@@ -76,7 +76,7 @@ public class Introspection
 
         var requestCount = 0;
 
-        var messageHandler = PipelineFactory.CreateHandler(o =>
+        var messageHandler = await PipelineFactory.CreateHandler(o =>
         {
             _options(o);
 
@@ -129,7 +129,7 @@ public class Introspection
         var waitForTheSecondRequestToStart = new ManualResetEvent(initialState: false);
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active);
 
-        var messageHandler = PipelineFactory.CreateHandler(o =>
+        var messageHandler = await PipelineFactory.CreateHandler(o =>
         {
             _options(o);
 
@@ -173,7 +173,7 @@ public class Introspection
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active);
         var count = 0;
 
-        var client = PipelineFactory.CreateClient(o =>
+        var client = await PipelineFactory.CreateClient(o =>
         {
             _options(o);
             o.ClientSecret = null;
@@ -221,7 +221,7 @@ public class Introspection
         bool? validatedCalled = null;
         bool? failureCalled = null;
 
-        var client = PipelineFactory.CreateClient(o =>
+        var client = await PipelineFactory.CreateClient(o =>
         {
             _options(o);
 
@@ -256,7 +256,7 @@ public class Introspection
     {
         var introspectionCalls = 0;
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active, TimeSpan.FromHours(1));
-        var client = PipelineFactory.CreateClient(o =>
+        var client = await PipelineFactory.CreateClient(o =>
         {
             _options(o);
 
@@ -284,7 +284,7 @@ public class Introspection
     {
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active, TimeSpan.FromMinutes(5));
 
-        var client = PipelineFactory.CreateClient(o =>
+        var client = await PipelineFactory.CreateClient(o =>
         {
             _options(o);
 
@@ -305,7 +305,7 @@ public class Introspection
     {
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Inactive);
 
-        var client = PipelineFactory.CreateClient(o => _options(o), handler);
+        var client = await PipelineFactory.CreateClient(o => _options(o), handler);
         client.SetBearerToken("sometoken");
 
         var result = await client.GetAsync("http://test");
@@ -319,7 +319,7 @@ public class Introspection
         bool? validatedCalled = null;
         bool? failureCalled = null;
 
-        var client = PipelineFactory.CreateClient(o =>
+        var client = await PipelineFactory.CreateClient(o =>
         {
             _options(o);
 
@@ -355,7 +355,7 @@ public class Introspection
         var expectedToken = "expected_token";
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active);
 
-        var client = PipelineFactory.CreateClient(o =>
+        var client = await PipelineFactory.CreateClient(o =>
         {
             _options(o);
 
@@ -380,7 +380,7 @@ public class Introspection
         var expectedToken = "expected_token";
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active, TimeSpan.FromHours(1));
 
-        var server = PipelineFactory.CreateServer(o =>
+        var server = await PipelineFactory.CreateServer(o =>
         {
             _options(o);
 
@@ -411,7 +411,7 @@ public class Introspection
         var cacheKeyPrefix = "KeyPrefix";
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active, TimeSpan.FromHours(1));
 
-        var server = PipelineFactory.CreateServer(o =>
+        var server = await PipelineFactory.CreateServer(o =>
         {
             _options(o);
 
@@ -442,7 +442,7 @@ public class Introspection
         var expectedToken = "expected_token";
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active, TimeSpan.FromHours(1));
 
-        var server = PipelineFactory.CreateServer(o =>
+        var server = await PipelineFactory.CreateServer(o =>
         {
             _options(o);
 
@@ -469,7 +469,7 @@ public class Introspection
         var expectedToken = "expected_token";
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Inactive);
 
-        var server = PipelineFactory.CreateServer(o =>
+        var server = await PipelineFactory.CreateServer(o =>
         {
             _options(o);
 
@@ -496,7 +496,7 @@ public class Introspection
     {
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active);
 
-        var client = PipelineFactory.CreateClient(o => _options(o), handler);
+        var client = await PipelineFactory.CreateClient(o => _options(o), handler);
         client.SetBearerToken("sometoken");
 
         handler.IsDiscoveryFailureTest = true;
@@ -512,7 +512,7 @@ public class Introspection
     {
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active);
 
-        var client = PipelineFactory.CreateClient(o =>
+        var client = await PipelineFactory.CreateClient(o =>
         {
             _options(o);
 
@@ -538,7 +538,7 @@ public class Introspection
         var introspectionRequestsMade = 0;
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active, TimeSpan.FromMilliseconds(250));
 
-        var client = PipelineFactory.CreateClient(o =>
+        var client = await PipelineFactory.CreateClient(o =>
         {
             _options(o);
 
@@ -570,7 +570,7 @@ public class Introspection
         var token = "sometoken";
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active, TimeSpan.FromMinutes(5));
 
-        var server = PipelineFactory.CreateServer(o =>
+        var server = await PipelineFactory.CreateServer(o =>
         {
             _options(o);
 

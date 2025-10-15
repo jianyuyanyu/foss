@@ -9,60 +9,70 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Duende.AspNetCore.Authentication.OAuth2Introspection.Util;
 
 internal static class PipelineFactory
 {
-    public static TestServer CreateServer(
+    public static async Task<TestServer> CreateServer(
         Action<OAuth2IntrospectionOptions> options,
-        DelegatingHandler? backChannelHandler = null) => new(new WebHostBuilder()
-            .ConfigureServices(services =>
-            {
-                services
-                    .AddAuthentication(OAuth2IntrospectionDefaults.AuthenticationScheme)
-                    .AddOAuth2Introspection(options);
-
-                if (backChannelHandler != null)
+        DelegatingHandler? backChannelHandler = null)
+    {
+        var host = new HostBuilder()
+            .ConfigureWebHost(webHostBuilder => webHostBuilder
+                .UseTestServer()
+                .ConfigureServices(services =>
                 {
-                    services.AddHttpClient(OAuth2IntrospectionDefaults.BackChannelHttpClientName)
-                        .AddHttpMessageHandler(() => backChannelHandler);
-                }
-            })
-            .Configure(app =>
-            {
-                app.UseAuthentication();
+                    services
+                        .AddAuthentication(OAuth2IntrospectionDefaults.AuthenticationScheme)
+                        .AddOAuth2Introspection(options);
 
-                app.Run(async context =>
-                {
-                    var user = context.User;
-
-                    if (user.Identity!.IsAuthenticated)
+                    if (backChannelHandler != null)
                     {
-                        var token = await context.GetTokenAsync("access_token");
-                        var responseObject = new Dictionary<string, string>
+                        services.AddHttpClient(OAuth2IntrospectionDefaults.BackChannelHttpClientName)
+                            .AddHttpMessageHandler(() => backChannelHandler);
+                    }
+                })
+                .Configure(app =>
+                {
+                    app.UseAuthentication();
+
+                    app.Run(async context =>
+                    {
+                        var user = context.User;
+
+                        if (user.Identity!.IsAuthenticated)
                         {
-                            {"token", token! }
-                        };
+                            var token = await context.GetTokenAsync("access_token");
+                            var responseObject = new Dictionary<string, string>
+                            {
+                                { "token", token! }
+                            };
 
-                        var json = JsonSerializer.Serialize(responseObject);
+                            var json = JsonSerializer.Serialize(responseObject);
 
-                        context.Response.StatusCode = 200;
-                        await context.Response.WriteAsync(json, Encoding.UTF8);
-                    }
-                    else
-                    {
-                        context.Response.StatusCode = 401;
-                    }
-                });
-            }));
+                            context.Response.StatusCode = 200;
+                            await context.Response.WriteAsync(json, Encoding.UTF8);
+                        }
+                        else
+                        {
+                            context.Response.StatusCode = 401;
+                        }
+                    });
+                })).Build();
 
-    public static HttpClient CreateClient(
+        await host.StartAsync();
+
+        return host.GetTestServer();
+    }
+
+    public static async Task<HttpClient> CreateClient(
         Action<OAuth2IntrospectionOptions> options,
         DelegatingHandler? handler = null)
-        => CreateServer(options, handler).CreateClient();
+        => (await CreateServer(options, handler)).CreateClient();
 
-    public static HttpMessageHandler CreateHandler(
+    public static async Task<HttpMessageHandler> CreateHandler(
         Action<OAuth2IntrospectionOptions> options,
-        DelegatingHandler? handler = null) => CreateServer(options, handler).CreateHandler();
+        DelegatingHandler? handler = null) => (await CreateServer(options, handler)).CreateHandler();
 }
