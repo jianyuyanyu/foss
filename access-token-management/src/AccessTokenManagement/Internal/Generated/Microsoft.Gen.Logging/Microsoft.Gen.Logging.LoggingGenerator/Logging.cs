@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Duende.AccessTokenManagement.Internal
 {
-    static class Log
+    public static class Log
     {
         /// <summary>
         /// Logs "Cannot authenticate scheme: {Scheme} to acquire user access token.".
