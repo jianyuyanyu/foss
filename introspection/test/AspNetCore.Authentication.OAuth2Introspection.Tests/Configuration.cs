@@ -9,50 +9,57 @@ namespace Duende.AspNetCore.Authentication.OAuth2Introspection;
 public class Configuration
 {
     [Fact]
-    public void Empty_Options()
+    public async Task Empty_Options()
     {
-        var act = () => PipelineFactory.CreateClient(options => { })
-            .GetAsync("http://test").GetAwaiter().GetResult();
+        var client = await PipelineFactory.CreateClient(_ => { });
 
-        act.ShouldThrow<InvalidOperationException>().Message.ShouldBe("You must either set Authority or IntrospectionEndpoint");
+        var act = async () => await client.GetAsync("http://test");
+
+        var result = await act.ShouldThrowAsync<InvalidOperationException>();
+        result.Message.ShouldBe("You must either set Authority or IntrospectionEndpoint");
     }
 
     [Fact]
-    public void Endpoint_But_No_Authority()
+    public async Task Endpoint_But_No_Authority()
     {
-        var act = () => PipelineFactory.CreateClient(options =>
+        var client = await PipelineFactory.CreateClient(options =>
         {
             options.IntrospectionEndpoint = "http://endpoint";
             options.ClientId = "scope";
 
-        }).GetAsync("http://test").GetAwaiter().GetResult();
+        });
 
-        act.ShouldNotThrow();
+        var act = async () => await client.GetAsync("http://test");
+
+        await act.ShouldNotThrowAsync();
     }
 
     [Fact]
-    public void No_ClientName_But_Introspection_Handler()
+    public async Task No_ClientName_But_Introspection_Handler()
     {
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active);
-
-        var act = () => PipelineFactory.CreateClient(options =>
+        var client = await PipelineFactory.CreateClient(options =>
         {
             options.IntrospectionEndpoint = "http://endpoint";
-        }, handler).GetAsync("http://test").GetAwaiter().GetResult();
+        }, handler);
 
-        act.ShouldNotThrow();
+        var act = async () => await client.GetAsync("http://test");
+
+        await act.ShouldNotThrowAsync();
     }
 
     [Fact]
-    public void Authority_No_Network_Delay_Load()
+    public async Task Authority_No_Network_Delay_Load()
     {
-        var act = () => PipelineFactory.CreateClient(options =>
+        var client = await PipelineFactory.CreateClient(options =>
         {
             options.Authority = "http://localhost:6666";
             options.ClientId = "scope";
-        }).GetAsync("http://test").GetAwaiter().GetResult();
+        });
 
-        act.ShouldNotThrow();
+        var act = async () => await client.GetAsync("http://test");
+
+        await act.ShouldNotThrowAsync();
     }
 
     [Fact]
@@ -61,7 +68,7 @@ public class Configuration
         OAuth2IntrospectionOptions ops = null!;
         var handler = new IntrospectionEndpointHandler(IntrospectionEndpointHandler.Behavior.Active);
 
-        var client = PipelineFactory.CreateClient(options =>
+        var client = await PipelineFactory.CreateClient(options =>
         {
             options.Authority = "https://authority.com/";
             options.ClientId = "scope";
