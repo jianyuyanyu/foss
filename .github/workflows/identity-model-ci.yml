@@ -55,7 +55,7 @@ jobs:
         dotnet-version: |-
           8.0.414
           9.0.305
-          10.0.x
+          10.0.100-rc.2.25502.107
     - name: Restore
       run: dotnet restore ../
     - name: Verify Formatting
@@ -63,9 +63,12 @@ jobs:
     - name: Test - IdentityModel.Tests
       if: matrix.os != 'windows-latest'
       run: dotnet test -c Release test/IdentityModel.Tests --logger "console;verbosity=normal" --logger "trx;LogFileName=IdentityModel.Tests.trx" --collect:"XPlat Code Coverage"
-    - name: Test - IdentityModel.Tests-net481
-      if: matrix.os == 'windows-latest'
-      run: dotnet test -c Release test/IdentityModel.Tests --logger "console;verbosity=normal" --logger "trx;LogFileName=IdentityModel.Tests-net481.trx" --collect:"XPlat Code Coverage" --framework net481
+    # This is different from what WorkflowGen would generate
+    # We remove the 481 Target Framework because we had issues building with net10 RC2
+
+    # - name: Test - IdentityModel.Tests-net481
+    #   if: matrix.os == 'windows-latest'
+    #   run: dotnet test -c Release test/IdentityModel.Tests --logger "console;verbosity=normal" --logger "trx;LogFileName=IdentityModel.Tests-net481.trx" --collect:"XPlat Code Coverage" --framework net481
     - name: Test report
       if: matrix.os != 'windows-latest'
       uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
@@ -73,13 +76,13 @@ jobs:
         name: test-results
         path: identity-model/test/IdentityModel.Tests/TestResults/IdentityModel.Tests.trx
         retention-days: 5
-    - name: Test report-net481
-      if: matrix.os == 'windows-latest'
-      uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
-      with:
-        name: test-results-net481
-        path: identity-model/test/IdentityModel.Tests/TestResults/IdentityModel.Tests-net481.trx
-        retention-days: 5
+    # - name: Test report-net481
+    #   if: matrix.os == 'windows-latest'
+    #   uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
+    #   with:
+    #     name: test-results-net481
+    #     path: identity-model/test/IdentityModel.Tests/TestResults/IdentityModel.Tests-net481.trx
+    #     retention-days: 5
     - name: Tool restore
       run: dotnet tool restore
     - name: Pack IdentityModel

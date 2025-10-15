@@ -190,7 +190,7 @@ public class PushedAuthorizationTests
 
         Request.ResponseType = null;
 
-        Func<Task> act = async () => await client.PushAuthorizationAsync(Request);
+        var act = async () => await client.PushAuthorizationAsync(Request);
 
         var exception = await act.ShouldThrowAsync<ArgumentException>();
         exception.ParamName.ShouldBe("response_type");
@@ -206,7 +206,7 @@ public class PushedAuthorizationTests
         Request.Parameters.Add(OidcConstants.AuthorizeRequest.RequestUri, "not allowed");
 
 
-        Func<Task> act = async () => await client.PushAuthorizationAsync(Request);
+        var act = async () => await client.PushAuthorizationAsync(Request);
 
         var exception = await act.ShouldThrowAsync<ArgumentException>();
         exception.ParamName.ShouldBe("request_uri");

@@ -215,7 +215,7 @@ public class TokenRequestExtensionsRequestTests
     [Fact]
     public async Task Explicit_null_parameters_should_not_fail_()
     {
-        Func<Task> act = async () =>
+        var act = async () =>
             await _client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             { ClientId = "client", Parameters = null });
 
@@ -244,7 +244,7 @@ public class TokenRequestExtensionsRequestTests
     [Fact]
     public async Task Device_request_without_device_code_should_fail()
     {
-        Func<Task> act = async () =>
+        var act = async () =>
             await _client.RequestDeviceTokenAsync(new DeviceTokenRequest { ClientId = "device" });
 
         var exception = await act.ShouldThrowAsync<ArgumentException>();
@@ -309,7 +309,7 @@ public class TokenRequestExtensionsRequestTests
     [Fact]
     public async Task Password_request_without_username_should_fail()
     {
-        Func<Task> act = async () => await _client.RequestPasswordTokenAsync(new PasswordTokenRequest());
+        var act = async () => await _client.RequestPasswordTokenAsync(new PasswordTokenRequest());
 
         var exception = await act.ShouldThrowAsync<ArgumentException>();
         exception.ParamName.ShouldBe("username");
@@ -351,7 +351,7 @@ public class TokenRequestExtensionsRequestTests
     [Fact]
     public async Task Code_request_without_code_should_fail()
     {
-        Func<Task> act = async () => await _client.RequestAuthorizationCodeTokenAsync(
+        var act = async () => await _client.RequestAuthorizationCodeTokenAsync(
             new AuthorizationCodeTokenRequest
             {
                 RedirectUri = "uri"
@@ -364,7 +364,7 @@ public class TokenRequestExtensionsRequestTests
     [Fact]
     public async Task Code_request_without_redirect_uri_should_fail()
     {
-        Func<Task> act = async () => await _client.RequestAuthorizationCodeTokenAsync(
+        var act = async () => await _client.RequestAuthorizationCodeTokenAsync(
             new AuthorizationCodeTokenRequest
             {
                 Code = "code"
@@ -406,7 +406,7 @@ public class TokenRequestExtensionsRequestTests
     [Fact]
     public async Task Refresh_request_without_refresh_token_should_fail()
     {
-        Func<Task> act = async () => await _client.RequestRefreshTokenAsync(new RefreshTokenRequest());
+        var act = async () => await _client.RequestRefreshTokenAsync(new RefreshTokenRequest());
 
         var exception = await act.ShouldThrowAsync<ArgumentException>();
         exception.ParamName.ShouldBe("refresh_token");
@@ -491,7 +491,7 @@ public class TokenRequestExtensionsRequestTests
     [Fact]
     public async Task Setting_no_grant_type_should_fail()
     {
-        Func<Task> act = async () => await _client.RequestTokenAsync(new TokenRequest());
+        var act = async () => await _client.RequestTokenAsync(new TokenRequest());
 
         var exception = await act.ShouldThrowAsync<ArgumentException>();
         exception.ParamName.ShouldBe("grant_type");
@@ -665,7 +665,7 @@ public class TokenRequestExtensionsRequestTests
     [Fact]
     public async Task Setting_client_id_and_assertion_with_authorization_header_should_fail()
     {
-        Func<Task> act = () => _client.RequestTokenAsync(new TokenRequest
+        var act = () => _client.RequestTokenAsync(new TokenRequest
         {
             GrantType = "test",
             ClientId = "client",

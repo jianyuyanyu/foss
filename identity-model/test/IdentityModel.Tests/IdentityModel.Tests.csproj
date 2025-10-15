@@ -5,9 +5,9 @@
     <Nullable>disable</Nullable>
     <OutputType>exe</OutputType>
   </PropertyGroup>
-  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+  <!--<PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <TargetFrameworks>net481;$(TargetFrameworks)</TargetFrameworks>
-  </PropertyGroup>
+  </PropertyGroup>-->
   <ItemGroup>
     <ProjectReference Include="..\..\src\IdentityModel\IdentityModel.csproj" />
   </ItemGroup>
@@ -17,7 +17,7 @@
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" VersionOverride="2.3.0"/>
-    <PackageReference Include="System.Net.Http" />
+    <PackageReference Include="System.Net.Http" NoWarn="NU1510" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' != 'net481'">
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" />

@@ -86,7 +86,7 @@ public class DiscoveryExtensionsTests
     {
         var client = new HttpClient(_successHandler) { BaseAddress = null };
 
-        Func<Task> act = () => client.GetDiscoveryDocumentAsync();
+        var act = () => client.GetDiscoveryDocumentAsync();
 
         await act.ShouldThrowAsync<ArgumentException>("Either the address parameter or the HttpClient BaseAddress must not be null.");
     }
@@ -96,7 +96,7 @@ public class DiscoveryExtensionsTests
     {
         var client = new HttpClient(_successHandler) { BaseAddress = null };
 
-        Func<Task> act = () => client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest());
+        var act = () => client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest());
 
         await act.ShouldThrowAsync<ArgumentException>("Either the DiscoveryDocumentRequest Address or the HttpClient BaseAddress must not be null.");
     }
