@@ -17,7 +17,7 @@
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" VersionOverride="2.3.0"/>
-    <PackageReference Include="System.Net.Http" />
+    <PackageReference Include="System.Net.Http" NoWarn="NU1510" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' != 'net481'">
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" />
