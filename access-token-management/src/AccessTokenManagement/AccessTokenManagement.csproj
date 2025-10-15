@@ -10,7 +10,11 @@
     <PackageReadmePath>README.md</PackageReadmePath>
     <PublishAot>true</PublishAot>
     <TrimmerSingleWarn>true</TrimmerSingleWarn>
+<!--    Related to https://github.com/dotnet/sdk/issues/50676-->
+<!--    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>-->
+<!--    <CompilerGeneratedFilesOutputPath>Internal/Generated</CompilerGeneratedFilesOutputPath>-->
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Duende.IdentityModel" />
     <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" />

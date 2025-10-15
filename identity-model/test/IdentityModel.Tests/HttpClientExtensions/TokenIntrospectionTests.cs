@@ -226,7 +226,7 @@ public class TokenIntrospectionTests
             BaseAddress = new Uri(Endpoint)
         };
 
-        Func<Task> act = async () => await client.IntrospectTokenAsync(new TokenIntrospectionRequest());
+        var act = async () => await client.IntrospectTokenAsync(new TokenIntrospectionRequest());
 
         var exception = await act.ShouldThrowAsync<ArgumentException>();
         exception.Message.ShouldContain("token");
