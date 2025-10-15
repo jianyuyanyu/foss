@@ -300,7 +300,7 @@ public static class StepExtensions
     public static void StepSetupDotNet(this Job job)
         => job.Step()
             .Name("Setup .NET")
-            .ActionsSetupDotNet("d4c94342e560b34958eacfc5d055d21461ed1c5d", ["8.0.414", "9.0.305", "10.0.x"]); // v5.0.0
+            .ActionsSetupDotNet("d4c94342e560b34958eacfc5d055d21461ed1c5d", ["8.0.414", "9.0.305", "10.0.100-rc.2.25502.107"]); // v5.0.0
 
     public static Step IfRefMain(this Step step)
         => step.If("github.ref == 'refs/heads/main'");
