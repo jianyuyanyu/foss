@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Buffers.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -29,13 +30,13 @@ public static class Crypto
 #endif
         RsaSecurityKey key = null;
 #if NET472
-            if (rsa is RSACryptoServiceProvider) 
+            if (rsa is RSACryptoServiceProvider)
             {
                 var parameters = rsa.ExportParameters(includePrivateParameters: true);
                 key = new RsaSecurityKey(parameters);
-                        
+
                 rsa.Dispose();
-            }   
+            }
 #endif
         if (key == null)
         {
@@ -49,8 +50,8 @@ public static class Crypto
     public static Duende.IdentityModel.Jwk.JsonWebKeySet CreateKeySet(RsaSecurityKey key)
     {
         var parameters = key.Rsa?.ExportParameters(false) ?? key.Parameters;
-        var exponent = Base64Url.Encode(parameters.Exponent);
-        var modulus = Base64Url.Encode(parameters.Modulus);
+        var exponent = Base64Url.EncodeToString(parameters.Exponent);
+        var modulus = Base64Url.EncodeToString(parameters.Modulus);
 
         var webKey = new Duende.IdentityModel.Jwk.JsonWebKey
         {
@@ -99,6 +100,6 @@ public static class Crypto
         var leftPart = new byte[16];
         Array.Copy(hash, leftPart, 16);
 
-        return Base64Url.Encode(leftPart);
+        return Base64Url.EncodeToString(leftPart);
     }
 }

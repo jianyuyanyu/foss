@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Buffers.Text;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Logging;
@@ -54,12 +55,12 @@ internal class CryptoHelper
         using (hashAlgorithm)
         {
             var hash = hashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(data));
-            var size = hashAlgorithm.HashSize / 8 / 2; // Only take the left half of the data, as per spec for at_hash 
+            var size = hashAlgorithm.HashSize / 8 / 2; // Only take the left half of the data, as per spec for at_hash
 
             var leftPart = new byte[size];
             Array.Copy(hash, leftPart, size);
 
-            var leftPartB64 = Base64Url.Encode(leftPart);
+            var leftPartB64 = Base64Url.EncodeToString(leftPart);
             var match = leftPartB64.Equals(hashedData);
 
             if (!match)
@@ -90,7 +91,7 @@ internal class CryptoHelper
         using (var sha256 = SHA256.Create())
         {
             var challengeBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(pkce.CodeVerifier));
-            pkce.CodeChallenge = Base64Url.Encode(challengeBytes);
+            pkce.CodeChallenge = Base64Url.EncodeToString(challengeBytes);
         }
 
         return pkce;
