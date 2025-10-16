@@ -6,7 +6,6 @@ using System.Text.Json;
 using Duende.AccessTokenManagement.DPoP;
 using Duende.AccessTokenManagement.DPoP.Internal;
 using Duende.AccessTokenManagement.Framework;
-using Duende.IdentityModel;
 using Duende.IdentityServer.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;

@@ -4,7 +4,6 @@
 using System.Buffers.Text;
 using System.Security.Cryptography;
 using System.Text;
-using Duende.IdentityModel;
 
 namespace Duende.AccessTokenManagement.Internal;
 
