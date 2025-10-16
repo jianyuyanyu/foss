@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Buffers.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -69,7 +70,7 @@ static class DPoPExtensions
     /// </summary>
     public static string CreateThumbprint(this JsonWebKey jwk)
     {
-        var jkt = Base64Url.Encode(jwk.ComputeJwkThumbprint());
+        var jkt = Base64Url.EncodeToString(jwk.ComputeJwkThumbprint());
         return jkt;
     }
 }

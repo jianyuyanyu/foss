@@ -1,16 +1,16 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Buffers.Text;
 using System.Security.Cryptography;
 using System.Text;
-using Duende.IdentityModel;
 
 namespace Duende.AccessTokenManagement.Internal;
 
 internal static class Crypto
 {
     /// <summary>
-    /// Simple hashing algorithm that should only be used to obfuscate ephemeral data in a deterministic way 
+    /// Simple hashing algorithm that should only be used to obfuscate ephemeral data in a deterministic way
     /// in logs, not for storing passwords
     /// </summary>
     /// <param name="data">The data to hash</param>
@@ -23,6 +23,6 @@ internal static class Crypto
         var leftPart = new byte[16];
         Array.Copy(hash, leftPart, 16);
 
-        return Base64Url.Encode(leftPart);
+        return Base64Url.EncodeToString(leftPart);
     }
 }

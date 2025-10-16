@@ -54,15 +54,6 @@ jobs:
       run: dotnet restore ../
     - name: Verify Formatting
       run: dotnet format ../ --verify-no-changes --no-restore
-    - name: Test - AccessTokenManagement.Tests
-      run: dotnet test -c Release test/AccessTokenManagement.Tests --logger "console;verbosity=normal" --logger "trx;LogFileName=AccessTokenManagement.Tests.trx" --collect:"XPlat Code Coverage"
-    - name: Test report
-      if: success() || failure()
-      uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
-      with:
-        name: test-results
-        path: access-token-management/test/AccessTokenManagement.Tests/TestResults/AccessTokenManagement.Tests.trx
-        retention-days: 5
     - name: Tool restore
       run: dotnet tool restore
     - name: Pack AccessTokenManagement

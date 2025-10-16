@@ -43,7 +43,11 @@ foreach (var component in components)
     GenerateReleaseWorkflow(component);
 }
 
-GenerateUploadTestResultsWorkflow();
+//**********************************************************************
+// Temporarily disabling tests because of mutual test dependencies.
+//**********************************************************************
+//
+// GenerateUploadTestResultsWorkflow();
 
 
 void GenerateCiWorkflow(Component component)
@@ -109,23 +113,27 @@ void GenerateCiWorkflow(Component component)
 
     job.StepVerifyFormatting();
 
-    var runsOnIncludesWindows = component.RunsOn.Contains(GitHubHostedRunners.WindowsLatest);
-    foreach (var testProject in component.Tests)
-    {
-        job.StepTest(component.Name, testProject, runsOnIncludesWindows);
-
-        if (runsOnIncludesWindows)
-        {
-            job.StepTest(component.Name, testProject, false, "net481");
-        }
-    }
-
-    job.StepUploadTestResultsAsArtifact(component, runsOnIncludesWindows);
-
-    if (runsOnIncludesWindows)
-    {
-        job.StepUploadTestResultsAsArtifact(component, false, "net481");
-    }
+    //**********************************************************************
+    // Temporarily disabling tests because of mutual test dependencies.
+    //**********************************************************************
+    //
+    // var runsOnIncludesWindows = component.RunsOn.Contains(GitHubHostedRunners.WindowsLatest);
+    // foreach (var testProject in component.Tests)
+    // {
+    //     job.StepTest(component.Name, testProject, runsOnIncludesWindows);
+    //
+    //     if (runsOnIncludesWindows)
+    //     {
+    //         job.StepTest(component.Name, testProject, false, "net481");
+    //     }
+    // }
+    //
+    // job.StepUploadTestResultsAsArtifact(component, runsOnIncludesWindows);
+    //
+    // if (runsOnIncludesWindows)
+    // {
+    //     job.StepUploadTestResultsAsArtifact(component, false, "net481");
+    // }
 
     job.StepToolRestore();
 

@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Buffers.Text;
 using System.Text;
 
 namespace Duende.IdentityModel.OidcClient;
@@ -23,7 +24,7 @@ public class CryptoHelperTests
         var leftHalf = new byte[bytesInLeftHalf];
         Array.Copy(hash, leftHalf, bytesInLeftHalf);
 
-        var hashString = Base64Url.Encode(leftHalf);
+        var hashString = Base64Url.EncodeToString(leftHalf);
 
         sut.ValidateHash(data, hashString, algorithmName).ShouldBeTrue();
     }
