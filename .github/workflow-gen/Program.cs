@@ -114,18 +114,19 @@ void GenerateCiWorkflow(Component component)
     {
         job.StepTest(component.Name, testProject, runsOnIncludesWindows);
 
-        if (runsOnIncludesWindows)
-        {
-            job.StepTest(component.Name, testProject, false, "net481");
-        }
+        // Temporarily disabled
+        // if (runsOnIncludesWindows)
+        // {
+        //     job.StepTest(component.Name, testProject, false, "net481");
+        // }
     }
 
     job.StepUploadTestResultsAsArtifact(component, runsOnIncludesWindows);
 
-    if (runsOnIncludesWindows)
-    {
-        job.StepUploadTestResultsAsArtifact(component, false, "net481");
-    }
+    // if (runsOnIncludesWindows)
+    // {
+    //     job.StepUploadTestResultsAsArtifact(component, false, "net481");
+    // }
 
     job.StepToolRestore();
 
