@@ -1,7 +1,6 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using System.Collections.Concurrent;
 using Duende.AccessTokenManagement.OTel;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,10 +12,12 @@ namespace Duende.AccessTokenManagement.Internal;
 internal class ClientCredentialsTokenManager(
     AccessTokenManagementMetrics metrics,
     IOptions<ClientCredentialsTokenManagementOptions> options,
-    [FromKeyedServices(ServiceProviderKeys.ClientCredentialsTokenCache)] HybridCache cache,
+    [FromKeyedServices(ServiceProviderKeys.ClientCredentialsTokenCache)]
+    HybridCache cache,
     TimeProvider time,
     IClientCredentialsTokenEndpoint client,
     IClientCredentialsCacheKeyGenerator cacheKeyGenerator,
+    ClientCredentialsCacheDurationStore cacheDurationAutoTuningStore,
     ILogger<ClientCredentialsTokenManager> logger
 ) : IClientCredentialsTokenManager
 {
@@ -24,11 +25,6 @@ internal class ClientCredentialsTokenManager(
     // between exceptions that are thrown inside the cache and those that are thrown
     // inside the factory.
     private const string ThrownInsideFactoryExceptionKey = "Duende.AccessTokenManagement.ThrownInside";
-
-    // We're assuming that the cache duration for access tokens will remain (relatively) stable
-    // First time we acquire an access token, don't yet know how long it will be valid, so we're assuming
-    // a specific period. However, after that, we'll use the actual expiration time to set the cache duration.
-    private readonly ConcurrentDictionary<ClientCredentialsCacheKey, TimeSpan> _cacheDurationAutoTuning = new();
 
     private readonly ClientCredentialsTokenManagementOptions _options = options.Value;
 
@@ -41,9 +37,7 @@ internal class ClientCredentialsTokenManager(
 
         parameters ??= new TokenRequestParameters();
 
-        var cacheExpiration = _options.UseCacheAutoTuning
-            ? _cacheDurationAutoTuning.GetValueOrDefault(cacheKey, _options.DefaultCacheLifetime)
-            : _options.DefaultCacheLifetime;
+        var cacheExpiration = cacheDurationAutoTuningStore.GetExpiration(cacheKey);
 
         // On force renewal, don't read from the cache, so we always get a new token.
         var disableDistributedCacheRead = parameters.ForceTokenRenewal
@@ -75,7 +69,8 @@ internal class ClientCredentialsTokenManager(
         {
             // This exception is thrown if there was a failure while retrieving an access token. We
             // don't want to cache this failure, so we throw an exception to bypass the cache action.
-            logger.WillNotCacheTokenResultWithError(LogLevel.Debug, clientName, ex.Failure.Error, ex.Failure.ErrorDescription);
+            logger.WillNotCacheTokenResultWithError(LogLevel.Debug, clientName, ex.Failure.Error,
+                ex.Failure.ErrorDescription);
             return ex.Failure;
         }
         catch (Exception ex) when (!ex.Data.Contains(ThrownInsideFactoryExceptionKey))
@@ -135,23 +130,14 @@ internal class ClientCredentialsTokenManager(
 
         // See if we need to record how long this access token is valid, to be used the next time
         // this access token is used.
-        if (_options.UseCacheAutoTuning
-            && token.Expiration != DateTimeOffset.MaxValue)
-        {
-            // Calculate how long this access token should be valid in the cache.
-            // Note, the expiration time was just calculated by adding time.GetUTcNow() to the token lifetime.
-            // so for now it's safe to subtract this time from the expiration time.
-            _cacheDurationAutoTuning[cacheKey] = token.Expiration
-                                                 - time.GetUtcNow()
-                                                 - TimeSpan.FromSeconds(_options.CacheLifetimeBuffer);
-
-            logger.CachingAccessToken(LogLevel.Debug, clientName, token.Expiration);
-        }
+        var cacheDuration = cacheDurationAutoTuningStore.SetExpiration(cacheKey, token.Expiration);
+        logger.CachingAccessToken(LogLevel.Debug, clientName, cacheDuration);
 
         return token;
     }
 
-    public async Task DeleteAccessTokenAsync(ClientCredentialsClientName clientName, TokenRequestParameters? parameters = null,
+    public async Task DeleteAccessTokenAsync(ClientCredentialsClientName clientName,
+        TokenRequestParameters? parameters = null,
         CT ct = default)
     {
         var cacheKey = cacheKeyGenerator.GenerateKey(clientName, parameters);
