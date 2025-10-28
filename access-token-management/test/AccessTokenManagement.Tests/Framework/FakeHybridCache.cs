@@ -13,20 +13,27 @@ public class FakeHybridCache : HybridCache
 
     public Action OnGetOrCreate = () => { };
 
-    public override async ValueTask<T> GetOrCreateAsync<TState, T>(string key, TState state, Func<TState, CancellationToken, ValueTask<T>> factory, HybridCacheEntryOptions? options = null,
+    public HybridCacheEntryOptions? LastOptions { get; private set; }
+
+    public override async ValueTask<T> GetOrCreateAsync<TState, T>(string key, TState state,
+        Func<TState, CancellationToken, ValueTask<T>> factory, HybridCacheEntryOptions? options = null,
         IEnumerable<string>? tags = null, CancellationToken cancellationToken = new())
     {
         CacheKey = key;
+        LastOptions = options;
         Interlocked.Increment(ref GetOrCreateCount);
         OnGetOrCreate();
         return await factory(state, cancellationToken);
     }
 
-    public override ValueTask SetAsync<T>(string key, T value, HybridCacheEntryOptions? options = null, IEnumerable<string>? tags = null,
+    public override ValueTask SetAsync<T>(string key, T value, HybridCacheEntryOptions? options = null,
+        IEnumerable<string>? tags = null,
         CancellationToken cancellationToken = new()) =>
         throw new NotImplementedException();
 
-    public override ValueTask RemoveAsync(string key, CancellationToken cancellationToken = new()) => throw new NotImplementedException();
+    public override ValueTask RemoveAsync(string key, CancellationToken cancellationToken = new()) =>
+        throw new NotImplementedException();
 
-    public override ValueTask RemoveByTagAsync(string tag, CancellationToken cancellationToken = new()) => throw new NotImplementedException();
+    public override ValueTask RemoveByTagAsync(string tag, CancellationToken cancellationToken = new()) =>
+        throw new NotImplementedException();
 }

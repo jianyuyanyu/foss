@@ -973,7 +973,7 @@ namespace Duende.AccessTokenManagement.Internal
         /// Logs "Caching access token for client: {ClientName}. Expiration: {Expiration}".
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")]
-        public static  void CachingAccessToken(this global::Microsoft.Extensions.Logging.ILogger logger, global::Microsoft.Extensions.Logging.LogLevel logLevel, global::Duende.AccessTokenManagement.ClientCredentialsClientName clientName, global::System.DateTimeOffset expiration)
+        public static  void CachingAccessToken(this global::Microsoft.Extensions.Logging.ILogger logger, global::Microsoft.Extensions.Logging.LogLevel logLevel, global::Duende.AccessTokenManagement.ClientCredentialsClientName clientName, global::System.TimeSpan cacheDuration)
         {
             if (!logger.IsEnabled(logLevel))
             {
@@ -985,7 +985,7 @@ namespace Duende.AccessTokenManagement.Internal
             _ = state.ReserveTagSpace(3);
             state.TagArray[2] = new("{OriginalFormat}", "Caching access token for client: {ClientName}. Expiration: {Expiration}");
             state.TagArray[1] = new("ClientName", clientName.ToString());
-            state.TagArray[0] = new("Expiration", expiration);
+            state.TagArray[0] = new("CacheDuration", cacheDuration);
 
             logger.Log(
                 logLevel,

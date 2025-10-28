@@ -540,4 +540,65 @@ public class ClientTokenManagementTests
             DPoPJsonWebKey = The.JsonWebKey
         });
     }
+
+    [Fact]
+    public async Task Cache_auto_tuning_should_persist_across_transient_manager_instances()
+    {
+        var tokenExpiry = (int)TimeSpan.FromDays(7).TotalSeconds;
+
+        var fakeCache = new FakeHybridCache();
+        _services.AddSingleton<HybridCache>(fakeCache);
+
+        _services.AddClientCredentialsTokenManagement(options =>
+        {
+            options.UseCacheAutoTuning = true;
+            options.DefaultCacheLifetime = TimeSpan.FromSeconds(30);
+            options.LocalCacheExpiration = TimeSpan.FromMinutes(10);
+            options.CacheLifetimeBuffer = 60;
+        })
+        .AddClient("test", client => Some.ClientCredentialsClient(client));
+
+        _mockHttp.Expect("/connect/token")
+            .Respond(_ => Some.TokenHttpResponse(Some.Token() with
+            {
+                expires_in = tokenExpiry
+            }));
+
+        _services.AddHttpClient(ClientCredentialsTokenManagementDefaults.BackChannelHttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(() => _mockHttp);
+
+        var services = _services.BuildServiceProvider();
+
+        // First request with first manager instance
+        var firstManager = services.GetRequiredService<IClientCredentialsTokenManager>();
+        var firstToken = await firstManager.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
+        _mockHttp.VerifyNoOutstandingExpectation();
+
+        firstToken.Expiration.ShouldBe(The.CurrentDateTime.Add(TimeSpan.FromSeconds(tokenExpiry)));
+
+        // Get the cache expiration used for the first request
+        var firstRequestExpiration = fakeCache.LastOptions?.Expiration;
+        // The first request doesn't know the token lifetime yet, so it should use DefaultCacheLifetime (30 seconds)
+        firstRequestExpiration.ShouldBe(TimeSpan.FromSeconds(30));
+
+        _mockHttp.Expect("/connect/token")
+            .Respond(_ => Some.TokenHttpResponse(Some.Token() with
+            {
+                expires_in = tokenExpiry
+            }));
+
+        var secondManager = services.GetRequiredService<IClientCredentialsTokenManager>();
+        var secondToken = await secondManager.GetAccessTokenAsync(ClientCredentialsClientName.Parse("test")).GetToken();
+        _mockHttp.VerifyNoOutstandingExpectation();
+
+        secondToken.Expiration.ShouldBe(The.CurrentDateTime.Add(TimeSpan.FromSeconds(tokenExpiry)));
+
+        // Get the cache expiration used for the second request
+        var secondRequestExpiration = fakeCache.LastOptions?.Expiration;
+
+        // Expect the lifetime to be auto-tuned based on the first token's lifetime minus the buffer
+        var expectedExpiration = TimeSpan.FromSeconds(tokenExpiry) - TimeSpan.FromSeconds(60);
+        secondRequestExpiration.ShouldBe(expectedExpiration,
+            "Second request should use the auto-tuned cache duration learned from the first request");
+    }
 }
