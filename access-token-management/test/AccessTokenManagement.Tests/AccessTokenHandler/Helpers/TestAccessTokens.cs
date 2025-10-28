@@ -15,7 +15,11 @@ public class TestAccessTokens(DPoPProofKey? dPoPJsonWebKey)
             IdentityToken = IdentityToken.Parse("identity_token"),
             AccessToken = AccessToken.Parse("access_token_1"),
             AccessTokenType = AccessTokenType.Parse("Bearer"),
-            Expiration = DateTimeOffset.UtcNow.AddMinutes(5),
+            /*
+             * Expiring the token allows us to exercise the Token Endpoint instead of relying on the token retrieved
+             * from the authentication service
+             */
+            Expiration = DateTimeOffset.UtcNow.AddSeconds(-1),
             RefreshToken = RefreshToken.Parse("refresh_token"),
             DPoPJsonWebKey = dPoPJsonWebKey
         };

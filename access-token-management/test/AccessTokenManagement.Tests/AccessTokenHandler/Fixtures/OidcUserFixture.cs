@@ -14,9 +14,7 @@ internal class OidcUserFixture : AccessTokenHandlingBaseFixture
 {
     public override async ValueTask InitializeAsync(DPoPProofKey? dPoPJsonWebKey)
     {
-        ApiEndpoint.DefaultRespondOkWithToken();
-        TokenEndpoint.DefaultRespondWithAccessToken();
-        Services.AddSingleton(new TestAccessTokens(The.JsonWebKey));
+        Services.AddSingleton(new TestAccessTokens(dPoPJsonWebKey));
         Services.AddSingleton<FakeAuthenticationService>();
         Services.AddSingleton<IAuthenticationService>(sp => sp.GetRequiredService<FakeAuthenticationService>());
 
@@ -28,31 +26,21 @@ internal class OidcUserFixture : AccessTokenHandlingBaseFixture
                 opt.Authority = TokenEndpoint.Uri.ToString();
                 opt.BackchannelHttpHandler = TokenEndpoint;
             });
-        Services.AddSingleton<IHttpContextAccessor>(sp =>
+        Services.AddSingleton<IHttpContextAccessor>(sp => new FakeHttpContextAccessor
         {
-            var httpContextAccessor = new FakeHttpContextAccessor
+            HttpContext = new DefaultHttpContext
             {
-                HttpContext = new DefaultHttpContext
-                {
-                    User = sp.GetRequiredService<FakeAuthenticationService>().Principal,
-                    RequestServices = sp
-                }
-            };
-            return httpContextAccessor;
+                User = sp.GetRequiredService<FakeAuthenticationService>().Principal,
+                RequestServices = sp
+            }
         });
 
-        Services.AddOpenIdConnectAccessTokenManagement(opt =>
-        {
-            opt.DPoPJsonWebKey = dPoPJsonWebKey;
-        });
+        Services.AddOpenIdConnectAccessTokenManagement(opt => opt.DPoPJsonWebKey = dPoPJsonWebKey);
 
-
-        Services.AddClientAccessTokenHttpClient("httpClient", new UserTokenRequestParameters())
-            .ConfigureHttpClient(c =>
-            {
-                c.BaseAddress = ApiEndpoint.Uri;
-            })
-            .ConfigurePrimaryHttpMessageHandler(() => ApiEndpoint);
+        var clientBuilder = Services.AddUserAccessTokenHttpClient("httpClient", new UserTokenRequestParameters(),
+            (Action<HttpClient>?)null);
+        clientBuilder.ConfigureHttpClient(c => { c.BaseAddress = ApiEndpoint.Uri; });
+        clientBuilder.ConfigurePrimaryHttpMessageHandler(() => ApiEndpoint);
 
         await TokenEndpoint.SetupDiscoveryDocuments();
     }

@@ -147,6 +147,27 @@ public class AccessTokenHandlerTests(ITestOutputHelper output)
         await fixture.HttpClient.GetAsync("/").CheckHttpStatusCode();
     }
 
+    [Theory]
+    [MemberData(nameof(AllFixtures))]
+    public async Task ForceTokenRenewal_should_bypass_cache_and_get_new_token(FixtureType type)
+    {
+        var fixture = await GetInitializedFixture(type);
+
+        await fixture.HttpClient.GetAsync("/").CheckHttpStatusCode();
+        fixture.ApiEndpoint.LastUsedAccessToken.ShouldBe("access_token_1");
+
+        await fixture.HttpClient.GetAsync("/").CheckHttpStatusCode();
+        fixture.ApiEndpoint.LastUsedAccessToken.ShouldBe("access_token_1");
+
+        var request = new HttpRequestMessage(HttpMethod.Get, "/");
+        request.SetForceRenewal(true);
+        await fixture.HttpClient.SendAsync(request).CheckHttpStatusCode();
+        fixture.ApiEndpoint.LastUsedAccessToken.ShouldBe("access_token_2");
+
+        await fixture.HttpClient.GetAsync("/").CheckHttpStatusCode();
+        fixture.ApiEndpoint.LastUsedAccessToken.ShouldBe("access_token_2");
+    }
+
     private DPoPProofKey BuildDPoPProofKey(string alg = "ES256")
     {
         var key = CryptoHelper.CreateECDsaSecurityKey();
