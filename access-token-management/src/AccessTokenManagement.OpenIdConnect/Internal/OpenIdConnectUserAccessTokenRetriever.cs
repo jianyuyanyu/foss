@@ -1,6 +1,8 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using Duende.AccessTokenManagement.DPoP;
+
 namespace Duende.AccessTokenManagement.OpenIdConnect.Internal;
 
 internal class OpenIdConnectUserAccessTokenRetriever(
@@ -20,7 +22,8 @@ internal class OpenIdConnectUserAccessTokenRetriever(
             ChallengeScheme = _parameters.ChallengeScheme,
             Scope = _parameters.Scope,
             Resource = _parameters.Resource,
-            Context = _parameters.Context
+            Context = _parameters.Context,
+            ForceTokenRenewal = request.GetForceRenewal()
         };
 
         var customizedParameters = customizer != null
