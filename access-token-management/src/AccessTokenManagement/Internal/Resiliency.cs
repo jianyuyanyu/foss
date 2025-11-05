@@ -21,7 +21,7 @@ internal static class Resiliency
     /// Basically, this retries http calls that return 401 Unauthorized.
     /// 
     /// When using DPOP, it will retry the call if the nonce is missing or if the nonce is invalid.
-    /// it will then also take then once from the response and put it on the request. 
+    /// It will then also take the nonce from the response and put it on the request.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="context"></param>
