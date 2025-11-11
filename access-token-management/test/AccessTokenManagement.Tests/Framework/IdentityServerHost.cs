@@ -39,6 +39,8 @@ public class IdentityServerHost : GenericHost
         new("urn:api2")
     ];
 
+    public List<Dictionary<string, string>> CapturedTokenRequests { get; } = [];
+
     private void ConfigureServices(IServiceCollection services)
     {
         services.AddRouting();
@@ -68,6 +70,20 @@ public class IdentityServerHost : GenericHost
 
     private void Configure(IApplicationBuilder app)
     {
+        app.Use(async (ctx, next) =>
+        {
+            if (ctx.Request.Path == "/connect/token" && ctx.Request.Method == "POST")
+            {
+                var form = await ctx.Request.ReadFormAsync();
+                var capturedData = form.ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.ToString());
+                CapturedTokenRequests.Add(capturedData);
+            }
+
+            await next();
+        });
+
         app.UseRouting();
 
         app.UseIdentityServer();

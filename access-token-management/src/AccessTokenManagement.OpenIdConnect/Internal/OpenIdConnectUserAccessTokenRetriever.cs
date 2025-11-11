@@ -23,6 +23,8 @@ internal class OpenIdConnectUserAccessTokenRetriever(
             Scope = _parameters.Scope,
             Resource = _parameters.Resource,
             Context = _parameters.Context,
+            Assertion = _parameters.Assertion,
+            Parameters = _parameters.Parameters,
             ForceTokenRenewal = request.GetForceRenewal()
         };
 
@@ -34,7 +36,10 @@ internal class OpenIdConnectUserAccessTokenRetriever(
         {
             Scope = customizedParameters.Scope,
             Resource = customizedParameters.Resource,
-            Context = customizedParameters.Context
+            Parameters = customizedParameters.Parameters,
+            Assertion = customizedParameters.Assertion,
+            Context = customizedParameters.Context,
+            ForceTokenRenewal = customizedParameters.ForceTokenRenewal
         };
 
         var user = await userAccessor.GetCurrentUserAsync(ct).ConfigureAwait(false);
