@@ -137,10 +137,8 @@ public static class ServiceCollectionExtensions
     /// <returns></returns>
     public static IHttpClientBuilder AddClientCredentialsTokenHandler(
         this IHttpClientBuilder httpClientBuilder,
-        ClientCredentialsClientName clientName) => AddClientCredentialsTokenHandler(
-        httpClientBuilder,
-        tokenRequestCustomizer: null,
-        clientName);
+        ClientCredentialsClientName clientName) =>
+        AddClientCredentialsTokenHandlerInternal(httpClientBuilder, tokenRequestCustomizerFactory: null, clientName);
 
     /// <summary>
     /// Adds the client access token handler to an HttpClient
@@ -151,17 +149,44 @@ public static class ServiceCollectionExtensions
     /// <returns></returns>
     public static IHttpClientBuilder AddClientCredentialsTokenHandler(
         this IHttpClientBuilder httpClientBuilder,
-        ITokenRequestCustomizer? tokenRequestCustomizer,
-        ClientCredentialsClientName clientName) => httpClientBuilder
-        .AddHttpMessageHandler(provider =>
-        {
-            var accessTokenManagementService = provider.GetRequiredService<IClientCredentialsTokenManager>();
-            var retriever =
-                new ClientCredentialsTokenRetriever(accessTokenManagementService, clientName, tokenRequestCustomizer);
-            var accessTokenHandler = provider.BuildAccessTokenRequestHandler(retriever);
+        ITokenRequestCustomizer tokenRequestCustomizer,
+        ClientCredentialsClientName clientName)
+    {
+        ArgumentNullException.ThrowIfNull(tokenRequestCustomizer);
+        return AddClientCredentialsTokenHandlerInternal(httpClientBuilder, _ => tokenRequestCustomizer, clientName);
+    }
 
-            return accessTokenHandler;
-        });
+    /// <summary>
+    /// Adds the client access token handler to an HttpClient
+    /// </summary>
+    /// <param name="httpClientBuilder"></param>
+    /// <param name="tokenRequestCustomizerFactory"></param>
+    /// <param name="clientName"></param>
+    /// <returns></returns>
+    public static IHttpClientBuilder AddClientCredentialsTokenHandler(
+        this IHttpClientBuilder httpClientBuilder,
+        Func<IServiceProvider, ITokenRequestCustomizer> tokenRequestCustomizerFactory,
+        ClientCredentialsClientName clientName)
+    {
+        ArgumentNullException.ThrowIfNull(tokenRequestCustomizerFactory);
+        return AddClientCredentialsTokenHandlerInternal(httpClientBuilder, tokenRequestCustomizerFactory, clientName);
+    }
+
+    private static IHttpClientBuilder AddClientCredentialsTokenHandlerInternal(
+        IHttpClientBuilder httpClientBuilder,
+        Func<IServiceProvider, ITokenRequestCustomizer>? tokenRequestCustomizerFactory,
+        ClientCredentialsClientName clientName) => httpClientBuilder
+            .AddHttpMessageHandler(provider =>
+            {
+                var accessTokenManagementService = provider.GetRequiredService<IClientCredentialsTokenManager>();
+                var tokenRequestCustomizer = tokenRequestCustomizerFactory?.Invoke(provider);
+                var retriever =
+                    new ClientCredentialsTokenRetriever(accessTokenManagementService, clientName,
+                        tokenRequestCustomizer);
+                var accessTokenHandler = provider.BuildAccessTokenRequestHandler(retriever);
+
+                return accessTokenHandler;
+            });
 
     internal static AccessTokenRequestHandler BuildAccessTokenRequestHandler(
         this IServiceProvider provider,

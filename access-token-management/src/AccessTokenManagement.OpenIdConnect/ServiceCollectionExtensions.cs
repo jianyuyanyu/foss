@@ -216,9 +216,9 @@ public static class ServiceCollectionExtensions
     /// <returns></returns>
     public static IHttpClientBuilder AddUserAccessTokenHandler(
         this IHttpClientBuilder httpClientBuilder,
-        UserTokenRequestParameters? parameters = null) => AddUserAccessTokenHandler(
+        UserTokenRequestParameters? parameters = null) => AddUserAccessTokenHandlerInternal(
         httpClientBuilder,
-        tokenRequestCustomizer: null,
+        tokenRequestCustomizerFactory: null,
         parameters);
 
     /// <summary>
@@ -230,12 +230,35 @@ public static class ServiceCollectionExtensions
     /// <returns></returns>
     public static IHttpClientBuilder AddUserAccessTokenHandler(
         this IHttpClientBuilder httpClientBuilder,
-        ITokenRequestCustomizer? tokenRequestCustomizer,
+        ITokenRequestCustomizer tokenRequestCustomizer,
         UserTokenRequestParameters? parameters = null) =>
+        AddUserAccessTokenHandlerInternal(httpClientBuilder, _ => tokenRequestCustomizer, parameters);
+
+    /// <summary>
+    /// Adds the user access token handler to an HttpClient
+    /// </summary>
+    /// <param name="httpClientBuilder"></param>
+    /// <param name="tokenRequestCustomizerFactory"></param>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
+    public static IHttpClientBuilder AddUserAccessTokenHandler(
+        this IHttpClientBuilder httpClientBuilder,
+        Func<IServiceProvider, ITokenRequestCustomizer> tokenRequestCustomizerFactory,
+        UserTokenRequestParameters? parameters = null)
+    {
+        ArgumentNullException.ThrowIfNull(tokenRequestCustomizerFactory);
+        return AddUserAccessTokenHandlerInternal(httpClientBuilder, tokenRequestCustomizerFactory, parameters);
+    }
+
+    private static IHttpClientBuilder AddUserAccessTokenHandlerInternal(
+        IHttpClientBuilder httpClientBuilder,
+        Func<IServiceProvider, ITokenRequestCustomizer>? tokenRequestCustomizerFactory,
+        UserTokenRequestParameters? parameters) =>
         httpClientBuilder.AddHttpMessageHandler(provider =>
         {
             var httpContextAccessor = provider.GetRequiredService<IUserAccessor>();
             var userTokenManagementService = provider.GetRequiredService<IUserTokenManager>();
+            var tokenRequestCustomizer = tokenRequestCustomizerFactory?.Invoke(provider);
 
             var tokenRetriever = new OpenIdConnectUserAccessTokenRetriever(
                 httpContextAccessor,
@@ -244,8 +267,6 @@ public static class ServiceCollectionExtensions
                 tokenRequestCustomizer);
 
             return provider.BuildAccessTokenRequestHandler(tokenRetriever);
-
-#pragma warning restore CS0618 // Type or member is obsolete
         });
 
     /// <summary>
@@ -257,9 +278,9 @@ public static class ServiceCollectionExtensions
     public static IHttpClientBuilder AddClientAccessTokenHandler(
         this IHttpClientBuilder httpClientBuilder,
         UserTokenRequestParameters? parameters = null) =>
-        AddClientAccessTokenHandler(
+        AddClientAccessTokenHandlerInternal(
             httpClientBuilder,
-            tokenRequestCustomizer: null,
+            tokenRequestCustomizerFactory: null,
             parameters);
 
     /// <summary>
@@ -271,13 +292,36 @@ public static class ServiceCollectionExtensions
     /// <returns></returns>
     public static IHttpClientBuilder AddClientAccessTokenHandler(
         this IHttpClientBuilder httpClientBuilder,
-        ITokenRequestCustomizer? tokenRequestCustomizer,
+        ITokenRequestCustomizer tokenRequestCustomizer,
         UserTokenRequestParameters? parameters = null) =>
+        AddClientAccessTokenHandlerInternal(httpClientBuilder, _ => tokenRequestCustomizer, parameters);
+
+    /// <summary>
+    /// Adds the client access token handler to an HttpClient
+    /// </summary>
+    /// <param name="httpClientBuilder"></param>
+    /// <param name="tokenRequestCustomizerFactory"></param>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
+    public static IHttpClientBuilder AddClientAccessTokenHandler(
+        this IHttpClientBuilder httpClientBuilder,
+        Func<IServiceProvider, ITokenRequestCustomizer> tokenRequestCustomizerFactory,
+        UserTokenRequestParameters? parameters = null)
+    {
+        ArgumentNullException.ThrowIfNull(tokenRequestCustomizerFactory);
+        return AddClientAccessTokenHandlerInternal(httpClientBuilder, tokenRequestCustomizerFactory, parameters);
+    }
+
+    private static IHttpClientBuilder AddClientAccessTokenHandlerInternal(
+        IHttpClientBuilder httpClientBuilder,
+        Func<IServiceProvider, ITokenRequestCustomizer>? tokenRequestCustomizerFactory,
+        UserTokenRequestParameters? parameters) =>
         httpClientBuilder.AddHttpMessageHandler(provider =>
         {
             var tokenManager = provider.GetRequiredService<IClientCredentialsTokenManager>();
             var schemeProvider = provider.GetRequiredService<IAuthenticationSchemeProvider>();
             var options = provider.GetRequiredService<IOptions<UserTokenManagementOptions>>();
+            var tokenRequestCustomizer = tokenRequestCustomizerFactory?.Invoke(provider);
 
             var tokenRetriever = new OpenIdConnectClientAccessTokenRetriever(tokenManager,
                 options,
@@ -287,5 +331,4 @@ public static class ServiceCollectionExtensions
 
             return provider.BuildAccessTokenRequestHandler(tokenRetriever);
         });
-#pragma warning restore CS0618 // Type or member is obsolete
 }
