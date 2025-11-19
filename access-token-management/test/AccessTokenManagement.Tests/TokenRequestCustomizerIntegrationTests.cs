@@ -188,6 +188,213 @@ public class TokenRequestCustomizerIntegrationTests(ITestOutputHelper output) : 
         refreshRequest["client_assertion"].ShouldBe(assertion.Value);
     }
 
+    [Fact]
+    public async Task TokenRequestCustomizerFactory_is_used_during_client_credentials_flow()
+    {
+        var tokenRequestCustomizer = new TestTokenRequestCustomizer(new TokenRequestParameters
+        {
+            Scope = Scope.Parse("scope2")
+        });
+        Func<IServiceProvider, ITokenRequestCustomizer> tokenRequestCustomizerFactory = serviceProvider =>
+            serviceProvider.GetRequiredService<ITokenRequestCustomizer>();
+
+        AppHost.OnConfigureServices += services =>
+        {
+            services.AddSingleton<ITokenRequestCustomizer>(tokenRequestCustomizer);
+
+            services.AddClientCredentialsTokenManagement()
+                .AddClient("pure_client_credentials", client =>
+                {
+                    client.ClientId = ClientId.Parse("client_credentials_client");
+                    client.ClientSecret = ClientSecret.Parse("secret");
+                    client.TokenEndpoint = new Uri("https://identityserver/connect/token");
+                    client.Scope = Scope.Parse("scope1");
+                    client.HttpClient = IdentityServerHost.HttpClient;
+                });
+
+            services.AddHttpClient("clientCredentialsApi")
+                .ConfigureHttpClient(client => client.BaseAddress = new Uri(ApiHost.Url()))
+                .ConfigurePrimaryHttpMessageHandler(() => ApiHost.HttpMessageHandler)
+                .AddClientCredentialsTokenHandler(
+                    tokenRequestCustomizerFactory,
+                    ClientCredentialsClientName.Parse("pure_client_credentials"));
+        };
+
+        AppHost.OnConfigure += app =>
+        {
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/exercise_client_credentials", async (IHttpClientFactory factory, HttpContext _) =>
+                {
+                    var httpClient = factory.CreateClient("clientCredentialsApi");
+                    var response = await httpClient.GetAsync("test");
+                    return await response.Content.ReadFromJsonAsync<TokenEchoResponse>();
+                });
+            });
+        };
+        await InitializeAsync();
+
+        var response = await AppHost.BrowserClient.GetAsync(AppHost.Url("/exercise_client_credentials"));
+        response.EnsureSuccessStatusCode();
+        var token = ParseTokenFromResponse(response);
+        token.Claims.ShouldContain(c => c.Type == "scope" && c.Value.Contains("scope2"));
+    }
+
+    [Fact]
+    public async Task TokenRequestCustomizerFactory_is_used_during_openid_connect_user_access_token_flow()
+    {
+        var tokenRequestCustomizer = new TestTokenRequestCustomizer(new TokenRequestParameters
+        {
+            Scope = Scope.Parse("scope2")
+        });
+        Func<IServiceProvider, ITokenRequestCustomizer> tokenRequestCustomizerFactory = serviceProvider =>
+            serviceProvider.GetRequiredService<ITokenRequestCustomizer>();
+        AppHost.OnConfigureServices += services =>
+        {
+            services.AddSingleton<ITokenRequestCustomizer>(tokenRequestCustomizer);
+
+            services.AddHttpClient("callApi")
+                .ConfigureHttpClient(client => client.BaseAddress = new Uri(ApiHost.Url()))
+                .ConfigurePrimaryHttpMessageHandler(() => ApiHost.HttpMessageHandler)
+                .AddUserAccessTokenHandler(
+                    tokenRequestCustomizerFactory,
+                    new UserTokenRequestParameters
+                    {
+                        Scope = Scope.Parse("scope1")
+                    });
+        };
+
+        await InitializeAsync();
+
+        await AppHost.LoginAsync("alice");
+
+        var response = await AppHost.BrowserClient.GetAsync(AppHost.Url("/call_api"));
+        response.EnsureSuccessStatusCode();
+        var token = ParseTokenFromResponse(response);
+        token.Claims.ShouldContain(c => c.Type == "scope" && c.Value.Contains("scope2"));
+    }
+
+    [Fact]
+    public async Task TokenRequestCustomizerFactory_is_used_during_openid_connect_client_access_token_flow()
+    {
+        var tokenRequestCustomizer = new TestTokenRequestCustomizer(new TokenRequestParameters
+        {
+            Scope = Scope.Parse("scope2")
+        });
+        Func<IServiceProvider, ITokenRequestCustomizer> tokenRequestCustomizerFactory = serviceProvider =>
+            serviceProvider.GetRequiredService<ITokenRequestCustomizer>();
+        AppHost.OnConfigureServices += services =>
+        {
+            services.AddSingleton<ITokenRequestCustomizer>(tokenRequestCustomizer);
+
+            services.AddHttpClient("oidcClientApi")
+                .ConfigureHttpClient(client => client.BaseAddress = new Uri(ApiHost.Url()))
+                .ConfigurePrimaryHttpMessageHandler(() => ApiHost.HttpMessageHandler)
+                .AddClientAccessTokenHandler(
+                    tokenRequestCustomizerFactory,
+                    new UserTokenRequestParameters
+                    {
+                        Scope = Scope.Parse("scope1")
+                    });
+        };
+
+        AppHost.OnConfigure += app =>
+        {
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/exercise_oidc_client_token", async (IHttpClientFactory factory, HttpContext _) =>
+                {
+                    var httpClient = factory.CreateClient("oidcClientApi");
+                    var response = await httpClient.GetAsync("test");
+                    return await response.Content.ReadFromJsonAsync<TokenEchoResponse>();
+                });
+            });
+        };
+        await InitializeAsync();
+
+        var response = await AppHost.BrowserClient.GetAsync(AppHost.Url("/exercise_oidc_client_token"));
+        response.EnsureSuccessStatusCode();
+        var token = ParseTokenFromResponse(response);
+        token.Claims.ShouldContain(c => c.Type == "scope" && c.Value.Contains("scope2"));
+    }
+
+    [Fact]
+    public void AddClientCredentialsTokenHandler_throws_when_factory_is_null()
+    {
+        var services = new ServiceCollection();
+        var builder = services.AddHttpClient("test");
+
+        Func<IServiceProvider, ITokenRequestCustomizer> nullFactory = null!;
+
+        Should.Throw<ArgumentNullException>(() =>
+                builder.AddClientCredentialsTokenHandler(
+                    nullFactory,
+                    ClientCredentialsClientName.Parse("test")))
+            .ParamName.ShouldBe("tokenRequestCustomizerFactory");
+    }
+
+    [Fact]
+    public void AddOpenIdConnectUserAccessTokenHandler_throws_when_factory_is_null()
+    {
+        var services = new ServiceCollection();
+        var builder = services.AddHttpClient("test");
+
+        Func<IServiceProvider, ITokenRequestCustomizer> nullFactory = null!;
+
+        Should.Throw<ArgumentNullException>(() =>
+                builder.AddUserAccessTokenHandler(
+                    nullFactory,
+                    new UserTokenRequestParameters
+                    {
+                        Scope = Scope.Parse("scope1")
+                    }))
+            .ParamName.ShouldBe("tokenRequestCustomizerFactory");
+    }
+
+    [Fact]
+    public void AddOpenIdConnectClientAccessTokenHandler_throws_when_factory_is_null()
+    {
+        var services = new ServiceCollection();
+        var builder = services.AddHttpClient("test");
+
+        Func<IServiceProvider, ITokenRequestCustomizer> nullFactory = null!;
+
+        Should.Throw<ArgumentNullException>(() =>
+                builder.AddClientAccessTokenHandler(
+                    nullFactory,
+                    new UserTokenRequestParameters
+                    {
+                        Scope = Scope.Parse("scope1")
+                    }))
+            .ParamName.ShouldBe("tokenRequestCustomizerFactory");
+    }
+
+    [Fact]
+    public void AddUserAccessTokenHandler_throws_when_factory_is_null()
+    {
+        var services = new ServiceCollection();
+        var builder = services.AddHttpClient("test");
+
+        Func<IServiceProvider, ITokenRequestCustomizer> nullFactory = null!;
+
+        Should.Throw<ArgumentNullException>(() =>
+                builder.AddUserAccessTokenHandler(nullFactory))
+            .ParamName.ShouldBe("tokenRequestCustomizerFactory");
+    }
+
+    [Fact]
+    public void AddClientAccessTokenHandler_throws_when_factory_is_null()
+    {
+        var services = new ServiceCollection();
+        var builder = services.AddHttpClient("test");
+
+        Func<IServiceProvider, ITokenRequestCustomizer> nullFactory = null!;
+
+        Should.Throw<ArgumentNullException>(() =>
+                builder.AddClientAccessTokenHandler(nullFactory))
+            .ParamName.ShouldBe("tokenRequestCustomizerFactory");
+    }
+
     private static JwtSecurityToken ParseTokenFromResponse(HttpResponseMessage response)
     {
         var result = response.Content.ReadAsStringAsync().Result;
