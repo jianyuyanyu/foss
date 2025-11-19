@@ -258,7 +258,8 @@ public static class ServiceCollectionExtensions
         {
             var httpContextAccessor = provider.GetRequiredService<IUserAccessor>();
             var userTokenManagementService = provider.GetRequiredService<IUserTokenManager>();
-            var tokenRequestCustomizer = tokenRequestCustomizerFactory?.Invoke(provider);
+            var tokenRequestCustomizer = tokenRequestCustomizerFactory?.Invoke(provider) ??
+                                         provider.GetService<ITokenRequestCustomizer>();
 
             var tokenRetriever = new OpenIdConnectUserAccessTokenRetriever(
                 httpContextAccessor,
@@ -321,7 +322,8 @@ public static class ServiceCollectionExtensions
             var tokenManager = provider.GetRequiredService<IClientCredentialsTokenManager>();
             var schemeProvider = provider.GetRequiredService<IAuthenticationSchemeProvider>();
             var options = provider.GetRequiredService<IOptions<UserTokenManagementOptions>>();
-            var tokenRequestCustomizer = tokenRequestCustomizerFactory?.Invoke(provider);
+            var tokenRequestCustomizer = tokenRequestCustomizerFactory?.Invoke(provider) ??
+                                         provider.GetService<ITokenRequestCustomizer>();
 
             var tokenRetriever = new OpenIdConnectClientAccessTokenRetriever(tokenManager,
                 options,

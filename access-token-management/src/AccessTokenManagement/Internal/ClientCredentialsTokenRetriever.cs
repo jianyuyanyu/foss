@@ -5,7 +5,6 @@ using Duende.AccessTokenManagement.DPoP;
 
 namespace Duende.AccessTokenManagement.Internal;
 
-
 /// <summary>
 /// An <see cref="AccessTokenRequestHandler.ITokenRetriever" /> implementation that retrieves a token using the client credentials flow.
 /// </summary>
@@ -24,7 +23,7 @@ internal class ClientCredentialsTokenRetriever(
         };
 
         var parameters = customizer != null
-            ? await customizer.Customize(request, baseParameters, ct)
+            ? await customizer.Customize(request.ToHttpRequestContext(), baseParameters, ct)
             : baseParameters;
 
         var getTokenResult = await clientCredentialsTokenManager.GetAccessTokenAsync(clientName, parameters, ct);

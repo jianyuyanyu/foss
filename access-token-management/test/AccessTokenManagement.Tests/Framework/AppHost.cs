@@ -165,10 +165,10 @@ public class AppHost : GenericHost
                 await context.Response.WriteAsJsonAsync(getResult.FailedResult);
             });
 
-            endpoints.MapGet("/call_api", async (IHttpClientFactory factory, HttpContext _) =>
+            endpoints.MapGet("/call_api", async (IHttpClientFactory factory, HttpContext context) =>
             {
                 var http = factory.CreateClient("callApi");
-                var response = await http.GetAsync("test");
+                var response = await http.GetAsync("test" + context.Request.QueryString);
                 return await response.Content.ReadFromJsonAsync<TokenEchoResponse>();
             });
 

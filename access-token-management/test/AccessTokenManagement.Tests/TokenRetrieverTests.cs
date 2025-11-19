@@ -168,7 +168,7 @@ public class TokenRetrieverTests
 
     private class TokenRequestCustomizer(TokenRequestParameters tokenParameters) : ITokenRequestCustomizer
     {
-        public Task<TokenRequestParameters> Customize(HttpRequestMessage httpRequest,
+        public Task<TokenRequestParameters> Customize(HttpRequestContext httpRequest,
             TokenRequestParameters baseParameters,
             CancellationToken cancellationToken = default) => Task.FromResult(tokenParameters);
     }
