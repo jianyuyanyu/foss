@@ -176,17 +176,18 @@ public static class ServiceCollectionExtensions
         IHttpClientBuilder httpClientBuilder,
         Func<IServiceProvider, ITokenRequestCustomizer>? tokenRequestCustomizerFactory,
         ClientCredentialsClientName clientName) => httpClientBuilder
-            .AddHttpMessageHandler(provider =>
-            {
-                var accessTokenManagementService = provider.GetRequiredService<IClientCredentialsTokenManager>();
-                var tokenRequestCustomizer = tokenRequestCustomizerFactory?.Invoke(provider);
-                var retriever =
-                    new ClientCredentialsTokenRetriever(accessTokenManagementService, clientName,
-                        tokenRequestCustomizer);
-                var accessTokenHandler = provider.BuildAccessTokenRequestHandler(retriever);
+        .AddHttpMessageHandler(provider =>
+        {
+            var accessTokenManagementService = provider.GetRequiredService<IClientCredentialsTokenManager>();
+            var tokenRequestCustomizer = tokenRequestCustomizerFactory?.Invoke(provider) ??
+                                         provider.GetService<ITokenRequestCustomizer>();
+            var retriever =
+                new ClientCredentialsTokenRetriever(accessTokenManagementService, clientName,
+                    tokenRequestCustomizer);
+            var accessTokenHandler = provider.BuildAccessTokenRequestHandler(retriever);
 
-                return accessTokenHandler;
-            });
+            return accessTokenHandler;
+        });
 
     internal static AccessTokenRequestHandler BuildAccessTokenRequestHandler(
         this IServiceProvider provider,

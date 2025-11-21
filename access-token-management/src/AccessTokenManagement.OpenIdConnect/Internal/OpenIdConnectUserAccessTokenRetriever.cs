@@ -29,7 +29,7 @@ internal class OpenIdConnectUserAccessTokenRetriever(
         };
 
         var customizedParameters = customizer != null
-            ? await customizer.Customize(request, baseParameters, ct)
+            ? await customizer.Customize(request.ToHttpRequestContext(), baseParameters, ct)
             : baseParameters;
 
         var parameters = baseParameters with

@@ -135,6 +135,12 @@
         public ForceTokenRenewal(bool Value) { }
         public bool Value { get; init; }
     }
+    public struct HttpRequestContext : System.IEquatable<Duende.AccessTokenManagement.HttpRequestContext>
+    {
+        public required System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, System.Collections.Generic.IEnumerable<string>>> Headers { get; init; }
+        public required string Method { get; init; }
+        public required System.Uri? RequestUri { get; init; }
+    }
     public static class HybridCacheConstants
     {
         public const string CacheTag = "Duende.AccessTokenManagement";
@@ -158,7 +164,7 @@
     }
     public interface ITokenRequestCustomizer
     {
-        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenRequestParameters> Customize(System.Net.Http.HttpRequestMessage httpRequest, Duende.AccessTokenManagement.TokenRequestParameters baseParameters, System.Threading.CancellationToken cancellationToken = default);
+        System.Threading.Tasks.Task<Duende.AccessTokenManagement.TokenRequestParameters> Customize(Duende.AccessTokenManagement.HttpRequestContext httpRequest, Duende.AccessTokenManagement.TokenRequestParameters baseParameters, System.Threading.CancellationToken cancellationToken = default);
     }
     [System.Text.Json.Serialization.JsonConverter(typeof(Duende.AccessTokenManagement.Internal.StringValueJsonConverter<Duende.AccessTokenManagement.IdentityToken>))]
     public readonly struct IdentityToken : System.IEquatable<Duende.AccessTokenManagement.IdentityToken>

@@ -16,7 +16,7 @@ public interface ITokenRequestCustomizer
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Customized token request parameters</returns>
     Task<TokenRequestParameters> Customize(
-        HttpRequestMessage httpRequest,
+        HttpRequestContext httpRequest,
         TokenRequestParameters baseParameters,
         CancellationToken cancellationToken = default);
 }

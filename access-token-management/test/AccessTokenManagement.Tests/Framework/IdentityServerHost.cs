@@ -40,6 +40,7 @@ public class IdentityServerHost : GenericHost
     ];
 
     public List<Dictionary<string, string>> CapturedTokenRequests { get; } = [];
+    public List<Dictionary<string, string>> CapturedRevocationRequests { get; } = [];
 
     private void ConfigureServices(IServiceCollection services)
     {
@@ -79,6 +80,14 @@ public class IdentityServerHost : GenericHost
                     kvp => kvp.Key,
                     kvp => kvp.Value.ToString());
                 CapturedTokenRequests.Add(capturedData);
+            }
+            else if (ctx.Request.Path == "/connect/revocation" && ctx.Request.Method == "POST")
+            {
+                var form = await ctx.Request.ReadFormAsync();
+                var capturedData = form.ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.ToString());
+                CapturedRevocationRequests.Add(capturedData);
             }
 
             await next();

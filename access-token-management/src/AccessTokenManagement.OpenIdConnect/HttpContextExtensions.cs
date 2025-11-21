@@ -28,8 +28,9 @@ public static class HttpContextExtensions
         CT ct = default)
     {
         var service = httpContext.RequestServices.GetRequiredService<IUserTokenManager>();
+        var requestParameters = await ApplyTokenRequestCustomizationAsync(httpContext, parameters, ct);
 
-        return await service.GetAccessTokenAsync(httpContext.User, parameters, ct).ConfigureAwait(false);
+        return await service.GetAccessTokenAsync(httpContext.User, requestParameters, ct).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -45,8 +46,9 @@ public static class HttpContextExtensions
         CT ct = default)
     {
         var service = httpContext.RequestServices.GetRequiredService<IUserTokenManager>();
+        var requestParameters = await ApplyTokenRequestCustomizationAsync(httpContext, parameters, ct);
 
-        await service.RevokeRefreshTokenAsync(httpContext.User, parameters, ct).ConfigureAwait(false);
+        await service.RevokeRefreshTokenAsync(httpContext.User, requestParameters, ct).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -72,20 +74,49 @@ public static class HttpContextExtensions
             var defaultScheme = await schemes.GetDefaultChallengeSchemeAsync().ConfigureAwait(false);
             if (defaultScheme == null)
             {
-                throw new InvalidOperationException("Cannot retrieve client access token. No scheme was provided and default challenge scheme was not set.");
+                throw new InvalidOperationException(
+                    "Cannot retrieve client access token. No scheme was provided and default challenge scheme was not set.");
             }
 
             schemeName = Scheme.Parse(defaultScheme.Name);
         }
 
+        var requestParameters = await ApplyTokenRequestCustomizationAsync(httpContext, parameters, ct);
+
         return await service.GetAccessTokenAsync(
             schemeName.Value.ToClientName(),
-            parameters,
+            requestParameters,
             ct).ConfigureAwait(false);
     }
 
+    private static async Task<UserTokenRequestParameters> ApplyTokenRequestCustomizationAsync(
+        HttpContext httpContext,
+        UserTokenRequestParameters? parameters,
+        CT ct)
+    {
+        var baseParameters = parameters ?? new UserTokenRequestParameters();
+        var tokenRequestCustomizer = httpContext.RequestServices.GetService<ITokenRequestCustomizer>();
+
+        var customizedParameters = tokenRequestCustomizer != null
+            ? await tokenRequestCustomizer.Customize(httpContext.Request.ToHttpRequestContext(), baseParameters, ct)
+            : baseParameters;
+
+        return baseParameters with
+        {
+            Scope = customizedParameters.Scope,
+            Resource = customizedParameters.Resource,
+            Parameters = customizedParameters.Parameters,
+            Assertion = customizedParameters.Assertion,
+            Context = customizedParameters.Context,
+            ForceTokenRenewal = customizedParameters.ForceTokenRenewal
+        };
+    }
+
     const string AuthenticationPropertiesDPoPKey = ".Token.dpop_proof_key";
-    internal static void SetProofKey(this AuthenticationProperties properties, DPoPProofKey dpopProofKey) => properties.Items[AuthenticationPropertiesDPoPKey] = dpopProofKey.ToString();
+
+    internal static void SetProofKey(this AuthenticationProperties properties, DPoPProofKey dpopProofKey) =>
+        properties.Items[AuthenticationPropertiesDPoPKey] = dpopProofKey.ToString();
+
     internal static DPoPProofKey? GetProofKey(this AuthenticationProperties properties)
     {
         if (properties.Items.TryGetValue(AuthenticationPropertiesDPoPKey, out var key))
@@ -97,17 +128,22 @@ public static class HttpContextExtensions
 
             return DPoPProofKey.Parse(key);
         }
+
         return null;
     }
 
     const string HttpContextDPoPKey = "dpop_proof_key";
-    internal static void SetCodeExchangeDPoPKey(this HttpContext context, DPoPProofKey dpopProofKey) => context.Items[HttpContextDPoPKey] = dpopProofKey;
+
+    internal static void SetCodeExchangeDPoPKey(this HttpContext context, DPoPProofKey dpopProofKey) =>
+        context.Items[HttpContextDPoPKey] = dpopProofKey;
+
     internal static DPoPProofKey? GetCodeExchangeDPoPKey(this HttpContext context)
     {
         if (context.Items.TryGetValue(HttpContextDPoPKey, out var item))
         {
             return item as DPoPProofKey?;
         }
+
         return null;
     }
 }
