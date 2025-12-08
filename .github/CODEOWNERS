@@ -1,6 +1,0 @@
-/*.* @DuendeSoftware/product-owners
-/LICENSE @DuendeSoftware/product-owners
-/access-token-management/ @DuendeSoftware/team-bff
-/identity-model/ @DuendeSoftware/team-is
-/identity-model-oidc-client/ @DuendeSoftware/team-is
-/identity-model-introspection/ @DuendeSoftware/team-is
