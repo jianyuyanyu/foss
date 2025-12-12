@@ -46,7 +46,11 @@ public class ClientAssertionService : IClientAssertionService
         var descriptor = new SecurityTokenDescriptor
         {
             Issuer = config.ClientId.ToString(),
-            Audience = config.TokenEndpoint.GetLeftPart(UriPartial.Authority),
+
+            // Don't use the TokenEndpoint here. Use the Authority as the audience. 
+            // You may expose yourself to a vulnerability, as described in the document below:
+            // https://openid.net/wp-content/uploads/2025/01/OIDF-Responsible-Disclosure-Notice-on-Security-Vulnerability-for-private_key_jwt.pdf
+            Audience = "https://demo.duendesoftware.com",
             Expires = DateTime.UtcNow.AddMinutes(1),
             SigningCredentials = Credential,
 
@@ -87,7 +91,11 @@ public class ClientAssertionService : IClientAssertionService
         var descriptor = new SecurityTokenDescriptor
         {
             Issuer = config.ClientId.ToString(),
-            Audience = config.TokenEndpoint.GetLeftPart(UriPartial.Authority),
+
+            // Don't use the TokenEndpoint here. Use the Authority as the audience. 
+            // You may expose yourself to a vulnerability, as described in the document below:
+            // https://openid.net/wp-content/uploads/2025/01/OIDF-Responsible-Disclosure-Notice-on-Security-Vulnerability-for-private_key_jwt.pdf
+            Audience = "https://demo.duendesoftware.com",
             Expires = DateTime.UtcNow.AddMinutes(1),
             SigningCredentials = Credential,
 

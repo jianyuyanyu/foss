@@ -40,7 +40,7 @@ public class ClientAssertionService(IOptionsMonitor<ClientCredentialsClient> opt
             var descriptor = new SecurityTokenDescriptor
             {
                 Issuer = options1.ClientId?.ToString(),
-                Audience = options1.TokenEndpoint?.ToString(),
+                Audience = "https://demo.duendesoftware.com",
                 Expires = DateTime.UtcNow.AddMinutes(1),
                 SigningCredentials = Credential,
 
