@@ -1,3 +1,12 @@
-*.verified.txt text eol=lf working-tree-encoding=UTF-8
-*.verified.xml text eol=lf working-tree-encoding=UTF-8
-*.verified.json text eol=lf working-tree-encoding=UTF-8
+# Set C# as the primary language
+*.cs linguist-language=C#
+*.cs linguist-detectable=true
+
+# Common files to exclude from language statistics
+*.js linguist-vendored=true
+*.css linguist-vendored=true
+*.html linguist-vendored=true
+*.json linguist-vendored=true
+
+# Line endings - enforce LF for all text files
+* text=auto eol=lf
