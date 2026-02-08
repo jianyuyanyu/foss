@@ -41,7 +41,7 @@ public class UserTokenManagementWithDPoPTests(ITestOutputHelper output)
         // valid. Ideally we would verify that we actually retried, but in this test we aren't mocking
         // the http client so there isn't an obvious way to do that. However, the next test 
         // (dpop_nonce_is_respected_during_code_exchange) does exactly that.
-        Thread.Sleep(2000);
+        await Task.Delay(2000, _ct);
 
         // This API call should trigger a refresh, and that refresh request must use a nonce from the server (because the client is configured that way)
         var response = await AppHost.BrowserClient.GetAsync(AppHost.Url("/user_token"), _ct);

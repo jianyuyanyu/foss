@@ -205,7 +205,7 @@ public class Introspection
         request.ShouldContainKeyAndValue("client_assertion_type", "testType");
         request.ShouldContainKeyAndValue("client_assertion", assertion1);
 
-        await Task.Delay(20); // wait for cache to expire
+        await Task.Delay(20, _ct); // wait for cache to expire
 
         result = await client.GetAsync("http://test", _ct);
         result.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -559,7 +559,7 @@ public class Introspection
         result.StatusCode.ShouldBe(HttpStatusCode.OK);
         introspectionRequestsMade.ShouldBe(1);
 
-        await Task.Delay(500); // wait for token to expire
+        await Task.Delay(500, _ct); // wait for token to expire
 
         result = await client.GetAsync("http://test", _ct);
         result.StatusCode.ShouldBe(HttpStatusCode.OK);
