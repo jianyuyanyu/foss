@@ -184,13 +184,13 @@ void GenerateReleaseWorkflow(Component component)
 
     tagJob.Step()
         .Name("Git Config")
-        .Run(@"git config --global user.email ""github-bot@duendesoftware.com""
+        .RunScript(@"git config --global user.email ""github-bot@duendesoftware.com""
 git config --global user.name ""Duende Software GitHub Bot""");
 
     tagJob.Step()
         .Name("Remove previous git tag")
         .If("github.event.inputs['remove-tag-if-exists'] == 'true'")
-        .Run($@"if git rev-parse {component.TagPrefix}-{contexts.Event.Input.Version} >/dev/null 2>&1; then
+        .RunScript($@"if git rev-parse {component.TagPrefix}-{contexts.Event.Input.Version} >/dev/null 2>&1; then
   git tag -d {component.TagPrefix}-{contexts.Event.Input.Version}
   git push --delete origin {component.TagPrefix}-{contexts.Event.Input.Version}
 else
@@ -200,7 +200,7 @@ fi");
 
     tagJob.Step()
         .Name("Git tag")
-        .Run($@"git tag -a {component.TagPrefix}-{contexts.Event.Input.Version} -m ""Release v{contexts.Event.Input.Version}""
+        .RunScript($@"git tag -a {component.TagPrefix}-{contexts.Event.Input.Version} -m ""Release v{contexts.Event.Input.Version}""
 git push origin {component.TagPrefix}-{contexts.Event.Input.Version}");
 
     foreach (var project in component.Projects)
@@ -293,6 +293,14 @@ record Component(string Name, string[] Projects, string[] Tests, string TagPrefi
 
 public static class StepExtensions
 {
+    /// <summary>
+    /// Normalizes line endings in run scripts so the YAML library correctly detects multi-line
+    /// strings and emits literal block scalar (|-) instead of folded (>-).
+    /// This ensures shell scripts work correctly across Windows and Linux runners.
+    /// </summary>
+    public static Step RunScript(this Step step, string script)
+        => step.Run(script.ReplaceLineEndings());
+
     public static void EnvDefaults(this Workflow workflow)
         => workflow.Env(
             ("DOTNET_NOLOGO", "true"),
@@ -409,7 +417,7 @@ public static class StepExtensions
         {
             step = step.IfGithubEventIsPush();
         }
-        step.Run($"""
+        step.RunScript($"""
               for file in artifacts/*.nupkg; do
                  dotnet NuGetKeyVaultSignTool sign "$file" {flags}
               done
