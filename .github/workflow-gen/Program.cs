@@ -437,12 +437,12 @@ public static class StepExtensions
     public static Step StepVerifyFormatting(this Job job)
         => job.Step()
             .Name("Verify Formatting")
-            .Run("dotnet format ../ --verify-no-changes --no-restore");
+            .Run("dotnet format *.slnf --verify-no-changes --no-restore");
 
     public static Step StepRestore(this Job job)
         => job.Step()
             .Name("Restore")
-            .Run("dotnet restore ../");
+            .Run("dotnet restore *.slnf");
 
     public static void StepUploadArtifacts(this Job job, string componentName, bool uploadAlways = false)
     {
