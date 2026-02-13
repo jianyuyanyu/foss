@@ -1,0 +1,20 @@
+{
+  "solution": {
+    "path": "..\\foss.slnx",
+    "projects": [
+      "access-token-management\\src\\AccessTokenManagement\\AccessTokenManagement.csproj",
+      "access-token-management\\src\\AccessTokenManagement.OpenIdConnect\\AccessTokenManagement.OpenIdConnect.csproj",
+      "access-token-management\\test\\AccessTokenManagement.Tests\\AccessTokenManagement.Tests.csproj",
+      "access-token-management\\samples\\BlazorServer\\BlazorServer.csproj",
+      "access-token-management\\samples\\Web\\Web.csproj",
+      "access-token-management\\samples\\WebJarJwt\\WebJarJwt.csproj",
+      "access-token-management\\samples\\Worker\\Worker.csproj",
+      "access-token-management\\samples\\WorkerDI\\WorkerDI.csproj",
+      "access-token-management\\samples\\WorkerWithFusionCache\\WorkerWithFusionCache.csproj",
+      "access-token-management\\perf\\Perf.DevServer\\Perf.DevServer.csproj",
+      "access-token-management\\perf\\Perf.DevServer.ServiceDefaults\\Perf.DevServer.ServiceDefaults.csproj",
+      "access-token-management\\perf\\Perf.IdentityServer\\Perf.IdentityServer.csproj",
+      "access-token-management\\perf\\Perf.TokenEndpoint\\Perf.TokenEndpoint.csproj"
+    ]
+  }
+}

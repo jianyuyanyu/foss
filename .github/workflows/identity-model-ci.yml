@@ -57,9 +57,9 @@ jobs:
           9.0.305
           10.0.100
     - name: Restore
-      run: dotnet restore ../
+      run: dotnet restore *.slnf
     - name: Verify Formatting
-      run: dotnet format ../ --verify-no-changes --no-restore
+      run: dotnet format *.slnf --verify-no-changes --no-restore
     - name: Test - IdentityModel.Tests
       if: matrix.os != 'windows-latest'
       run: dotnet test -c Release test/IdentityModel.Tests --logger "console;verbosity=normal" --logger "trx;LogFileName=IdentityModel.Tests.trx" --collect:"XPlat Code Coverage"

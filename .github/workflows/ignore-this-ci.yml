@@ -51,9 +51,9 @@ jobs:
           9.0.305
           10.0.100
     - name: Restore
-      run: dotnet restore ../
+      run: dotnet restore *.slnf
     - name: Verify Formatting
-      run: dotnet format ../ --verify-no-changes --no-restore
+      run: dotnet format *.slnf --verify-no-changes --no-restore
     - name: Test - IgnoreThis.Tests
       run: dotnet test -c Release test/IgnoreThis.Tests --logger "console;verbosity=normal" --logger "trx;LogFileName=IgnoreThis.Tests.trx" --collect:"XPlat Code Coverage"
     - name: Test report
