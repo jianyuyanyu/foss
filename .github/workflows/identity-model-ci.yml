@@ -52,10 +52,7 @@ jobs:
     - name: Setup Dotnet
       uses: actions/setup-dotnet@d4c94342e560b34958eacfc5d055d21461ed1c5d
       with:
-        dotnet-version: |-
-          8.0.414
-          9.0.305
-          10.0.100
+        dotnet-version: 10.0.100
     - name: Restore
       run: dotnet restore *.slnf
     - name: Verify Formatting
@@ -66,7 +63,7 @@ jobs:
     - name: Test - IdentityModel.Tests
       if: matrix.os != 'windows-latest'
       run: >-
-        for tfm in net8.0 net9.0 net10.0; do
+        for tfm in net10.0; do
           dotnet run --project test/IdentityModel.Tests -c Release --no-build -f $tfm -- \
             --report-xunit-trx --report-xunit-trx-filename IdentityModel.Tests-$tfm.trx \
             --coverage --coverage-output-format cobertura \
@@ -77,10 +74,7 @@ jobs:
       uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
       with:
         name: test-results
-        path: |-
-          identity-model/test/IdentityModel.Tests/TestResults/IdentityModel.Tests-net8.0.trx
-          identity-model/test/IdentityModel.Tests/TestResults/IdentityModel.Tests-net9.0.trx
-          identity-model/test/IdentityModel.Tests/TestResults/IdentityModel.Tests-net10.0.trx
+        path: identity-model/test/IdentityModel.Tests/TestResults/IdentityModel.Tests-net10.0.trx
         retention-days: 5
     - name: Tool restore
       run: dotnet tool restore
