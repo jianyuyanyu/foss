@@ -1,13 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <RootNamespace>Duende.IdentityModel</RootNamespace>
     <Nullable>disable</Nullable>
     <OutputType>exe</OutputType>
   </PropertyGroup>
-  <!--<PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-    <TargetFrameworks>net481;$(TargetFrameworks)</TargetFrameworks>
-  </PropertyGroup>-->
   <ItemGroup>
     <ProjectReference Include="..\..\src\IdentityModel\IdentityModel.csproj" />
   </ItemGroup>
@@ -15,11 +12,7 @@
     <PackageReference Include="PublicApiGenerator" />
     <PackageReference Include="Verify.XunitV3" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net481'">
-    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" VersionOverride="2.3.0"/>
-    <PackageReference Include="System.Net.Http" NoWarn="NU1510" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' != 'net481'">
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" />
   </ItemGroup>
 </Project>
