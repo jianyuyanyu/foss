@@ -1,8 +1,6 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-#if NET8_0_OR_GREATER
-
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -137,5 +135,3 @@ public class DPoPTest : IntegrationTestBase
         apiResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
     }
 }
-
-#endif
