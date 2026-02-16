@@ -17,8 +17,4 @@
     <PackageReference Include="Duende.IdentityModel" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
-  <!--Conditional Package references -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Text.Json" />
-  </ItemGroup>
 </Project>
