@@ -122,7 +122,6 @@ public class ProtocolRequest : HttpRequestMessage
             clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
         }
 
-#if NET5_0_OR_GREATER
         if (Options.Any())
         {
             foreach (var property in Options)
@@ -130,15 +129,7 @@ public class ProtocolRequest : HttpRequestMessage
                 clone.Options.TryAdd(property.Key, property.Value);
             }
         }
-#else
-        if (Properties != null && Properties.Any())
-        {
-            foreach (var property in Properties)
-            {
-                clone.Properties.Add(property);
-            }
-        }
-#endif
+
         return clone;
     }
 
