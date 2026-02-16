@@ -11,35 +11,35 @@ Component[] components = [
         ["IgnoreThis.Tests"],
         "it",
         [GitHubHostedRunners.UbuntuLatest],
-        ["net8.0", "net10.0"]),
+        ["net10.0"]),
 
     new("access-token-management",
         ["AccessTokenManagement", "AccessTokenManagement.OpenIdConnect"],
         ["AccessTokenManagement.Tests"],
         "atm",
         [GitHubHostedRunners.UbuntuLatest],
-        ["net8.0", "net9.0", "net10.0"]),
+        ["net10.0"]),
 
     new("identity-model",
         ["IdentityModel"],
         ["IdentityModel.Tests"],
         "im",
         [GitHubHostedRunners.UbuntuLatest, GitHubHostedRunners.WindowsLatest],
-        ["net8.0", "net9.0", "net10.0"]),
+        ["net10.0"]),
 
     new("identity-model-oidc-client",
         ["IdentityModel.OidcClient", "IdentityModel.OidcClient.Extensions"],
         ["IdentityModel.OidcClient.Tests"],
         "imoc",
         [GitHubHostedRunners.UbuntuLatest],
-        ["net8.0", "net9.0", "net10.0"]),
+        ["net10.0"]),
 
     new("introspection",
         ["AspNetCore.Authentication.OAuth2Introspection"],
         ["AspNetCore.Authentication.OAuth2Introspection.Tests"],
         "intro",
         [GitHubHostedRunners.UbuntuLatest],
-        ["net8.0", "net9.0", "net10.0"]),
+        ["net10.0"]),
 ];
 
 foreach (var component in components)
@@ -301,7 +301,7 @@ public static class StepExtensions
     public static void StepSetupDotNet(this Job job)
         => job.Step()
             .Name("Setup .NET")
-            .ActionsSetupDotNet("d4c94342e560b34958eacfc5d055d21461ed1c5d", ["8.0.414", "9.0.305", "10.0.100"]); // v5.0.0
+            .ActionsSetupDotNet("d4c94342e560b34958eacfc5d055d21461ed1c5d", ["10.0.100"]); // v5.0.0
 
     public static Step IfRefMain(this Step step)
         => step.If("github.ref == 'refs/heads/main'");
