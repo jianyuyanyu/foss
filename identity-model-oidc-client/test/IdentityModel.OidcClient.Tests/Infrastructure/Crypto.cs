@@ -21,27 +21,7 @@ public static class Crypto
     {
         var rsa = RSA.Create();
 
-#if NET472
-            if (rsa.KeySize < 2048)
-            {
-                rsa.Dispose();
-                rsa = new RSACryptoServiceProvider(2048);
-            }
-#endif
-        RsaSecurityKey key = null;
-#if NET472
-            if (rsa is RSACryptoServiceProvider)
-            {
-                var parameters = rsa.ExportParameters(includePrivateParameters: true);
-                key = new RsaSecurityKey(parameters);
-
-                rsa.Dispose();
-            }
-#endif
-        if (key == null)
-        {
-            key = new RsaSecurityKey(rsa);
-        }
+        var key = new RsaSecurityKey(rsa);
 
         key.KeyId = "1";
         return key;
