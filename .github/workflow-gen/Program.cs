@@ -118,20 +118,9 @@ void GenerateCiWorkflow(Component component)
     foreach (var testProject in component.Tests)
     {
         job.StepTest(component, testProject, runsOnIncludesWindows);
-
-        // Temporarily disabled
-        // if (runsOnIncludesWindows)
-        // {
-        //     job.StepTest(component.Name, testProject, false, "net481");
-        // }
     }
 
     job.StepUploadTestResultsAsArtifact(component, runsOnIncludesWindows);
-
-    // if (runsOnIncludesWindows)
-    // {
-    //     job.StepUploadTestResultsAsArtifact(component, false, "net481");
-    // }
 
     job.StepToolRestore();
 
@@ -274,12 +263,6 @@ void GenerateUploadTestResultsWorkflow()
             {
                 job.StepGenerateReportFromTestArtifact(component, testProject, tfm);
             }
-
-            // Temporarily disabled
-            // if (component.RunsOn.Contains(GitHubHostedRunners.WindowsLatest))
-            // {
-            //     job.StepGenerateReportFromTestArtifact(component, $"{testProject}-net481", "test-results-net481");
-            // }
         }
     }
 
