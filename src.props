@@ -14,7 +14,7 @@
     <Deterministic>true</Deterministic>
     <IsTestProject>false</IsTestProject>
     <IsPackable>true</IsPackable>
-    <IsTrimmable Condition="'$(TargetFramework)' != 'netstandard2.0'">true</IsTrimmable>
+    <IsTrimmable>true</IsTrimmable>
 
     <!--Warning suppressions-->
     <!--For each warning, the description is copied from the corresponding docs page.-->

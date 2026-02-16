@@ -1,11 +1,9 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Duende.IdentityModel.Internal;
-#if NET6_0_OR_GREATER
-using System.Diagnostics.CodeAnalysis;
-#endif
 
 namespace Duende.IdentityModel.Client;
 
@@ -19,9 +17,7 @@ public class Parameters : List<KeyValuePair<string, string>>
     /// </summary>
     /// <param name="values"></param>
     /// <returns></returns>
-#if NET6_0_OR_GREATER
     [RequiresUnreferencedCode("The FromObject method uses reflection in a way that is incompatible with trimming.")]
-#endif
     public static Parameters? FromObject(object values)
     {
         if (values == null)

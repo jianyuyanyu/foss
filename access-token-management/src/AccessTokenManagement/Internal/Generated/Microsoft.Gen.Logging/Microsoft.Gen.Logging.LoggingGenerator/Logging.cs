@@ -34,11 +34,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var scheme = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Cannot authenticate scheme: {scheme} to acquire user access token.");
-                    #else
-                    return global::System.FormattableString.Invariant($"Cannot authenticate scheme: {scheme} to acquire user access token.");
-                    #endif
                 });
 
             state.Clear();
@@ -69,11 +66,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var scheme = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Authentication result properties are null for scheme: {scheme} after authentication.");
-                    #else
-                    return global::System.FormattableString.Invariant($"Authentication result properties are null for scheme: {scheme} after authentication.");
-                    #endif
                 });
 
             state.Clear();
@@ -133,11 +127,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var error = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Error revoking refresh token. Error = {error}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Error revoking refresh token. Error = {error}");
-                    #endif
                 });
 
             state.Clear();
@@ -168,11 +159,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var url = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Sending DPoP proof token in request to endpoint: {url}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Sending DPoP proof token in request to endpoint: {url}");
-                    #endif
                 });
 
             state.Clear();
@@ -203,11 +191,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var url = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Failed to create DPoP proof token for request to endpoint: {url}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Failed to create DPoP proof token for request to endpoint: {url}");
-                    #endif
                 });
 
             state.Clear();
@@ -240,11 +225,8 @@ namespace Duende.AccessTokenManagement.Internal
                 {
                     var url = s.TagArray[1].Value ?? "(null)";
                     var tokenType = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Sending Access token of type {tokenType} to endpoint: {url}.");
-                    #else
-                    return global::System.FormattableString.Invariant($"Sending Access token of type {tokenType} to endpoint: {url}.");
-                    #endif
                 });
 
             state.Clear();
@@ -277,11 +259,8 @@ namespace Duende.AccessTokenManagement.Internal
                 {
                     var error = s.TagArray[1].Value ?? "(null)";
                     var errorDescription = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Failed to obtain an access token while sending the request. Error: {error}, ErrorDescription {errorDescription}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Failed to obtain an access token while sending the request. Error: {error}, ErrorDescription {errorDescription}");
-                    #endif
                 });
 
             state.Clear();
@@ -341,11 +320,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var error = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"DPoP nonce error: '{error}'. Retrying using new nonce");
-                    #else
-                    return global::System.FormattableString.Invariant($"DPoP nonce error: '{error}'. Retrying using new nonce");
-                    #endif
                 });
 
             state.Clear();
@@ -405,11 +381,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var tokenHash = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Refreshing access token using refresh token: hash={tokenHash}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Refreshing access token using refresh token: hash={tokenHash}");
-                    #endif
                 });
 
             state.Clear();
@@ -440,11 +413,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var url = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Sending Refresh token request to: {url}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Sending Refresh token request to: {url}");
-                    #endif
                 });
 
             state.Clear();
@@ -475,11 +445,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var error = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"DPoP error '{error}' during token refresh. Retrying with server nonce");
-                    #else
-                    return global::System.FormattableString.Invariant($"DPoP error '{error}' during token refresh. Retrying with server nonce");
-                    #endif
                 });
 
             state.Clear();
@@ -510,11 +477,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var statusCode = s.TagArray[0].Value;
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Failed to get DPoP Nonce because server didn't respond with ok. StatusCode was: {statusCode}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Failed to get DPoP Nonce because server didn't respond with ok. StatusCode was: {statusCode}");
-                    #endif
                 });
 
             state.Clear();
@@ -545,11 +509,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var tokenHash = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Revoking refresh token: hash={tokenHash}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Revoking refresh token: hash={tokenHash}");
-                    #endif
                 });
 
             state.Clear();
@@ -580,11 +541,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var url = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Sending Token revocation request to: {url}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Sending Token revocation request to: {url}");
-                    #endif
                 });
 
             state.Clear();
@@ -673,11 +631,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var user = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Cannot retrieve token: No token data found in user token store for user {user}.");
-                    #else
-                    return global::System.FormattableString.Invariant($"Cannot retrieve token: No token data found in user token store for user {user}.");
-                    #endif
                 });
 
             state.Clear();
@@ -710,11 +665,8 @@ namespace Duende.AccessTokenManagement.Internal
                 {
                     var user = s.TagArray[1].Value ?? "(null)";
                     var resource = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"No refresh token found in user token store for user {user} / resource {resource}. Returning current access token.");
-                    #else
-                    return global::System.FormattableString.Invariant($"No refresh token found in user token store for user {user} / resource {resource}. Returning current access token.");
-                    #endif
                 });
 
             state.Clear();
@@ -747,11 +699,8 @@ namespace Duende.AccessTokenManagement.Internal
                 {
                     var user = s.TagArray[1].Value ?? "(null)";
                     var resource = s.TagArray[0].Value;
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"No access token found in user token store for user {user} / resource {resource}. Trying to refresh.");
-                    #else
-                    return global::System.FormattableString.Invariant($"No access token found in user token store for user {user} / resource {resource}. Trying to refresh.");
-                    #endif
                 });
 
             state.Clear();
@@ -786,11 +735,8 @@ namespace Duende.AccessTokenManagement.Internal
                     var user = s.TagArray[2].Value ?? "(null)";
                     var expiration = s.TagArray[1].Value ?? "(null)";
                     var forceRenewal = s.TagArray[0].Value;
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Token for user {user} will be refreshed. Expiration: {expiration}, ForceRenewal:{forceRenewal}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Token for user {user} will be refreshed. Expiration: {expiration}, ForceRenewal:{forceRenewal}");
-                    #endif
                 });
 
             state.Clear();
@@ -821,11 +767,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var user = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Returning refreshed token for user: {user}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Returning refreshed token for user: {user}");
-                    #endif
                 });
 
             state.Clear();
@@ -856,11 +799,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var user = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Returning current token for user: {user}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Returning current token for user: {user}");
-                    #endif
                 });
 
             state.Clear();
@@ -893,11 +833,8 @@ namespace Duende.AccessTokenManagement.Internal
                 {
                     var error = s.TagArray[1].Value ?? "(null)";
                     var errorDescription = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Error refreshing access token. Error = {error}, Description: {errorDescription}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Error refreshing access token. Error = {error}, Description: {errorDescription}");
-                    #endif
                 });
 
             state.Clear();
@@ -930,11 +867,8 @@ namespace Duende.AccessTokenManagement.Internal
                 {
                     var tokenType = s.TagArray[1].Value ?? "(null)";
                     var expiration = s.TagArray[0].Value;
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Access Token of type {tokenType} refreshed with expiration: {expiration}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Access Token of type {tokenType} refreshed with expiration: {expiration}");
-                    #endif
                 });
 
             state.Clear();
@@ -996,11 +930,8 @@ namespace Duende.AccessTokenManagement.Internal
                 {
                     var clientName = s.TagArray[1].Value;
                     var expiration = s.TagArray[0].Value;
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Caching access token for client: {clientName}. Expiration: {expiration}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Caching access token for client: {clientName}. Expiration: {expiration}");
-                    #endif
                 });
 
             state.Clear();
@@ -1035,11 +966,8 @@ namespace Duende.AccessTokenManagement.Internal
                     var clientName = s.TagArray[2].Value;
                     var error = s.TagArray[1].Value ?? "(null)";
                     var errorDescription = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Will not cache token result with error for {clientName}. Error = {error}, Description: {errorDescription}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Will not cache token result with error for {clientName}. Error = {error}, Description: {errorDescription}");
-                    #endif
                 });
 
             state.Clear();
@@ -1070,11 +998,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var clientName = s.TagArray[0].Value;
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"An exception has occurred while reading ClientCredentialsToken value from the cache for client {clientName}. The call will be executed without the cache.");
-                    #else
-                    return global::System.FormattableString.Invariant($"An exception has occurred while reading ClientCredentialsToken value from the cache for client {clientName}. The call will be executed without the cache.");
-                    #endif
                 });
 
             state.Clear();
@@ -1109,11 +1034,8 @@ namespace Duende.AccessTokenManagement.Internal
                     var clientName = s.TagArray[2].Value;
                     var error = s.TagArray[1].Value ?? "(null)";
                     var errorDescription = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Error requesting access token for client {clientName}. Error = {error}, Description: {errorDescription}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Error requesting access token for client {clientName}. Error = {error}, Description: {errorDescription}");
-                    #endif
                 });
 
             state.Clear();
@@ -1144,11 +1066,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var clientName = s.TagArray[0].Value;
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Error trying to set token in cache for client {clientName}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Error trying to set token in cache for client {clientName}");
-                    #endif
                 });
 
             state.Clear();
@@ -1179,11 +1098,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var clientName = s.TagArray[0].Value;
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Cache hit for obtaining access token for client: {clientName}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Cache hit for obtaining access token for client: {clientName}");
-                    #endif
                 });
 
             state.Clear();
@@ -1216,11 +1132,8 @@ namespace Duende.AccessTokenManagement.Internal
                 {
                     var url = s.TagArray[1].Value ?? "(null)";
                     var method = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Cache hit for DPoP nonce for URL: {url}, method: {method}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Cache hit for DPoP nonce for URL: {url}, method: {method}");
-                    #endif
                 });
 
             state.Clear();
@@ -1255,11 +1168,8 @@ namespace Duende.AccessTokenManagement.Internal
                     var url = s.TagArray[2].Value ?? "(null)";
                     var method = s.TagArray[1].Value ?? "(null)";
                     var expiration = s.TagArray[0].Value;
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Writing DPoP nonce to Cache for URL: {url}, method: {method}. Expiration: {expiration}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Writing DPoP nonce to Cache for URL: {url}, method: {method}. Expiration: {expiration}");
-                    #endif
                 });
 
             state.Clear();
@@ -1294,11 +1204,8 @@ namespace Duende.AccessTokenManagement.Internal
                     var url = s.TagArray[2].Value ?? "(null)";
                     var method = s.TagArray[1].Value ?? "(null)";
                     var expiration = s.TagArray[0].Value;
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Writing DPoP nonce to Cache for URL: {url}, method: {method}. Expiration: {expiration}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Writing DPoP nonce to Cache for URL: {url}, method: {method}. Expiration: {expiration}");
-                    #endif
                 });
 
             state.Clear();
@@ -1331,11 +1238,8 @@ namespace Duende.AccessTokenManagement.Internal
                 {
                     var url = s.TagArray[1].Value ?? "(null)";
                     var method = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Cache miss for DPoP nonce for URL: {url}, method: {method}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Cache miss for DPoP nonce for URL: {url}, method: {method}");
-                    #endif
                 });
 
             state.Clear();
@@ -1372,11 +1276,8 @@ namespace Duende.AccessTokenManagement.Internal
                     var method = s.TagArray[2].Value ?? "(null)";
                     var value = s.TagArray[1].Value ?? "(null)";
                     var error = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Failed to parse the cached Nonce '{value}' for URL: {url}, method: {method}. Error: {error}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Failed to parse the cached Nonce '{value}' for URL: {url}, method: {method}. Error: {error}");
-                    #endif
                 });
 
             state.Clear();
@@ -1407,11 +1308,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var clientName = s.TagArray[0].Value;
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Error parsing cached access token for client {clientName}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Error parsing cached access token for client {clientName}");
-                    #endif
                 });
 
             state.Clear();
@@ -1442,11 +1340,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var clientName = s.TagArray[0].Value;
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Cache miss while retrieving access token for client: {clientName}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Cache miss while retrieving access token for client: {clientName}");
-                    #endif
                 });
 
             state.Clear();
@@ -1506,11 +1401,8 @@ namespace Duende.AccessTokenManagement.Internal
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Gen.Logging", "9.9.0.0")] static string (s, _) =>
                 {
                     var url = s.TagArray[0].Value ?? "(null)";
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Requesting client credentials access token at endpoint: {url}");
-                    #else
-                    return global::System.FormattableString.Invariant($"Requesting client credentials access token at endpoint: {url}");
-                    #endif
                 });
 
             state.Clear();
@@ -1545,11 +1437,8 @@ namespace Duende.AccessTokenManagement.Internal
                     var clientName = s.TagArray[2].Value;
                     var tokenType = s.TagArray[1].Value ?? "(null)";
                     var expiration = s.TagArray[0].Value;
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Client Credentials token of type '{tokenType}' for Client: {clientName} retrieved with expiration {expiration} ");
-                    #else
-                    return global::System.FormattableString.Invariant($"Client Credentials token of type '{tokenType}' for Client: {clientName} retrieved with expiration {expiration} ");
-                    #endif
                 });
 
             state.Clear();
@@ -1582,11 +1471,8 @@ namespace Duende.AccessTokenManagement.Internal
                 {
                     var clientName = s.TagArray[1].Value;
                     var cacheKey = s.TagArray[0].Value;
-                    #if NET
+                    
                     return string.Create(global::System.Globalization.CultureInfo.InvariantCulture, $"Failed to obtain token from cache for client {clientName} using cacheKey {cacheKey}. Will obtain new token.");
-                    #else
-                    return global::System.FormattableString.Invariant($"Failed to obtain token from cache for client {clientName} using cacheKey {cacheKey}. Will obtain new token.");
-                    #endif
                 });
 
             state.Clear();

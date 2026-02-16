@@ -21,16 +21,6 @@ jobs:
       contents: read
       packages: write
     steps:
-    - name: Test report - ignore-this - IgnoreThis.Tests-net8.0
-      if: github.event.workflow.name == 'ignore-this/ci'
-      uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
-      with:
-        artifact: test-results
-        name: Test Report - IgnoreThis.Tests-net8.0
-        path: IgnoreThis.Tests-net8.0.trx
-        reporter: dotnet-trx
-        fail-on-error: true
-        fail-on-empty: true
     - name: Test report - ignore-this - IgnoreThis.Tests-net10.0
       if: github.event.workflow.name == 'ignore-this/ci'
       uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
@@ -38,26 +28,6 @@ jobs:
         artifact: test-results
         name: Test Report - IgnoreThis.Tests-net10.0
         path: IgnoreThis.Tests-net10.0.trx
-        reporter: dotnet-trx
-        fail-on-error: true
-        fail-on-empty: true
-    - name: Test report - access-token-management - AccessTokenManagement.Tests-net8.0
-      if: github.event.workflow.name == 'access-token-management/ci'
-      uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
-      with:
-        artifact: test-results
-        name: Test Report - AccessTokenManagement.Tests-net8.0
-        path: AccessTokenManagement.Tests-net8.0.trx
-        reporter: dotnet-trx
-        fail-on-error: true
-        fail-on-empty: true
-    - name: Test report - access-token-management - AccessTokenManagement.Tests-net9.0
-      if: github.event.workflow.name == 'access-token-management/ci'
-      uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
-      with:
-        artifact: test-results
-        name: Test Report - AccessTokenManagement.Tests-net9.0
-        path: AccessTokenManagement.Tests-net9.0.trx
         reporter: dotnet-trx
         fail-on-error: true
         fail-on-empty: true
@@ -71,26 +41,6 @@ jobs:
         reporter: dotnet-trx
         fail-on-error: true
         fail-on-empty: true
-    - name: Test report - identity-model - IdentityModel.Tests-net8.0
-      if: github.event.workflow.name == 'identity-model/ci'
-      uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
-      with:
-        artifact: test-results
-        name: Test Report - IdentityModel.Tests-net8.0
-        path: IdentityModel.Tests-net8.0.trx
-        reporter: dotnet-trx
-        fail-on-error: true
-        fail-on-empty: true
-    - name: Test report - identity-model - IdentityModel.Tests-net9.0
-      if: github.event.workflow.name == 'identity-model/ci'
-      uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
-      with:
-        artifact: test-results
-        name: Test Report - IdentityModel.Tests-net9.0
-        path: IdentityModel.Tests-net9.0.trx
-        reporter: dotnet-trx
-        fail-on-error: true
-        fail-on-empty: true
     - name: Test report - identity-model - IdentityModel.Tests-net10.0
       if: github.event.workflow.name == 'identity-model/ci'
       uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
@@ -101,26 +51,6 @@ jobs:
         reporter: dotnet-trx
         fail-on-error: true
         fail-on-empty: true
-    - name: Test report - identity-model-oidc-client - IdentityModel.OidcClient.Tests-net8.0
-      if: github.event.workflow.name == 'identity-model-oidc-client/ci'
-      uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
-      with:
-        artifact: test-results
-        name: Test Report - IdentityModel.OidcClient.Tests-net8.0
-        path: IdentityModel.OidcClient.Tests-net8.0.trx
-        reporter: dotnet-trx
-        fail-on-error: true
-        fail-on-empty: true
-    - name: Test report - identity-model-oidc-client - IdentityModel.OidcClient.Tests-net9.0
-      if: github.event.workflow.name == 'identity-model-oidc-client/ci'
-      uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
-      with:
-        artifact: test-results
-        name: Test Report - IdentityModel.OidcClient.Tests-net9.0
-        path: IdentityModel.OidcClient.Tests-net9.0.trx
-        reporter: dotnet-trx
-        fail-on-error: true
-        fail-on-empty: true
     - name: Test report - identity-model-oidc-client - IdentityModel.OidcClient.Tests-net10.0
       if: github.event.workflow.name == 'identity-model-oidc-client/ci'
       uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
@@ -128,26 +58,6 @@ jobs:
         artifact: test-results
         name: Test Report - IdentityModel.OidcClient.Tests-net10.0
         path: IdentityModel.OidcClient.Tests-net10.0.trx
-        reporter: dotnet-trx
-        fail-on-error: true
-        fail-on-empty: true
-    - name: Test report - introspection - AspNetCore.Authentication.OAuth2Introspection.Tests-net8.0
-      if: github.event.workflow.name == 'introspection/ci'
-      uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
-      with:
-        artifact: test-results
-        name: Test Report - AspNetCore.Authentication.OAuth2Introspection.Tests-net8.0
-        path: AspNetCore.Authentication.OAuth2Introspection.Tests-net8.0.trx
-        reporter: dotnet-trx
-        fail-on-error: true
-        fail-on-empty: true
-    - name: Test report - introspection - AspNetCore.Authentication.OAuth2Introspection.Tests-net9.0
-      if: github.event.workflow.name == 'introspection/ci'
-      uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
-      with:
-        artifact: test-results
-        name: Test Report - AspNetCore.Authentication.OAuth2Introspection.Tests-net9.0
-        path: AspNetCore.Authentication.OAuth2Introspection.Tests-net9.0.trx
         reporter: dotnet-trx
         fail-on-error: true
         fail-on-empty: true
