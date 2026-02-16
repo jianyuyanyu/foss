@@ -2,14 +2,6 @@
   <PropertyGroup>
     <ExtensionsVersion>10.0.0</ExtensionsVersion>
 	  <WilsonVersion>[8.0.1,9.0.0)</WilsonVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0'">
-    <FrameworkVersion>8.0.1</FrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net9.0'">
-    <FrameworkVersion>9.0.0</FrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net10.0'">
     <FrameworkVersion>10.0.0</FrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
