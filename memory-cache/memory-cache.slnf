@@ -1,0 +1,9 @@
+{
+  "solution": {
+    "path": "..\\foss.slnx",
+    "projects": [
+      "memory-cache\\src\\Extensions.Caching.Memory\\Extensions.Caching.Memory.csproj",
+      "memory-cache\\test\\Extensions.Caching.Memory.Tests\\Extensions.Caching.Memory.Tests.csproj"
+    ]
+  }
+}

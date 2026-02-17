@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <Import Project="../../src.props" />
+
+  <PropertyGroup>
+    <MinVerTagPrefix>ecm-</MinVerTagPrefix>
+    <MinVerMinimumMajorMinor>10.0</MinVerMinimumMajorMinor>
+  </PropertyGroup>
+
+</Project>
