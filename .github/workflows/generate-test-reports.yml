@@ -9,6 +9,7 @@ on:
     - 'identity-model/ci'
     - 'identity-model-oidc-client/ci'
     - 'introspection/ci'
+    - 'memory-cache/ci'
     types:
     - completed
 jobs:
@@ -68,6 +69,16 @@ jobs:
         artifact: test-results
         name: Test Report - AspNetCore.Authentication.OAuth2Introspection.Tests-net10.0
         path: AspNetCore.Authentication.OAuth2Introspection.Tests-net10.0.trx
+        reporter: dotnet-trx
+        fail-on-error: true
+        fail-on-empty: true
+    - name: Test report - memory-cache - Extensions.Caching.Memory.Tests-net10.0
+      if: github.event.workflow.name == 'memory-cache/ci'
+      uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
+      with:
+        artifact: test-results
+        name: Test Report - Extensions.Caching.Memory.Tests-net10.0
+        path: Extensions.Caching.Memory.Tests-net10.0.trx
         reporter: dotnet-trx
         fail-on-error: true
         fail-on-empty: true

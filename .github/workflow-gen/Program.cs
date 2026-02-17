@@ -40,6 +40,13 @@ Component[] components = [
         "intro",
         [GitHubHostedRunners.UbuntuLatest],
         ["net10.0"]),
+
+    new("memory-cache",
+        ["Extensions.Caching.Memory"],
+        ["Extensions.Caching.Memory.Tests"],
+        "ecm",
+        [GitHubHostedRunners.UbuntuLatest],
+        ["net10.0"]),
 ];
 
 foreach (var component in components)

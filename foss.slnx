@@ -82,4 +82,13 @@
     <File Path="introspection/test/Directory.Build.props" />
     <Project Path="introspection/test/AspNetCore.Authentication.OAuth2Introspection.Tests/AspNetCore.Authentication.OAuth2Introspection.Tests.csproj" />
   </Folder>
+  <Folder Name="/memory-cache/" />
+  <Folder Name="/memory-cache/src/">
+    <File Path="memory-cache/src/Directory.Build.props" />
+    <Project Path="memory-cache/src/Extensions.Caching.Memory/Extensions.Caching.Memory.csproj" Id="848d971c-3f76-463f-83fd-4b584a4b7573" />
+  </Folder>
+  <Folder Name="/memory-cache/test/">
+    <File Path="memory-cache/test/Directory.Build.props" />
+    <Project Path="memory-cache/test/Extensions.Caching.Memory.Tests/Extensions.Caching.Memory.Tests.csproj" />
+  </Folder>
 </Solution>
