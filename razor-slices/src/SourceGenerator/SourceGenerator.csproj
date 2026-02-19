@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Duende.RazorSlices.SourceGenerator</AssemblyName>
+    <RootNamespace>Duende.RazorSlices.SourceGenerator</RootNamespace>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IsRoslynComponent>true</IsRoslynComponent>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <IsPackable>false</IsPackable>
+    <!-- IsTrimmable is not supported on netstandard2.0 (required for Roslyn analyzers); suppress NETSDK1212 -->
+    <IsTrimmable>false</IsTrimmable>
+    <!-- Strong-naming is disabled so InternalsVisibleTo does not require a public key -->
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+
+    <InternalsVisibleTo Include="Duende.RazorSlices.SourceGenerator.Tests" />
+  </ItemGroup>
+
+</Project>
