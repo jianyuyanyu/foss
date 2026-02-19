@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
 using System.Collections.Immutable;
-using System.IO;
-using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
@@ -163,7 +162,7 @@ internal class RazorSliceProxyGenerator : IIncrementalGenerator
                 // Resolve directives (including _ViewImports hierarchy)
                 var sourceText = file.GetText();
                 string? resolvedModelType = null;
-                bool hasModel = false;
+                var hasModel = false;
 
                 if (sourceText is not null)
                 {
@@ -213,7 +212,7 @@ internal class RazorSliceProxyGenerator : IIncrementalGenerator
                         /// <summary>
                         /// Static proxy for the Razor Slice defined in <c>{{relativeFilePath}}</c>.
                         /// </summary>
-                        public {{ sealedValue }}class {{className}} : global::Duende.RazorSlices.IRazorSliceProxy{{genericParameter}}
+                        public {{sealedValue}}class {{className}} : global::Duende.RazorSlices.IRazorSliceProxy{{genericParameter}}
                         {
                             [global::System.Diagnostics.CodeAnalysis.DynamicDependency(global::System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.All, TypeName, "{{assemblyName}}")]
                             private const string TypeName = "AspNetCoreGeneratedDocument.{{generatedTypeName}}, {{assemblyName}}";

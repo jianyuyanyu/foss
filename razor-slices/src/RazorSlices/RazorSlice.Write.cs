@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Html;
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+using System.Buffers;
+using System.Globalization;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using System.Buffers;
-using System.Globalization;
 
 namespace Duende.RazorSlices;
 
@@ -189,10 +192,7 @@ public partial class RazorSlice
     /// the <c>Write</c> method for all Razor expressions in your .cshtml file, e.g. <c>@someVariable</c>.
     /// </remarks>
     /// <param name="value">The <typeparamref name="T"/> to write to the output.</param>
-    protected void Write<T>(T? value)
-    {
-        WriteValue(value);
-    }
+    protected void Write<T>(T? value) => WriteValue(value);
 
     /// <summary>
     /// Writes a <see cref="bool"/> value to the output.
@@ -251,10 +251,7 @@ public partial class RazorSlice
         return HtmlString.Empty;
     }
 
-    private static bool IsTaskFromAsyncMethod(Task task)
-    {
-        return task.GetType().FullName is { } fullName && fullName.StartsWith(nameof(System.Runtime.CompilerServices.AsyncTaskMethodBuilder), StringComparison.Ordinal);
-    }
+    private static bool IsTaskFromAsyncMethod(Task task) => task.GetType().FullName is { } fullName && fullName.StartsWith(nameof(System.Runtime.CompilerServices.AsyncTaskMethodBuilder), StringComparison.Ordinal);
 
     /// <summary>
     /// Writes the specified <see cref="IHtmlContent"/> value to the output.
@@ -265,7 +262,7 @@ public partial class RazorSlice
         where T : IHtmlContent
     {
 #pragma warning disable CA2000 // Dispose objects before losing scope: Utf8PipeTextWriter is returned to the pool in the finally block
-        TextWriter textWriter = _textWriter ?? Utf8PipeTextWriter.Get(_pipeWriter!);
+        var textWriter = _textWriter ?? Utf8PipeTextWriter.Get(_pipeWriter!);
 #pragma warning restore CA2000
         var faulted = false;
 

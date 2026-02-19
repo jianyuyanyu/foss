@@ -1,4 +1,7 @@
-﻿namespace Duende.RazorSlices;
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+namespace Duende.RazorSlices;
 
 public abstract partial class RazorSlice
 {
@@ -215,11 +218,7 @@ public abstract partial class RazorSlice
     }
 
 #pragma warning disable IDE0060 // Remove unused parameter
-    private void WritePositionTaggedLiteral(string value, int position)
-#pragma warning restore IDE0060 // Remove unused parameter
-    {
-        WriteLiteral(value);
-    }
+    private void WritePositionTaggedLiteral(string value, int position) => WriteLiteral(value);
 
     private struct AttributeInfo
     {

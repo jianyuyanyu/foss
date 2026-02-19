@@ -1,3 +1,6 @@
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -293,10 +296,7 @@ public abstract partial class RazorSlice : IDisposable
         return ValueTask.FromResult(_noFlushResult);
     }
 
-    private static async ValueTask AwaitOutputFlushTask(Task flushTask)
-    {
-        await flushTask.ConfigureAwait(false);
-    }
+    private static async ValueTask AwaitOutputFlushTask(Task flushTask) => await flushTask.ConfigureAwait(false);
 
     private static async ValueTask AwaitExecuteTaskFlushAndDispose(RazorSlice slice, Task executeTask)
     {

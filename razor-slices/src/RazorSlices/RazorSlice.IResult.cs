@@ -1,3 +1,6 @@
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
 using System.IO.Pipelines;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +15,7 @@ public abstract partial class RazorSlice : IResult, IStatusCodeHttpResult, ICont
     /// </summary>
     public int StatusCode { get; set; } = StatusCodes.Status200OK;
 
-    int? IStatusCodeHttpResult.StatusCode { get => StatusCode; }
+    int? IStatusCodeHttpResult.StatusCode => StatusCode;
 
     /// <summary>
     /// Gets the content type: <c>text/html; charset=utf-8</c>

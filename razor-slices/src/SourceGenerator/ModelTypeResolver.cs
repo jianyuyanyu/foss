@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
 using System.Text;
 using Microsoft.CodeAnalysis;
 
@@ -49,10 +50,7 @@ internal static class ModelTypeResolver
     /// <param name="compilation">The Roslyn compilation for type lookup.</param>
     /// <param name="rootNamespace">The root namespace of the project, used as a resolution candidate.</param>
     /// <returns>The fully qualified type name with global:: prefix, or null if resolution fails.</returns>
-    internal static string? ResolveModelType(string modelTypeName, List<UsingDirective> usingDirectives, Compilation compilation, string? rootNamespace = null)
-    {
-        return ResolveTypeExpression(modelTypeName.Trim(), usingDirectives, compilation, rootNamespace);
-    }
+    internal static string? ResolveModelType(string modelTypeName, List<UsingDirective> usingDirectives, Compilation compilation, string? rootNamespace = null) => ResolveTypeExpression(modelTypeName.Trim(), usingDirectives, compilation, rootNamespace);
 
     private static string? ResolveTypeExpression(string typeName, List<UsingDirective> usingDirectives, Compilation compilation, string? rootNamespace)
     {
@@ -125,7 +123,7 @@ internal static class ModelTypeResolver
         var sb = new StringBuilder();
         sb.Append(resolvedOuter);
         sb.Append('<');
-        for (int i = 0; i < resolvedArgs.Count; i++)
+        for (var i = 0; i < resolvedArgs.Count; i++)
         {
             if (i > 0)
             {
@@ -270,10 +268,10 @@ internal static class ModelTypeResolver
     private static List<string> SplitGenericArguments(string args)
     {
         var result = new List<string>();
-        int depth = 0;
-        int start = 0;
+        var depth = 0;
+        var start = 0;
 
-        for (int i = 0; i < args.Length; i++)
+        for (var i = 0; i < args.Length; i++)
         {
             var c = args[i];
             if (c == '<')
@@ -301,8 +299,8 @@ internal static class ModelTypeResolver
     private static int FindArrayBracketStart(string typeName)
     {
         // Find the last ']' and then walk back to find the matching '['
-        int depth = 0;
-        for (int i = typeName.Length - 1; i >= 0; i--)
+        var depth = 0;
+        for (var i = typeName.Length - 1; i >= 0; i--)
         {
             if (typeName[i] == ']')
             {
@@ -329,7 +327,7 @@ internal static class ModelTypeResolver
     /// </summary>
     private static int FindTopLevelGenericOpen(string typeName)
     {
-        for (int i = 0; i < typeName.Length; i++)
+        for (var i = 0; i < typeName.Length; i++)
         {
             if (typeName[i] == '<')
             {

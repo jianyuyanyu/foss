@@ -1,4 +1,7 @@
-﻿namespace Duende.RazorSlices;
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+namespace Duende.RazorSlices;
 
 internal static class BufferSizes
 {
@@ -11,8 +14,5 @@ internal static class BufferSizes
     public const int MaxBufferSize = 1024;
     public const double HtmlEncodeAllowanceRatio = 1.1; // Generally allow 10% of input size
 
-    public static int GetHtmlEncodedSizeHint(int length)
-    {
-        return Math.Min(MaxBufferSize, (int)Math.Round(length * HtmlEncodeAllowanceRatio));
-    }
+    public static int GetHtmlEncodedSizeHint(int length) => Math.Min(MaxBufferSize, (int)Math.Round(length * HtmlEncodeAllowanceRatio));
 }

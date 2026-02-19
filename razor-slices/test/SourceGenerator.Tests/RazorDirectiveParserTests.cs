@@ -1,3 +1,6 @@
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
 using Microsoft.CodeAnalysis.Text;
 
 namespace Duende.RazorSlices.SourceGenerator.Tests;
@@ -43,19 +46,13 @@ public class RazorDirectiveParserTests
     [InlineData("RazorSliceHttpResult<DateTime>", "DateTime")]
     [InlineData("RazorSlice<Func<object?, HelperResult>>", "Func<object?, HelperResult>")]
     [InlineData("RazorSlice<Models.Todo[]>", "Models.Todo[]")]
-    public void ExtractModelType_ReturnsModelType(string baseType, string expected)
-    {
-        Assert.Equal(expected, RazorDirectiveParser.ExtractModelType(baseType));
-    }
+    public void ExtractModelType_ReturnsModelType(string baseType, string expected) => Assert.Equal(expected, RazorDirectiveParser.ExtractModelType(baseType));
 
     [Theory]
     [InlineData("RazorSlice")]
     [InlineData("RazorSliceHttpResult")]
     [InlineData("RazorLayoutSlice")]
-    public void ExtractModelType_ReturnsNull_WhenNoGenericArg(string baseType)
-    {
-        Assert.Null(RazorDirectiveParser.ExtractModelType(baseType));
-    }
+    public void ExtractModelType_ReturnsNull_WhenNoGenericArg(string baseType) => Assert.Null(RazorDirectiveParser.ExtractModelType(baseType));
 
     [Fact]
     public void ParseUsingDirectives_ReturnsSimpleUsings()

@@ -1,5 +1,5 @@
-﻿// Adapted from System.IO.StringWriter
-// https://github.com/dotnet/runtime/blob/57ab984bd0dbbacd02315d41e09144d2823e9475/src/libraries/System.Private.CoreLib/src/System/IO/StringWriter.cs
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System.Text;
 using Microsoft.Extensions.ObjectPool;
@@ -16,20 +16,11 @@ internal sealed class ReusableStringWriter : TextWriter
 
     public override Encoding Encoding => _encoding ??= new UnicodeEncoding(false, false);
 
-    public void SetStringBuilder(StringBuilder sb)
-    {
-        _sb = sb;
-    }
+    public void SetStringBuilder(StringBuilder sb) => _sb = sb;
 
-    public void Reset()
-    {
-        _sb = null;
-    }
+    public void Reset() => _sb = null;
 
-    public override void Write(char value)
-    {
-        _sb?.Append(value);
-    }
+    public override void Write(char value) => _sb?.Append(value);
 
     public override void Write(char[] buffer, int index, int count)
     {
@@ -45,10 +36,7 @@ internal sealed class ReusableStringWriter : TextWriter
         _sb?.Append(buffer, index, count);
     }
 
-    public override void Write(ReadOnlySpan<char> buffer)
-    {
-        _sb?.Append(buffer);
-    }
+    public override void Write(ReadOnlySpan<char> buffer) => _sb?.Append(buffer);
 
     public override void Write(string? value)
     {
@@ -58,10 +46,7 @@ internal sealed class ReusableStringWriter : TextWriter
         }
     }
 
-    public override void Write(StringBuilder? value)
-    {
-        _sb?.Append(value);
-    }
+    public override void Write(StringBuilder? value) => _sb?.Append(value);
 
     public override void WriteLine(ReadOnlySpan<char> buffer)
     {
@@ -158,20 +143,14 @@ internal sealed class ReusableStringWriter : TextWriter
         return Task.CompletedTask;
     }
 
-    public override Task FlushAsync()
-    {
-        return Task.CompletedTask;
-    }
+    public override Task FlushAsync() => Task.CompletedTask;
 
     #endregion
 }
 
 internal static class ReusableStringWriterObjectPoolProviderExtensions
 {
-    public static ObjectPool<ReusableStringWriter> CreateStringWriterPool(this ObjectPoolProvider poolProvider)
-    {
-        return poolProvider.Create(new ReusableStringWriterPooledObjectPolicy());
-    }
+    public static ObjectPool<ReusableStringWriter> CreateStringWriterPool(this ObjectPoolProvider poolProvider) => poolProvider.Create(new ReusableStringWriterPooledObjectPolicy());
 
     private class ReusableStringWriterPooledObjectPolicy : IPooledObjectPolicy<ReusableStringWriter>
     {

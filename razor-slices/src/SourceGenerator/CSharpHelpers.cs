@@ -1,7 +1,9 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
 using System.Collections.Immutable;
 using System.Globalization;
-using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace Duende.RazorSlices.SourceGenerator;
 
@@ -9,10 +11,7 @@ internal static class CSharpHelpers
 {
     private static readonly ImmutableHashSet<string> reservedKeywords = SyntaxFacts.GetKeywordKinds().Select(SyntaxFacts.GetText).ToImmutableHashSet();
 
-    private static bool IsKeyword(string value)
-    {
-        return reservedKeywords.Contains(value);
-    }
+    private static bool IsKeyword(string value) => reservedKeywords.Contains(value);
 
     internal static bool IsValidNamespace(string text) => IsValidTypeName(text, allowPeriod: true);
 
@@ -35,9 +34,9 @@ internal static class CSharpHelpers
         // Each character must be
         // Letter (Lu, Ll, Lt, Lm, Lo or Nl), digit (Nd), connecting (Pc), combining (Mn or Mc), and formatting (Cf) categories.
 
-        for (int i = 0; i < text.Length; i++)
+        for (var i = 0; i < text.Length; i++)
         {
-            char character = text[i];
+            var character = text[i];
 
             if (allowPeriod && character == '.')
             {
@@ -81,11 +80,11 @@ internal static class CSharpHelpers
         // Letter (Lu, Ll, Lt, Lm, Lo or Nl), digit (Nd), connecting (Pc), combining (Mn or Mc), and formatting (Cf) categories.
         // Anything outside that is automatically replaced using _
 
-        char[] characters = text.ToCharArray();
+        var characters = text.ToCharArray();
 
-        for (int i = 0; i < characters.Length; i++)
+        for (var i = 0; i < characters.Length; i++)
         {
-            char character = text[i];
+            var character = text[i];
 
             if (allowPeriod && character == '.')
             {

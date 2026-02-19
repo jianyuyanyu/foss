@@ -1,16 +1,15 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 // Adapted from https://github.com/dotnet/corefx/blob/master/src/Common/src/CoreLib/System/IO/Path.cs#L697
 // by Anton Krouglov
 
 // Further tweaked by Damian Edwards
 
-using System.Runtime.CompilerServices;
 using System.Diagnostics;
-using System.Text;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace System.IO;
 
@@ -27,10 +26,7 @@ internal static class PathUtils
     /// <param name="path">The destination path.</param>
     /// <returns>The relative path or <paramref name="path"/> if the paths don't share the same root.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="relativeTo"/> or <paramref name="path"/> is <c>null</c> or an empty string.</exception>
-    public static string GetRelativePath(string relativeTo, string path)
-    {
-        return GetRelativePath(relativeTo, path, StringComparison);
-    }
+    public static string GetRelativePath(string relativeTo, string path) => GetRelativePath(relativeTo, path, StringComparison);
 
     private static string GetRelativePath(string relativeTo, string path, StringComparison comparisonType)
     {
@@ -56,7 +52,7 @@ internal static class PathUtils
             return path;
         }
 
-        int commonLength = PathInternalNetCore.GetCommonPathLength(relativeTo, path,
+        var commonLength = PathInternalNetCore.GetCommonPathLength(relativeTo, path,
             ignoreCase: comparisonType == StringComparison.OrdinalIgnoreCase);
 
         // If there is nothing in common they can't share the same root, return the "to" path as is.
@@ -66,14 +62,14 @@ internal static class PathUtils
         }
 
         // Trailing separators aren't significant for comparison
-        int relativeToLength = relativeTo.Length;
+        var relativeToLength = relativeTo.Length;
         if (PathInternalNetCore.EndsInDirectorySeparator(relativeTo))
         {
             relativeToLength--;
         }
 
-        bool pathEndsInSeparator = PathInternalNetCore.EndsInDirectorySeparator(path);
-        int pathLength = path.Length;
+        var pathEndsInSeparator = PathInternalNetCore.EndsInDirectorySeparator(path);
+        var pathLength = path.Length;
         if (pathEndsInSeparator)
         {
             pathLength--;
@@ -102,7 +98,7 @@ internal static class PathUtils
         {
             sb.Append("..");
 
-            for (int i = commonLength + 1; i < relativeToLength; i++)
+            for (var i = commonLength + 1; i < relativeToLength; i++)
             {
                 if (PathInternalNetCore.IsDirectorySeparator(relativeTo[i]))
                 {
@@ -119,7 +115,7 @@ internal static class PathUtils
         }
 
         // Now add the rest of the "to" path, adding back the trailing separator
-        int differenceLength = pathLength - commonLength;
+        var differenceLength = pathLength - commonLength;
         if (pathEndsInSeparator)
         {
             differenceLength++;
@@ -173,8 +169,8 @@ internal static class PathInternalNetCore
     /// </summary>
     internal static bool AreRootsEqual(string first, string second, StringComparison comparisonType)
     {
-        int firstRootLength = GetRootLength(first);
-        int secondRootLength = GetRootLength(second);
+        var firstRootLength = GetRootLength(first);
+        var secondRootLength = GetRootLength(second);
 
         return firstRootLength == secondRootLength
                && string.Compare(
@@ -191,12 +187,12 @@ internal static class PathInternalNetCore
     /// </summary>
     internal static int GetRootLength(string path)
     {
-        int i = 0;
-        int volumeSeparatorLength = 2; // Length to the colon "C:"
-        int uncRootLength = 2; // Length to the start of the server name "\\"
+        var i = 0;
+        var volumeSeparatorLength = 2; // Length to the colon "C:"
+        var uncRootLength = 2; // Length to the start of the server name "\\"
 
-        bool extendedSyntax = path.StartsWith(ExtendedDevicePathPrefix);
-        bool extendedUncSyntax = path.StartsWith(UncExtendedPathPrefix);
+        var extendedSyntax = path.StartsWith(ExtendedDevicePathPrefix);
+        var extendedUncSyntax = path.StartsWith(UncExtendedPathPrefix);
         if (extendedSyntax)
         {
             // Shift the position we look for the root from to account for the extended prefix
@@ -222,7 +218,7 @@ internal static class PathInternalNetCore
                 // UNC (\\?\UNC\ or \\), scan past the next two directory separators at most
                 // (e.g. to \\?\UNC\Server\Share or \\Server\Share\)
                 i = uncRootLength;
-                int n = 2; // Maximum separators to skip
+                var n = 2; // Maximum separators to skip
                 while (i < path.Length && (!IsDirectorySeparator(path[i]) || --n > 0))
                 {
                     i++;
@@ -248,17 +244,14 @@ internal static class PathInternalNetCore
     /// True if the given character is a directory separator.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool IsDirectorySeparator(char c)
-    {
-        return c == PathUtils.DirectorySeparatorChar || c == PathUtils.AltDirectorySeparatorChar;
-    }
+    internal static bool IsDirectorySeparator(char c) => c == PathUtils.DirectorySeparatorChar || c == PathUtils.AltDirectorySeparatorChar;
 
     /// <summary>
     /// Get the common path length from the start of the string.
     /// </summary>
     internal static int GetCommonPathLength(string first, string second, bool ignoreCase)
     {
-        int commonChars = EqualStartingCharacterCount(first, second, ignoreCase: ignoreCase);
+        var commonChars = EqualStartingCharacterCount(first, second, ignoreCase: ignoreCase);
 
         // If nothing matches
         if (commonChars == 0)
@@ -297,15 +290,15 @@ internal static class PathInternalNetCore
             return 0;
         }
 
-        int commonChars = 0;
+        var commonChars = 0;
 
         fixed (char* f = first)
         fixed (char* s = second)
         {
-            char* l = f;
-            char* r = s;
-            char* leftEnd = l + first.Length;
-            char* rightEnd = r + second.Length;
+            var l = f;
+            var r = s;
+            var leftEnd = l + first.Length;
+            var rightEnd = r + second.Length;
 
             while (l != leftEnd && r != rightEnd
                                 && (*l == *r || (ignoreCase &&

@@ -1,5 +1,6 @@
-using System.Buffers;
-using System.IO.Pipelines;
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
 using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.Extensions.ObjectPool;
@@ -46,7 +47,7 @@ public static class RazorSliceStringBuilderExtensions
         return AwaitRenderTask(task, sw);
     }
 
-    private static async ValueTask  AwaitRenderTask(ValueTask task, ReusableStringWriter sw)
+    private static async ValueTask AwaitRenderTask(ValueTask task, ReusableStringWriter sw)
     {
         await task.ConfigureAwait(false);
 

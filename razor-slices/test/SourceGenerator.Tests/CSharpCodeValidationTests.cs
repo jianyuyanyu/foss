@@ -1,3 +1,6 @@
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
 namespace Duende.RazorSlices.SourceGenerator.Tests;
 
 public class CSharpCodeValidationTests
@@ -7,10 +10,7 @@ public class CSharpCodeValidationTests
     [InlineData("Todo_")]
     [InlineData("Todo_Row")]
     [InlineData("lorem")]
-    public void ValidTypeName_ReturnTrue(string typeName)
-    {
-        Assert.True(CSharpHelpers.IsValidTypeName(typeName));
-    }
+    public void ValidTypeName_ReturnTrue(string typeName) => Assert.True(CSharpHelpers.IsValidTypeName(typeName));
 
     [Theory]
     [InlineData("1Footer")] // starts with number
@@ -18,10 +18,7 @@ public class CSharpCodeValidationTests
     [InlineData("lorem ipsum")] // contains space
     [InlineData("lorem-ipsum")] // contains -
     [InlineData("lorem.ipsum")] // contains .
-    public void InvalidTypeName_ReturnFalse(string typeName)
-    {
-        Assert.False(CSharpHelpers.IsValidTypeName(typeName));
-    }
+    public void InvalidTypeName_ReturnFalse(string typeName) => Assert.False(CSharpHelpers.IsValidTypeName(typeName));
 
     [Theory]
     [InlineData("1Footer", "_1Footer")]
@@ -29,8 +26,5 @@ public class CSharpCodeValidationTests
     [InlineData("lorem-ipsum", "lorem_ipsum")]
     [InlineData("lorem ipsum", "lorem_ipsum")]
     [InlineData("lorem&*$^^-ipsum", "lorem______ipsum")]
-    public void CreateValidTypeName(string input, string expected)
-    {
-        Assert.Equal(expected, CSharpHelpers.CreateValidTypeName(input));
-    }
+    public void CreateValidTypeName(string input, string expected) => Assert.Equal(expected, CSharpHelpers.CreateValidTypeName(input));
 }

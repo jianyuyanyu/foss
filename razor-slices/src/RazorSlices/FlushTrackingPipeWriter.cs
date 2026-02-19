@@ -1,4 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Pipelines;
 using Microsoft.Extensions.ObjectPool;
 
@@ -12,7 +15,7 @@ internal class FlushTrackingPipeWriter : PipeWriter
 
     [Obsolete("Exists for use by ObjectPool only. Call Create instead.", error: true)]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-                               // This field is initialized by the Create method below.
+    // This field is initialized by the Create method below.
     public FlushTrackingPipeWriter() { }
 #pragma warning restore CS8618
 
@@ -44,10 +47,7 @@ internal class FlushTrackingPipeWriter : PipeWriter
         _unflushedBytes = 0;
     }
 
-    private void Reset()
-    {
-        _innerPipeWriter = null!;
-    }
+    private void Reset() => _innerPipeWriter = null!;
 
     public override bool CanGetUnflushedBytes => true;
 
@@ -59,16 +59,11 @@ internal class FlushTrackingPipeWriter : PipeWriter
         _unflushedBytes += bytes;
     }
 
-    public override void CancelPendingFlush()
-    {
+    public override void CancelPendingFlush() =>
         // REVIEW: What to do here?
         _innerPipeWriter.CancelPendingFlush();
-    }
 
-    public override void Complete(Exception? exception = null)
-    {
-        _innerPipeWriter.Complete(exception);
-    }
+    public override void Complete(Exception? exception = null) => _innerPipeWriter.Complete(exception);
 
     public override ValueTask<FlushResult> FlushAsync(CancellationToken cancellationToken = default)
     {
@@ -79,13 +74,7 @@ internal class FlushTrackingPipeWriter : PipeWriter
         return result;
     }
 
-    public override Memory<byte> GetMemory(int sizeHint = 0)
-    {
-        return _innerPipeWriter.GetMemory(sizeHint);
-    }
+    public override Memory<byte> GetMemory(int sizeHint = 0) => _innerPipeWriter.GetMemory(sizeHint);
 
-    public override Span<byte> GetSpan(int sizeHint = 0)
-    {
-        return _innerPipeWriter.GetSpan(sizeHint);
-    }
+    public override Span<byte> GetSpan(int sizeHint = 0) => _innerPipeWriter.GetSpan(sizeHint);
 }

@@ -1,4 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -80,9 +83,7 @@ public static class RazorSliceFactory
                 nonNullable?.ToArray() ?? []);
     }
 
-    private static Action<RazorSlice, IServiceProvider?, HttpContext?> GetReflectionInitAction(SliceDefinition sliceDefinition)
-    {
-        return sliceDefinition.InjectableProperties.Any
+    private static Action<RazorSlice, IServiceProvider?, HttpContext?> GetReflectionInitAction(SliceDefinition sliceDefinition) => sliceDefinition.InjectableProperties.Any
             ? (slice, serviceProvider, httpContext) =>
             {
                 var services = (serviceProvider ?? httpContext?.RequestServices)
@@ -98,8 +99,7 @@ public static class RazorSliceFactory
                     pi.SetValue(slice, services.GetService(pi.PropertyType));
                 }
             }
-            : _emptyInit;
-    }
+    : _emptyInit;
 
     [RequiresDynamicCode("Uses System.Linq.Expressions to dynamically generate delegates for initializing slices")]
     private static Expression<Action<RazorSlice, IServiceProvider?, HttpContext?>> GetExpressionInitAction(SliceDefinition sliceDefinition)
@@ -177,12 +177,9 @@ public static class RazorSliceFactory
 
     [UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.",
         Justification = "Guarded by check of RuntimeFeature.IsDynamicCodeCompiled")]
-    internal static Delegate GetSliceFactory(SliceDefinition sliceDefinition)
-    {
-        return RuntimeFeature.IsDynamicCodeCompiled
+    internal static Delegate GetSliceFactory(SliceDefinition sliceDefinition) => RuntimeFeature.IsDynamicCodeCompiled
             ? GetExpressionsSliceFactory(sliceDefinition)
             : GetReflectionSliceFactory(sliceDefinition);
-    }
 
     private static Delegate GetReflectionSliceFactory(SliceDefinition sliceDefinition)
     {
@@ -195,12 +192,12 @@ public static class RazorSliceFactory
                 slice.Initialize = init;
                 return slice;
             }
-            : () =>
-            {
-                var slice = (RazorSlice)Activator.CreateInstance(sliceDefinition.SliceType)!;
-                slice.Initialize = init;
-                return slice;
-            };
+        : () =>
+        {
+            var slice = (RazorSlice)Activator.CreateInstance(sliceDefinition.SliceType)!;
+            slice.Initialize = init;
+            return slice;
+        };
     }
 
     /// <summary>

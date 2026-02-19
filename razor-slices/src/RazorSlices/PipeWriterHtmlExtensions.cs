@@ -1,10 +1,13 @@
-﻿using System.Buffers.Text;
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+using System.Buffers.Text;
 using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
-using Microsoft.AspNetCore.Razor.TagHelpers;
 using Duende.RazorSlices;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace System.Buffers;
 
@@ -253,7 +256,7 @@ internal static class PipeWriterHtmlExtensions
         Span<byte> writerSpan = default;
 
         var status = OperationStatus.Done;
-        int waitingToAdvance = 0;
+        var waitingToAdvance = 0;
 
         while (html.Length > 0)
         {

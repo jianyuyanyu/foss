@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
@@ -59,15 +62,9 @@ internal sealed class Utf8PipeTextWriter : TextWriter
     }
 
     [MemberNotNull(nameof(_pipeWriter))]
-    public void SetWriter(PipeWriter pipeWriter)
-    {
-        _pipeWriter = pipeWriter;
-    }
+    public void SetWriter(PipeWriter pipeWriter) => _pipeWriter = pipeWriter;
 
-    public override void Write(char[] buffer, int index, int count)
-    {
-        WriteInternal(buffer.AsSpan(index, count));
-    }
+    public override void Write(char[] buffer, int index, int count) => WriteInternal(buffer.AsSpan(index, count));
 
     public override void Write(char[]? buffer)
     {
