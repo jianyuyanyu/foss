@@ -1,4 +1,4 @@
-﻿namespace RazorSlices.Samples.WebApp.Slices;
+namespace RazorSlices.Samples.WebApp.Slices;
 
 public class LayoutModel
 {

@@ -1,4 +1,4 @@
-﻿namespace RazorSlices.Samples.WebApp;
+namespace RazorSlices.Samples.WebApp;
 
 public partial class Program
 {

@@ -1,4 +1,4 @@
-﻿namespace RazorSlices.Samples.RazorClassLibrary;
+namespace RazorSlices.Samples.RazorClassLibrary;
 
 internal class MarkerClass
 {

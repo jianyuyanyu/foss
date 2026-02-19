@@ -1,4 +1,4 @@
-﻿namespace RazorSlices.Samples.RazorClassLibrary.Slices;
+namespace RazorSlices.Samples.RazorClassLibrary.Slices;
 
 public partial class FromLibrary
 {

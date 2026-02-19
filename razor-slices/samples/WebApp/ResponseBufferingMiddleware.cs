@@ -1,4 +1,4 @@
-﻿namespace RazorSlices.Samples.WebApp;
+namespace RazorSlices.Samples.WebApp;
 
 using System.IO;
 using System.Threading.Tasks;

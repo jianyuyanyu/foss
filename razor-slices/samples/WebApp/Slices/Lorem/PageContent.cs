@@ -1,4 +1,4 @@
-﻿namespace RazorSlices.Samples.WebApp.Slices.Lorem;
+namespace RazorSlices.Samples.WebApp.Slices.Lorem;
 
 public static class PageContent
 {
