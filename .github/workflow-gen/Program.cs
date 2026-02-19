@@ -47,6 +47,13 @@ Component[] components = [
         "ecm",
         [GitHubHostedRunners.UbuntuLatest],
         ["net10.0"]),
+
+    new("razor-slices",
+        ["RazorSlices"],
+        ["RazorSlices.Tests", "SourceGenerator.Tests"],
+        "rs",
+        [GitHubHostedRunners.UbuntuLatest],
+        ["net10.0"]),
 ];
 
 foreach (var component in components)

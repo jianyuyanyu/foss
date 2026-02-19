@@ -1,0 +1,11 @@
+{
+  "solution": {
+    "path": "..\\foss.slnx",
+    "projects": [
+      "razor-slices\\src\\RazorSlices\\RazorSlices.csproj",
+      "razor-slices\\src\\SourceGenerator\\SourceGenerator.csproj",
+      "razor-slices\\test\\RazorSlices.Tests\\RazorSlices.Tests.csproj",
+      "razor-slices\\test\\SourceGenerator.Tests\\SourceGenerator.Tests.csproj"
+    ]
+  }
+}

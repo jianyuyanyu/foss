@@ -1,0 +1,15 @@
+<Project>
+
+  <PropertyGroup>
+    <EnableDefaultRazorSlices Condition=" '$(EnableDefaultRazorSlices)' == '' ">true</EnableDefaultRazorSlices>
+    <RazorSliceProxiesSealed Condition=" '$(RazorSliceProxiesSealed)' == '' ">true</RazorSliceProxiesSealed>
+  </PropertyGroup>
+
+  <!-- Define a new item type for consumers to easily specify which files should generate slices -->
+  <ItemDefinitionGroup>
+    <RazorSlice>
+      <GenerateRazorSlice>true</GenerateRazorSlice>
+    </RazorSlice>
+  </ItemDefinitionGroup>
+
+</Project>

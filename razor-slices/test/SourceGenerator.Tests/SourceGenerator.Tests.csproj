@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Duende.RazorSlices.SourceGenerator.Tests</AssemblyName>
+    <RootNamespace>Duende.RazorSlices.SourceGenerator.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <PackageReference Include="xunit.v3.assert" />
+    <ProjectReference Include="..\..\src\SourceGenerator\SourceGenerator.csproj" />
+  </ItemGroup>
+
+</Project>

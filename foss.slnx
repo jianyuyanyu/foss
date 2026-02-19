@@ -91,4 +91,22 @@
     <File Path="memory-cache/test/Directory.Build.props" />
     <Project Path="memory-cache/test/Extensions.Caching.Memory.Tests/Extensions.Caching.Memory.Tests.csproj" />
   </Folder>
+  <Folder Name="/razor-slices/">
+    <File Path="razor-slices/README.md" />
+  </Folder>
+  <Folder Name="/razor-slices/samples/">
+    <Project Path="razor-slices/samples/PagesAndSlices/PagesAndSlices.csproj" />
+    <Project Path="razor-slices/samples/RazorClassLibrary/RazorClassLibrary.csproj" />
+    <Project Path="razor-slices/samples/WebApp/WebApp.csproj" />
+  </Folder>
+  <Folder Name="/razor-slices/src/">
+    <File Path="razor-slices/src/Directory.Build.props" />
+    <Project Path="razor-slices/src/RazorSlices/RazorSlices.csproj" />
+    <Project Path="razor-slices/src/SourceGenerator/SourceGenerator.csproj" />
+  </Folder>
+  <Folder Name="/razor-slices/test/">
+    <File Path="razor-slices/test/Directory.Build.props" />
+    <Project Path="razor-slices/test/RazorSlices.Tests/RazorSlices.Tests.csproj" />
+    <Project Path="razor-slices/test/SourceGenerator.Tests/SourceGenerator.Tests.csproj" />
+  </Folder>
 </Solution>

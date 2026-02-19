@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Duende.RazorSlices</AssemblyName>
+    <RootNamespace>Duende.RazorSlices</RootNamespace>
+    <PackageId>Duende.RazorSlices</PackageId>
+    <Description>Lightweight Razor-based templates for ASP.NET Core without MVC, Razor Pages, or Blazor.</Description>
+    <PackageTags>ASP.NET Web MinimalApis IResult Razor templating templates</PackageTags>
+    <AnalysisMode>Recommended</AnalysisMode>
+    <AnalysisModeReliability>All</AnalysisModeReliability>
+    <AnalysisModePerformance>All</AnalysisModePerformance>
+    <AnalysisModeSecurity>All</AnalysisModeSecurity>
+    <IsAotCompatible>true</IsAotCompatible>
+    <!-- Strong-naming is disabled so InternalsVisibleTo does not require a public key -->
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- This is the T4 template service and is added by VS anytime you modify a T4 template. Required for .tt files. -->
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include=".\build\**\*.*" Pack="true" PackagePath="build" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <InternalsVisibleTo Include="Duende.RazorSlices.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="RazorSlice.Formattables.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RazorSlice.Formattables.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="RazorSlice.Formattables.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RazorSlice.Formattables.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Reference the source generator just to ensure it's built but don't reference its output -->
+    <ProjectReference Include="..\SourceGenerator\SourceGenerator.csproj" OutputItemType="SourceGeneratorAssemblyPath" ReferenceOutputAssembly="false" Private="true" />
+  </ItemGroup>
+
+  <!-- Include source generator assembly in this project's package output -->
+  <Target Name="IncludeSourceGeneratorInPackage" AfterTargets="ResolveProjectReferences">
+    <ItemGroup>
+      <None Include="@(SourceGeneratorAssemblyPath -> '%(Identity)')" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+  </Target>
+
+</Project>
