@@ -1,3 +1,5 @@
+using Duende.RazorSlices;
+
 namespace RazorSlices.Samples.RazorClassLibrary.Slices;
 
 public partial class FromLibrary
