@@ -97,10 +97,6 @@ jobs:
       with:
         name: artifacts
         path: artifacts
-    - name: Setup .NET
-      uses: actions/setup-dotnet@d4c94342e560b34958eacfc5d055d21461ed1c5d
-      with:
-        global-json-file: global.json
     - name: List files
       run: tree
       shell: bash
