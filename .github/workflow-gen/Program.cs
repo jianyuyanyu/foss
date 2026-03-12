@@ -237,8 +237,6 @@ git push origin {component.TagPrefix}-{contexts.Event.Input.Version}");
         .Uses("actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16") // 4.1.8
         .With(("name", "artifacts"), ("path", "artifacts"));
 
-    publishJob.StepSetupDotNet();
-
     publishJob.Step()
         .Name("List files")
         .Shell("bash")
