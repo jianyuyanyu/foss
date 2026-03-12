@@ -212,3 +212,4 @@ tools/
 # are checked deliberately
 **/.vscode/settings.json
 nCrunchTemp_
+nul
