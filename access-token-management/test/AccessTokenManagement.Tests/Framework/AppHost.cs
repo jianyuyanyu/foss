@@ -10,7 +10,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using RichardSzalay.MockHttp;
+using PushedAuthorizationBehavior = Microsoft.AspNetCore.Authentication.OpenIdConnect.PushedAuthorizationBehavior;
 
 namespace Duende.AccessTokenManagement.Framework;
 
@@ -18,6 +20,8 @@ public class AppHost : GenericHost
 {
     public string ClientId;
     public string? ClientSecret;
+    public SigningCredentials? ClientAssertionSigningCredentials { get; set; }
+    public PushedAuthorizationBehavior PushedAuthorizationBehavior { get; set; } = PushedAuthorizationBehavior.Disable;
 
     private readonly IdentityServerHost _identityServerHost;
     private readonly ApiHost _apiHost;
@@ -69,7 +73,7 @@ public class AppHost : GenericHost
                 options.Authority = _identityServerHost.Url();
 
                 options.ClientId = ClientId;
-                options.ClientSecret = ClientSecret;
+                options.ClientSecret = ClientAssertionSigningCredentials is null ? ClientSecret : null;
                 options.ResponseType = "code";
                 options.ResponseMode = "query";
 
@@ -104,7 +108,14 @@ public class AppHost : GenericHost
                 }
 
                 options.ProtocolValidator.RequireNonce = false;
+                options.PushedAuthorizationBehavior = PushedAuthorizationBehavior;
             });
+
+        if (ClientAssertionSigningCredentials is { } assertionCredentials)
+        {
+            services.AddSingleton<IClientAssertionService>(
+                new JwtClientAssertionService(ClientId, assertionCredentials));
+        }
 
         services.AddOpenIdConnectAccessTokenManagement(opt =>
         {
