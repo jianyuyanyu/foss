@@ -10,7 +10,7 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
-    <PackageVersion Include="Duende.IdentityModel" Version="8.0.1" />
+    <PackageVersion Include="Duende.IdentityModel" Version="8.1.0" />
     <PackageVersion Include="Duende.IdentityServer" Version="7.4.2" />
     <PackageVersion Include="MartinCostello.Logging.XUnit.v3" Version="0.7.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(FrameworkVersion)" />
