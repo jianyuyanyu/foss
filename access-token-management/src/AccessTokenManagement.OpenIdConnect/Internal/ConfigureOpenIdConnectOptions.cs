@@ -22,10 +22,11 @@ internal class ConfigureOpenIdConnectOptions(
     IHttpContextAccessor httpContextAccessor,
     IOptions<UserTokenManagementOptions> userAccessTokenManagementOptions,
     IAuthenticationSchemeProvider schemeProvider,
-    IClientAssertionService clientAssertionService,
+    IServiceProvider serviceProvider,
     ILoggerFactory loggerFactory) : IConfigureNamedOptions<OpenIdConnectOptions>
 {
     private readonly Scheme _configScheme = GetConfigScheme(userAccessTokenManagementOptions.Value, schemeProvider);
+    private IClientAssertionService ClientAssertionService => serviceProvider.GetRequiredService<IClientAssertionService>();
 
     private ClientCredentialsClientName ClientName => _configScheme.ToClientName();
 
@@ -119,7 +120,7 @@ internal class ConfigureOpenIdConnectOptions(
             }
 
             // Automatically send client assertion during code exchange if a service is registered
-            var assertion = await clientAssertionService
+            var assertion = await ClientAssertionService
                 .GetClientAssertionAsync(ClientName, ct: context.HttpContext.RequestAborted)
                 .ConfigureAwait(false);
 
@@ -162,7 +163,7 @@ internal class ConfigureOpenIdConnectOptions(
             await inner.Invoke(context);
 
             // --- Client assertion ---
-            var assertion = await clientAssertionService
+            var assertion = await ClientAssertionService
                 .GetClientAssertionAsync(ClientName, ct: context.HttpContext.RequestAborted)
                 .ConfigureAwait(false);
 
