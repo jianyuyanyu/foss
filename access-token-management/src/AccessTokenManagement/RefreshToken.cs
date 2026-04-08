@@ -11,7 +11,23 @@ namespace Duende.AccessTokenManagement;
 public readonly record struct RefreshToken : IStronglyTypedValue<RefreshToken>
 {
     public const int MaxLength = 4 * 1024;
+
     public override string ToString() => Value;
+
+    /// <summary>
+    /// Changes the maximum length for refresh tokens.
+    /// </summary>
+    /// <param name="maxLength">The new maximum length. Must be a strictly positive value.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="maxLength"/> is zero or a negative value.</exception>
+    /// <remarks>
+    /// Note that this change is applied statically and will affect all instances of <see cref="RefreshToken"/> across the entire application.
+    /// </remarks>
+    public static void SetMaxLength(int maxLength)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxLength);
+
+        Validators[0] = ValidationRules.MaxLength(maxLength);
+    }
 
     private static readonly ValidationRule<string>[] Validators = [
         // Officially, there's no max length refresh tokens, but 4k is a good limit
