@@ -10,7 +10,13 @@ namespace Duende.AccessTokenManagement;
 [JsonConverter(typeof(StringValueJsonConverter<RefreshToken>))]
 public readonly record struct RefreshToken : IStronglyTypedValue<RefreshToken>
 {
+    private static int? _overriddenMaxLength;
+    private static ValidationRule<string>[] _validators = [];
+
+    // Officially, there's no max length refresh tokens, but 4k is a good limit
     public const int MaxLength = 4 * 1024;
+
+    static RefreshToken() => InitializeValidators();
 
     public override string ToString() => Value;
 
@@ -26,13 +32,14 @@ public readonly record struct RefreshToken : IStronglyTypedValue<RefreshToken>
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxLength);
 
-        Validators[0] = ValidationRules.MaxLength(maxLength);
+        _overriddenMaxLength = maxLength;
+        InitializeValidators();
     }
 
-    private static readonly ValidationRule<string>[] Validators = [
-        // Officially, there's no max length refresh tokens, but 4k is a good limit
-        ValidationRules.MaxLength(MaxLength)
-    ];
+    private static void InitializeValidators() =>
+        _validators = [
+            ValidationRules.MaxLength(_overriddenMaxLength ?? MaxLength)
+        ];
 
     /// <summary>
     /// You can't directly create this type.
@@ -54,7 +61,7 @@ public readonly record struct RefreshToken : IStronglyTypedValue<RefreshToken>
     /// and also includes a list of errors. This is useful for validating user input or other scenarios where you want to provide feedback
     /// </summary>
     public static bool TryParse(string value, [NotNullWhen(true)] out RefreshToken? parsed, out string[] errors) =>
-        IStronglyTypedValue<RefreshToken>.TryBuildValidatedObject(value, Validators, out parsed, out errors);
+        IStronglyTypedValue<RefreshToken>.TryBuildValidatedObject(value, _validators, out parsed, out errors);
 
     static RefreshToken IStronglyTypedValue<RefreshToken>.Create(string result) => new(result);
 
