@@ -3,10 +3,9 @@
 
 namespace Duende.AccessTokenManagement.Types;
 
-/// <summary>
-/// Both the <see cref="RefreshTokenTests"/> and <see cref="RefreshTokenSetMaxLengthTests"/> classes share a collection to prevent parallel execution,
-/// since <see cref="RefreshToken.SetMaxLength"/> mutates static state.
-/// </summary>
+// All test classes that use <see cref="RefreshToken"/> share this collection because
+// <see cref="RefreshToken.SetMaxLength"/> mutates static state. Serializing them
+// prevents flaky failures from concurrent reads/writes of the max length.
 [Collection(nameof(RefreshTokenTests))]
 public class RefreshTokenTests
 {
