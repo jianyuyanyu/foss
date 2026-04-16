@@ -1,0 +1,28 @@
+name: ignore-this/publish
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - release-*
+    paths:
+      - .config/dotnet-tools.json
+      - .github/BuildHelpers/**
+      - .github/workflows/ignore-this-**
+      - .github/workflows/publish-template.yml
+      - ignore-this/**
+      - .editorconfig
+      - Directory.Packages.props
+      - global.json
+      - src.props
+      - test.props
+
+jobs:
+  publish:
+    uses: ./.github/workflows/publish-template.yml
+    with:
+      product: ignore-this
+      solution: ignore-this/ignore-this.slnf
+    secrets:
+      SignClientSecret: ${{ secrets.SignClientSecret }}

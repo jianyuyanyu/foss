@@ -1,0 +1,28 @@
+name: memory-cache/publish
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - release-*
+    paths:
+      - .config/dotnet-tools.json
+      - .github/BuildHelpers/**
+      - .github/workflows/memory-cache-**
+      - .github/workflows/publish-template.yml
+      - memory-cache/**
+      - .editorconfig
+      - Directory.Packages.props
+      - global.json
+      - src.props
+      - test.props
+
+jobs:
+  publish:
+    uses: ./.github/workflows/publish-template.yml
+    with:
+      product: memory-cache
+      solution: memory-cache/memory-cache.slnf
+    secrets:
+      SignClientSecret: ${{ secrets.SignClientSecret }}

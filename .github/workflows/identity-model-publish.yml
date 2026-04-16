@@ -1,0 +1,28 @@
+name: identity-model/publish
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - release-*
+    paths:
+      - .config/dotnet-tools.json
+      - .github/BuildHelpers/**
+      - .github/workflows/identity-model-publish.yml
+      - .github/workflows/publish-template.yml
+      - identity-model/**
+      - .editorconfig
+      - Directory.Packages.props
+      - global.json
+      - src.props
+      - test.props
+
+jobs:
+  publish:
+    uses: ./.github/workflows/publish-template.yml
+    with:
+      product: identity-model
+      solution: identity-model/identity-model.slnf
+    secrets:
+      SignClientSecret: ${{ secrets.SignClientSecret }}
