@@ -1,0 +1,229 @@
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      product:
+        description: 'Product to release'
+        type: choice
+        required: true
+        options:
+          - access-token-management
+          - identity-model
+          - identity-model-oidc-client
+          - introspection
+          - memory-cache
+          - razor-slices
+          - ignore-this
+      version:
+        description: 'Version in format X.Y.Z, X.Y.Z-preview.N, or X.Y.Z-rc.N'
+        type: string
+        required: true
+        default: '0.0.0'
+      branch:
+        description: 'Branch to release from'
+        type: string
+        required: false
+        default: 'main'
+      remove-tag-if-exists:
+        description: 'Remove existing tag before creating (use for re-releases)'
+        type: boolean
+        required: false
+        default: false
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  configure:
+    name: Configure
+    runs-on: ubuntu-latest
+    permissions: {}
+    outputs:
+      tag-prefix: ${{ steps.map.outputs.tag-prefix }}
+      directory: ${{ steps.map.outputs.directory }}
+      solution: ${{ steps.map.outputs.solution }}
+      tag: ${{ steps.map.outputs.tag }}
+    steps:
+      - name: Validate version format
+        env:
+          VERSION: ${{ inputs.version }}
+        run: echo "$VERSION" | grep -P '^\d+\.\d+\.\d+(-preview\.\d+|-rc\.\d+)?$' || (echo 'Invalid version format' && exit 1)
+
+      - name: Map product to settings
+        id: map
+        env:
+          PRODUCT: ${{ inputs.product }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          case "$PRODUCT" in
+            access-token-management)
+              TAG_PREFIX="atm-"
+              DIR="access-token-management"
+              SOLUTION="access-token-management/access-token-management.slnf"
+              ;;
+            identity-model)
+              TAG_PREFIX="im-"
+              DIR="identity-model"
+              SOLUTION="identity-model/identity-model.slnf"
+              ;;
+            identity-model-oidc-client)
+              TAG_PREFIX="imoc-"
+              DIR="identity-model-oidc-client"
+              SOLUTION="identity-model-oidc-client/identity-model-oidc-client.slnf"
+              ;;
+            introspection)
+              TAG_PREFIX="intro-"
+              DIR="introspection"
+              SOLUTION="introspection/introspection.slnf"
+              ;;
+            memory-cache)
+              TAG_PREFIX="ecm-"
+              DIR="memory-cache"
+              SOLUTION="memory-cache/memory-cache.slnf"
+              ;;
+            razor-slices)
+              TAG_PREFIX="rs-"
+              DIR="razor-slices"
+              SOLUTION="razor-slices/razor-slices.slnf"
+              ;;
+            ignore-this)
+              TAG_PREFIX="it-"
+              DIR="ignore-this"
+              SOLUTION="ignore-this/ignore-this.slnf"
+              ;;
+            *)
+              echo "Unknown product: $PRODUCT"
+              exit 1
+              ;;
+          esac
+
+          echo "tag-prefix=${TAG_PREFIX}" >> "$GITHUB_OUTPUT"
+          echo "directory=${DIR}" >> "$GITHUB_OUTPUT"
+          echo "solution=${SOLUTION}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG_PREFIX}${VERSION}" >> "$GITHUB_OUTPUT"
+
+  tag:
+    name: Tag
+    needs: configure
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          ref: ${{ inputs.branch }}
+          fetch-depth: 0
+
+      - name: Git config
+        run: |
+          git config --global user.email "github-bot@duendesoftware.com"
+          git config --global user.name "Duende Software GitHub Bot"
+
+      - name: Remove existing tag
+        if: inputs.remove-tag-if-exists == true
+        run: |
+          TAG="${{ needs.configure.outputs.tag }}"
+          if git rev-parse "${TAG}" >/dev/null 2>&1; then
+            git tag -d "${TAG}"
+            git push --delete origin "${TAG}"
+          else
+            echo "Tag ${TAG} does not exist - nothing to remove."
+          fi
+
+      - name: Create and push tag
+        env:
+          TAG: ${{ needs.configure.outputs.tag }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          git tag -a "${TAG}" -m "Release v${VERSION}"
+          git push origin "${TAG}"
+
+  pack:
+    name: Pack and Sign
+    needs: [configure, tag]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout at tag
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          ref: ${{ needs.configure.outputs.tag }}
+          fetch-depth: 0
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5
+        with:
+          global-json-file: global.json
+          source-url: https://nuget.pkg.github.com/DuendeSoftware/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Tool restore
+        run: dotnet tool restore
+
+      - name: Pack
+        run: dotnet pack -c Release ${{ needs.configure.outputs.solution }} -o ${{ needs.configure.outputs.directory }}/artifacts
+
+      - name: Sign packages
+        env:
+          SIGN_SECRET: ${{ secrets.SignClientSecret }}
+        run: |
+          shopt -s nullglob
+          for file in ${{ needs.configure.outputs.directory }}/artifacts/*.nupkg; do
+            dotnet NuGetKeyVaultSignTool sign "$file" \
+              --file-digest sha256 \
+              --timestamp-rfc3161 http://timestamp.digicert.com \
+              --azure-key-vault-url https://duendecodesigninghsm.vault.azure.net/ \
+              --azure-key-vault-client-id 18e3de68-2556-4345-8076-a46fad79e474 \
+              --azure-key-vault-tenant-id ed3089f0-5401-4758-90eb-066124e2d907 \
+              --azure-key-vault-client-secret "$SIGN_SECRET" \
+              --azure-key-vault-certificate NuGetPackageSigning
+          done
+
+      - name: Push to GitHub NuGet
+        run: dotnet nuget push ${{ needs.configure.outputs.directory }}/artifacts/*.nupkg --source https://nuget.pkg.github.com/DuendeSoftware/index.json --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: artifacts
+          path: ${{ needs.configure.outputs.directory }}/artifacts/*.nupkg
+          overwrite: true
+          retention-days: 15
+
+  publish-nuget-org:
+    name: Publish to nuget.org
+    needs: pack
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    environment:
+      name: nuget.org
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          sparse-checkout: global.json
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: artifacts
+          path: artifacts
+
+      - uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5
+        with:
+          global-json-file: global.json
+
+      - name: Push packages to nuget.org
+        run: dotnet nuget push artifacts/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_ORG_API_KEY }} --skip-duplicate

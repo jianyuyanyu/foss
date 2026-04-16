@@ -1,0 +1,28 @@
+name: access-token-management/publish
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - release-*
+    paths:
+      - .config/dotnet-tools.json
+      - .github/BuildHelpers/**
+      - .github/workflows/access-token-management-**
+      - .github/workflows/publish-template.yml
+      - access-token-management/**
+      - .editorconfig
+      - Directory.Packages.props
+      - global.json
+      - src.props
+      - test.props
+
+jobs:
+  publish:
+    uses: ./.github/workflows/publish-template.yml
+    with:
+      product: access-token-management
+      solution: access-token-management/access-token-management.slnf
+    secrets:
+      SignClientSecret: ${{ secrets.SignClientSecret }}
