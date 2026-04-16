@@ -10,6 +10,10 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Duende.AccessTokenManagement;
 
+// This class uses <see cref="RefreshToken"/>, whose max length is static mutable state
+// (via <see cref="RefreshToken.SetMaxLength"/>). Sharing a collection with the other
+// RefreshToken test classes prevents parallel execution that could cause flaky failures.
+[Collection(nameof(Types.RefreshTokenTests))]
 public class StoreTokensInAuthenticationPropertiesTests
 {
     private readonly CancellationToken _ct = TestContext.Current.CancellationToken;
