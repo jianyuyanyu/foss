@@ -18,7 +18,7 @@ public sealed record UserToken : AccessTokenRequestHandler.IToken
     public required AccessToken AccessToken { get; init; }
 
     /// <summary>
-    /// The DPoP proof key associated with this token when the token is DPoP-bound.
+    /// The DPoP JSON Web Key (JWK) associated with this token when the token is DPoP-bound.
     /// </summary>
     public DPoPProofKey? DPoPJsonWebKey { get; init; }
 

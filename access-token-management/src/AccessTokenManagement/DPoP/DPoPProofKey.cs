@@ -69,10 +69,6 @@ public readonly record struct DPoPProofKey : IStronglyTypedValue<DPoPProofKey>
         };
 
     /// <summary>
-    /// You can't directly create this type. 
-    /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <summary>
     /// Prevents creating an uninitialized <see cref="DPoPProofKey"/> instance.
     /// </summary>
     /// <exception cref="InvalidOperationException">Always thrown.</exception>
