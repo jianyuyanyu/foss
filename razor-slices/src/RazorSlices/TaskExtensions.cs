@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+// Parts taken from https://github.com/dotnet/aspnetcore/blob/4eae56d8f7315cbd49fcbd760341940e3d087aa5/src/Shared/ValueTaskExtensions/ValueTaskExtensions.cs
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 

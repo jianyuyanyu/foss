@@ -52,6 +52,46 @@ internal static class ModelTypeResolver
     /// <returns>The fully qualified type name with global:: prefix, or null if resolution fails.</returns>
     internal static string? ResolveModelType(string modelTypeName, List<UsingDirective> usingDirectives, Compilation compilation, string? rootNamespace = null) => ResolveTypeExpression(modelTypeName.Trim(), usingDirectives, compilation, rootNamespace);
 
+    /// <summary>
+    /// Resolves the model type by resolving an inherited slice base type and walking its base type hierarchy
+    /// until a <c>Duende.RazorSlices.RazorSlice&lt;TModel&gt;</c> base type is found.
+    /// Returns null when the inherited type cannot be resolved or does not derive from a generic RazorSlice.
+    /// </summary>
+    internal static string? ResolveModelTypeFromSliceBaseType(string baseTypeName, List<UsingDirective> usingDirectives, Compilation compilation, string? rootNamespace = null)
+    {
+        var trimmedBaseTypeName = baseTypeName.Trim();
+        if (trimmedBaseTypeName.StartsWith("global::", StringComparison.Ordinal))
+        {
+            trimmedBaseTypeName = trimmedBaseTypeName.Substring("global::".Length);
+        }
+
+        var baseTypeSymbol = ResolveTypeSymbolExpression(trimmedBaseTypeName, usingDirectives, compilation, rootNamespace) as INamedTypeSymbol;
+        if (baseTypeSymbol is null)
+        {
+            return null;
+        }
+
+        for (var currentType = baseTypeSymbol; currentType is not null; currentType = currentType.BaseType)
+        {
+            if (!string.Equals(currentType.Name, "RazorSlice", StringComparison.Ordinal) ||
+                !string.Equals(currentType.ContainingNamespace.ToDisplayString(), "Duende.RazorSlices", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            if (currentType.IsGenericType && currentType.TypeArguments.Length == 1)
+            {
+                return "global::" + currentType.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat
+                    .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.OmittedAsContaining));
+            }
+
+            // Reached non-generic RazorSlice, so there is no model.
+            return null;
+        }
+
+        return null;
+    }
+
     private static string? ResolveTypeExpression(string typeName, List<UsingDirective> usingDirectives, Compilation compilation, string? rootNamespace)
     {
         // Handle nullable value types: T?
@@ -84,6 +124,93 @@ internal static class ModelTypeResolver
 
         // Handle simple type names
         return ResolveSimpleType(typeName, usingDirectives, compilation, rootNamespace: rootNamespace);
+    }
+
+    private static ITypeSymbol? ResolveTypeSymbolExpression(string typeName, List<UsingDirective> usingDirectives, Compilation compilation, string? rootNamespace)
+    {
+        // Handle nullable value/reference types by resolving the underlying type symbol.
+        if (typeName.EndsWith("?", StringComparison.Ordinal))
+        {
+            var innerType = typeName.Substring(0, typeName.Length - 1).Trim();
+            return ResolveTypeSymbolExpression(innerType, usingDirectives, compilation, rootNamespace);
+        }
+
+        // Handle array types: T[], T[,], etc.
+        if (typeName.EndsWith("]", StringComparison.Ordinal))
+        {
+            var bracketStart = FindArrayBracketStart(typeName);
+            if (bracketStart >= 0)
+            {
+                var elementType = typeName.Substring(0, bracketStart).Trim();
+                var elementSymbol = ResolveTypeSymbolExpression(elementType, usingDirectives, compilation, rootNamespace);
+                if (elementSymbol is null)
+                {
+                    return null;
+                }
+
+                var arraySuffix = typeName.Substring(bracketStart);
+                var rank = 1;
+                for (var i = 0; i < arraySuffix.Length; i++)
+                {
+                    if (arraySuffix[i] == ',')
+                    {
+                        rank++;
+                    }
+                }
+
+                return compilation.CreateArrayTypeSymbol(elementSymbol, rank);
+            }
+        }
+
+        // Handle generic types: Type<T1, T2>
+        var genericOpen = FindTopLevelGenericOpen(typeName);
+        if (genericOpen >= 0)
+        {
+            var outerType = typeName.Substring(0, genericOpen).Trim();
+            var genericClose = typeName.LastIndexOf('>');
+            if (genericClose <= genericOpen)
+            {
+                return null;
+            }
+
+            var argsString = typeName.Substring(genericOpen + 1, genericClose - genericOpen - 1);
+            var args = SplitGenericArguments(argsString);
+
+            var metadataName = outerType + "`" + args.Count;
+            var resolvedOuter = ResolveSimpleType(outerType, usingDirectives, compilation, metadataName, stripGenericParams: true, rootNamespace: rootNamespace);
+            if (resolvedOuter is null)
+            {
+                return null;
+            }
+
+            var outerSymbol = ResolveNamedTypeSymbol(resolvedOuter + "`" + args.Count, compilation);
+            if (outerSymbol is null)
+            {
+                return null;
+            }
+
+            var resolvedArgs = new ITypeSymbol[args.Count];
+            for (var i = 0; i < args.Count; i++)
+            {
+                var resolvedArg = ResolveTypeSymbolExpression(args[i].Trim(), usingDirectives, compilation, rootNamespace);
+                if (resolvedArg is null)
+                {
+                    return null;
+                }
+
+                resolvedArgs[i] = resolvedArg;
+            }
+
+            return outerSymbol.Construct(resolvedArgs);
+        }
+
+        var resolvedSimple = ResolveSimpleType(typeName, usingDirectives, compilation, rootNamespace: rootNamespace);
+        if (resolvedSimple is null)
+        {
+            return null;
+        }
+
+        return ResolveNamedTypeSymbol(resolvedSimple, compilation);
     }
 
     private static string? ResolveGenericType(string typeName, int genericOpen, List<UsingDirective> usingDirectives, Compilation compilation, string? rootNamespace)
@@ -171,11 +298,94 @@ internal static class ModelTypeResolver
                     {
                         return resolved;
                     }
+
+                    // Try treating dots in the suffix as nested type separators
+                    resolved = TryResolveNestedType(expandedType, expandedLookup, compilation, stripGenericParams);
+                    if (resolved != null)
+                    {
+                        return resolved;
+                    }
                 }
             }
         }
 
-        // 3. Try as fully-qualified name first
+        // 3-6. Try as fully-qualified, with @using prefixes, implicit namespaces, and root namespace
+        var result = TryResolveWithNamespaces(typeName, metadataNameOverride, usingDirectives, compilation, stripGenericParams, rootNamespace);
+        if (result != null)
+        {
+            return result;
+        }
+
+        // 7. Try nested types: for types like "Outer.Inner", try treating dots as
+        //    nested type separators ('+' in metadata) with namespace resolution.
+        var parts = typeName.Split('.');
+        for (var j = parts.Length - 1; j > 0; j--)
+        {
+            var outerPart = string.Join(".", parts, 0, j);
+            var nestedPart = string.Join("+", parts, j, parts.Length - j);
+            var candidateName = outerPart + "+" + nestedPart;
+            string? candidateLookup = null;
+
+            if (metadataNameOverride != null)
+            {
+                var arityIndex = metadataNameOverride.IndexOf('`');
+                candidateLookup = arityIndex >= 0
+                    ? candidateName + metadataNameOverride.Substring(arityIndex)
+                    : candidateName;
+            }
+
+            result = TryResolveWithNamespaces(candidateName, candidateLookup, usingDirectives, compilation, stripGenericParams, rootNamespace);
+            if (result != null)
+            {
+                return result;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Tries to resolve a fully-qualified type name by treating dots as nested type separators.
+    /// For "Namespace.Outer.Inner", tries "Namespace.Outer+Inner", "Namespace+Outer+Inner", etc.
+    /// </summary>
+    private static string? TryResolveNestedType(string typeName, string? metadataNameOverride, Compilation compilation, bool stripGenericParams)
+    {
+        var parts = typeName.Split('.');
+        for (var j = parts.Length - 1; j > 0; j--)
+        {
+            var namespacePart = string.Join(".", parts, 0, j);
+            var nestedPart = string.Join("+", parts, j, parts.Length - j);
+            var candidateName = namespacePart + "+" + nestedPart;
+            string? candidateLookup = null;
+
+            if (metadataNameOverride != null)
+            {
+                var metaParts = metadataNameOverride.Split('.');
+                if (metaParts.Length == parts.Length)
+                {
+                    var metaNamespacePart = string.Join(".", metaParts, 0, j);
+                    var metaNestedPart = string.Join("+", metaParts, j, metaParts.Length - j);
+                    candidateLookup = metaNamespacePart + "+" + metaNestedPart;
+                }
+            }
+
+            var resolved = TryResolveViaCompilation(candidateName, candidateLookup, compilation, stripGenericParams);
+            if (resolved != null)
+            {
+                return resolved;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Tries to resolve a type name by attempting it as fully-qualified, then with each @using namespace prefix,
+    /// implicit namespaces, and the project's root namespace.
+    /// </summary>
+    private static string? TryResolveWithNamespaces(string typeName, string? metadataNameOverride, List<UsingDirective> usingDirectives, Compilation compilation, bool stripGenericParams, string? rootNamespace)
+    {
+        // Try as fully-qualified name
         var lookupName = metadataNameOverride ?? typeName;
         var result = TryResolveViaCompilation(typeName, lookupName, compilation, stripGenericParams);
         if (result != null)
@@ -183,12 +393,12 @@ internal static class ModelTypeResolver
             return result;
         }
 
-        // 4. Try with each @using namespace prefix
+        // Try with each @using namespace prefix
         foreach (var ud in usingDirectives)
         {
             if (ud.Alias != null)
             {
-                continue; // Skip aliases, handled above
+                continue;
             }
 
             var candidateName = ud.NamespaceOrType + "." + typeName;
@@ -203,7 +413,7 @@ internal static class ModelTypeResolver
             }
         }
 
-        // 5. Try with implicit namespaces (System, System.Collections.Generic, etc.)
+        // Try with implicit namespaces (System, System.Collections.Generic, etc.)
         foreach (var implicitNs in ImplicitNamespaces)
         {
             var candidateName = implicitNs + "." + typeName;
@@ -218,7 +428,7 @@ internal static class ModelTypeResolver
             }
         }
 
-        // 6. Try with the project's root namespace
+        // Try with the project's root namespace
         if (!string.IsNullOrEmpty(rootNamespace))
         {
             var candidateName = rootNamespace + "." + typeName;
@@ -261,6 +471,36 @@ internal static class ModelTypeResolver
         return null;
     }
 
+    private static INamedTypeSymbol? ResolveNamedTypeSymbol(string fullyQualifiedTypeName, Compilation compilation)
+    {
+        const string GlobalPrefix = "global::";
+
+        var metadataName = fullyQualifiedTypeName.StartsWith(GlobalPrefix, StringComparison.Ordinal)
+            ? fullyQualifiedTypeName.Substring(GlobalPrefix.Length)
+            : fullyQualifiedTypeName;
+
+        var symbol = compilation.GetTypeByMetadataName(metadataName);
+        if (symbol is not null)
+        {
+            return symbol;
+        }
+
+        var parts = metadataName.Split('.');
+        for (var j = parts.Length - 1; j > 0; j--)
+        {
+            var namespacePart = string.Join(".", parts, 0, j);
+            var nestedPart = string.Join("+", parts, j, parts.Length - j);
+            var candidateName = namespacePart + "+" + nestedPart;
+            symbol = compilation.GetTypeByMetadataName(candidateName);
+            if (symbol is not null)
+            {
+                return symbol;
+            }
+        }
+
+        return null;
+    }
+
     /// <summary>
     /// Splits generic arguments at the top level, respecting nested angle brackets.
     /// "int, List&lt;string&gt;" → ["int", "List&lt;string&gt;"]
@@ -268,7 +508,9 @@ internal static class ModelTypeResolver
     private static List<string> SplitGenericArguments(string args)
     {
         var result = new List<string>();
-        var depth = 0;
+        var angleDepth = 0;
+        var squareDepth = 0;
+        var parenDepth = 0;
         var start = 0;
 
         for (var i = 0; i < args.Length; i++)
@@ -276,13 +518,29 @@ internal static class ModelTypeResolver
             var c = args[i];
             if (c == '<')
             {
-                depth++;
+                angleDepth++;
             }
             else if (c == '>')
             {
-                depth--;
+                angleDepth--;
             }
-            else if (c == ',' && depth == 0)
+            else if (c == '[')
+            {
+                squareDepth++;
+            }
+            else if (c == ']')
+            {
+                squareDepth--;
+            }
+            else if (c == '(')
+            {
+                parenDepth++;
+            }
+            else if (c == ')')
+            {
+                parenDepth--;
+            }
+            else if (c == ',' && angleDepth == 0 && squareDepth == 0 && parenDepth == 0)
             {
                 result.Add(args.Substring(start, i - start));
                 start = i + 1;

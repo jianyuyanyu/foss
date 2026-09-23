@@ -28,29 +28,99 @@ public static class RazorSliceFactory
     private static readonly MethodInfo _getRequiredServiceMethod = typeof(ServiceProviderServiceExtensions).GetMethod(nameof(ServiceProviderServiceExtensions.GetRequiredService), [typeof(IServiceProvider), typeof(Type)])
         ?? throw new InvalidOperationException("Could not find ServiceProviderServiceExtensions.GetRequirdService. Likely a bug in Razor Slices itself.");
 
-    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.PublicProperties)]
-    private static readonly Type _razorSliceType = typeof(RazorSlice);
-    private static readonly PropertyInfo _razorSliceInitializeProperty = _razorSliceType.GetProperty(nameof(RazorSlice.Initialize))
-        ?? throw new InvalidOperationException("Could not find RazorSlice.Initialize property. Likely a bug in Razor Slices itself.");
     private static readonly ConstructorInfo _ioeCtor = typeof(InvalidOperationException).GetConstructor([typeof(string)])!;
     private static readonly NullabilityInfoContext _nullabilityContext = new();
-    private static readonly Action<RazorSlice, IServiceProvider?, HttpContext?> _emptyInit = (_, __, ___) => { };
 
-    internal static bool IsModelSlice(Type sliceType)
+    /// <summary>
+    /// Creates a slice using its generated constructor callback and configures deferred property injection.
+    /// </summary>
+    /// <typeparam name="TSlice">The compiled Razor template type.</typeparam>
+    /// <param name="createSlice">A callback that directly constructs the template.</param>
+    /// <returns>A new slice, or its Hot Reload replacement.</returns>
+    public static RazorSlice Create<
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TSlice>(Func<TSlice> createSlice)
+        where TSlice : RazorSlice
     {
-        var baseType = sliceType.BaseType;
+        ArgumentNullException.ThrowIfNull(createSlice);
+        var activation = SliceCache<TSlice>.Current;
+        var slice = activation.CreateReplacement is { } createReplacement ? createReplacement() : createSlice();
+        slice.Initialize = activation.Initialize;
+        return slice;
+    }
 
-        while (baseType is not null)
+    /// <summary>
+    /// Creates a model slice using its generated constructor callback and configures deferred property injection.
+    /// </summary>
+    /// <typeparam name="TSlice">The compiled Razor template type.</typeparam>
+    /// <typeparam name="TModel">The model type.</typeparam>
+    /// <param name="model">The model for the slice.</param>
+    /// <param name="createSlice">A callback that directly constructs the template with its model.</param>
+    /// <returns>A new slice, or its Hot Reload replacement, with the specified model.</returns>
+    public static RazorSlice<TModel> Create<
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TSlice, TModel>(
+        TModel model, Func<TModel, TSlice> createSlice)
+        where TSlice : RazorSlice<TModel>
+    {
+        ArgumentNullException.ThrowIfNull(createSlice);
+        var activation = SliceCache<TSlice>.Current;
+        RazorSlice<TModel> slice;
+        if (activation.CreateReplacement is { } createReplacement)
         {
-            if (baseType.IsGenericType && baseType.GetGenericTypeDefinition() == typeof(RazorSlice<>))
-            {
-                return true;
-            }
+            slice = (RazorSlice<TModel>)createReplacement();
+            slice.Model = model;
+        }
+        else
+        {
+            slice = createSlice(model);
+        }
+        slice.Initialize = activation.Initialize;
+        return slice;
+    }
 
-            baseType = baseType.BaseType;
+    internal sealed record SliceActivation(
+        Action<RazorSlice, IServiceProvider?, HttpContext?>? Initialize,
+        Func<RazorSlice>? CreateReplacement = null);
+
+    internal static class SliceCache<
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TSlice>
+        where TSlice : RazorSlice
+    {
+        internal static volatile SliceActivation Current = new(GetInitializer(typeof(TSlice)));
+
+        static SliceCache()
+        {
+            if (HotReloadService.IsSupported)
+            {
+                HotReloadService.ClearCacheEvent += ReplaceSliceType;
+            }
         }
 
-        return false;
+        [UnconditionalSuppressMessage("Trimming", "IL2072",
+            Justification = "Replacement types are only used during Hot Reload, which is not supported in trimmed applications.")]
+        internal static void ReplaceSliceType(Type[]? changedTypes)
+        {
+            if (HotReloadService.TryGetUpdatedType(changedTypes, typeof(TSlice), out var updatedType))
+            {
+                // Publish construction and injection together so a render cannot mix two generations of the template.
+                Current = new(GetInitializer(updatedType), () => (RazorSlice)Activator.CreateInstance(updatedType)!);
+            }
+        }
+    }
+
+    [UnconditionalSuppressMessage("AOT", "IL3050",
+        Justification = "Guarded by RuntimeFeature.IsDynamicCodeCompiled.")]
+    internal static Action<RazorSlice, IServiceProvider?, HttpContext?>? GetInitializer(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type sliceType)
+    {
+        var properties = GetInjectableProperties(sliceType);
+        if (!properties.Any)
+        {
+            return null;
+        }
+
+        return RuntimeFeature.IsDynamicCodeCompiled
+            ? GetExpressionInitAction(sliceType, properties).Compile()
+            : GetReflectionInitAction(sliceType, properties);
     }
 
     internal static (bool Any, PropertyInfo[] Nullable, PropertyInfo[] NonNullable) GetInjectableProperties(
@@ -83,32 +153,27 @@ public static class RazorSliceFactory
                 nonNullable?.ToArray() ?? []);
     }
 
-    private static Action<RazorSlice, IServiceProvider?, HttpContext?> GetReflectionInitAction(SliceDefinition sliceDefinition) => sliceDefinition.InjectableProperties.Any
-            ? (slice, serviceProvider, httpContext) =>
-            {
-                var services = (serviceProvider ?? httpContext?.RequestServices)
-                    ?? throw new InvalidOperationException($"Cannot initialize @inject properties of slice {sliceDefinition.SliceType.Name} because the ServiceProvider property is null.");
+    internal static Action<RazorSlice, IServiceProvider?, HttpContext?> GetReflectionInitAction(
+        Type sliceType, (bool Any, PropertyInfo[] Nullable, PropertyInfo[] NonNullable) properties) => (slice, serviceProvider, httpContext) =>
+                                                                                                            {
+                                                                                                                var services = (serviceProvider ?? httpContext?.RequestServices)
+                                                                                                                    ?? throw new InvalidOperationException($"Cannot initialize @inject properties of slice {sliceType.Name} because the ServiceProvider property is null.");
 
-                foreach (var pi in sliceDefinition.InjectableProperties.NonNullable)
-                {
-                    pi.SetValue(slice, services.GetRequiredService(pi.PropertyType));
-                }
+                                                                                                                foreach (var pi in properties.NonNullable)
+                                                                                                                {
+                                                                                                                    pi.SetValue(slice, services.GetRequiredService(pi.PropertyType));
+                                                                                                                }
 
-                foreach (var pi in sliceDefinition.InjectableProperties.Nullable)
-                {
-                    pi.SetValue(slice, services.GetService(pi.PropertyType));
-                }
-            }
-    : _emptyInit;
+                                                                                                                foreach (var pi in properties.Nullable)
+                                                                                                                {
+                                                                                                                    pi.SetValue(slice, services.GetService(pi.PropertyType));
+                                                                                                                }
+                                                                                                            };
 
     [RequiresDynamicCode("Uses System.Linq.Expressions to dynamically generate delegates for initializing slices")]
-    private static Expression<Action<RazorSlice, IServiceProvider?, HttpContext?>> GetExpressionInitAction(SliceDefinition sliceDefinition)
+    private static Expression<Action<RazorSlice, IServiceProvider?, HttpContext?>> GetExpressionInitAction(
+        Type sliceType, (bool Any, PropertyInfo[] Nullable, PropertyInfo[] NonNullable) properties)
     {
-        if (!sliceDefinition.InjectableProperties.Any)
-        {
-            throw new InvalidOperationException("Shouldn't call GetExpressionInitAction if there's no injectable properties.");
-        }
-
         // Make a delegate like:
         //
         // (RazorSlice slice, IServiceProvider? sp, HttpContext? httpContext) =>
@@ -124,11 +189,11 @@ public static class RazorSliceFactory
         //     s.NextProp = (SomeOtherService)services.GetRequiredService(typeof(SomeOtherService));
         // }
 
-        var sliceParam = Expression.Parameter(_razorSliceType, "slice");
+        var sliceParam = Expression.Parameter(typeof(RazorSlice), "slice");
         var spParam = Expression.Parameter(typeof(IServiceProvider), "sp");
         var httpContextParam = Expression.Parameter(typeof(HttpContext), "httpContext");
         var servicesVar = Expression.Variable(typeof(IServiceProvider), "services");
-        var castSliceVar = Expression.Variable(sliceDefinition.SliceType, "s");
+        var castSliceVar = Expression.Variable(sliceType, "s");
 
         var body = new List<Expression>
         {
@@ -149,10 +214,10 @@ public static class RazorSliceFactory
                 // throw new InvalidOperationException
                 Expression.Throw(Expression.New(_ioeCtor, Expression.Constant("Cannot initialize @inject properties of slice because the ServiceProvider property is null.")))),
             // var s = (MySlice)slice;
-            Expression.Assign(castSliceVar, Expression.Convert(sliceParam, sliceDefinition.SliceType))
+            Expression.Assign(castSliceVar, Expression.Convert(sliceParam, sliceType))
         };
 
-        foreach (var ip in sliceDefinition.InjectableProperties.Nullable)
+        foreach (var ip in properties.Nullable)
         {
             // s.SomeProp = (SomeService)services.GetService(typeof(SomeService));
             var propertyAccess = Expression.MakeMemberAccess(castSliceVar, ip);
@@ -160,7 +225,7 @@ public static class RazorSliceFactory
             body.Add(Expression.Assign(propertyAccess, Expression.Convert(getServiceCall, ip.PropertyType)));
         }
 
-        foreach (var ip in sliceDefinition.InjectableProperties.NonNullable)
+        foreach (var ip in properties.NonNullable)
         {
             // s.SomeProp = (SomeService)services.GetRequiredService(typeof(SomeService));
             var propertyAccess = Expression.MakeMemberAccess(castSliceVar, ip);
@@ -173,105 +238,6 @@ public static class RazorSliceFactory
                 variables: [servicesVar, castSliceVar],
                 body),
             parameters: [sliceParam, spParam, httpContextParam]);
-    }
-
-    [UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.",
-        Justification = "Guarded by check of RuntimeFeature.IsDynamicCodeCompiled")]
-    internal static Delegate GetSliceFactory(SliceDefinition sliceDefinition) => RuntimeFeature.IsDynamicCodeCompiled
-            ? GetExpressionsSliceFactory(sliceDefinition)
-            : GetReflectionSliceFactory(sliceDefinition);
-
-    private static Delegate GetReflectionSliceFactory(SliceDefinition sliceDefinition)
-    {
-        var init = GetReflectionInitAction(sliceDefinition);
-        return sliceDefinition.HasModel
-            ? (object model) =>
-            {
-                var slice = (RazorSlice)Activator.CreateInstance(sliceDefinition.SliceType)!;
-                sliceDefinition.ModelProperty!.SetValue(slice, model);
-                slice.Initialize = init;
-                return slice;
-            }
-        : () =>
-        {
-            var slice = (RazorSlice)Activator.CreateInstance(sliceDefinition.SliceType)!;
-            slice.Initialize = init;
-            return slice;
-        };
-    }
-
-    /// <summary>
-    /// Creates a <see cref="RazorSliceFactory"/> that can be used to create a <see cref="RazorSlice"/> of the specified <see cref="Type"/>.
-    /// </summary>
-    /// <param name="sliceDefinition"></param>
-    /// <returns>A <see cref="RazorSliceFactory"/> that can be used to create an instance of the slice.</returns>
-    [RequiresDynamicCode("Uses System.Linq.Expressions to dynamically generate delegates for creating slices")]
-    private static Delegate GetExpressionsSliceFactory(SliceDefinition sliceDefinition)
-    {
-        var sliceType = sliceDefinition.SliceType;
-
-        if (sliceType.GetConstructor(Type.EmptyTypes) is null)
-        {
-            throw new ArgumentException($"Slice type {sliceType.Name} must have a parameterless constructor.", nameof(sliceDefinition));
-        }
-
-        var body = new List<Expression>();
-
-        // Make a delegate like:
-        //
-        // MySlice CreateSlice()
-        // {
-        //     var slice = new SliceType();
-        //     slice.Init = ...;
-        //     return slice;
-        // }
-        //
-        // or
-        //
-        // MySlice CreateSlice(object model)
-        // {
-        //     var slice = new SliceType<MyModel>();
-        //     slice.Init = ...;
-        //     slice.Model = (MyModel)model
-        //     return slice;
-        // }
-
-        var sliceVariable = Expression.Variable(sliceType, "slice");
-        body.Add(Expression.Assign(sliceVariable, Expression.New(sliceType)));
-        ParameterExpression[]? parameters = null;
-        var factoryType = typeof(Func<RazorSlice>);
-
-        if (sliceDefinition.InjectableProperties.Any)
-        {
-            body.Add(Expression.Assign(
-                Expression.MakeMemberAccess(sliceVariable, _razorSliceInitializeProperty),
-                GetExpressionInitAction(sliceDefinition)!));
-        }
-
-        if (sliceDefinition.ModelType is not null)
-        {
-            // Func<object, RazorSlice<MyModel>>
-            var modelPropInfo = sliceType.GetProperty("Model")!;
-            factoryType = typeof(Func<,>).MakeGenericType(typeof(object), sliceType);
-            var modelParam = Expression.Parameter(typeof(object), "model");
-            parameters = [modelParam];
-            body.Add(Expression.Assign(
-                Expression.MakeMemberAccess(sliceVariable, modelPropInfo),
-                Expression.Convert(modelParam, sliceDefinition.ModelType)));
-        }
-
-        var returnTarget = Expression.Label(sliceType);
-        body.Add(Expression.Label(returnTarget, sliceVariable));
-
-        return Expression.Lambda(
-            delegateType: factoryType,
-            body: Expression.Block(
-                variables: [sliceVariable],
-                body
-            ),
-            name: "CreateSlice",
-            parameters: parameters)
-        .Compile();
     }
 
     private static bool IsNullable(PropertyInfo info) =>
