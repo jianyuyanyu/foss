@@ -1,6 +1,9 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+// Adapted from System.IO.StringWriter
+// https://github.com/dotnet/runtime/blob/57ab984bd0dbbacd02315d41e09144d2823e9475/src/libraries/System.Private.CoreLib/src/System/IO/StringWriter.cs
+
 using System.Text;
 using Microsoft.Extensions.ObjectPool;
 

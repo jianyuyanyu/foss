@@ -35,45 +35,14 @@ internal static class TextWriterHtmlExtensions
             formatBuffer = ArrayPool<char>.Shared.Rent(bufferSize);
         }
 
-        var textToEncode = formatBuffer.AsSpan(..charsWritten);
-        var encodeBuffer = ArrayPool<char>.Shared.Rent(BufferSizes.GetHtmlEncodedSizeHint(textToEncode.Length));
-        var encodeBufferSpan = encodeBuffer.AsSpan();
-        var encodeStatus = OperationStatus.Done;
-        var waitingToWrite = 0;
-
-        while (textToEncode.Length > 0)
+        try
         {
-            if (encodeBufferSpan.Length == 0)
-            {
-                if (waitingToWrite > 0)
-                {
-                    textWriter.Write(encodeBuffer.AsSpan()[..waitingToWrite]);
-                    waitingToWrite = 0;
-                    encodeBufferSpan = encodeBuffer;
-                }
-            }
-
-            encodeStatus = htmlEncoder.Encode(textToEncode, encodeBufferSpan, out var charsConsumed, out var charsEncoded);
-            waitingToWrite += charsEncoded;
-
-            if (textToEncode.Length - charsConsumed == 0)
-            {
-                break;
-            }
-
-            textToEncode = textToEncode[charsConsumed..];
-            encodeBufferSpan = encodeBufferSpan[charsEncoded..];
+            htmlEncoder.Encode(textWriter, formatBuffer, 0, charsWritten);
         }
-
-        if (waitingToWrite > 0)
+        finally
         {
-            textWriter.Write(encodeBufferSpan);
+            ArrayPool<char>.Shared.Return(formatBuffer);
         }
-
-        ArrayPool<char>.Shared.Return(encodeBuffer);
-        ArrayPool<char>.Shared.Return(formatBuffer);
-
-        Debug.Assert(encodeStatus == OperationStatus.Done, "Bad math in TextWriter HTML writing extensions");
     }
 
     private static bool TryHtmlEncodeAndWriteSpanFormattableSmall<T>(TextWriter textWriter, T formattable, HtmlEncoder htmlEncoder, ReadOnlySpan<char> format = default, IFormatProvider? formatProvider = null)
@@ -85,8 +54,9 @@ internal static class TextWriterHtmlExtensions
             if ((charsWritten * BufferSizes.HtmlEncodeAllowanceRatio) < BufferSizes.SmallFormattableWriteCharSize)
             {
                 Span<char> encodedBuffer = stackalloc char[BufferSizes.SmallFormattableWriteCharSize];
-                if (htmlEncoder.Encode(formatBuffer, encodedBuffer, out var charsConsumed, out var charsEncoded) == OperationStatus.Done)
+                if (htmlEncoder.Encode(formatBuffer[..charsWritten], encodedBuffer, out var charsConsumed, out var charsEncoded) == OperationStatus.Done)
                 {
+                    textWriter.Write(encodedBuffer[..charsEncoded]);
                     return true;
                 }
             }
@@ -147,9 +117,9 @@ internal static class TextWriterHtmlExtensions
     {
         var charCount = Encoding.UTF8.GetCharCount(value);
         var buffer = ArrayPool<char>.Shared.Rent(charCount);
-        var bytesDecoded = Encoding.UTF8.GetChars(value, buffer);
+        var charsWritten = Encoding.UTF8.GetChars(value, buffer);
 
-        Debug.Assert(bytesDecoded == value.Length, "Bad decoding when writing to TextWriter in HtmlEncodeAndWriteUtf8(ReadOnlySpan<byte>)");
+        Debug.Assert(charsWritten == charCount, "Bad decoding when writing to TextWriter in HtmlEncodeAndWriteUtf8(ReadOnlySpan<byte>)");
 
         htmlEncoder.Encode(textWriter, buffer, 0, charCount);
         ArrayPool<char>.Shared.Return(buffer);
@@ -157,11 +127,11 @@ internal static class TextWriterHtmlExtensions
 
     public static void WriteUtf8(this TextWriter textWriter, ReadOnlySpan<byte> value)
     {
-        var charCount = Encoding.Unicode.GetCharCount(value);
+        var charCount = Encoding.UTF8.GetCharCount(value);
         var buffer = ArrayPool<char>.Shared.Rent(charCount);
-        var bytesDecoded = Encoding.Unicode.GetChars(value, buffer);
+        var charsWritten = Encoding.UTF8.GetChars(value, buffer);
 
-        Debug.Assert(bytesDecoded == value.Length, "Bad decoding when writing to TextWriter in WriteUtf8(ReadOnlySpan<byte>)");
+        Debug.Assert(charsWritten == charCount, "Bad decoding when writing to TextWriter in WriteUtf8(ReadOnlySpan<byte>)");
 
         textWriter.Write(buffer, 0, charCount);
         ArrayPool<char>.Shared.Return(buffer);

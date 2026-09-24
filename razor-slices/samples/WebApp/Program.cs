@@ -1,3 +1,6 @@
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
 using System.Runtime.CompilerServices;
 using RazorSlices.Samples.WebApp;
 using RazorSlices.Samples.WebApp.Services;
@@ -22,11 +25,12 @@ var app = builder.Build();
 
 app.UseStatusCodePages();
 app.UseStaticFiles();
+app.UseRouting();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    if (Environment.GetEnvironmentVariable("ENABLE_RESPONSE_BUFFERING") == "true")
+    if (builder.Configuration["ENABLE_RESPONSE_BUFFERING"] == "true")
     {
         // Enable response buffering middleware to allow for response interception during local development
         app.UseResponseBuffering();

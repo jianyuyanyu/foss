@@ -1,3 +1,6 @@
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
 namespace RazorSlices.Samples.WebApp;
 
 using System.IO;
@@ -9,6 +12,12 @@ internal sealed class ResponseBufferingMiddleware(RequestDelegate next)
 {
     public async Task InvokeAsync(HttpContext context)
     {
+        if (context.GetEndpoint()?.Metadata.GetMetadata<IDisableResponseBufferingMetadata>() is not null)
+        {
+            await next(context);
+            return;
+        }
+
         // Save the original response body stream
         var originalBodyStream = context.Response.Body;
 
@@ -42,11 +51,10 @@ internal sealed class ResponseBufferingMiddleware(RequestDelegate next)
     }
 }
 
-internal static class ResponseBufferingMiddlewareExtensions
+public static class ResponseBufferingMiddlewareExtensions
 {
     public static IApplicationBuilder UseResponseBuffering(this IApplicationBuilder app)
     {
         return app.UseMiddleware<ResponseBufferingMiddleware>();
     }
 }
-

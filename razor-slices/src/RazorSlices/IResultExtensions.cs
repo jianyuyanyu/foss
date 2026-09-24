@@ -170,7 +170,7 @@ public static class TypedResultsExtensions
 #endif
 
 /// <summary>
-/// RazorSlices IResult extensions.
+/// Duende.RazorSlices IResult extensions.
 /// </summary>
 public static class RazorSlicesExtensions
 {

@@ -1,9 +1,17 @@
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
 using System.Text;
 
 namespace RazorSlices.Samples.WebApp.Models;
 
 public class Todo
 {
+    public class Nested
+    {
+        public string? Extra { get; set; }
+    }
+
     public int Id { get; set; }
 
     private byte[] _titleUtf8 = [];

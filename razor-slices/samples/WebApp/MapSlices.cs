@@ -1,3 +1,6 @@
+// Copyright (c) Duende Software. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
 using Duende.RazorSlices;
 using LibrarySlices = RazorSlices.Samples.RazorClassLibrary.Slices;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -31,6 +34,9 @@ internal static class MapSlicesExtensions
             await slice.RenderAsync(httpResponse.Body);
         });
         endpoints.MapGet("/encoding", () => Results.RazorSlice<Slices.Encoding>());
+        endpoints.MapGet("/attribute-rendering", () => Results.RazorSlice<Slices.AttributeRendering>());
+        endpoints.MapGet("/streaming", () => Results.RazorSlice<Slices.Streaming>())
+            .DisableResponseBuffering();
         endpoints.MapGet("/unicode", () => Results.RazorSlice<Slices.Unicode>());
         endpoints.MapGet("/templated", (bool async = false) => Results.RazorSlice<Slices.Templated, bool>(async));
         endpoints.MapGet("/library", () => Results.RazorSlice<LibrarySlices.FromLibrary>());
@@ -49,6 +55,7 @@ internal static class MapSlicesExtensions
             return Results.Ok(new ResultDto(stringBuilder.ToString()));
         });
 
+        endpoints.MapGet("/nested", () => Results.RazorSlice<Slices.Nested, Models.Todo.Nested>(new Models.Todo.Nested { Extra = "Test" }));
         endpoints.MapGet("/", () => Results.RazorSlice<Slices.Todos, Models.Todo[]>(Models.Todos.AllTodos));
         endpoints.MapGet("/{id:int}", Results<RazorSlice, NotFound> (int id) =>
         {
@@ -58,7 +65,8 @@ internal static class MapSlicesExtensions
                 : TypedResults.NotFound();
         });
 #else
-        endpoints.MapGet("/lorem-static", () => Results.Extensions.RazorSlice<Slices.Lorem.LoremStatic>());
+        endpoints.MapGet("/nested", () => Results.Extensions.RazorSlice<Slices.Nested, Models.Todo.Nested>(new Models.Todo.Nested { Extra = "Test" }));
+        endpoints.MapGet("/lorem-static",() => Results.Extensions.RazorSlice<Slices.Lorem.LoremStatic>());
         endpoints.MapGet("/lorem-dynamic", (int? paraCount, int? paraLength) =>
             Results.Extensions.RazorSlice<Slices.Lorem.LoremDynamic, LoremParams>(new LoremParams(paraCount, paraLength)));
         endpoints.MapGet("/lorem-formattable", (int? paraCount, int? paraLength) =>
@@ -76,6 +84,9 @@ internal static class MapSlicesExtensions
             await slice.RenderAsync(httpResponse.Body);
         });
         endpoints.MapGet("/encoding", () => Results.Extensions.RazorSlice<Slices.Encoding>());
+        endpoints.MapGet("/attribute-rendering", () => Results.Extensions.RazorSlice<Slices.AttributeRendering>());
+        endpoints.MapGet("/streaming", () => Results.Extensions.RazorSlice<Slices.Streaming>())
+            .DisableResponseBuffering();
         endpoints.MapGet("/unicode", () => Results.Extensions.RazorSlice<Slices.Unicode>());
         endpoints.MapGet("/templated", (bool async = false) => Results.Extensions.RazorSlice<Slices.Templated, bool>(async));
         endpoints.MapGet("/library", () => Results.Extensions.RazorSlice<LibrarySlices.FromLibrary>());

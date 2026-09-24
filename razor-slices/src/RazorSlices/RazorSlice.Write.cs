@@ -56,6 +56,7 @@ public partial class RazorSlice
         WriteLiteral(value?.ToString());
     }
 
+#if !RAZOR_SLICES_DISABLE_UTF8_LITERAL_OVERLOAD
     /// <summary>
     /// Writes a buffer of UTF8 bytes to the output without HTML encoding it.
     /// </summary>
@@ -80,6 +81,7 @@ public partial class RazorSlice
         _pipeWriter?.Write(value);
         _textWriter?.WriteUtf8(value);
     }
+#endif
 
     /// <summary>
     /// Writes a <see cref="bool"/> value to the output.
@@ -105,6 +107,16 @@ public partial class RazorSlice
     /// </remarks>
     /// <param name="value">The value to write to the output.</param>
     protected void Write(byte[] value) => Write(value.AsSpan());
+
+    /// <summary>
+    /// Writes a buffer of UTF8 bytes to the output after HTML encoding it.
+    /// </summary>
+    /// <remarks>
+    /// You generally shouldn't call this method directly. The Razor compiler will emit the appropriate calls to this method for
+    /// all matching Razor expressions in your .cshtml file.
+    /// </remarks>
+    /// <param name="value">The value to write to the output.</param>
+    protected void Write(ReadOnlyMemory<byte> value) => Write(value.Span);
 
     /// <summary>
     /// Writes a buffer of UTF8 bytes to the output after HTML encoding it.
@@ -167,7 +179,11 @@ public partial class RazorSlice
     {
         if (!string.IsNullOrEmpty(value))
         {
-            Write(value.AsSpan());
+            _pipeWriter?.HtmlEncodeAndWrite(value.AsSpan(), _htmlEncoder);
+            if (_textWriter is not null)
+            {
+                _htmlEncoder.Encode(_textWriter, value);
+            }
         }
     }
 
@@ -393,7 +409,7 @@ public partial class RazorSlice
     /// <returns><see cref="HtmlString.Empty"/> to allow for easy calling via a Razor expression, e.g. <c>@WriteHtml(Model.SomeHtml)</c></returns>
     protected HtmlString WriteHtml(string? htmlString)
     {
-        if (string.IsNullOrEmpty(htmlString))
+        if (!string.IsNullOrEmpty(htmlString))
         {
             _pipeWriter?.WriteHtml(htmlString.AsSpan());
             _textWriter?.Write(htmlString);
