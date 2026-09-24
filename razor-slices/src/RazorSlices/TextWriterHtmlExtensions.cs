@@ -35,45 +35,14 @@ internal static class TextWriterHtmlExtensions
             formatBuffer = ArrayPool<char>.Shared.Rent(bufferSize);
         }
 
-        var textToEncode = formatBuffer.AsSpan(..charsWritten);
-        var encodeBuffer = ArrayPool<char>.Shared.Rent(BufferSizes.GetHtmlEncodedSizeHint(textToEncode.Length));
-        var encodeBufferSpan = encodeBuffer.AsSpan();
-        var encodeStatus = OperationStatus.Done;
-        var waitingToWrite = 0;
-
-        while (textToEncode.Length > 0)
+        try
         {
-            if (encodeBufferSpan.Length == 0)
-            {
-                if (waitingToWrite > 0)
-                {
-                    textWriter.Write(encodeBuffer.AsSpan()[..waitingToWrite]);
-                    waitingToWrite = 0;
-                    encodeBufferSpan = encodeBuffer;
-                }
-            }
-
-            encodeStatus = htmlEncoder.Encode(textToEncode, encodeBufferSpan, out var charsConsumed, out var charsEncoded);
-            waitingToWrite += charsEncoded;
-
-            if (textToEncode.Length - charsConsumed == 0)
-            {
-                break;
-            }
-
-            textToEncode = textToEncode[charsConsumed..];
-            encodeBufferSpan = encodeBufferSpan[charsEncoded..];
+            htmlEncoder.Encode(textWriter, formatBuffer, 0, charsWritten);
         }
-
-        if (waitingToWrite > 0)
+        finally
         {
-            textWriter.Write(encodeBuffer.AsSpan()[..waitingToWrite]);
+            ArrayPool<char>.Shared.Return(formatBuffer);
         }
-
-        ArrayPool<char>.Shared.Return(encodeBuffer);
-        ArrayPool<char>.Shared.Return(formatBuffer);
-
-        Debug.Assert(encodeStatus == OperationStatus.Done, "Bad math in TextWriter HTML writing extensions");
     }
 
     private static bool TryHtmlEncodeAndWriteSpanFormattableSmall<T>(TextWriter textWriter, T formattable, HtmlEncoder htmlEncoder, ReadOnlySpan<char> format = default, IFormatProvider? formatProvider = null)
