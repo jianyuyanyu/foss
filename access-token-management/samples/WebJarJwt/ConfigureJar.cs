@@ -35,7 +35,10 @@ public class ConfigureJar : IPostConfigureOptions<OpenIdConnectOptions>
         {
             await redirect(context);
 
-            if (options.PushedAuthorizationBehavior == PushedAuthorizationBehavior.Disable)
+            // Only sign here when PAR is not actually used. With the default UseIfAvailable behavior, the handler
+            // falls back to a regular redirect (and skips OnPushAuthorization) when discovery has no PAR endpoint,
+            // so the request must be signed on this path as well.
+            if (!await UsesPushedAuthorization(context.Options, context.HttpContext.RequestAborted))
             {
                 await SignRequest(context.HttpContext, context.ProtocolMessage, keepRedirectUri: true);
             }
@@ -49,6 +52,27 @@ public class ConfigureJar : IPostConfigureOptions<OpenIdConnectOptions>
 
             await push(context);
         };
+    }
+
+    // Mirrors the OpenID Connect handler: Disable never uses PAR, Require always does, and UseIfAvailable only
+    // uses PAR when the discovery document advertises a pushed authorization request endpoint.
+    private static async Task<bool> UsesPushedAuthorization(OpenIdConnectOptions options, CancellationToken cancellationToken)
+    {
+        switch (options.PushedAuthorizationBehavior)
+        {
+            case PushedAuthorizationBehavior.Disable:
+                return false;
+            case PushedAuthorizationBehavior.Require:
+                return true;
+            default:
+                var configuration = options.Configuration;
+                if (configuration == null && options.ConfigurationManager != null)
+                {
+                    configuration = await options.ConfigurationManager.GetConfigurationAsync(cancellationToken);
+                }
+
+                return !string.IsNullOrEmpty(configuration?.PushedAuthorizationRequestEndpoint);
+        }
     }
 
     private static async Task SignRequest(HttpContext httpContext, OpenIdConnectMessage message, bool keepRedirectUri)
