@@ -3,7 +3,6 @@
 
 using Duende.AccessTokenManagement;
 using Duende.AccessTokenManagement.OpenIdConnect;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
