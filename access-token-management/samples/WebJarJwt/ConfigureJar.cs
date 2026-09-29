@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using Duende.AccessTokenManagement;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -16,7 +17,7 @@ namespace WebJarJwt;
 /// replaces all event handlers configured on <see cref="OpenIdConnectOptions.Events"/> at runtime.
 /// </summary>
 /// <remarks>
-/// <see cref="ClientAssertionService"/> depends on the OpenID Connect options, so it is resolved from the
+/// The <see cref="IClientAssertionService"/> depends on the OpenID Connect options, so it is resolved from the
 /// request services at runtime instead of being injected into this class (which would cause a circular dependency).
 /// </remarks>
 public class ConfigureJar : IPostConfigureOptions<OpenIdConnectOptions>
@@ -52,7 +53,9 @@ public class ConfigureJar : IPostConfigureOptions<OpenIdConnectOptions>
 
     private static async Task SignRequest(HttpContext httpContext, OpenIdConnectMessage message, bool keepRedirectUri)
     {
-        var assertionService = httpContext.RequestServices.GetRequiredService<ClientAssertionService>();
+        // IClientAssertionService is expected to be registered in DI as this sample's ClientAssertionService
+        // (see Startup.cs), which also knows how to sign authorize requests.
+        var assertionService = (ClientAssertionService)httpContext.RequestServices.GetRequiredService<IClientAssertionService>();
         var request = await assertionService.SignAuthorizeRequest(message, httpContext.RequestAborted);
         var clientId = message.ClientId;
         var redirectUri = message.RedirectUri;

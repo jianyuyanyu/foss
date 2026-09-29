@@ -54,8 +54,7 @@ public static class Startup
             });
 
         builder.Services.AddOpenIdConnectAccessTokenManagement();
-        builder.Services.AddTransient<ClientAssertionService>();
-        builder.Services.AddTransient<IClientAssertionService>(sp => sp.GetRequiredService<ClientAssertionService>());
+        builder.Services.AddTransient<IClientAssertionService, ClientAssertionService>();
 
         // signs authorize requests (JAR) by wrapping, not replacing, the OpenID Connect event handlers
         builder.Services.ConfigureOptions<ConfigureJar>();
