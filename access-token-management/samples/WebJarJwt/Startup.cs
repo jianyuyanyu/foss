@@ -3,7 +3,6 @@
 
 using Duende.AccessTokenManagement;
 using Duende.AccessTokenManagement.OpenIdConnect;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
@@ -15,7 +14,6 @@ public static class Startup
     internal static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddControllersWithViews();
-        builder.Services.AddTransient<OidcEvents>();
 
         builder.Services.AddAuthentication(options =>
             {
@@ -47,20 +45,18 @@ public static class Startup
                 options.SaveTokens = true;
                 options.MapInboundClaims = false;
 
-                options.EventsType = typeof(OidcEvents);
-
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     NameClaimType = "name",
                     RoleClaimType = "role"
                 };
-
-                // Disable PAR because it is incompatible with currently wired up OidcEvents
-                options.PushedAuthorizationBehavior = PushedAuthorizationBehavior.Disable;
             });
 
         builder.Services.AddOpenIdConnectAccessTokenManagement();
         builder.Services.AddTransient<IClientAssertionService, ClientAssertionService>();
+
+        // signs authorize requests (JAR) by wrapping, not replacing, the OpenID Connect event handlers
+        builder.Services.ConfigureOptions<ConfigureJar>();
 
         // registers HTTP client that uses the managed user access token
         builder.Services.AddUserAccessTokenHttpClient("user_client",
